@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class FormatSpec:
-    fill_char: str = ''
+    fill_char: str = ' '
     sign_mode: SignMode = SignMode.NEGATIVE
     alternate_mode: bool = False
     width: int = 0
@@ -76,9 +76,12 @@ def parse_format_spec(fmt: str) -> FormatSpec:
     thousandths_seperator = GroupingSeparator.from_flag(
         thousandths_separator_flag)
 
-    prec_mode_flag = match.group('prec_mode') or '.'
+    # TODO Think about default option here
+    prec_mode_flag = match.group('prec_mode') or '!'
     prec_mode = PrecMode.from_flag(prec_mode_flag)
 
+    # TODO Think about default values here, force a default precision or number
+    #  of sig figs?
     prec = match.group('prec')
     if prec:
         prec = int(prec)
@@ -150,6 +153,8 @@ def format_float(num: float, format_spec: FormatSpec) -> str:
     mantissa_str = format_float_by_top_bottom_dig(mantissa, top_padded_digit,
                                                   round_digit, sign_mode,
                                                   fill_char)
+
+    # TODO: Think about seperators and fill characters
     thousands_separator = GroupingSeparator.to_char(
         format_spec.thousands_separator)
     decimal_separator = DecimalSeparator.to_char(format_spec.decimal_separator)
