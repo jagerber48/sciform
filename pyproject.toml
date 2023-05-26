@@ -11,6 +11,7 @@ description = "A package for formatting floats into scientific formatted strings
 classifiers = [
     "License :: OSI Approved :: MIT License"
 ]
+url = "https://github.com/jagerber48/sciform"
 dynamic = ["version", "readme"]
 
 [tool.setuptools.dynamic]
