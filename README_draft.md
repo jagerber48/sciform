@@ -47,3 +47,5 @@ the non-backwards compatible changes.
   - Under python float formatting `f'{12: =4}` yields `'  12'`.
   - Under scientific float formatting `f{12: =4}` yeilds`'   12'`. E.g.
     fill characters are padded up to the `10^4` digits place.
+- Python float formatting supports displaying negative zero. Scientific 
+  float formatting always coerces zero to be positive.

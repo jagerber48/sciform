@@ -344,6 +344,46 @@ class TestFormatting(unittest.TestCase):
                                   actual_num_str=snum_str):
                     self.assertEqual(snum_str, expected_num_str)
 
+    def test_separators(self):
+        cases: dict[float, dict[str, str]] = {
+            123456.654321: {
+                '': '123456.654321',
+                ',': '123,456.654321',
+                ',.s': '123,456.654 321',
+                ',._': '123,456.654_321',
+                '_._': '123_456.654_321',
+                's.s': '123 456.654 321',
+                'n,n': '123456,654321',
+                '.,': '123.456,654321',
+                '.,s': '123.456,654 321',
+                '.,_': '123.456,654_321',
+                '_,_': '123_456,654_321',
+                's,s': '123 456,654 321',
+            },
+            12345.54321: {
+                '': '12345.54321',
+                ',': '12,345.54321',
+                ',.s': '12,345.543 21',
+                ',._': '12,345.543_21',
+                '_._': '12_345.543_21',
+                's.s': '12 345.543 21',
+                'n,n': '12345,54321',
+                '.,': '12.345,54321',
+                '.,s': '12.345,543 21',
+                '.,_': '12.345,543_21',
+                '_,_': '12_345,543_21',
+                's,s': '12 345,543 21',
+            }
+        }
+        for num, fmt_dict in cases.items():
+            for format_spec, expected_num_str in fmt_dict.items():
+                snum = sfloat(num)
+                snum_str = f'{snum:{format_spec}}'
+                with self.subTest(num=num, format_spec=format_spec,
+                                  expected_num_str=expected_num_str,
+                                  actual_num_str=snum_str):
+                    self.assertEqual(snum_str, expected_num_str)
+
     def test_format(self):
         for num, fmt_dict in fmtcases.items():
             for format_spec, expected_num_str in fmt_dict.items():

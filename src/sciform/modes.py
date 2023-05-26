@@ -52,34 +52,65 @@ class PrecMode(Enum):
             raise ValueError(f'Invalid precision type flag {flag}.')
 
 
-class GroupingMode(Enum):
+class GroupingSeparator(Enum):
     NO_GROUPING = 'no_grouping'
     COMMA = 'comma'
+    POINT = 'point'
     UNDERSCORE = 'underscore'
     SPACE = 'space'
 
     @staticmethod
-    def to_char(grouping_mode: 'GroupingMode') -> str:
-        if grouping_mode is GroupingMode.NO_GROUPING:
+    def to_char(grouping_separator: 'GroupingSeparator') -> str:
+        if grouping_separator is GroupingSeparator.NO_GROUPING:
             return ''
-        elif grouping_mode is GroupingMode.COMMA:
+        elif grouping_separator is GroupingSeparator.COMMA:
             return ','
-        elif grouping_mode is GroupingMode.UNDERSCORE:
+        elif grouping_separator is GroupingSeparator.POINT:
+            return '.'
+        elif grouping_separator is GroupingSeparator.UNDERSCORE:
             return '_'
-        elif grouping_mode is GroupingMode.SPACE:
+        elif grouping_separator is GroupingSeparator.SPACE:
             return ' '
         else:
-            raise ValueError(f'Invalid grouping mode: {grouping_mode}')
+            raise ValueError(f'Invalid grouping separator: '
+                             f'{grouping_separator}')
 
     @staticmethod
     def from_flag(flag: str):
-        if flag == '':
-            return GroupingMode.NO_GROUPING
+        if flag == 'n':
+            return GroupingSeparator.NO_GROUPING
         elif flag == ',':
-            return GroupingMode.COMMA
+            return GroupingSeparator.COMMA
+        elif flag == '.':
+            return GroupingSeparator.POINT
         elif flag == '_':
-            return GroupingMode.UNDERSCORE
-        elif flag == 'v':
-            return GroupingMode.SPACE
+            return GroupingSeparator.UNDERSCORE
+        elif flag == 's':
+            return GroupingSeparator.SPACE
         else:
-            raise ValueError(f'Invalid sign mode flag {flag}.')
+            raise ValueError(f'Invalid grouping separator flag '
+                             f'\'{flag}\'.')
+
+
+class DecimalSeparator(Enum):
+    POINT = 'point'
+    COMMA = 'comma'
+
+    @staticmethod
+    def to_char(decimal_separator: 'DecimalSeparator'):
+        if decimal_separator is DecimalSeparator.POINT:
+            return '.'
+        elif decimal_separator is DecimalSeparator.COMMA:
+            return ','
+        else:
+            raise ValueError(f'Invalid decimal separator: '
+                             f'{decimal_separator}.')
+
+    @staticmethod
+    def from_flag(flag: str):
+        if flag == '.':
+            return DecimalSeparator.POINT
+        elif flag == ',':
+            return DecimalSeparator.COMMA
+        else:
+            raise ValueError(f'Invalid decimal separator flag {flag}.')

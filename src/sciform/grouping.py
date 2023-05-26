@@ -6,8 +6,9 @@ class GroupingDirection(Enum):
     BACKWARD = 'backward'
 
 
-def add_group_chars(string, group_char='_',
-                    direction=GroupingDirection.FORWARD, group_size=3):
+def add_group_chars_between_numbers(string, group_char='_',
+                                    direction=GroupingDirection.FORWARD,
+                                    group_size=3):
     num_chars = len(string)
     result_str = ''
 
@@ -40,25 +41,30 @@ def add_group_chars(string, group_char='_',
     return result_str
 
 
-def add_group_chars_float(float_string, pre_group_char='_',
-                          post_group_char='_', group_size=3):
+def add_separators(float_string,
+                   thousands_separator='',
+                   decimal_separator='.',
+                   thousandths_separator='',
+                   group_size=3):
     dec_split = float_string.split('.')
-    pre_string = dec_split[0]
+    thousands_string = dec_split[0]
     if len(dec_split) == 1:
-        post_string = ''
+        thousandths_string = ''
     elif len(dec_split) == 2:
-        pre_string, post_string = dec_split
+        thousandths_string = dec_split[1]
     else:
         raise ValueError
 
-    pre_grouped_string = add_group_chars(pre_string, pre_group_char,
-                                         GroupingDirection.BACKWARD,
-                                         group_size)
-    post_grouped_string = add_group_chars(post_string, post_group_char,
-                                          GroupingDirection.FORWARD,
-                                          group_size)
-    if len(post_grouped_string) > 0:
-        grouped_str = pre_grouped_string + '.' + post_grouped_string
+    thousands_grouped_string = add_group_chars_between_numbers(
+        thousands_string, thousands_separator, GroupingDirection.BACKWARD,
+        group_size)
+    thousandths_grouped_string = add_group_chars_between_numbers(
+        thousandths_string, thousandths_separator, GroupingDirection.FORWARD,
+        group_size)
+    if len(thousandths_string) > 0:
+        grouped_str = (f'{thousands_grouped_string}'
+                       f'{decimal_separator}'
+                       f'{thousandths_grouped_string}')
     else:
-        grouped_str = pre_grouped_string
+        grouped_str = thousands_grouped_string
     return grouped_str
