@@ -136,25 +136,40 @@ def format_float(num: float, format_spec: FormatSpec) -> str:
             return str(num).lower()
 
     if format_spec.percent_mode:
-        if format_spec.format_mode is not FormatMode.FIXEDPOINT:
-            raise ValueError('Invalid format specifier')  # TODO better message
         num *= 100
 
     exp = format_spec.exp
     mantissa, exp = get_mantissa_exp(num, format_mode, exp, alternate_mode)
-    exp_str = get_exp_str(exp, format_mode, capital_exp_char)
-
-    if mantissa == -0.0:
-        mantissa = abs(mantissa)
 
     top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
     round_digit = get_round_digit(top_digit, bottom_digit,
                                   prec, prec_mode)
-    mantissa_str = format_float_by_top_bottom_dig(mantissa, top_padded_digit,
+
+    mantissa_rounded = round(mantissa, -round_digit)
+
+    if format_mode is not FormatMode.FIXEDPOINT:
+        # Shift the exponent if rounding change the top digit of the mantissa
+        new_top_digit, _ = get_top_and_bottom_digit(mantissa_rounded)
+        exp_shift = new_top_digit - top_digit
+        exp += exp_shift
+        mantissa_rounded = mantissa_rounded * 10**-exp_shift
+
+        # Round again
+        mantissa_rounded = round(mantissa_rounded, -round_digit)
+        if mantissa_rounded == 0:
+            exp = 0
+
+    exp_str = get_exp_str(exp, format_mode, capital_exp_char)
+
+    if mantissa_rounded == -0.0:
+        mantissa_rounded = abs(mantissa_rounded)
+    mantissa_str = format_float_by_top_bottom_dig(mantissa_rounded,
+                                                  top_padded_digit,
                                                   round_digit, sign_mode,
                                                   fill_char)
 
-    # TODO: Think about seperators and fill characters
+    # TODO: Think about the interaction between separators and fill
+    #  characters
     thousands_separator = GroupingSeparator.to_char(
         format_spec.thousands_separator)
     decimal_separator = DecimalSeparator.to_char(format_spec.decimal_separator)

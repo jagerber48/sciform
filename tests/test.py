@@ -164,9 +164,9 @@ class TestFormatting(unittest.TestCase):
         cases: dict[float, dict[str, str]] = {
             123.456: {
                 'e': '1.23456e+02',
-                '.-3e': '0e+02',  # TODO: What actually is expected here?
-                '.-2e': '0e+02',  # TODO: What actually is expected here?
-                '.-1e': '0e+02',  # TODO: What actually is expected here?
+                '.-3e': '0e+00',  # TODO: What actually is expected here?
+                '.-2e': '0e+00',  # TODO: What actually is expected here?
+                '.-1e': '0e+00',  # TODO: What actually is expected here?
                 '.0e': '1e+02',
                 '.1e': '1.2e+02',
                 '.2e': '1.23e+02',
@@ -182,8 +182,8 @@ class TestFormatting(unittest.TestCase):
             },
             0.00062607: {
                 'e': '6.2607e-04',
-                '.-2e': '0e-04',  # TODO: What actually is expected here?
-                '.-1e': '10e-04',  # TODO: This is a problem I think
+                '.-2e': '0e+00',  # TODO: What actually is expected here?
+                '.-1e': '0e+00',  # TODO: This is a problem I think
                 '.0e': '6e-04',
                 '.1e': '6.3e-04',
                 '.2e': '6.26e-04',
@@ -230,9 +230,9 @@ class TestFormatting(unittest.TestCase):
             },
             1234.56: {
                 'r': '1.23456e+03',
-                '.-3r': '0e+03',  # TODO: What actually is expected here?
-                '.-2r': '0e+03',  # TODO: What actually is expected here?
-                '.-1r': '0e+03',  # TODO: What actually is expected here?
+                '.-3r': '0e+00',  # TODO: What actually is expected here?
+                '.-2r': '0e+00',  # TODO: What actually is expected here?
+                '.-1r': '0e+00',  # TODO: What actually is expected here?
                 '.0r': '1e+03',
                 '.1r': '1.2e+03',
                 '.2r': '1.23e+03',
@@ -249,8 +249,8 @@ class TestFormatting(unittest.TestCase):
             },
             12345.6: {
                 'r': '12.3456e+03',
-                '.-3r': '0e+03',  # TODO: What actually is expected here?
-                '.-2r': '0e+03',  # TODO: What actually is expected here?
+                '.-3r': '0e+00',  # TODO: What actually is expected here?
+                '.-2r': '0e+00',  # TODO: What actually is expected here?
                 '.-1r': '10e+03',  # TODO: What actually is expected here?
                 '.0r': '12e+03',
                 '.1r': '12.3e+03',
@@ -280,10 +280,10 @@ class TestFormatting(unittest.TestCase):
         cases: dict[float, dict[str, str]] = {
             123.456: {
                 '#r': '0.123456e+03',
-                '#.-3r': '0e+03',  # TODO: What actually is expected here?
-                '#.-2r': '0e+03',  # TODO: What actually is expected here?
-                '#.-1r': '0e+03',  # TODO: What actually is expected here?
-                '#.0r': '0e+03',
+                '#.-3r': '0e+00',  # TODO: What actually is expected here?
+                '#.-2r': '0e+00',  # TODO: What actually is expected here?
+                '#.-1r': '0e+00',  # TODO: What actually is expected here?
+                '#.0r': '0e+00',  # TODO: What actually is expected here?
                 '#.1r': '0.1e+03',
                 '#.2r': '0.12e+03',
                 '#.3r': '0.123e+03',
@@ -298,9 +298,9 @@ class TestFormatting(unittest.TestCase):
             },
             1234.56: {
                 '#r': '1.23456e+03',
-                '#.-3r': '0e+03',  # TODO: What actually is expected here?
-                '#.-2r': '0e+03',  # TODO: What actually is expected here?
-                '#.-1r': '0e+03',  # TODO: What actually is expected here?
+                '#.-3r': '0e+00',  # TODO: What actually is expected here?
+                '#.-2r': '0e+00',  # TODO: What actually is expected here?
+                '#.-1r': '0e+00',  # TODO: What actually is expected here?
                 '#.0r': '1e+03',
                 '#.1r': '1.2e+03',
                 '#.2r': '1.23e+03',
@@ -317,8 +317,8 @@ class TestFormatting(unittest.TestCase):
             },
             12345.6: {
                 '#r': '12.3456e+03',
-                '#.-3r': '0e+03',  # TODO: What actually is expected here?
-                '#.-2r': '0e+03',  # TODO: What actually is expected here?
+                '#.-3r': '0e+00',  # TODO: What actually is expected here?
+                '#.-2r': '0e+00',  # TODO: What actually is expected here?
                 '#.-1r': '10e+03',  # TODO: What actually is expected here?
                 '#.0r': '12e+03',
                 '#.1r': '12.3e+03',
@@ -334,6 +334,29 @@ class TestFormatting(unittest.TestCase):
                 '#!6r': '12.3456e+03',
                 '#!7r': '12.34560e+03'
             }
+        }
+        for num, fmt_dict in cases.items():
+            for format_spec, expected_num_str in fmt_dict.items():
+                snum = sfloat(num)
+                snum_str = f'{snum:{format_spec}}'
+                with self.subTest(num=num, format_spec=format_spec,
+                                  expected_num_str=expected_num_str,
+                                  actual_num_str=snum_str):
+                    self.assertEqual(snum_str, expected_num_str)
+
+    def test_rounding(self):
+        cases: dict[float, dict[str, str]] = {
+            99.99: {
+                '': '99.99',
+                'e': '9.999e+01',
+                '.1e': '1.0e+02',
+                '.2e': '1.00e+02',
+                '.3e': '9.999e+01',
+                '!1e': '1e+02',
+                '!2e': '1.0e+02',
+                '!3e': '1.00e+02',
+                '!4e': '9.999e+01',
+            },
         }
         for num, fmt_dict in cases.items():
             for format_spec, expected_num_str in fmt_dict.items():
