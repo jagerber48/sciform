@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sciform"
+authors = [
+    {name = "Justin Gerber", email="justin.gerber48@gmail.com"}
+]
+description = "A package for formatting floats into scientific formatted strings."
+dynamic = ["version", "readme"]
+
+[tool.setuptools.dynamic]
+version = {attr = "sciform.__version__"}
+readme = {file = "README.md"}
