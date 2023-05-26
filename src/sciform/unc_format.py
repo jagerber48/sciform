@@ -99,6 +99,3 @@ def format_val_unc(val: float, unc: float, fmt: str):
         result_str = val_unc_exp_str
 
     return result_str
-
-
-print(format_val_unc(100, 0.002, '#!3r'))
