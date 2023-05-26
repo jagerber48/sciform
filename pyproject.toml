@@ -8,6 +8,9 @@ authors = [
     {name = "Justin Gerber", email="justin.gerber48@gmail.com"}
 ]
 description = "A package for formatting floats into scientific formatted strings."
+classifiers = [
+    "License :: OSI Approved :: MIT License"
+]
 dynamic = ["version", "readme"]
 
 [tool.setuptools.dynamic]
