@@ -1,5 +1,5 @@
 import sys
-from typing import Optional
+from typing import Optional, Union
 from math import floor, log10, log2, isfinite
 import warnings
 import logging
@@ -63,7 +63,7 @@ def get_top_and_bottom_digit(num: float) -> tuple[int, int]:
 
 def get_mantissa_exp_base(num: float,
                           format_mode: FormatMode,
-                          exp: Optional[int] = None,
+                          exp: Union[int, type(AUTO)] = None,
                           alternate_mode: bool = False) -> (float, int, int):
     if num == 0:
         if exp is AUTO:
@@ -150,7 +150,7 @@ def get_sign_str(num: float, sign_mode: SignMode) -> str:
 
 
 def get_round_digit(top_digit: int, bottom_digit: int,
-                    prec: int, prec_mode: PrecMode) -> int:
+                    prec: Union[int, type(AUTO)], prec_mode: PrecMode) -> int:
     # TODO: Decide on default precision/sig figs.  Minimum round-trippable or
     #  hard-coded to 6?
     if prec_mode is PrecMode.SIG_FIG:
@@ -168,12 +168,9 @@ def get_round_digit(top_digit: int, bottom_digit: int,
 
 
 def get_fill_str(fill_char: ' ', top_digit: int, top_padded_digit: int) -> str:
-    if top_padded_digit is not None:
-        if top_padded_digit > top_digit:
-            pad_len = top_padded_digit - max(top_digit, 0)
-            pad_str = fill_char*pad_len
-        else:
-            pad_str = ''
+    if top_padded_digit > top_digit:
+        pad_len = top_padded_digit - max(top_digit, 0)
+        pad_str = fill_char*pad_len
     else:
         pad_str = ''
     return pad_str

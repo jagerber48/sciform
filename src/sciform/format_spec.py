@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Union, Optional
 import re
 from warnings import warn
 
@@ -143,11 +143,11 @@ class FormatSpec:
             decimal_separator: Union[str, DecimalSeparator] = None,
             thousandths_separator: Union[str, GroupingSeparator] = None,
             prec_mode: Union[str, PrecMode] = None,
-            prec: Optional[int] = None,
+            prec: Union[int, type(AUTO)] = None,
             format_mode: Union[str, FormatMode] = None,
             capital_exp_char: bool = None,
             percent_mode: bool = None,
-            exp: Optional[int] = None,
+            exp: Union[int, type(AUTO)] = None,
             prefix_mode: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             include_c: bool = False,
@@ -187,11 +187,11 @@ class FormatSpec:
             decimal_separator: Union[str, DecimalSeparator] = None,
             thousandths_separator: Union[str, GroupingSeparator] = None,
             prec_mode: Union[str, PrecMode] = None,
-            prec: Optional[int] = None,
+            prec: Union[int, type(AUTO)] = None,
             format_mode: Union[str, FormatMode] = None,
             capital_exp_char: bool = None,
             percent_mode: bool = None,
-            exp: Optional[int] = None,
+            exp: Union[int, type(AUTO)] = None,
             prefix_mode: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             include_c: bool = False,
