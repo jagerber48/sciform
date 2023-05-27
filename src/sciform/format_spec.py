@@ -1,6 +1,7 @@
 from typing import Union, Optional
 import re
 from warnings import warn
+from copy import copy
 
 from sciform.modes import (FillMode, FormatMode, PrecMode, SignMode,
                            GroupingSeparator, DecimalSeparator, AUTO)
@@ -171,10 +172,12 @@ class FormatSpec:
             percent_mode=percent_mode or template.percent_mode,
             exp=template.exp if exp is None else exp,
             prefix_mode=prefix_mode or template.prefix_mode,
-            extra_si_prefixes=extra_si_prefixes or template.extra_si_prefixes,
+            extra_si_prefixes=(extra_si_prefixes
+                               or copy(template.extra_si_prefixes)),
             include_c=include_c,
             include_small_si_prefixes=include_small_si_prefixes,
-            extra_iec_prefixes=extra_iec_prefixes)
+            extra_iec_prefixes=(extra_iec_prefixes
+                                or copy(template.extra_iec_prefixes)))
 
     def update(
             self,

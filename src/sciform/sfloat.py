@@ -171,7 +171,10 @@ class GlobalDefaultsContext:
 
     def __enter__(self):
         self.initial_global_defaults = copy(get_global_defaults())
-        update_global_defaults(**self.kwargs)
+        new_defaults = FormatSpec.from_template(
+            template=self.initial_global_defaults,
+            **self.kwargs)
+        update_global_defaults(new_defaults)
 
     def __exit__(self, exc_type, exc_value, exc_tb):
         update_global_defaults(self.initial_global_defaults)

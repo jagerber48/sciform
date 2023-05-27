@@ -481,6 +481,28 @@ class TestFormatting(unittest.TestCase):
         self.assertEqual(during_str, expected_during_str)
         self.assertEqual(after_str, expected_before_str)
 
+    def test_c_prefix(self):
+        num = sfloat(123.456)
+        with GlobalDefaultsContext(include_c=True):
+            num_str = f'{num:e-2p}'
+
+        expected_num_str = '12345.6 c'
+
+        self.assertEqual(num_str, expected_num_str)
+
+    def test_small_si_prefixes(self):
+        num = sfloat(123.456)
+
+        cases_dict = {-2: '12345.6 c',
+                      -1: '1234.56 d',
+                      +1: '12.3456 da',
+                      +2: '1.23456 h'}
+
+        with GlobalDefaultsContext(include_small_si_prefixes=True):
+            for exp, expected_num_str in cases_dict.items():
+                num_str = f'{num:e{exp:+02}p}'
+                self.assertEqual(num_str, expected_num_str)
+
     def test_format(self):
         self.do_test_case_dict(fmtcases)
 
