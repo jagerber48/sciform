@@ -1,5 +1,5 @@
 import sys
-from typing import Optional, Union
+from typing import Union
 from math import floor, log10, log2, isfinite
 import warnings
 import logging
