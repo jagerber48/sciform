@@ -5,13 +5,14 @@ from sciform.sfloat import SFloatFormatContext
 def main():
     num = 0.00062607
     snum = sfloat(num)
-    print(snum)
+    print(f'{snum}')
     with SFloatFormatContext(sign_mode='+',
-                             format_mode='%',
+                             format_mode='e',
                              decimal_separator=',',
-                             prec=3):
-        print(snum)
-    print(snum)
+                             prec=4,
+                             exp=-6):
+        print(f'{snum}')
+    print(f'{snum}')
 
 
 if __name__ == "__main__":
