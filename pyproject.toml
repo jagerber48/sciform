@@ -18,4 +18,4 @@ Homepage = "https://github.com/jagerber48/sciform"
 
 [tool.setuptools.dynamic]
 version = {attr = "sciform.__version__"}
-readme = {file = "README.md"}
+readme = {file = "README.md", content-type = "text/markdown"}
