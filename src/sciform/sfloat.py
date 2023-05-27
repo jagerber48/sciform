@@ -13,7 +13,7 @@ from sciform.grouping import add_separators
 from sciform.prefix import replace_prefix
 
 
-def format_sfloat(num: 'sfloat', format_spec: FormatSpec) -> str:
+def format_float(num: float, format_spec: FormatSpec) -> str:
     format_mode = format_spec.format_mode
     alternate_mode = format_spec.alternate_mode
     prec_mode = format_spec.prec_mode
@@ -91,7 +91,7 @@ class sfloat(float):
     def __format__(self, fmt: str):
         format_spec = parse_format_spec(fmt,
                                         self.default_format_spec)
-        return format_sfloat(self, format_spec)
+        return format_float(self, format_spec)
 
     @classmethod
     def to_sfloat(cls, num: float) -> 'sfloat':

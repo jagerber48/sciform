@@ -3,7 +3,8 @@ import re
 from sciform.modes import PrecMode, SignMode
 from sciform.format_utils import (get_round_digit, get_top_and_bottom_digit,
                                   get_top_digit, get_mantissa_exp)
-from sciform.format_spec import parse_format_spec, pattern, FormatSpec, format_float
+from sciform.format_spec import parse_format_spec, pattern, FormatSpec
+from sciform.sfloat import format_float
 from sciform.prefix import replace_prefix
 
 
@@ -44,13 +45,13 @@ def format_val_unc(val: float, unc: float, fmt: str):
     val_format_spec = FormatSpec(
         format_spec.fill_mode,
         sign_mode=format_spec.sign_mode,
-        force_zero_positive=format_spec.force_zero_positive,
         alternate_mode=format_spec.alternate_mode,
-        width=new_top_digit,
-        grouping_option_1=format_spec.grouping_option_1,
-        grouping_option_2=format_spec.grouping_option_2,
+        top_dig_place=new_top_digit,
+        thousands_separator=format_spec.thousands_separator,
+        decimal_separator=format_spec.decimal_separator,
+        thousandths_separator=format_spec.thousandths_separator,
         prec_mode=PrecMode.PREC,
-        precision=prec,
+        prec=prec,
         format_mode=format_spec.format_mode,
         capital_exp_char=format_spec.capital_exp_char,
         percent_mode=False,
@@ -60,13 +61,13 @@ def format_val_unc(val: float, unc: float, fmt: str):
     unc_format_spec = FormatSpec(
         format_spec.fill_mode,
         sign_mode=SignMode.NEGATIVE,
-        force_zero_positive=format_spec.force_zero_positive,
         alternate_mode=format_spec.alternate_mode,
-        width=new_top_digit,
-        grouping_option_1=format_spec.grouping_option_1,
-        grouping_option_2=format_spec.grouping_option_2,
+        top_dig_place=new_top_digit,
+        thousands_separator=format_spec.thousands_separator,
+        decimal_separator=format_spec.decimal_separator,
+        thousandths_separator=format_spec.thousandths_separator,
         prec_mode=PrecMode.PREC,
-        precision=prec,
+        prec=prec,
         format_mode=format_spec.format_mode,
         capital_exp_char=format_spec.capital_exp_char,
         percent_mode=False,
