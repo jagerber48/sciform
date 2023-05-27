@@ -211,6 +211,9 @@ Forthcoming features to improve ease of configuration:
 - Ability to set module or class level defaults for each FSML term to 
   avoid repetitive, verbose format specifications.
 - Class-based API for storing default configurations?
+- Optional registration of new prefixes, notably `c`, `d`, `da`, and `h` which 
+  are recognized SI prefixes for 10<sup>-2</sup>, 10<sup>-1</sup>, 
+  10<sup>+1</sup> and 10<sup>+2</sup> respectively.
 
 
 # Value + uncertainty formatting (forthcoming)
@@ -234,13 +237,16 @@ it will support
 
 # Incompatibilities With Built-in Format Specification Mini Language
 
-
 The `sciform` FSML extends the functionality of the built-in FSML. 
 However, `sciform` FSML is not entirely backwards compatible with the
-built-in FSML. Certain allowed built-in format specifications are
+built-in FSML. 
+Certain allowed built-in format specifications are
 illegal in `sciform` FSML and certain allowed built-in format 
 specifications give different results when used with `sfloat` rather 
-than `float.`
+than `float.`. 
+These incompatibilities were intentionally introduced to simplify the 
+`sciform` FSML by cutting out features less likely to be required for
+scientific formatting.
 
 - The built-in FSML accepts `g`, `G` and `n` precision types
   These precision types are not supported by scientific formatting.
