@@ -61,22 +61,28 @@ def get_top_and_bottom_digit(num: float) -> tuple[int, int]:
     return get_top_digit(num), get_bottom_digit(num)
 
 
-def get_mantissa_exp(num: float,
-                     format_mode: FormatMode,
-                     exp: Optional[int] = None,
-                     alternate_mode: bool = False) -> (float, int):
+def get_mantissa_exp_base(num: float,
+                          format_mode: FormatMode,
+                          exp: Optional[int] = None,
+                          alternate_mode: bool = False) -> (float, int, int):
     if num == 0:
         if exp is None:
             exp = 0
+        if format_mode is FormatMode.BINARY:
+            base = 2
+        else:
+            base = 10
     elif format_mode is FormatMode.FIXEDPOINT:
         if exp is not None:
             if exp != 0:
                 warnings.warn('Attempt to set exponent explicity in fixed '
                               'point exponent mode. coercing exponent to 0.')
         exp = 0
+        base = 10
     elif format_mode is FormatMode.SCIENTIFIC:
         if exp is None:
             exp = floor(log10(abs(num)))
+        base = 10
     elif format_mode is FormatMode.ENGINEERING:
         if exp is not None:
             if exp % 3 != 0:
@@ -94,6 +100,7 @@ def get_mantissa_exp(num: float,
                 exp = (exp // 3) * 3
             else:
                 exp = ((exp + 1) // 3) * 3
+        base = 10
     elif format_mode is FormatMode.BINARY:
         if exp is None:
             exp = floor(log2(abs(num)))
@@ -102,15 +109,13 @@ def get_mantissa_exp(num: float,
         elif alternate_mode:
             logger.debug(f'Alternate mode ignored when setting exponent '
                          f'explicitly.')
+        base = 2
     else:
         raise ValueError(f'Unhandled format mode: {format_mode}')
 
-    if format_mode is not FormatMode.BINARY:
-        mantissa = num * 10**-exp
-    else:
-        mantissa = num * 2**-exp
+    mantissa = num * base**-exp
 
-    return mantissa, exp
+    return mantissa, exp, base
 
 
 def get_exp_str(exp: int, format_mode: FormatMode,

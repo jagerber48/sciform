@@ -3,14 +3,16 @@ from sciform.sfloat import SFloatFormatContext
 
 
 def main():
-    num = 0.00062607
-    snum = sfloat(num)
+    num = 999.99
+    snum = sfloat(num, sign_mode='+')
+    snum.update_default_options(include_c=True)
     print(f'{snum}')
-    with SFloatFormatContext(sign_mode='+',
-                             format_mode='e',
+    with SFloatFormatContext(sign_mode='-',
+                             format_mode='r',
+                             prec_mode='!',
                              decimal_separator=',',
-                             prec=4,
-                             exp=-6):
+                             prec=2,
+                             prefix_mode=False):
         print(f'{snum}')
     print(f'{snum}')
 

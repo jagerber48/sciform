@@ -1,11 +1,10 @@
 from copy import copy
 from math import isfinite
 
-from sciform.modes import (FillMode, FormatMode, GroupingSeparator,
-                           DecimalSeparator)
-from sciform.format_spec import (parse_format_spec, DEFAULT_FORMAT_SPEC,
-                                 get_format_spec, FormatSpec)
-from sciform.format_utils import (get_mantissa_exp, get_exp_str,
+from sciform.modes import (FillMode, GroupingSeparator, DecimalSeparator)
+from sciform.format_spec import (parse_format_spec, FormatSpec,
+                                 FormatSpecDefaultOptions)
+from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_and_bottom_digit,
                                   get_round_digit,
                                   format_float_by_top_bottom_dig)
@@ -32,7 +31,8 @@ def format_float(num: float, format_spec: FormatSpec) -> str:
         num *= 100
 
     exp = format_spec.exp
-    mantissa, exp = get_mantissa_exp(num, format_mode, exp, alternate_mode)
+    mantissa, temp_exp, base = get_mantissa_exp_base(num, format_mode, exp,
+                                                     alternate_mode)
 
     top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
     round_digit = get_round_digit(top_digit, bottom_digit,
@@ -40,17 +40,21 @@ def format_float(num: float, format_spec: FormatSpec) -> str:
 
     mantissa_rounded = round(mantissa, -round_digit)
 
-    if format_mode is not FormatMode.FIXEDPOINT:
-        # Shift the exponent if rounding change the top digit of the mantissa
-        new_top_digit, _ = get_top_and_bottom_digit(mantissa_rounded)
-        exp_shift = new_top_digit - top_digit
-        exp += exp_shift
-        mantissa_rounded = mantissa_rounded * 10**-exp_shift
+    '''
+    Repeat mantissa + exponent discovery after rounding in case rounding
+    altered the required exponent.
+    '''
+    rounded_num = mantissa_rounded * base**temp_exp
+    mantissa, exp, base = get_mantissa_exp_base(rounded_num, format_mode,
+                                                exp, alternate_mode)
 
-        # Round again
-        mantissa_rounded = round(mantissa_rounded, -round_digit)
-        if mantissa_rounded == 0:
-            exp = 0
+    top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
+    round_digit = get_round_digit(top_digit, bottom_digit,
+                                  prec, prec_mode)
+
+    mantissa_rounded = round(mantissa, -round_digit)
+    if mantissa_rounded == 0:
+        exp = 0
 
     exp_str = get_exp_str(exp, format_mode, capital_exp_char)
 
@@ -77,7 +81,9 @@ def format_float(num: float, format_spec: FormatSpec) -> str:
     full_str = f'{mantissa_str}{exp_str}'
 
     if format_spec.prefix_mode:
-        full_str = replace_prefix(full_str)
+        full_str = replace_prefix(full_str,
+                                  format_spec.extra_si_prefixes,
+                                  format_spec.extra_iec_prefixes)
 
     if format_spec.percent_mode:
         full_str = full_str + '%'
@@ -86,23 +92,21 @@ def format_float(num: float, format_spec: FormatSpec) -> str:
 
 
 class sfloat(float):
-    default_format_spec = DEFAULT_FORMAT_SPEC
+    default_options = FormatSpecDefaultOptions()
 
     def __format__(self, fmt: str):
-        format_spec = parse_format_spec(fmt,
-                                        self.default_format_spec)
+        format_spec = parse_format_spec(fmt, self.default_options)
+        format_spec.add_si_prefixes(self.default_options.EXTRA_SI_PREFIXES)
+        format_spec.add_iec_prefixes(self.default_options.EXTRA_IEC_PREFIXES)
         return format_float(self, format_spec)
+
+    @classmethod
+    def update_default_options(cls, **kwargs):
+        cls.default_options.update(**kwargs)
 
     @classmethod
     def to_sfloat(cls, num: float) -> 'sfloat':
         return cls(num)
-
-    @classmethod
-    def update_default_format_spec(cls, **kwargs):
-        new_default_format_spec = get_format_spec(
-            default_fmt_spec=cls.default_format_spec,
-            **kwargs)
-        cls.default_format_spec = new_default_format_spec
 
     def __abs__(self) -> 'sfloat':
         return self.to_sfloat(super().__abs__())
@@ -170,11 +174,11 @@ class sfloat(float):
 class SFloatFormatContext:
     def __init__(self, **kwargs):
         self.kwargs = kwargs
-        self.init_default_format_spec = None
+        self.initial_default_options = None
 
     def __enter__(self):
-        self.init_default_format_spec = copy(sfloat.default_format_spec)
-        sfloat.update_default_format_spec(**self.kwargs)
+        self.initial_default_options = copy(sfloat.default_options)
+        sfloat.update_default_options(**self.kwargs)
 
     def __exit__(self, exc_type, exc_value, exc_tb):
-        sfloat.default_format_spec = self.init_default_format_spec
+        sfloat.default_options = self.initial_default_options

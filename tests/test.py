@@ -110,8 +110,19 @@ fmtcases: dict[float, dict[str, str]] = {
 
 class TestFormatting(unittest.TestCase):
     # TODO: exp symbol capitalization
+
+    def do_test_case_dict(self, cases_dict: dict[float, dict[str, str]]):
+        for num, fmt_dict in cases_dict.items():
+            for format_spec, expected_num_str in fmt_dict.items():
+                snum = sfloat(num)
+                snum_str = f'{snum:{format_spec}}'
+                with self.subTest(num=num, format_spec=format_spec,
+                                  expected_num_str=expected_num_str,
+                                  actual_num_str=snum_str):
+                    self.assertEqual(snum_str, expected_num_str)
+
     def test_fixed_point(self):
-        cases: dict[float, dict[str, str]] = {
+        cases_dict: dict[float, dict[str, str]] = {
             123.456: {
                 'f': '123.456',
                 '.-3f': '0',
@@ -151,17 +162,11 @@ class TestFormatting(unittest.TestCase):
                 '!6f': '0.000626070',
             }
         }
-        for num, fmt_dict in cases.items():
-            for format_spec, expected_num_str in fmt_dict.items():
-                snum = sfloat(num)
-                snum_str = f'{snum:{format_spec}}'
-                with self.subTest(num=num, format_spec=format_spec,
-                                  expected_num_str=expected_num_str,
-                                  actual_num_str=snum_str):
-                    self.assertEqual(snum_str, expected_num_str)
+
+        self.do_test_case_dict(cases_dict)
 
     def test_scientific(self):
-        cases: dict[float, dict[str, str]] = {
+        cases_dict: dict[float, dict[str, str]] = {
             123.456: {
                 'e': '1.23456e+02',
                 '.-3e': '0e+00',  # TODO: What actually is expected here?
@@ -199,17 +204,11 @@ class TestFormatting(unittest.TestCase):
                 '!6e': '6.26070e-04',
             }
         }
-        for num, fmt_dict in cases.items():
-            for format_spec, expected_num_str in fmt_dict.items():
-                snum = sfloat(num)
-                snum_str = f'{snum:{format_spec}}'
-                with self.subTest(num=num, format_spec=format_spec,
-                                  expected_num_str=expected_num_str,
-                                  actual_num_str=snum_str):
-                    self.assertEqual(snum_str, expected_num_str)
+
+        self.do_test_case_dict(cases_dict)
 
     def test_engineering(self):
-        cases: dict[float, dict[str, str]] = {
+        cases_dict: dict[float, dict[str, str]] = {
             123.456: {
                 'r': '123.456e+00',
                 '.-3r': '0e+00',  # TODO: What actually is expected here?
@@ -267,17 +266,11 @@ class TestFormatting(unittest.TestCase):
                 '!7r': '12.34560e+03'
             }
         }
-        for num, fmt_dict in cases.items():
-            for format_spec, expected_num_str in fmt_dict.items():
-                snum = sfloat(num)
-                snum_str = f'{snum:{format_spec}}'
-                with self.subTest(num=num, format_spec=format_spec,
-                                  expected_num_str=expected_num_str,
-                                  actual_num_str=snum_str):
-                    self.assertEqual(snum_str, expected_num_str)
+
+        self.do_test_case_dict(cases_dict)
 
     def test_engineering_shifted(self):
-        cases: dict[float, dict[str, str]] = {
+        cases_dict: dict[float, dict[str, str]] = {
             123.456: {
                 '#r': '0.123456e+03',
                 '#.-3r': '0e+00',  # TODO: What actually is expected here?
@@ -335,17 +328,11 @@ class TestFormatting(unittest.TestCase):
                 '#!7r': '12.34560e+03'
             }
         }
-        for num, fmt_dict in cases.items():
-            for format_spec, expected_num_str in fmt_dict.items():
-                snum = sfloat(num)
-                snum_str = f'{snum:{format_spec}}'
-                with self.subTest(num=num, format_spec=format_spec,
-                                  expected_num_str=expected_num_str,
-                                  actual_num_str=snum_str):
-                    self.assertEqual(snum_str, expected_num_str)
+
+        self.do_test_case_dict(cases_dict)
 
     def test_rounding(self):
-        cases: dict[float, dict[str, str]] = {
+        cases_dict: dict[float, dict[str, str]] = {
             99.99: {
                 '': '99.99',
                 'e': '9.999e+01',
@@ -357,18 +344,25 @@ class TestFormatting(unittest.TestCase):
                 '!3e': '1.00e+02',
                 '!4e': '9.999e+01',
             },
+            999.99: {
+                '.0r': '1e+03',
+                '.1r': '1.0e+03',
+                '.2r': '999.99e+00',
+                '.3r': '999.990e+00',
+                '.4r': '999.9900e+00',
+                '!1r': '1e+03',
+                '!2r': '1.0e+03',
+                '!3r': '1.00e+03',
+                '!4r': '1.000e+03',
+                '!5r': '999.99e+00',
+                '!6r': '999.990e+00'
+            }
         }
-        for num, fmt_dict in cases.items():
-            for format_spec, expected_num_str in fmt_dict.items():
-                snum = sfloat(num)
-                snum_str = f'{snum:{format_spec}}'
-                with self.subTest(num=num, format_spec=format_spec,
-                                  expected_num_str=expected_num_str,
-                                  actual_num_str=snum_str):
-                    self.assertEqual(snum_str, expected_num_str)
+
+        self.do_test_case_dict(cases_dict)
 
     def test_separators(self):
-        cases: dict[float, dict[str, str]] = {
+        cases_dict: dict[float, dict[str, str]] = {
             123456.654321: {
                 '': '123456.654321',
                 ',': '123,456.654321',
@@ -398,17 +392,11 @@ class TestFormatting(unittest.TestCase):
                 's,s': '12 345,543 21',
             }
         }
-        for num, fmt_dict in cases.items():
-            for format_spec, expected_num_str in fmt_dict.items():
-                snum = sfloat(num)
-                snum_str = f'{snum:{format_spec}}'
-                with self.subTest(num=num, format_spec=format_spec,
-                                  expected_num_str=expected_num_str,
-                                  actual_num_str=snum_str):
-                    self.assertEqual(snum_str, expected_num_str)
+
+        self.do_test_case_dict(cases_dict)
 
     def test_prefix(self):
-        cases: dict[float, dict[str, str]] = {
+        cases_dict: dict[float, dict[str, str]] = {
             3.1415e-30: {'ep': '3.1415 q'},
             3.1415e-29: {'ep': '3.1415e-29'},
             3.1415e-28: {'ep': '3.1415e-28'},
@@ -471,25 +459,11 @@ class TestFormatting(unittest.TestCase):
             3.1415e+29: {'ep': '3.1415e+29'},
             3.1415e+30: {'ep': '3.1415 Q'},
         }
-        for num, fmt_dict in cases.items():
-            for format_spec, expected_num_str in fmt_dict.items():
-                snum = sfloat(num)
-                snum_str = f'{snum:{format_spec}}'
-                with self.subTest(num=num, format_spec=format_spec,
-                                  expected_num_str=expected_num_str,
-                                  actual_num_str=snum_str):
-                    self.assertEqual(snum_str, expected_num_str)
+
+        self.do_test_case_dict(cases_dict)
 
     def test_format(self):
-        for num, fmt_dict in fmtcases.items():
-            for format_spec, expected_num_str in fmt_dict.items():
-                snum = sfloat(num)
-                snum_str = f'{snum:{format_spec}}'
-
-                with self.subTest(num=num, format_spec=format_spec,
-                                  expected_num_str=expected_num_str,
-                                  actual_num_str=snum_str):
-                    self.assertEqual(snum_str, expected_num_str)
+        self.do_test_case_dict(fmtcases)
 
 
 if __name__ == '__main__':
