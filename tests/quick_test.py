@@ -1,20 +1,13 @@
 from sciform import sfloat
-from sciform.sfloat import SFloatFormatContext
+from sciform.sfloat import GlobalDefaultsContext
 
 
 def main():
-    num = 999.99
-    snum = sfloat(num, sign_mode='+')
-    snum.update_default_options(include_c=True)
-    print(f'{snum}')
-    with SFloatFormatContext(sign_mode='-',
-                             format_mode='r',
-                             prec_mode='!',
-                             decimal_separator=',',
-                             prec=2,
-                             prefix_mode=False):
-        print(f'{snum}')
-    print(f'{snum}')
+    num = sfloat(123.456)
+    with GlobalDefaultsContext(include_c=True):
+        num_str = f'{num:e-2p}'
+
+    print(f'{num_str=}')
 
 
 if __name__ == "__main__":

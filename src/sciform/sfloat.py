@@ -3,7 +3,8 @@ from math import isfinite
 
 from sciform.modes import (FillMode, GroupingSeparator, DecimalSeparator)
 from sciform.format_spec import (parse_format_spec, FormatSpec,
-                                 FormatSpecDefaultOptions)
+                                 update_global_defaults,
+                                 get_global_defaults)
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_and_bottom_digit,
                                   get_round_digit,
@@ -92,17 +93,9 @@ def format_float(num: float, format_spec: FormatSpec) -> str:
 
 
 class sfloat(float):
-    default_options = FormatSpecDefaultOptions()
-
     def __format__(self, fmt: str):
-        format_spec = parse_format_spec(fmt, self.default_options)
-        format_spec.add_si_prefixes(self.default_options.EXTRA_SI_PREFIXES)
-        format_spec.add_iec_prefixes(self.default_options.EXTRA_IEC_PREFIXES)
+        format_spec = parse_format_spec(fmt)
         return format_float(self, format_spec)
-
-    @classmethod
-    def update_default_options(cls, **kwargs):
-        cls.default_options.update(**kwargs)
 
     @classmethod
     def to_sfloat(cls, num: float) -> 'sfloat':
@@ -171,14 +164,17 @@ class sfloat(float):
         return self.to_sfloat(super().__truediv__(x))
 
 
-class SFloatFormatContext:
+class GlobalDefaultsContext:
     def __init__(self, **kwargs):
         self.kwargs = kwargs
-        self.initial_default_options = None
+        self.initial_global_defaults = None
 
     def __enter__(self):
-        self.initial_default_options = copy(sfloat.default_options)
-        sfloat.update_default_options(**self.kwargs)
+        self.initial_global_defaults = copy(get_global_defaults())
+        new_defaults = FormatSpec.from_template(
+            template=self.initial_global_defaults,
+            **self.kwargs)
+        update_global_defaults(new_defaults)
 
     def __exit__(self, exc_type, exc_value, exc_tb):
-        sfloat.default_options = self.initial_default_options
+        update_global_defaults(self.initial_global_defaults)

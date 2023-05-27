@@ -1,4 +1,5 @@
 import re
+from copy import copy
 
 
 si_val_to_prefix_dict = {30: 'Q',
@@ -53,11 +54,11 @@ def replace_prefix(num_str: str, extra_si_prefixes: dict[int, str] = None,
         return before
 
     if exp_type in ['e', 'E']:
-        val_to_prefix_dict = si_val_to_prefix_dict
+        val_to_prefix_dict = copy(si_val_to_prefix_dict)
         if extra_si_prefixes is not None:
             val_to_prefix_dict.update(extra_si_prefixes)
     else:
-        val_to_prefix_dict = iec_val_to_prefix_dict
+        val_to_prefix_dict = copy(iec_val_to_prefix_dict)
         if extra_iec_prefixes is not None:
             val_to_prefix_dict.update(extra_iec_prefixes)
     try:
