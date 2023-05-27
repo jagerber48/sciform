@@ -29,11 +29,11 @@ def format_val_unc(val: float, unc: float, fmt: str):
         alternate_mode=format_spec.alternate_mode)
     unc_top_digit, unc_bottom_digit = get_top_and_bottom_digit(unc_mantissa)
     round_digit = get_round_digit(unc_top_digit, unc_bottom_digit,
-                                  format_spec.precision, format_spec.prec_mode)
+                                  format_spec.prec, format_spec.prec_mode)
 
     prec = -round_digit
 
-    user_top_digit = format_spec.width
+    user_top_digit = format_spec.top_dig_place
 
     if match_widths:
         val_top_digit = get_top_digit(val_mantissa)
@@ -42,7 +42,7 @@ def format_val_unc(val: float, unc: float, fmt: str):
         new_top_digit = user_top_digit
 
     val_format_spec = FormatSpec(
-        format_spec.fill_char,
+        format_spec.fill_mode,
         sign_mode=format_spec.sign_mode,
         force_zero_positive=format_spec.force_zero_positive,
         alternate_mode=format_spec.alternate_mode,
@@ -58,7 +58,7 @@ def format_val_unc(val: float, unc: float, fmt: str):
         prefix_mode=False)
 
     unc_format_spec = FormatSpec(
-        format_spec.fill_char,
+        format_spec.fill_mode,
         sign_mode=SignMode.NEGATIVE,
         force_zero_positive=format_spec.force_zero_positive,
         alternate_mode=format_spec.alternate_mode,

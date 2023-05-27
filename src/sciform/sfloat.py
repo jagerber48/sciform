@@ -1,10 +1,38 @@
-from sciform.format import parse_format_spec, format_float
+from sciform.format import (parse_format_spec, format_float,
+                            DEFAULT_FORMAT_SPEC, get_format_spec)
+from copy import copy
+
+
+class SFloatFormatContext:
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+        self.init_default_format_spec = None
+
+    def __enter__(self):
+        self.init_default_format_spec = copy(sfloat.default_format_spec)
+        sfloat.update_default_format_spec(**self.kwargs)
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        sfloat.default_format_spec = self.init_default_format_spec
 
 
 class sfloat(float):
+    default_format_spec = DEFAULT_FORMAT_SPEC
+
+    @classmethod
+    def update_default_format_spec(cls, **kwargs):
+        new_default_format_spec = get_format_spec(
+            default_fmt_spec=cls.default_format_spec,
+            **kwargs)
+        cls.default_format_spec = new_default_format_spec
+
     def __format__(self, format_spec: str):
-        format_spec_data = parse_format_spec(format_spec)
+        format_spec_data = parse_format_spec(format_spec,
+                                             self.default_format_spec)
         return format_float(self, format_spec_data)
+
+    def __str__(self):
+        return self.__format__('')
 
     @classmethod
     def to_sfloat(cls, num: float) -> 'sfloat':

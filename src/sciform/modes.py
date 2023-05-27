@@ -1,6 +1,29 @@
 from enum import Enum
 
 
+class FillMode(Enum):
+    SPACE = 'space'
+    ZERO = 'zero'
+
+    @staticmethod
+    def to_char(fill_mode: 'FillMode') -> str:
+        if fill_mode is FillMode.SPACE:
+            return ' '
+        elif fill_mode is FillMode.ZERO:
+            return '0'
+        else:
+            raise ValueError(f'Unhandled fill mode \'{fill_mode}\'.')
+
+    @staticmethod
+    def from_flag(flag: str) -> 'FillMode':
+        if flag == ' ':
+            return FillMode.SPACE
+        elif flag == '0':
+            return FillMode.ZERO
+        else:
+            raise ValueError(f'Unhandled fill mode flag \'{flag}\'.')
+
+
 class FormatMode(Enum):
     FIXEDPOINT = 'fixed_point'
     SCIENTIFIC = 'scientific'
@@ -18,7 +41,7 @@ class FormatMode(Enum):
         elif flag in ['b', 'B']:
             return FormatMode.BINARY
         else:
-            raise ValueError(f'Invalid format type flag {flag}.')
+            raise ValueError(f'Invalid format mode flag \'{flag}\'.')
 
 
 class SignMode(Enum):
