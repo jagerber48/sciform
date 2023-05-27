@@ -1,4 +1,4 @@
-# sciform
+~~# sciform
 
 This package is used to format floats into scientific presentation 
 formats. Features include fixed point, and decimal and binary scientific 
@@ -143,6 +143,59 @@ print(f'{num:_!2f}')
 | exp <br/> (`[+-]\d+`)                                                             | Positive or negative integer that can be used to force the exponent to take a particular value. This flag is ignored in fixed format mode. If an explicit exponent is used in engineering mode or alternate binary mode which is incompatible with those modes (e.g. an exponent that is not a multiple of 3 for engineering notation), the exponent will be rounded down to the nearest compatible value.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | prefix_mode <br/> (`'p'`)                                                         | Flag (default off) indicating whether exponent strings should be replaced with SI or IEC prefix characters. E.g. `'123e+03' -> 123 k` or `857.2B+20 -> 857.2 Mi`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
  
+# Prefix Mode
+
+Prefix mode offers a simple translation between exponent strings and 
+one or two letter prefixes. 
+For scientific and engineering formats the prefixes are matched to
+integer multiple of 3 exponent according to the [SI prefixes](https://www.nist.gov/pml/owm/metric-si-prefixes).
+For binary formatsthe prefixes are matched to integer multiples of 10 
+according to the [IEC prefixes](https://physics.nist.gov/cuu/Units/binary.html).
+Supported translations:
+
+SI Prefixes:
+
+| Exponent Value   | Prefix Name | Prefix |
+|------------------|-------------|--------|
+| 10<sup>+30</sup> | Quetta      | Q      |
+| 10<sup>+27</sup> | Ronna       | R      |
+| 10<sup>+24</sup> | Yotta       | Y      |
+| 10<sup>+21</sup> | Zetta       | Z      |
+| 10<sup>+18</sup> | Exa         | E      |
+| 10<sup>+15</sup> | Peta        | P      |
+| 10<sup>+12</sup> | Tera        | T      | 
+| 10<sup>+9</sup>  | Giga        | G      |
+| 10<sup>+6</sup>  | Mega        | M      |
+| 10<sup>+3</sup>  | Kilo        | k      |
+| 10<sup>-3</sup>  | milli       | m      |
+| 10<sup>-6</sup>  | micro       | u      |
+| 10<sup>-9</sup>  | nano        | n      |
+| 10<sup>-12</sup> | pico        | p      |
+| 10<sup>-15</sup> | femto       | f      |
+| 10<sup>-18</sup> | atto        | a      |
+| 10<sup>-21</sup> | zepto       | z      |
+| 10<sup>-24</sup> | yocto       | y      |
+| 10<sup>-27</sup> | ronto       | r      |
+| 10<sup>-30</sup> | quecto      | q      |
+
+IEC Prefixes:
+
+| Exponent Value  | Prefix Name | Prefix |
+|-----------------|-------------|--------|
+| 2<sup>+80</sup> | Ronna       | Yi     |
+| 2<sup>+70</sup> | Yotta       | Zi     |
+| 2<sup>+60</sup> | Zetta       | Ei     |
+| 2<sup>+50</sup> | Exa         | Pi     |
+| 2<sup>+40</sup> | Peta        | Ti     |
+| 2<sup>+30</sup> | Tera        | Gi     | 
+| 2<sup>+20</sup> | Giga        | Mi     |
+| 2<sup>+10</sup> | Kibi        | Ki     |
+
+Examples of prefix mode are:
+
+- `f'{sfloat(12.4e+06):rp}'` gives `'12 M`'
+- `f'{sfloat(1024*2**10):bp'` gives `1 Mi`
+
 # Incompatibilities With Built-in Format Specification Mini Language
 
 

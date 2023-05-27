@@ -24,12 +24,14 @@ si_val_to_prefix_dict = {30: 'Q',
                          -30: 'q'}
 
 iec_val_to_prefix_dict = {0: '',
-                          10: 'K',
-                          20: 'M',
-                          30: 'G',
-                          40: 'T',
-                          50: 'P',
-                          60: 'E'}
+                          10: 'Ki',
+                          20: 'Mi',
+                          30: 'Gi',
+                          40: 'Ti',
+                          50: 'Pi',
+                          60: 'Ei',
+                          70: 'Zi',
+                          80: 'Yi'}
 
 
 def replace_prefix(num_str: str):
