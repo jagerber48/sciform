@@ -3,8 +3,8 @@ from math import isfinite
 
 from sciform.modes import (FillMode, FormatMode, GroupingSeparator,
                            DecimalSeparator)
-from sciform.format import (parse_format_spec, DEFAULT_FORMAT_SPEC,
-                            get_format_spec, FormatSpec)
+from sciform.format_spec import (parse_format_spec, DEFAULT_FORMAT_SPEC,
+                                 get_format_spec, FormatSpec)
 from sciform.format_utils import (get_mantissa_exp, get_exp_str,
                                   get_top_and_bottom_digit,
                                   get_round_digit,

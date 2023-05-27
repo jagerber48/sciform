@@ -3,7 +3,7 @@ import re
 from sciform.modes import PrecMode, SignMode
 from sciform.format_utils import (get_round_digit, get_top_and_bottom_digit,
                                   get_top_digit, get_mantissa_exp)
-from sciform.format import parse_format_spec, pattern, FormatSpec, format_float
+from sciform.format_spec import parse_format_spec, pattern, FormatSpec, format_float
 from sciform.prefix import replace_prefix
 
 

@@ -220,4 +220,3 @@ def parse_format_spec(
         prefix_mode=prefix_mode,
         default_fmt_spec=default_fmt_spec
     )
-
