@@ -205,15 +205,55 @@ Examples of prefix mode are:
 
 # Configuration options (forthcoming)
 
-Forthcoming features to improve ease of configuration:
-- Function-based (as opposed to string formatting/`__format__` based) 
-  formatting.
-- Ability to set module or class level defaults for each FSML term to 
-  avoid repetitive, verbose format specifications.
-- Class-based API for storing default configurations?
-- Optional registration of new prefixes, notably `c`, `d`, `da`, and `h` which 
-  are recognized SI prefixes for 10<sup>-2</sup>, 10<sup>-1</sup>, 
-  10<sup>+1</sup> and 10<sup>+2</sup> respectively.
+It is possible to modify the global default configuration for `sciform`
+to avoid repetition of verbose (and difficult-to-parse-for-humans) 
+format specification strings. 
+
+The global defaults are stored in the `FMT_SPEC_GLOBAL_DEFAULTS` 
+`FormatSpec` object.
+When a call is made to format an `sfloat`, any parameters extracted from
+the format specification string are used for the formatting, while any 
+parameters not supplied are extracted from the global defaults object.
+
+The global configuration object can be permanently modified using the 
+`update_global_defaults()` function and `kwargs` corresponding to the 
+parameters the default configuration options the user would like to
+update (TODO: Documentation of acceptable `kwargs`). 
+The user can also pass in an entirely new replacement `FormatSpec`
+object to use as the new global configuration object.
+In this case any `kwargs` passed in will be used to update this new
+configuration object after it has replaced the old one.
+
+The global configuration object can also be temporarily modified using 
+the `GlobalDefaultsContext` context decorator. 
+Similarly, the user can pass in `kwargs` to modify the existing 
+configuration object as well as an entirely new configuration object. 
+Within the scope of the context manager the new global configuration 
+will be used, but when the context manager scope exits, the original 
+configuration will be restored.
+
+Modifying the global configuration allows the user to modify the mapping
+between exponents and SI or IEC prefixes.
+In particular, it is possible to include the `c` SI prefix (e.g. 
+1 cm = 10<sup>-2</sup> m) using the `include_c` kwarg as well as to
+include all of the `c`, `d`, `da`, and `h` SI prefixes corresponding to
+10<sup>-2</sup>, 10<sup>-1</sup>, 10<sup>+1</sup>, and 10<sup>+2</sup>
+respectively using the `include_small_si_prefixes` kwarg.
+
+The user can format floats directly using the `format_float` function 
+and passing in an explicitly defined `FormatSpec` object. In the future
+a function allowing users to format floats using kwargs directly will be
+included.
+
+In the future, configuration may be added for persistant class- and
+instance-level default configuration options. However, it needs to be
+decided how configuration will be shared between the different levels.
+For example, if an `sfloat` object is instantiated which does not 
+specify behavior for the `prefix` field, but then the `prefix` field at
+the global level is modified, should this `sfloat` instance adopt the
+new global config?
+Also, how should config conflicts be managed?
+One idea is to resolve conflicts by deferring to the parent config.
 
 
 # Value + uncertainty formatting (forthcoming)

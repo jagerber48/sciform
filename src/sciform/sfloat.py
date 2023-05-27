@@ -1,5 +1,6 @@
 from copy import copy
 from math import isfinite
+from typing import Optional
 
 from sciform.modes import (FillMode, GroupingSeparator, DecimalSeparator)
 from sciform.format_spec import (parse_format_spec, FormatSpec,
@@ -165,16 +166,22 @@ class sfloat(float):
 
 
 class GlobalDefaultsContext:
-    def __init__(self, **kwargs):
+    def __init__(self,
+                 replacement_format_spec: Optional[FormatSpec] = None,
+                 **kwargs):
+        self.replacement_format_spec = replacement_format_spec
         self.kwargs = kwargs
         self.initial_global_defaults = None
 
     def __enter__(self):
         self.initial_global_defaults = copy(get_global_defaults())
-        new_defaults = FormatSpec.from_template(
-            template=self.initial_global_defaults,
-            **self.kwargs)
-        update_global_defaults(new_defaults)
+        if self.replacement_format_spec is None:
+            new_defaults = FormatSpec.from_template(
+                template=self.initial_global_defaults,
+                **self.kwargs)
+        else:
+            new_defaults = self.replacement_format_spec
+        update_global_defaults(new_defaults, **self.kwargs)
 
     def __exit__(self, exc_type, exc_value, exc_tb):
         update_global_defaults(self.initial_global_defaults)
