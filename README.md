@@ -1,4 +1,4 @@
-~~# sciform
+# sciform
 
 This package is used to format floats into scientific presentation 
 formats. Features include fixed point, and decimal and binary scientific 
@@ -35,6 +35,12 @@ number to the digit place corresponding to that number of sig figs
 the number to that digit. If that digit is the ones place or larger,
 then trailing zeros are added until the ones place.
 
+# Credits
+`sciform` was heavily motivated by the float formatting provided in the 
+[prefixed](https://github.com/Rockhopper-Technologies/prefixed) and the 
+value +/- uncertainty formatting in the 
+[uncertainties](https://github.com/lebigot/uncertainties) package.
+
 # Built-in Format Specification Mini Language
 
 In Python, `float` objects can already be converted to string
@@ -58,7 +64,7 @@ which makes it challenging to apply certain formatting strategies.
   point". There is no way to format `123` to yield `'120'`. You can use 
   `f'{123:#.4g}'` to get `'123.0'` (4 sig figs), but if you do 
   `f'{123:#.2g}'` you get `'1.2e+02'`. This is because built-in float 
-  formatting does not allow format to perform rounding/truncation 
+  formatting does not allow formatting to perform rounding/truncation 
   *above* the decimal point.
   - The `#` option is necessary to format to a specified number of sig 
   figs in `g` mode (which must be used if you want any possibility of 
@@ -195,6 +201,36 @@ Examples of prefix mode are:
 
 - `f'{sfloat(12.4e+06):rp}'` gives `'12 M`'
 - `f'{sfloat(1024*2**10):bp'` gives `1 Mi`
+
+
+# Configuration options (forthcoming)
+
+Forthcoming features to improve ease of configuration:
+- Function-based (as opposed to string formatting/`__format__` based) 
+  formatting.
+- Ability to set module or class level defaults for each FSML term to 
+  avoid repetitive, verbose format specifications.
+- Class-based API for storing default configurations?
+
+
+# Value + uncertainty formatting (forthcoming)
+
+One of (if not the) most important use cases for scientific formatting
+is formatting a value together with its specified uncertainty, e.g.
+`84.3 +/- 0.2`. The ability to format pairs of floats as 
+value/uncertainty pairs will be supported by the forthcoming `ufloat`
+class.
+
+Value/uncertainty formatting is not yet fully implemented or tested but 
+it will support
+- Selection of the exponent based on the value
+- Selection of the least significant digit based on a user-requested
+  number of sig figs to display for the uncertainty.
+- Optional padding so that the value and uncertainty have the same 
+  width
+- Short form "parentheses" uncertainty display, e.g. 
+  `84.3 +/- 2= 84.3(2)`.
+
 
 # Incompatibilities With Built-in Format Specification Mini Language
 
