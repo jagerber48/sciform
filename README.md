@@ -1,10 +1,10 @@
 # sciform
 
-This package can be used to nicely format floats into scientific 
-presentation formats. Features include fixed point, and decimal and 
-binary scientific and engineering notations. Where possible, formatting 
-follows documented standards such as those published by 
-[BIPM](https://www.bipm.org/en/) or [IEC](https://iec.ch/homepage).
+This package is used to format floats into scientific presentation 
+formats. Features include fixed point, and decimal and binary scientific 
+and engineering notations. Where possible, formatting follows documented 
+standards such as those published by [BIPM](https://www.bipm.org/en/) or 
+[IEC](https://iec.ch/homepage).
 
 Floats are formatted into strings of the form 
 ```
@@ -13,6 +13,75 @@ mantissa [exp_str]
 Where `exp_str` can be of the form `exp_symbol exp` where `exp_symbol` 
 is `e`,`E`, `b`, or `B`, and `exp` is an integer like `+03`. `exp_str` 
 can also be a single SI or IEC "prefix" character like `k` `M` or `Mi`.
+
+Example formatted floats are
+- `'103.0400'`
+- `'1.03e+02'`
+- `'1.03E+03'`
+- `'1.03 k'`
+- `'1023b+10'`
+- `'1.00b+20'`
+- `'3.4 Mi'`
+
+In this document, the terminology "precision" of a string representing a 
+float is number of digits that appear past the decimal point, e.g. 
+`1.030400` has a precision of 6. The number of "significant figures" or 
+"sig figs" for a string representing a float is the number of digits 
+past the left-most non-zero digit. So `1.030400` has 7 sig figs. The
+string `1030` has a precision of 0 and may have 3 or 4 sig figs. When 
+presenting a number to a certain number of sig figs, we first round the
+number to the digit place corresponding to that number of sig figs
+(based on the digit place of the most significant digit) then truncate 
+the number to that digit. If that digit is the ones place or larger,
+then trailing zeros are added until the ones place.
+
+# Built-in Format Specification Mini Language
+
+In Python, `float` objects can already be converted to string
+representations using built in formatting. For example, 
+`f'{0.00438:#.4g}'` yeilds the string `'0.004380'`. Here the float
+`0.00438` has been formatted according to the format specification
+string `'#.4g'`. The rules for constructing format specification strings
+are specified in [the format specification mini lanuage](https://docs.python.org/3/library/string.html#format-specification-mini-language) (FSML)
+documentation.
+
+The built-in FSML has a few short-comings making it non-ideal for all
+scientific formatting tasks:
+- The built-in FSML lacks certain features around rounding and
+presenting floats based on significant figures (as opposed to precision)
+which makes it challenging to apply certain formatting strategies.
+  - It is possible to specify sig figs for formatting using the `e` and 
+  `g`built in formatting modes, but it is impossible to format numbers 
+  according to a specific number of sig figs while also presenting the 
+  numbers in fixed point format. Specifically, it is impossible to 
+  coerce the string formatting to perform rounding "above the decimal 
+  point". There is no way to format `123` to yield `'120'`. You can use 
+  `f'{123:#.4g}'` to get `'123.0'` (4 sig figs), but if you do 
+  `f'{123:#.2g}'` you get `'1.2e+02'`. This is because built-in float 
+  formatting does not allow format to perform rounding/truncation 
+  *above* the decimal point.
+  - The `#` option is necessary to format to a specified number of sig 
+  figs in `g` mode (which must be used if you want any possibility of 
+  fixed-point sig fig formatting) but, this option means mantissa with 
+  no fractional part will include a trailing decimal point, e.g. 
+  `f'{123:#.3g}'` gives `123.` which may be undesirable.
+- While built-in formatting does provide a means to fill a string to a 
+certain overall width (including all non-numeric symbols), it does not
+provide a means to fill a string up to a certain digit place, e.g. add 
+zeros up to the hundreds place which may sometimes be desirable.
+- In the sciences it is very common to display numbers in *engineering* 
+notation in which the exponent is chosen so that it is an integer
+multiple of 3 and the mantissa is between `0.1 <= m < 1000`. Built-in 
+formatting has no functionality for this feature. See 
+[NIST Guide to the SI 7.9](https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-7-rules-and-style-conventions-expressing-values)
+for more details.
+- The built-in formatting has limited functionality for customizing the 
+separation and decimal characters used to display numbers.
+
+These shortcomings motivated the development of `sciform` for more 
+customizable and scientifically relevant string formatting.
+
+# sciform Format Specification Mini Language
 
 The format specification is:
 ```
@@ -26,11 +95,11 @@ The format specification is:
 | fill                  | `' '` (default) or `'0'`. Fill characters will be padded between the most signifant digit and the sign symbol until the digit corresponding to the `fill_top_digit` is filled.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | sign                  | `'-'` (default), `'+'` or `' '`. `'-'` will include a sign symbol only for negative numbers. `'+'` will include a sign symbol for all numbers. `' '` will include a minus symbol for negative numbers and a space for positive numbers. Zero is always considered to be positive.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | alternate mode        | Alternate mode is enabled (disabled by default) if the `'#'` flag is included in the format specification. In engineering notation (`r` or `R`), the alternate mode coerces the mantissa to be `0.1 <= m < 100` rather than `1 <= m < 1000`. In binary mode (`b` or `B`), the alternate flag coerces the mantissa to be between `1 <= m < 1024` rather than `1 <= m < 2`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| fill_top_digit        | Any non-negative integer, default (0). Indicates the decimal or binary place to which the formatted string should be padded. e.g. `f'{123:0=4}'` will give `00123`, i.e. padding to the `10^4` place.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| fill_top_digit        | Any non-negative integer, default (0). Indicates the decimal or binary place to which the formatted string should be padded. e.g. `f'{sfloat(123):0=4}'` will give `00123`, i.e. padding to the `10^4` place.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | thousands_separator   | `'n'` (default), `'.'`, `','`, `'s'`, `'_'`. Indicates the character to use as a thousands separator. `'n'` is no separator, `'s'` is a single-whitespace separator and `'.'`, `','`, and `'_'` are period, comma, and underscore separators.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | decimal_separator     | `'.'` (default) or `','`. Symbol to use as the decimal separator.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | thousandths_separator | `'n'` (default), `'s'`, `'_'`. Indicates the character to use as a thousandths separator. `'n'` is no separator, `'s'` is a single-whitespace separator and `'_'` is an underscore separators.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| prec_mode             | `'.'` or `'!'` (default). Indicates whether the float will be rounded and displayed according to precision (digits past the decimal point) or significant figure. `'.'` indicates precision mode and `'!'` indicates significant figure mode. E.g. `f'{123.456:.2f}'` gives `'123.46'` while `f'{123.456:!2f}'` gives `'120'`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| prec_mode             | `'.'` or `'!'` (default). Indicates whether the float will be rounded and displayed according to precision (digits past the decimal point) or significant figure. `'.'` indicates precision mode and `'!'` indicates significant figure mode. E.g. `f'{sfloat(123.456):.2f}'` gives `'123.46'` while `f'{sfloat(123.456):!2f}'` gives `'120'`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | prec                  | Integer indicating the precision or number of significant figures to which the float shall be rounded and displayed. Can be negative for precision formatting mode. Must be greater than zero for significant figure mode. If no precision is supplied then an algorithm will be used to attempt to infer the least significant digit for the float and the precision will be chosen to match this least significant digit. This algorithm may have surprising behavior for floats with a large number (e.g. 15) of significant digits or due to the underlying binary nature of floats, e.g. `0.1+0.2 = 0.30000000000000004`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | format_mode           | `'f'` (default), `'F'`, `'%'`, `'e'`, `'E'`, `'r'`, `'R'`, `'b'`, or `'B'`. Indicates which formatting mode should be used. In all cases the capitalization of the exponent symbol matches the capitalization of the format mode flag. <br/> &nbsp; -`'f'` and `'F'` indicating fixed point mode in which no exponent is used to display the number. <br/> &nbsp; -`'%'` mode is like fixed mode but the number is first multiplied by 100 and presented followed by a `'%'` character.<br/> &nbsp; -`'e'` and `'E'` indicate scientific notation in which the exponent is chosen so that the mantissa satisfies `1 <= m < 10`. <br/> &nbsp; -`'r'` and `'R'` indicate engineering notation in which the exponent is chosen so that the mantissa satisfies `1 <= m <= 1000`. If the alternate mode is enabled then the mantissa satisfies `0.1 <= m < 100`. In both cases the exponent is always an integer multiple of 3.<br/>&nbsp; -`'b'` and `'B'` indicate binary mode in which the number is presented as a mantissa and exponent in base 2. The mantissa satisfies `1 <= m < 2`. If alternate mode is enabled the mantissa satisfies `1 <= m < 1024 = 2^10`. In this case the exponent is always an integer multiple of 10. |
 | exp                   | Positive or negative integer that can be used to force the exponent to take a particular value. This flag is ignored in fixed format mode. If an explicit exponent is used in engineering mode or alternate binary mode which is incompatible with those modes (e.g. an exponent that is not a multiple of 3 for engineering notation), the exponent will be rounded down to the nearest compatible value.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
