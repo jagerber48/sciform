@@ -1,6 +1,9 @@
 from enum import Enum
 
 
+AUTO = object()
+
+
 class FillMode(Enum):
     SPACE = 'space'
     ZERO = 'zero'

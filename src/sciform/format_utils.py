@@ -4,7 +4,7 @@ from math import floor, log10, log2, isfinite
 import warnings
 import logging
 
-from sciform.modes import FormatMode, PrecMode, SignMode
+from sciform.modes import FormatMode, PrecMode, SignMode, AUTO
 
 
 logger = logging.getLogger(__name__)
@@ -66,25 +66,25 @@ def get_mantissa_exp_base(num: float,
                           exp: Optional[int] = None,
                           alternate_mode: bool = False) -> (float, int, int):
     if num == 0:
-        if exp is None:
+        if exp is AUTO:
             exp = 0
         if format_mode is FormatMode.BINARY:
             base = 2
         else:
             base = 10
     elif format_mode is FormatMode.FIXEDPOINT:
-        if exp is not None:
+        if exp is not AUTO:
             if exp != 0:
                 warnings.warn('Attempt to set exponent explicity in fixed '
                               'point exponent mode. coercing exponent to 0.')
         exp = 0
         base = 10
     elif format_mode is FormatMode.SCIENTIFIC:
-        if exp is None:
+        if exp is AUTO:
             exp = floor(log10(abs(num)))
         base = 10
     elif format_mode is FormatMode.ENGINEERING:
-        if exp is not None:
+        if exp is not AUTO:
             if exp % 3 != 0:
                 warnings.warn(f'Attempt to set exponent explicity to a '
                               f'non-integer multiple of 3 in engineering '
@@ -102,7 +102,7 @@ def get_mantissa_exp_base(num: float,
                 exp = ((exp + 1) // 3) * 3
         base = 10
     elif format_mode is FormatMode.BINARY:
-        if exp is None:
+        if exp is AUTO:
             exp = floor(log2(abs(num)))
             if alternate_mode:
                 exp = (exp // 10) * 10
@@ -154,12 +154,12 @@ def get_round_digit(top_digit: int, bottom_digit: int,
     # TODO: Decide on default precision/sig figs.  Minimum round-trippable or
     #  hard-coded to 6?
     if prec_mode is PrecMode.SIG_FIG:
-        if prec is None:
-            prec = top_digit - bottom_digit + 1  # 6
+        if prec is AUTO:
+            prec = top_digit - bottom_digit + 1
         round_digit = top_digit - (prec - 1)
     elif prec_mode is PrecMode.PREC:
-        if prec is None:
-            round_digit = bottom_digit  # -6
+        if prec is AUTO:
+            round_digit = bottom_digit
         else:
             round_digit = -prec
     else:
