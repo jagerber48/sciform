@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import unittest
 
 from sciform import sfloat
+from sciform.sfloat import GlobalDefaultsContext
 
 
 @dataclass
@@ -461,6 +462,24 @@ class TestFormatting(unittest.TestCase):
         }
 
         self.do_test_case_dict(cases_dict)
+
+    def test_global_defaults_context(self):
+        num = sfloat(123.456)
+        before_str = f'{num}'
+        with GlobalDefaultsContext(sign_mode='+',
+                                   format_mode='e',
+                                   prec_mode='!',
+                                   prec=2,
+                                   decimal_separator=','):
+            during_str = f'{num}'
+        after_str = f'{num}'
+
+        expected_before_str = '123.456'
+        expected_during_str = '+1,2e+02'
+
+        self.assertEqual(before_str, expected_before_str)
+        self.assertEqual(during_str, expected_during_str)
+        self.assertEqual(after_str, expected_before_str)
 
     def test_format(self):
         self.do_test_case_dict(fmtcases)
