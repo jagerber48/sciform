@@ -161,28 +161,28 @@ Supported translations:
 
 SI Prefixes:
 
-| Exponent Value   | Prefix Name | Prefix |
-|------------------|-------------|--------|
-| 10<sup>+30</sup> | Quetta      | Q      |
-| 10<sup>+27</sup> | Ronna       | R      |
-| 10<sup>+24</sup> | Yotta       | Y      |
-| 10<sup>+21</sup> | Zetta       | Z      |
-| 10<sup>+18</sup> | Exa         | E      |
-| 10<sup>+15</sup> | Peta        | P      |
-| 10<sup>+12</sup> | Tera        | T      | 
-| 10<sup>+9</sup>  | Giga        | G      |
-| 10<sup>+6</sup>  | Mega        | M      |
-| 10<sup>+3</sup>  | Kilo        | k      |
-| 10<sup>-3</sup>  | milli       | m      |
-| 10<sup>-6</sup>  | micro       | u      |
-| 10<sup>-9</sup>  | nano        | n      |
-| 10<sup>-12</sup> | pico        | p      |
-| 10<sup>-15</sup> | femto       | f      |
-| 10<sup>-18</sup> | atto        | a      |
-| 10<sup>-21</sup> | zepto       | z      |
-| 10<sup>-24</sup> | yocto       | y      |
-| 10<sup>-27</sup> | ronto       | r      |
-| 10<sup>-30</sup> | quecto      | q      |
+| Exponent Value   | Prefix Name | Prefix   |
+|------------------|-------------|----------|
+| 10<sup>+30</sup> | Quetta      | Q        |
+| 10<sup>+27</sup> | Ronna       | R        |
+| 10<sup>+24</sup> | Yotta       | Y        |
+| 10<sup>+21</sup> | Zetta       | Z        |
+| 10<sup>+18</sup> | Exa         | E        |
+| 10<sup>+15</sup> | Peta        | P        |
+| 10<sup>+12</sup> | Tera        | T        | 
+| 10<sup>+9</sup>  | Giga        | G        |
+| 10<sup>+6</sup>  | Mega        | M        |
+| 10<sup>+3</sup>  | Kilo        | k        |
+| 10<sup>-3</sup>  | milli       | m        |
+| 10<sup>-6</sup>  | micro       | &micro;  |
+| 10<sup>-9</sup>  | nano        | n        |
+| 10<sup>-12</sup> | pico        | p        |
+| 10<sup>-15</sup> | femto       | f        |
+| 10<sup>-18</sup> | atto        | a        |
+| 10<sup>-21</sup> | zepto       | z        |
+| 10<sup>-24</sup> | yocto       | y        |
+| 10<sup>-27</sup> | ronto       | r        |
+| 10<sup>-30</sup> | quecto      | q        |
 
 IEC Prefixes:
 
