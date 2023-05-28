@@ -1,13 +1,11 @@
-from sciform import sfloat
-from sciform.sfloat import GlobalDefaultsContext
+from sciform import format_val_unc
 
 
 def main():
-    num = sfloat(123.456)
-    with GlobalDefaultsContext(include_c=True):
-        num_str = f'{num:e-2p}'
-
-    print(f'{num_str=}')
+    val = float('nan')
+    unc = float('nan')
+    print(format_val_unc(val, unc, '0=0_._!2rp'))
+    expected_str = '(1+/-1)e-01'
 
 
 if __name__ == "__main__":

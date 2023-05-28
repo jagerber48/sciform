@@ -318,6 +318,11 @@ def update_global_defaults(new_fmt_spec: Optional[FormatSpec] = None,
     FMT_SPEC_GLOBAL_DEFAULTS.update(**kwargs)
 
 
+def reset_global_defaults():
+    global FMT_SPEC_GLOBAL_DEFAULTS
+    FMT_SPEC_GLOBAL_DEFAULTS = FMT_SPEC_PKG_DEFAULTS
+
+
 # TODO: Not possible to specify exp directly if nothing is specified between
 #       exp and sign and top digit place.
 pattern = re.compile(r'''^
@@ -328,9 +333,9 @@ pattern = re.compile(r'''^
                          (?P<thousands_separator>[n,.s_])?                     
                          (?P<decimal_separator>[.,])?            
                          (?P<thousandths_separator>[ns_])?                  
-                         (?:(?P<prec_mode>[.!])(?P<prec>-?\d+))?
+                         (?:(?P<prec_mode>[.!])(?P<prec>[+-]?\d+))?
                          (?P<format_mode>[fF%eErRbB])?
-                         (?P<exp>[+-]\d+)?
+                         (?:x(?P<exp>[+-]?\d+))?
                          (?P<prefix_mode>p)?
                          $''', re.VERBOSE)
 

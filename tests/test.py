@@ -1,112 +1,6 @@
-from dataclasses import dataclass
 import unittest
 
-from sciform import sfloat
-from sciform.sfloat import GlobalDefaultsContext
-
-
-@dataclass
-class SingleFloatCase:
-    num: float
-    fmt_spec_result_mapping: dict[str, str]
-
-
-fmtcases: dict[float, dict[str, str]] = {
-    123.456: {'': '123.456',
-              'f': '123.456',
-              'e': '1.23456e+02',
-              'r': '123.456e+00',
-              '#r': '0.123456e+03',
-              '.3': '123.456',
-              '.3f': '123.456',
-              '.3e': '1.235e+02',
-              '.3r': '123.456e+00',
-              '#.3r': '0.123e+03',
-              '!3': '123',
-              '!3f': '123',
-              '!3e': '1.23e+02',
-              '!3r': '123e+00',
-              '#!3r': '0.123e+03',
-              '+': '+123.456',
-              '+f': '+123.456',
-              '+e': '+1.23456e+02',
-              '+r': '+123.456e+00',
-              '+#r': '+0.123456e+03',
-              ' ': ' 123.456',
-              ' f': ' 123.456',
-              ' e': ' 1.23456e+02',
-              ' r': ' 123.456e+00',
-              ' #r': ' 0.123456e+03',
-              '4': '  123.456',
-              '4f': '  123.456',
-              '4e': '    1.23456e+02',
-              '4r': '  123.456e+00',
-              '#4r': '    0.123456e+03',
-              },
-    -0.031415: {'': '-0.031415',
-                'f': '-0.031415',
-                'e': '-3.1415e-02',
-                'r': '-31.415e-03',
-                '#r': '-31.415e-03',
-                '.3': '-0.031',
-                '.3f': '-0.031',
-                '.3e': '-3.141e-02',
-                '.3r': '-31.415e-03',
-                '#.3r': '-31.415e-03',
-                '!3': '-0.0314',
-                '!3f': '-0.0314',
-                '!3e': '-3.14e-02',
-                '!3r': '-31.4e-03',
-                '#!3r': '-31.4e-03',
-                '+': '-0.031415',
-                '+f': '-0.031415',
-                '+e': '-3.1415e-02',
-                '+r': '-31.415e-03',
-                '+#r': '-31.415e-03',
-                ' ': '-0.031415',
-                ' f': '-0.031415',
-                ' e': '-3.1415e-02',
-                ' r': '-31.415e-03',
-                ' #r': '-31.415e-03',
-                '4': '-    0.031415',
-                '4f': '-    0.031415',
-                '4e': '-    3.1415e-02',
-                '4r': '-   31.415e-03',
-                '#4r': '-   31.415e-03',
-                '%': '-3.1415%'
-                },
-    0: {'': '0',
-        'f': '0',
-        'e': '0e+00',
-        'r': '0e+00',
-        '#r': '0e+00',
-        '.3': '0.000',
-        '.3f': '0.000',
-        '.3e': '0.000e+00',
-        '.3r': '0.000e+00',
-        '#.3r': '0.000e+00',
-        '!3': '0.00',
-        '!3f': '0.00',
-        '!3e': '0.00e+00',
-        '!3r': '0.00e+00',
-        '#!3r': '0.00e+00',
-        '0=2.3': '000.000',
-        '0=2.3f': '000.000',
-        '0=2.3e': '000.000e+00',
-        '0=2.3r': '000.000e+00',
-        '0=#2.3r': '000.000e+00',
-        '0=2!3': '000.00',
-        '0=2!3f': '000.00',
-        '0=2!3e': '000.00e+00',
-        '0=2!3r': '000.00e+00',
-        '0=#2!3r': '000.00e+00'},
-    float('nan'): {'': 'nan',
-                   'E': 'NAN'},
-    float('inf'): {'': 'inf',
-                   'E': 'INF'},
-    float('-inf'): {'': '-inf',
-                    'E': '-INF'}
-}
+from sciform import sfloat, GlobalDefaultsContext, vufloat
 
 
 class TestFormatting(unittest.TestCase):
@@ -121,6 +15,18 @@ class TestFormatting(unittest.TestCase):
                                   expected_num_str=expected_num_str,
                                   actual_num_str=snum_str):
                     self.assertEqual(snum_str, expected_num_str)
+
+    def do_unc_val_test_case_dict(
+            self,
+            cases_dict: dict[tuple[float, float], dict[str, str]]):
+        for (val, unc), fmt_dict in cases_dict.items():
+            for format_spec, expected_str in fmt_dict.items():
+                vunum = vufloat(val, unc)
+                vunum_str = f'{vunum:{format_spec}}'
+                with self.subTest(val=val, unc=unc, format_spec=format_spec,
+                                  expected_str=expected_str,
+                                  actual_str=vunum_str):
+                    self.assertEqual(vunum_str, expected_str)
 
     def test_fixed_point(self):
         cases_dict: dict[float, dict[str, str]] = {
@@ -362,6 +268,61 @@ class TestFormatting(unittest.TestCase):
 
         self.do_test_case_dict(cases_dict)
 
+    def test_zero(self):
+        cases_dict = {
+            0: {
+                '': '0',
+                'f': '0',
+                'e': '0e+00',
+                'r': '0e+00',
+                '#r': '0e+00',
+                '.3': '0.000',
+                '.3f': '0.000',
+                '.3e': '0.000e+00',
+                '.3r': '0.000e+00',
+                '#.3r': '0.000e+00',
+                '!3': '0.00',
+                '!3f': '0.00',
+                '!3e': '0.00e+00',
+                '!3r': '0.00e+00',
+                '#!3r': '0.00e+00',
+                '0=2.3': '000.000',
+                '0=2.3f': '000.000',
+                '0=2.3e': '000.000e+00',
+                '0=2.3r': '000.000e+00',
+                '0=#2.3r': '000.000e+00',
+                '0=2!3': '000.00',
+                '0=2!3f': '000.00',
+                '0=2!3e': '000.00e+00',
+                '0=2!3r': '000.00e+00',
+                '0=#2!3r': '000.00e+00'
+            }
+        }
+        self.do_test_case_dict(cases_dict)
+
+    def test_non_finite(self):
+        cases_dict = {
+            float('nan'): {
+                '': 'nan',
+                'f': 'nan',
+                'F': 'NAN',
+                'E': 'NAN'
+            },
+            float('inf'): {
+                '': 'inf',
+                'f': 'inf',
+                'F': 'INF',
+                'E': 'INF'
+            },
+            float('-inf'): {
+                '': '-inf',
+                'f': '-inf',
+                'F': '-INF',
+                'E': '-INF'
+            }
+        }
+        self.do_test_case_dict(cases_dict)
+
     def test_separators(self):
         cases_dict: dict[float, dict[str, str]] = {
             123456.654321: {
@@ -391,6 +352,67 @@ class TestFormatting(unittest.TestCase):
                 '.,_': '12.345,543_21',
                 '_,_': '12_345,543_21',
                 's,s': '12 345,543 21',
+            }
+        }
+
+        self.do_test_case_dict(cases_dict)
+
+    def test_signs(self):
+        cases_dict: dict[float, dict[str, str]] = {
+            +1: {
+                '': '1',
+                '-': '1',
+                '+': '+1',
+                ' ': ' 1'
+            },
+            -1: {
+                '': '-1',
+                '-': '-1',
+                '+': '-1',
+                ' ': '-1'
+            },
+            +0.0: {
+                '': '0',
+                '-': '0',
+                '+': '+0',
+                ' ': ' 0'
+            },
+            -0.0: {
+                '': '0',
+                '-': '0',
+                '+': '+0',
+                ' ': ' 0'
+            }
+        }
+
+        self.do_test_case_dict(cases_dict)
+
+    def test_capitalization(self):
+        cases_dict: dict[float, dict[str, str]] = {
+            16180.33: {
+                'e': '1.618033e+04',
+                'E': '1.618033E+04',
+                'r': '16.18033e+03',
+                'R': '16.18033E+03'
+            },
+            1024: {
+                '!3b': '1.00b+10',
+                '!3B': '1.00B+10'
+            }
+        }
+
+        self.do_test_case_dict(cases_dict)
+
+    def test_padding(self):
+        cases_dict: dict[float, dict[str, str]] = {
+            12: {
+                '': '12',
+                '4': '   12',
+                '4!3e': '    1.20e+01',
+                ' =4': '   12',
+                ' =4!3e': '    1.20e+01',
+                '0=4': '00012',
+                '0=4!3e': '00001.20e+01'
             }
         }
 
@@ -484,7 +506,7 @@ class TestFormatting(unittest.TestCase):
     def test_c_prefix(self):
         num = sfloat(123.456)
         with GlobalDefaultsContext(include_c=True):
-            num_str = f'{num:e-2p}'
+            num_str = f'{num:ex-2p}'
 
         expected_num_str = '12345.6 c'
 
@@ -500,11 +522,17 @@ class TestFormatting(unittest.TestCase):
 
         with GlobalDefaultsContext(include_small_si_prefixes=True):
             for exp, expected_num_str in cases_dict.items():
-                num_str = f'{num:e{exp:+02}p}'
+                num_str = f'{num:ex{exp:+}p}'
                 self.assertEqual(num_str, expected_num_str)
 
-    def test_format(self):
-        self.do_test_case_dict(fmtcases)
+    def test_val_unc_rounding(self):
+        cases_dict = {
+            (0.0999, 0.0999): {
+                '!1e': '(1 +/- 1)e-01'},
+            (0.0999, 0.999): {
+                '!1e': '(0 +/- 1)e+00'}
+        }
+        self.do_unc_val_test_case_dict(cases_dict)
 
 
 if __name__ == '__main__':
