@@ -318,6 +318,8 @@ def update_global_defaults(new_fmt_spec: Optional[FormatSpec] = None,
     FMT_SPEC_GLOBAL_DEFAULTS.update(**kwargs)
 
 
+# TODO: Not possible to specify exp directly if nothing is specified between
+#       exp and sign and top digit place.
 pattern = re.compile(r'''^
                          (?:(?P<fill>[ 0])=)?
                          (?P<sign>[+\- ])?

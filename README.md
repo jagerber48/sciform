@@ -114,10 +114,21 @@ These incompatibilities are captured in a section below.
 
 The `sciform` format specification mini language is given by:
 ```
-[fill "="][sign]["#"][fill_top_digit]
-[thousands_separator][decimal_separator][thousandths_separator]
-[prec_mode precision][format_mode][exp][prefix_mode]
+    format_spec            ::=  [fill "="][sign]["#"][fill_top_digit][thousands_separator][decimal_separator][thousandths_separator][prec_mode precision][format_mode][exp][prefix_mode]
+    
+    fill                   ::=  "0" | " "
+    sign                   ::=  "+" | "-" | " "
+    fill_top_digit         ::=  digit+
+    thousands_separator    ::=  "n" | "." | "," | "s" | "_"
+    decimal_separator      ::=  "." | ","
+    thousandths_separator  ::=  "n" | "s" | "_" 
+    prec_mode              ::=  "!" | "."
+    prec                   ::=  -?digit+
+    format_mode            ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" | "b" | "B" |
+    exp                    ::=  [+-]digit+
+    prefix_mode            ::=  p
 ```
+
 Where the terms are described in the table below.
 
 The `sciform` FSML is accessed via the `sfloat` object. Regular built-in
