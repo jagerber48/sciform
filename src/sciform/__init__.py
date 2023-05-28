@@ -1,4 +1,4 @@
-__version__ = "0.6.1"
+__version__ = "0.7.0"
 
 from sciform.sfloat import sfloat, GlobalDefaultsContext, format_float
 from sciform.format_spec import update_global_defaults, reset_global_defaults
