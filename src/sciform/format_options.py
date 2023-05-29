@@ -283,9 +283,10 @@ class FormatOptions:
             extra_iec_prefixes: dict[int, str] = None,
     ):
         return cls(
-            fill_mode=fill_mode or template.fill_mode,
+            fill_mode=template.fill_mode if fill_mode is None else fill_mode,
             sign_mode=sign_mode or template.sign_mode,
-            top_dig_place=top_dig_place or template.top_dig_place,
+            top_dig_place=(template.top_dig_place if top_dig_place is None
+                           else top_dig_place),
             upper_separator=(upper_separator or
                              template.upper_separator),
             decimal_separator=(decimal_separator or
@@ -293,11 +294,11 @@ class FormatOptions:
             lower_separator=(lower_separator or
                              template.lower_separator),
             round_mode=round_mode or template.round_mode,
-            precision=precision or template.precision,
+            precision=template.precision if precision is None else precision,
             format_mode=format_mode or template.format_mode,
             capital_exp_char=(capital_exp_char or
                               template.capital_exp_char),
-            exp=exp or template.exp,
+            exp=template.exp if exp is None else exp,
             use_prefix=use_prefix or template.use_prefix,
             extra_si_prefixes=(extra_si_prefixes or
                                template.extra_si_prefixes),
