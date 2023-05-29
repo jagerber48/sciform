@@ -13,7 +13,7 @@ from sciform.types import (_FILL_TYPES,
 AUTO = object()
 
 
-def option_warn_str(value, options: Literal):
+def option_warn_str(value, options: type(Literal)):
     return f'Flag \'{value}\' not in {get_args(options)}.'
 
 

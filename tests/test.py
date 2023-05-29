@@ -4,6 +4,8 @@ from sciform import sfloat, GlobalDefaultsContext, vufloat
 
 
 class TestFormatting(unittest.TestCase):
+    # TODO: Test PERCENT format mode
+    # TODO: Test direct call to format float (i.e. not via sfloat or Formatter)
     def do_test_case_dict(self, cases_dict: dict[float, dict[str, str]]):
         for num, fmt_dict in cases_dict.items():
             for format_spec, expected_num_str in fmt_dict.items():
