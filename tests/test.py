@@ -4,8 +4,6 @@ from sciform import sfloat, GlobalDefaultsContext, vufloat
 
 
 class TestFormatting(unittest.TestCase):
-    # TODO: exp symbol capitalization
-
     def do_test_case_dict(self, cases_dict: dict[float, dict[str, str]]):
         for num, fmt_dict in cases_dict.items():
             for format_spec, expected_num_str in fmt_dict.items():
@@ -76,9 +74,9 @@ class TestFormatting(unittest.TestCase):
         cases_dict: dict[float, dict[str, str]] = {
             123.456: {
                 'e': '1.23456e+02',
-                '.-3e': '0e+00',  # TODO: What actually is expected here?
-                '.-2e': '0e+00',  # TODO: What actually is expected here?
-                '.-1e': '0e+00',  # TODO: What actually is expected here?
+                '.-3e': '0e+00',
+                '.-2e': '0e+00',
+                '.-1e': '0e+00',
                 '.0e': '1e+02',
                 '.1e': '1.2e+02',
                 '.2e': '1.23e+02',
@@ -94,8 +92,8 @@ class TestFormatting(unittest.TestCase):
             },
             0.00062607: {
                 'e': '6.2607e-04',
-                '.-2e': '0e+00',  # TODO: What actually is expected here?
-                '.-1e': '0e+00',  # TODO: This is a problem I think
+                '.-2e': '0e+00',
+                '.-1e': '0e+00',
                 '.0e': '6e-04',
                 '.1e': '6.3e-04',
                 '.2e': '6.26e-04',
@@ -118,9 +116,9 @@ class TestFormatting(unittest.TestCase):
         cases_dict: dict[float, dict[str, str]] = {
             123.456: {
                 'r': '123.456e+00',
-                '.-3r': '0e+00',  # TODO: What actually is expected here?
-                '.-2r': '100e+00',  # TODO: What actually is expected here?
-                '.-1r': '120e+00',  # TODO: What actually is expected here?
+                '.-3r': '0e+00',
+                '.-2r': '100e+00',
+                '.-1r': '120e+00',
                 '.0r': '123e+00',
                 '.1r': '123.5e+00',
                 '.2r': '123.46e+00',
@@ -136,9 +134,9 @@ class TestFormatting(unittest.TestCase):
             },
             1234.56: {
                 'r': '1.23456e+03',
-                '.-3r': '0e+00',  # TODO: What actually is expected here?
-                '.-2r': '0e+00',  # TODO: What actually is expected here?
-                '.-1r': '0e+00',  # TODO: What actually is expected here?
+                '.-3r': '0e+00',
+                '.-2r': '0e+00',
+                '.-1r': '0e+00',
                 '.0r': '1e+03',
                 '.1r': '1.2e+03',
                 '.2r': '1.23e+03',
@@ -155,9 +153,9 @@ class TestFormatting(unittest.TestCase):
             },
             12345.6: {
                 'r': '12.3456e+03',
-                '.-3r': '0e+00',  # TODO: What actually is expected here?
-                '.-2r': '0e+00',  # TODO: What actually is expected here?
-                '.-1r': '10e+03',  # TODO: What actually is expected here?
+                '.-3r': '0e+00',
+                '.-2r': '0e+00',
+                '.-1r': '10e+03',
                 '.0r': '12e+03',
                 '.1r': '12.3e+03',
                 '.2r': '12.35e+03',
@@ -180,10 +178,10 @@ class TestFormatting(unittest.TestCase):
         cases_dict: dict[float, dict[str, str]] = {
             123.456: {
                 '#r': '0.123456e+03',
-                '#.-3r': '0e+00',  # TODO: What actually is expected here?
-                '#.-2r': '0e+00',  # TODO: What actually is expected here?
-                '#.-1r': '0e+00',  # TODO: What actually is expected here?
-                '#.0r': '0e+00',  # TODO: What actually is expected here?
+                '#.-3r': '0e+00',
+                '#.-2r': '0e+00',
+                '#.-1r': '0e+00',
+                '#.0r': '0e+00',
                 '#.1r': '0.1e+03',
                 '#.2r': '0.12e+03',
                 '#.3r': '0.123e+03',
@@ -198,9 +196,9 @@ class TestFormatting(unittest.TestCase):
             },
             1234.56: {
                 '#r': '1.23456e+03',
-                '#.-3r': '0e+00',  # TODO: What actually is expected here?
-                '#.-2r': '0e+00',  # TODO: What actually is expected here?
-                '#.-1r': '0e+00',  # TODO: What actually is expected here?
+                '#.-3r': '0e+00',
+                '#.-2r': '0e+00',
+                '#.-1r': '0e+00',
                 '#.0r': '1e+03',
                 '#.1r': '1.2e+03',
                 '#.2r': '1.23e+03',
@@ -217,9 +215,9 @@ class TestFormatting(unittest.TestCase):
             },
             12345.6: {
                 '#r': '12.3456e+03',
-                '#.-3r': '0e+00',  # TODO: What actually is expected here?
-                '#.-2r': '0e+00',  # TODO: What actually is expected here?
-                '#.-1r': '10e+03',  # TODO: What actually is expected here?
+                '#.-3r': '0e+00',
+                '#.-2r': '0e+00',
+                '#.-1r': '10e+03', 
                 '#.0r': '12e+03',
                 '#.1r': '12.3e+03',
                 '#.2r': '12.35e+03',
