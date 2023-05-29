@@ -1,6 +1,6 @@
 import re
 
-from sciform.modes import PrecMode, SignMode
+from sciform.modes import RoundMode, SignMode
 from sciform.format_utils import (get_round_digit, get_top_and_bottom_digit,
                                   get_top_digit, get_mantissa_exp_base)
 from sciform.format_spec import parse_format_spec, pattern, FormatSpec
@@ -25,7 +25,7 @@ def format_val_unc(val: float, unc: float, fmt: str):
 
     unc_top_digit, unc_bottom_digit = get_top_and_bottom_digit(unc)
     round_digit = get_round_digit(unc_top_digit, unc_bottom_digit,
-                                  format_spec.prec, PrecMode.SIG_FIG)
+                                  format_spec.prec, RoundMode.SIG_FIG)
 
     unc_rounded = round(unc, -round_digit)
     val_rounded = round(val, -round_digit)
@@ -36,7 +36,7 @@ def format_val_unc(val: float, unc: float, fmt: str):
     '''
     unc_top_digit, unc_bottom_digit = get_top_and_bottom_digit(unc_rounded)
     round_digit = get_round_digit(unc_top_digit, unc_bottom_digit,
-                                  format_spec.prec, PrecMode.SIG_FIG)
+                                  format_spec.prec, RoundMode.SIG_FIG)
 
     unc_rounded = round(unc_rounded, -round_digit)
     val_rounded = round(val_rounded, -round_digit)
@@ -74,7 +74,7 @@ def format_val_unc(val: float, unc: float, fmt: str):
         thousands_separator=format_spec.thousands_separator,
         decimal_separator=format_spec.decimal_separator,
         thousandths_separator=format_spec.thousandths_separator,
-        prec_mode=PrecMode.PREC,
+        prec_mode=RoundMode.PREC,
         prec=prec,
         format_mode=format_spec.format_mode,
         capital_exp_char=format_spec.capital_exp_char,
@@ -94,7 +94,7 @@ def format_val_unc(val: float, unc: float, fmt: str):
         thousands_separator=format_spec.thousands_separator,
         decimal_separator=format_spec.decimal_separator,
         thousandths_separator=format_spec.thousandths_separator,
-        prec_mode=PrecMode.PREC,
+        prec_mode=RoundMode.PREC,
         prec=prec,
         format_mode=format_spec.format_mode,
         capital_exp_char=format_spec.capital_exp_char,
@@ -137,7 +137,7 @@ def format_val_unc(val: float, unc: float, fmt: str):
 
 class vufloat:
     """
-    Here we do not inherit from float and we do not support float operations.
+    Here we do not inherit from float, and we do not support float operations.
     This class is purely for the convenience of formatting value/uncertainty
     pairs. Mathematical operations are not supported on vufloat objects because
     the effect of such operations on the uncertainties is non-trivial. For the

@@ -3,8 +3,8 @@ import re
 from warnings import warn
 from copy import copy
 
-from sciform.modes import (FillMode, FormatMode, PrecMode, SignMode,
-                           GroupingSeparator, DecimalSeparator, AUTO)
+from sciform.modes import (FillMode, FormatMode, RoundMode, SignMode,
+                           GroupingSeparator, AUTO)
 
 
 class FormatSpec:
@@ -18,7 +18,7 @@ class FormatSpec:
             thousands_separator: Union[str, GroupingSeparator],
             decimal_separator: Union[str, DecimalSeparator],
             thousandths_separator: Union[str, GroupingSeparator],
-            prec_mode: Union[str, PrecMode],
+            prec_mode: Union[str, RoundMode],
             prec: Union[int, type(AUTO)],
             format_mode: Union[str, FormatMode],
             capital_exp_char: bool,
@@ -57,9 +57,9 @@ class FormatSpec:
         self.thousandths_separator = thousandths_separator
 
         if isinstance(prec_mode, str):
-            prec_mode = PrecMode.from_flag(prec_mode)
+            prec_mode = RoundMode.from_flag(prec_mode)
 
-        if prec_mode is PrecMode.SIG_FIG:
+        if prec_mode is RoundMode.SIG_FIG:
             # Validate prec >= 1 for SIG_FIG mode
             if isinstance(prec, int):
                 if prec < 1:
@@ -143,7 +143,7 @@ class FormatSpec:
             thousands_separator: Union[str, GroupingSeparator] = None,
             decimal_separator: Union[str, DecimalSeparator] = None,
             thousandths_separator: Union[str, GroupingSeparator] = None,
-            prec_mode: Union[str, PrecMode] = None,
+            prec_mode: Union[str, RoundMode] = None,
             prec: Union[int, type(AUTO)] = None,
             format_mode: Union[str, FormatMode] = None,
             capital_exp_char: bool = None,
@@ -189,7 +189,7 @@ class FormatSpec:
             thousands_separator: Union[str, GroupingSeparator] = None,
             decimal_separator: Union[str, DecimalSeparator] = None,
             thousandths_separator: Union[str, GroupingSeparator] = None,
-            prec_mode: Union[str, PrecMode] = None,
+            prec_mode: Union[str, RoundMode] = None,
             prec: Union[int, type(AUTO)] = None,
             format_mode: Union[str, FormatMode] = None,
             capital_exp_char: bool = None,
@@ -212,7 +212,7 @@ class FormatSpec:
         self.thousandths_separator = (thousandths_separator
                                       or self.thousandths_separator)
 
-        if prec_mode is PrecMode.SIG_FIG:
+        if prec_mode is RoundMode.SIG_FIG:
             # Validate prec >= 1 for SIG_FIG mode
             if isinstance(prec, int):
                 if prec < 1:
@@ -285,10 +285,10 @@ FMT_SPEC_PKG_DEFAULTS = FormatSpec(
     sign_mode=SignMode.NEGATIVE,
     alternate_mode=False,
     top_dig_place=0,
-    thousands_separator=GroupingSeparator.NO_GROUPING,
+    thousands_separator=GroupingSeparator.NONE,
     decimal_separator=DecimalSeparator.POINT,
-    thousandths_separator=GroupingSeparator.NO_GROUPING,
-    prec_mode=PrecMode.SIG_FIG,
+    thousandths_separator=GroupingSeparator.NONE,
+    prec_mode=RoundMode.SIG_FIG,
     prec=AUTO,
     format_mode=FormatMode.FIXEDPOINT,
     capital_exp_char=False,

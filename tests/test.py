@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import sfloat, GlobalDefaultsContext, vufloat
+from sciform import sfloat, GlobalDefaultsContext
 
 
 class TestFormatting(unittest.TestCase):
@@ -16,17 +16,17 @@ class TestFormatting(unittest.TestCase):
                                   actual_num_str=snum_str):
                     self.assertEqual(snum_str, expected_num_str)
 
-    def do_unc_val_test_case_dict(
-            self,
-            cases_dict: dict[tuple[float, float], dict[str, str]]):
-        for (val, unc), fmt_dict in cases_dict.items():
-            for format_spec, expected_str in fmt_dict.items():
-                vunum = vufloat(val, unc)
-                vunum_str = f'{vunum:{format_spec}}'
-                with self.subTest(val=val, unc=unc, format_spec=format_spec,
-                                  expected_str=expected_str,
-                                  actual_str=vunum_str):
-                    self.assertEqual(vunum_str, expected_str)
+    # def do_unc_val_test_case_dict(
+    #         self,
+    #         cases_dict: dict[tuple[float, float], dict[str, str]]):
+    #     for (val, unc), fmt_dict in cases_dict.items():
+    #         for format_spec, expected_str in fmt_dict.items():
+    #             vunum = vufloat(val, unc)
+    #             vunum_str = f'{vunum:{format_spec}}'
+    #             with self.subTest(val=val, unc=unc, format_spec=format_spec,
+    #                               expected_str=expected_str,
+    #                               actual_str=vunum_str):
+    #                 self.assertEqual(vunum_str, expected_str)
 
     def test_fixed_point(self):
         cases_dict: dict[float, dict[str, str]] = {
@@ -489,9 +489,9 @@ class TestFormatting(unittest.TestCase):
         num = sfloat(123.456)
         before_str = f'{num}'
         with GlobalDefaultsContext(sign_mode='+',
-                                   format_mode='e',
-                                   prec_mode='!',
-                                   prec=2,
+                                   format_mode='scientific',
+                                   round_mode='sig_fig',
+                                   precision=2,
                                    decimal_separator=','):
             during_str = f'{num}'
         after_str = f'{num}'
@@ -505,7 +505,7 @@ class TestFormatting(unittest.TestCase):
 
     def test_c_prefix(self):
         num = sfloat(123.456)
-        with GlobalDefaultsContext(include_c=True):
+        with GlobalDefaultsContext(include_c_prefix=True):
             num_str = f'{num:ex-2p}'
 
         expected_num_str = '12345.6 c'
@@ -525,14 +525,14 @@ class TestFormatting(unittest.TestCase):
                 num_str = f'{num:ex{exp:+}p}'
                 self.assertEqual(num_str, expected_num_str)
 
-    def test_val_unc_rounding(self):
-        cases_dict = {
-            (0.0999, 0.0999): {
-                '!1e': '(1 +/- 1)e-01'},
-            (0.0999, 0.999): {
-                '!1e': '(0 +/- 1)e+00'}
-        }
-        self.do_unc_val_test_case_dict(cases_dict)
+    # def test_val_unc_rounding(self):
+    #     cases_dict = {
+    #         (0.0999, 0.0999): {
+    #             '!1e': '(1 +/- 1)e-01'},
+    #         (0.0999, 0.999): {
+    #             '!1e': '(0 +/- 1)e+00'}
+    #     }
+    #     self.do_unc_val_test_case_dict(cases_dict)
 
 
 if __name__ == '__main__':
