@@ -1,4 +1,4 @@
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 from sciform.sfloat import sfloat
 from sciform.format_options import (get_global_defaults,
