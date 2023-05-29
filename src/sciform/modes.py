@@ -1,7 +1,20 @@
+from typing import get_args, Literal, Union
 from enum import Enum
+
+from sciform.types import (_FILL_TYPES,
+                           _SIGN_TYPES,
+                           _UPPER_SEP_TYPES,
+                           _DECIMAL_SEP_TYPES,
+                           _LOWER_SEP_TYPES,
+                           _ROUND_TYPES,
+                           _FORMAT_TYPES)
 
 
 AUTO = object()
+
+
+def option_warn_str(value, options: Literal):
+    return f'Flag \'{value}\' not in {get_args(options)}.'
 
 
 class FillMode(Enum):
@@ -18,76 +31,43 @@ class FillMode(Enum):
             raise ValueError(f'Unhandled fill mode \'{fill_mode}\'.')
 
     @staticmethod
-    def from_flag(flag: str) -> 'FillMode':
-        if flag == ' ':
-            return FillMode.SPACE
-        elif flag == '0':
+    def from_flag(flag: _FILL_TYPES) -> 'FillMode':
+        if flag in [0, '0', 'zero']:
             return FillMode.ZERO
+        elif flag in [' ', 'space']:
+            return FillMode.SPACE
         else:
-            raise ValueError(f'Unhandled fill mode flag \'{flag}\'.')
-
-
-class FormatMode(Enum):
-    FIXEDPOINT = 'fixed_point'
-    SCIENTIFIC = 'scientific'
-    ENGINEERING = 'engineering'
-    BINARY = 'binary'
-
-    @staticmethod
-    def from_flag(flag: str) -> 'FormatMode':
-        if flag in ['f', 'F', '%']:
-            return FormatMode.FIXEDPOINT
-        elif flag in ['e', 'E']:
-            return FormatMode.SCIENTIFIC
-        elif flag in ['r', 'R']:
-            return FormatMode.ENGINEERING
-        elif flag in ['b', 'B']:
-            return FormatMode.BINARY
-        else:
-            raise ValueError(f'Invalid format mode flag \'{flag}\'.')
+            raise ValueError(option_warn_str(flag, _FILL_TYPES))
 
 
 class SignMode(Enum):
-    ALWAYS = 'always'
     NEGATIVE = 'negative'
+    ALWAYS = 'always'
     SPACE = 'space'
 
     @staticmethod
-    def from_flag(flag: str):
-        if flag == '-':
+    def from_flag(flag: _SIGN_TYPES):
+        if flag in ['-', 'negative']:
             return SignMode.NEGATIVE
-        elif flag == '+':
+        elif flag in ['+', 'always']:
             return SignMode.ALWAYS
-        elif flag == ' ':
+        elif flag in [' ', 'space']:
             return SignMode.SPACE
         else:
-            raise ValueError(f'Invalid sign mode flag {flag}.')
-
-
-class PrecMode(Enum):
-    SIG_FIG = 'sig_fig'
-    PREC = 'prec'
-
-    @staticmethod
-    def from_flag(flag: str):
-        if flag == '!':
-            return PrecMode.SIG_FIG
-        elif flag == '.':
-            return PrecMode.PREC
-        else:
-            raise ValueError(f'Invalid precision type flag {flag}.')
+            raise ValueError(option_warn_str(flag, _SIGN_TYPES))
 
 
 class GroupingSeparator(Enum):
-    NO_GROUPING = 'no_grouping'
+    NONE = 'no_grouping'
     COMMA = 'comma'
     POINT = 'point'
     UNDERSCORE = 'underscore'
     SPACE = 'space'
 
     @staticmethod
-    def to_char(grouping_separator: 'GroupingSeparator') -> str:
-        if grouping_separator is GroupingSeparator.NO_GROUPING:
+    def to_char(
+            grouping_separator: 'GroupingSeparator') -> str:
+        if grouping_separator is GroupingSeparator.NONE:
             return ''
         elif grouping_separator is GroupingSeparator.COMMA:
             return ','
@@ -102,41 +82,67 @@ class GroupingSeparator(Enum):
                              f'{grouping_separator}')
 
     @staticmethod
-    def from_flag(flag: str):
-        if flag == 'n':
-            return GroupingSeparator.NO_GROUPING
-        elif flag == ',':
+    def from_flag(flag: Union[_UPPER_SEP_TYPES,
+                              _DECIMAL_SEP_TYPES,
+                              _LOWER_SEP_TYPES]):
+        if flag in ['', 'none']:
+            return GroupingSeparator.NONE
+        elif flag in [',', 'comma']:
             return GroupingSeparator.COMMA
-        elif flag == '.':
+        elif flag in ['.', 'point']:
             return GroupingSeparator.POINT
-        elif flag == '_':
+        elif flag in ['_', 'underscore']:
             return GroupingSeparator.UNDERSCORE
-        elif flag == 's':
+        elif flag in [' ', 'space']:
             return GroupingSeparator.SPACE
         else:
-            raise ValueError(f'Invalid grouping separator flag '
-                             f'\'{flag}\'.')
+            raise ValueError(
+                option_warn_str(flag,
+                                Union[_UPPER_SEP_TYPES,
+                                      _DECIMAL_SEP_TYPES,
+                                      _LOWER_SEP_TYPES]
+                                )
+            )
 
 
-class DecimalSeparator(Enum):
-    POINT = 'point'
-    COMMA = 'comma'
-
-    @staticmethod
-    def to_char(decimal_separator: 'DecimalSeparator'):
-        if decimal_separator is DecimalSeparator.POINT:
-            return '.'
-        elif decimal_separator is DecimalSeparator.COMMA:
-            return ','
-        else:
-            raise ValueError(f'Invalid decimal separator: '
-                             f'{decimal_separator}.')
+class RoundMode(Enum):
+    SIG_FIG = 'sig_fig'
+    PREC = 'prec'
 
     @staticmethod
-    def from_flag(flag: str):
-        if flag == '.':
-            return DecimalSeparator.POINT
-        elif flag == ',':
-            return DecimalSeparator.COMMA
+    def from_flag(flag: _ROUND_TYPES):
+        if flag == 'sig_fig':
+            return RoundMode.SIG_FIG
+        elif flag == 'precision':
+            return RoundMode.PREC
         else:
-            raise ValueError(f'Invalid decimal separator flag {flag}.')
+            raise ValueError(option_warn_str(flag, _ROUND_TYPES))
+
+
+class FormatMode(Enum):
+    FIXEDPOINT = 'fixed_point'
+    PERCENT = 'percent'
+    SCIENTIFIC = 'scientific'
+    ENGINEERING = 'engineering'
+    ENGINEERING_SHIFTED = 'engineering_shifted'
+    BINARY = 'binary'
+    BINARY_IEC = 'binary_iec'
+
+    @staticmethod
+    def from_flag(flag: _FORMAT_TYPES) -> 'FormatMode':
+        if flag == 'fixed_point':
+            return FormatMode.FIXEDPOINT
+        elif flag == 'percent':
+            return FormatMode.PERCENT
+        elif flag == 'scientific':
+            return FormatMode.SCIENTIFIC
+        elif flag == 'engineering':
+            return FormatMode.ENGINEERING
+        elif flag == 'engineering_shifted':
+            return FormatMode.ENGINEERING_SHIFTED
+        elif flag == 'binary':
+            return FormatMode.BINARY
+        elif flag == 'binary_iec':
+            return FormatMode.BINARY_IEC
+        else:
+            raise ValueError(option_warn_str(flag, _FORMAT_TYPES))

@@ -1,13 +1,9 @@
 import sys
 from typing import Union
 from math import floor, log10, log2, isfinite
-import warnings
-import logging
+from warnings import warn
 
-from sciform.modes import FormatMode, PrecMode, SignMode, AUTO
-
-
-logger = logging.getLogger(__name__)
+from sciform.modes import FormatMode, RoundMode, SignMode, AUTO
 
 
 def get_top_digit(num: float) -> int:
@@ -61,54 +57,52 @@ def get_top_and_bottom_digit(num: float) -> tuple[int, int]:
     return get_top_digit(num), get_bottom_digit(num)
 
 
-def get_mantissa_exp_base(num: float,
-                          format_mode: FormatMode,
-                          exp: Union[int, type(AUTO)] = None,
-                          alternate_mode: bool = False) -> (float, int, int):
+def get_mantissa_exp_base(
+        num: float,
+        format_mode: FormatMode,
+        exp: Union[int, type(AUTO)] = None) -> (float, int, int):
     if num == 0:
         if exp is AUTO:
             exp = 0
-        if format_mode is FormatMode.BINARY:
-            base = 2
-        else:
-            base = 10
+        base = 10
     elif format_mode is FormatMode.FIXEDPOINT:
         if exp is not AUTO:
             if exp != 0:
-                warnings.warn('Attempt to set exponent explicity in fixed '
-                              'point exponent mode. coercing exponent to 0.')
+                warn('Attempt to set exponent explicity in fixed point '
+                     'exponent mode. Coercing exponent to 0.')
         exp = 0
         base = 10
     elif format_mode is FormatMode.SCIENTIFIC:
         if exp is AUTO:
             exp = floor(log10(abs(num)))
         base = 10
-    elif format_mode is FormatMode.ENGINEERING:
+    elif (format_mode is FormatMode.ENGINEERING
+          or format_mode is FormatMode.ENGINEERING_SHIFTED):
         if exp is not AUTO:
             if exp % 3 != 0:
-                warnings.warn(f'Attempt to set exponent explicity to a '
-                              f'non-integer multiple of 3 in engineering '
-                              f'mode. Coercing to the next lower multiple of '
-                              f'3.')
+                warn(f'Attempt to set exponent explicity to a non-integer '
+                     f'multiple of 3 in engineering mode. Coercing to the '
+                     f'next lower multiple of 3.')
                 exp = (exp // 3) * 3
-            if alternate_mode:
-                logger.debug(f'Alternate mode ignored when setting exponent '
-                             f'explicitly.')
+            if format_mode is FormatMode.ENGINEERING_SHIFTED:
+                warn(f'Engineering shifted mode is ignored when setting '
+                     f'exponent explicitly.')
         else:
             exp = floor(log10(abs(num)))
-            if not alternate_mode:
+            if format_mode is FormatMode.ENGINEERING:
                 exp = (exp // 3) * 3
             else:
                 exp = ((exp + 1) // 3) * 3
         base = 10
-    elif format_mode is FormatMode.BINARY:
+    elif (format_mode is FormatMode.BINARY
+          or format_mode is FormatMode.BINARY_IEC):
         if exp is AUTO:
             exp = floor(log2(abs(num)))
-            if alternate_mode:
+            if format_mode is FormatMode.BINARY_IEC:
                 exp = (exp // 10) * 10
-        elif alternate_mode:
-            logger.debug(f'Alternate mode ignored when setting exponent '
-                         f'explicitly.')
+        elif format_mode is FormatMode.BINARY_IEC:
+            warn(f'Binary IEC mode is ignored when setting exponent '
+                 f'explicitly')
         base = 2
     else:
         raise ValueError(f'Unhandled format mode: {format_mode}')
@@ -120,13 +114,16 @@ def get_mantissa_exp_base(num: float,
 
 def get_exp_str(exp: int, format_mode: FormatMode,
                 capital_exp_char: bool) -> str:
-    if format_mode is format_mode.FIXEDPOINT:
+    if (format_mode is format_mode.FIXEDPOINT
+            or format_mode is format_mode.PERCENT):
         exp_str = ''
     elif (format_mode is FormatMode.SCIENTIFIC
-          or format_mode is FormatMode.ENGINEERING):
+          or format_mode is FormatMode.ENGINEERING
+          or format_mode is FormatMode.ENGINEERING_SHIFTED):
         exp_char = 'E' if capital_exp_char else 'e'
         exp_str = f'{exp_char}{exp:+03d}'
-    elif format_mode is FormatMode.BINARY:
+    elif (format_mode is FormatMode.BINARY
+          or format_mode is FormatMode.BINARY_IEC):
         exp_char = 'B' if capital_exp_char else 'b'
         exp_str = f'{exp_char}{exp:+03d}'
     else:
@@ -150,14 +147,14 @@ def get_sign_str(num: float, sign_mode: SignMode) -> str:
 
 
 def get_round_digit(top_digit: int, bottom_digit: int,
-                    prec: Union[int, type(AUTO)], prec_mode: PrecMode) -> int:
+                    prec: Union[int, type(AUTO)], prec_mode: RoundMode) -> int:
     # TODO: Decide on default precision/sig figs.  Minimum round-trippable or
     #  hard-coded to 6?
-    if prec_mode is PrecMode.SIG_FIG:
+    if prec_mode is RoundMode.SIG_FIG:
         if prec is AUTO:
             prec = top_digit - bottom_digit + 1
         round_digit = top_digit - (prec - 1)
-    elif prec_mode is PrecMode.PREC:
+    elif prec_mode is RoundMode.PREC:
         if prec is AUTO:
             round_digit = bottom_digit
         else:

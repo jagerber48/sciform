@@ -489,9 +489,9 @@ class TestFormatting(unittest.TestCase):
         num = sfloat(123.456)
         before_str = f'{num}'
         with GlobalDefaultsContext(sign_mode='+',
-                                   format_mode='e',
-                                   prec_mode='!',
-                                   prec=2,
+                                   format_mode='scientific',
+                                   round_mode='sig_fig',
+                                   precision=2,
                                    decimal_separator=','):
             during_str = f'{num}'
         after_str = f'{num}'
@@ -505,7 +505,7 @@ class TestFormatting(unittest.TestCase):
 
     def test_c_prefix(self):
         num = sfloat(123.456)
-        with GlobalDefaultsContext(include_c=True):
+        with GlobalDefaultsContext(include_c_prefix=True):
             num_str = f'{num:ex-2p}'
 
         expected_num_str = '12345.6 c'
