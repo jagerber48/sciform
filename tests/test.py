@@ -1,6 +1,7 @@
 import unittest
 
-from sciform import sfloat, GlobalDefaultsContext, vufloat
+from sciform import (sfloat, GlobalDefaultsContext, vufloat, FormatMode,
+                     GroupingSeparator, RoundMode, SignMode)
 
 
 class TestFormatting(unittest.TestCase):
@@ -488,11 +489,11 @@ class TestFormatting(unittest.TestCase):
     def test_global_defaults_context(self):
         num = sfloat(123.456)
         before_str = f'{num}'
-        with GlobalDefaultsContext(sign_mode='+',
-                                   format_mode='scientific',
-                                   round_mode='sig_fig',
+        with GlobalDefaultsContext(sign_mode=SignMode.ALWAYS,
+                                   format_mode=FormatMode.SCIENTIFIC,
+                                   round_mode=RoundMode.SIG_FIG,
                                    precision=2,
-                                   decimal_separator=','):
+                                   decimal_separator=GroupingSeparator.COMMA):
             during_str = f'{num}'
         after_str = f'{num}'
 

@@ -42,9 +42,9 @@ def add_group_chars_between_numbers(string, group_char='_',
 
 
 def add_separators(float_string,
-                   thousands_separator='',
+                   upper_separator='',
                    decimal_separator='.',
-                   thousandths_separator='',
+                   lower_separator='',
                    group_size=3):
     dec_split = float_string.split('.')
     thousands_string = dec_split[0]
@@ -56,10 +56,10 @@ def add_separators(float_string,
         raise ValueError
 
     thousands_grouped_string = add_group_chars_between_numbers(
-        thousands_string, thousands_separator, GroupingDirection.BACKWARD,
+        thousands_string, upper_separator, GroupingDirection.BACKWARD,
         group_size)
     thousandths_grouped_string = add_group_chars_between_numbers(
-        thousandths_string, thousandths_separator, GroupingDirection.FORWARD,
+        thousandths_string, lower_separator, GroupingDirection.FORWARD,
         group_size)
     if len(thousandths_string) > 0:
         grouped_str = (f'{thousands_grouped_string}'

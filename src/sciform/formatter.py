@@ -1,11 +1,9 @@
 from typing import Union
 from math import isfinite
 
-from sciform.types import (_FILL_TYPES, _SIGN_TYPES, _UPPER_SEP_TYPES,
-                           _DECIMAL_SEP_TYPES, _LOWER_SEP_TYPES, _ROUND_TYPES,
-                           _FORMAT_TYPES)
-from sciform.modes import (FillMode, GroupingSeparator,
-                           FormatMode, AUTO)
+from sciform.modes import (FillMode, SignMode, UpperGroupingSeparators,
+                           DecimalGroupingSeparators, LowerGroupingSeparators,
+                           RoundMode, FormatMode, AUTO)
 from sciform.format_options import FormatOptions
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_and_bottom_digit,
@@ -67,15 +65,13 @@ def format_float(num: float, options: FormatOptions) -> str:
 
     # TODO: Think about the interaction between separators and fill
     #  characters
-    thousands_separator = GroupingSeparator.to_char(
-        options.upper_separator)
-    decimal_separator = GroupingSeparator.to_char(options.decimal_separator)
-    thousandths_separator = GroupingSeparator.to_char(
-        options.lower_separator)
+    upper_separator = options.upper_separator.to_char()
+    decimal_separator = options.decimal_separator.to_char()
+    lower_separator = options.lower_separator.to_char()
     mantissa_str = add_separators(mantissa_str,
-                                  thousands_separator,
+                                  upper_separator,
                                   decimal_separator,
-                                  thousandths_separator,
+                                  lower_separator,
                                   group_size=3)
 
     full_str = f'{mantissa_str}{exp_str}'
@@ -95,15 +91,15 @@ class Formatter:
     def __init__(
             self,
             *,
-            fill_mode: _FILL_TYPES = None,
-            sign_mode: _SIGN_TYPES = None,
+            fill_mode: FillMode = None,
+            sign_mode: SignMode = None,
             top_dig_place: int = None,
-            upper_separator: _UPPER_SEP_TYPES = None,
-            decimal_separator: _DECIMAL_SEP_TYPES = None,
-            lower_separator: _LOWER_SEP_TYPES = None,
-            round_mode: _ROUND_TYPES = None,
+            upper_separator: UpperGroupingSeparators = None,
+            decimal_separator: DecimalGroupingSeparators = None,
+            lower_separator: LowerGroupingSeparators = None,
+            round_mode: RoundMode = None,
             precision: Union[int, type(AUTO)] = None,
-            format_mode: _FORMAT_TYPES = None,
+            format_mode: FormatMode = None,
             capital_exp_char: bool = None,
             exp: Union[int, type(AUTO)] = None,
             use_prefix: bool = None,
@@ -111,8 +107,9 @@ class Formatter:
             include_c_prefix: bool = False,
             include_small_si_prefixes: bool = False,
             extra_iec_prefixes: dict[int, str] = None,
-            defaults: FormatOptions = None):
-        self.options = FormatOptions.from_user_input(
+            default_options: FormatOptions = None):
+        self.options = FormatOptions.from_template(
+            template=default_options,
             fill_mode=fill_mode,
             sign_mode=sign_mode,
             top_dig_place=top_dig_place,
@@ -126,11 +123,12 @@ class Formatter:
             exp=exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
-            include_c_prefix=include_c_prefix,
-            include_small_si_prefixes=include_small_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
-            defaults=defaults
         )
+        if include_c_prefix:
+            self.options.include_c_prefix()
+        if include_small_si_prefixes:
+            self.options.include_small_si_prefixes()
 
     def format(self, num: float):
         return format_float(num, self.options)
@@ -138,4 +136,4 @@ class Formatter:
     @classmethod
     def from_format_spec_str(cls, fmt: str):
         format_options = FormatOptions.from_format_spec_str(fmt)
-        return cls(defaults=format_options)
+        return cls(default_options=format_options)

@@ -1,13 +1,12 @@
-from typing import Union, Optional
+from typing import Union, Optional, get_args
 from dataclasses import dataclass
 import re
 from copy import copy
 
-from sciform.types import (_FILL_TYPES, _SIGN_TYPES, _UPPER_SEP_TYPES,
-                           _DECIMAL_SEP_TYPES, _LOWER_SEP_TYPES, _ROUND_TYPES,
-                           _FORMAT_TYPES)
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
-                           RoundMode, FormatMode, AUTO)
+                           UpperGroupingSeparators, LowerGroupingSeparators,
+                           DecimalGroupingSeparators, RoundMode, FormatMode,
+                           AUTO)
 
 
 @dataclass
@@ -15,9 +14,9 @@ class FormatOptions:
     fill_mode: FillMode
     sign_mode: SignMode
     top_dig_place: int
-    upper_separator: GroupingSeparator
-    decimal_separator: GroupingSeparator
-    lower_separator: GroupingSeparator
+    upper_separator: UpperGroupingSeparators
+    decimal_separator: DecimalGroupingSeparators
+    lower_separator: LowerGroupingSeparators
     round_mode: RoundMode
     precision: Union[int, type(AUTO)]
     format_mode: FormatMode
@@ -34,233 +33,39 @@ class FormatOptions:
                     raise ValueError(f'Precision must be >= 1 for sig fig '
                                      f'rounding, not {self.precision}.')
 
-    @classmethod
-    def from_user_input(
-            cls,
-            *,
-            fill_mode: _FILL_TYPES = None,
-            sign_mode: _SIGN_TYPES = None,
-            top_dig_place: int = None,
-            upper_separator: _UPPER_SEP_TYPES = None,
-            decimal_separator: _DECIMAL_SEP_TYPES = None,
-            lower_separator: _LOWER_SEP_TYPES = None,
-            round_mode: _ROUND_TYPES = None,
-            precision: Union[int, type(AUTO)] = None,
-            format_mode: _FORMAT_TYPES = None,
-            capital_exp_char: bool = None,
-            exp: Union[int, type(AUTO)] = None,
-            use_prefix: bool = None,
-            extra_si_prefixes: dict[int, str] = None,
-            include_c_prefix: bool = False,
-            include_small_si_prefixes: bool = False,
-            extra_iec_prefixes: dict[int, str] = None,
-            defaults: 'FormatOptions' = None):
-        if defaults is None:
-            defaults = DEFAULT_GLOBAL_OPTIONS
+        if self.upper_separator not in get_args(UpperGroupingSeparators):
+            raise ValueError(f'upper_separator {self.upper_separator} not in '
+                             f'{get_args(UpperGroupingSeparators)}.')
 
-        if fill_mode is not None:
-            fill_mode = FillMode.from_flag(fill_mode)
-        else:
-            fill_mode = defaults.fill_mode
+        if self.decimal_separator not in get_args(DecimalGroupingSeparators):
+            raise ValueError(f'decimal_separator {self.upper_separator} not '
+                             f'in {get_args(DecimalGroupingSeparators)}.')
 
-        if sign_mode is not None:
-            sign_mode = SignMode.from_flag(sign_mode)
-        else:
-            sign_mode = defaults.sign_mode
+        if self.lower_separator not in get_args(LowerGroupingSeparators):
+            raise ValueError(f'lower_separator {self.lower_separator} not in '
+                             f'{get_args(LowerGroupingSeparators)}.')
 
-        if top_dig_place is None:
-            top_dig_place = defaults.top_dig_place
+        if self.upper_separator is self.decimal_separator:
+            raise ValueError(f'upper_separator and decimal_separator '
+                             f'{self.upper_separator} cannot be equal.')
 
-        if upper_separator is not None:
-            upper_separator = GroupingSeparator.from_flag(
-                upper_separator
-            )
-        else:
-            upper_separator = defaults.upper_separator
+    def add_si_prefix(self, exp: int, prefix: str):
+        self.extra_si_prefixes[exp] = prefix
 
-        if decimal_separator is not None:
-            decimal_separator = GroupingSeparator.from_flag(
-                decimal_separator
-            )
-        else:
-            decimal_separator = defaults.decimal_separator
+    def add_iec_prefix(self, exp: int, prefix: str):
+        self.extra_iec_prefixes[exp] = prefix
 
-        if lower_separator is not None:
-            lower_separator = GroupingSeparator.from_flag(
-                lower_separator
-            )
-        else:
-            lower_separator = defaults.lower_separator
+    def add_si_prefixes(self, si_prefixes: dict[int, str]):
+        self.extra_si_prefixes.update(si_prefixes)
 
-        if round_mode is not None:
-            round_mode = RoundMode.from_flag(round_mode)
-        else:
-            round_mode = defaults.round_mode
+    def add_iec_prefixes(self, iec_prefixes: dict[int, str]):
+        self.extra_iec_prefixes.update(iec_prefixes)
 
-        if precision is None:
-            precision = defaults.precision
+    def include_c_prefix(self):
+        self.add_si_prefix(exp=-2, prefix='c')
 
-        if format_mode is not None:
-            format_mode = FormatMode.from_flag(format_mode)
-        else:
-            format_mode = defaults.format_mode
-
-        if capital_exp_char is None:
-            capital_exp_char = defaults.capital_exp_char
-
-        if exp is None:
-            exp = defaults.exp
-
-        if use_prefix is None:
-            use_prefix = defaults.use_prefix
-
-        if extra_si_prefixes is None:
-            if include_c_prefix:
-                extra_si_prefixes = {-2: 'c'}
-            if include_small_si_prefixes:
-                extra_si_prefixes = {-2: 'c', -1: 'd',
-                                     +1: 'da', +2: 'h'}
-        if extra_si_prefixes is None:
-            extra_si_prefixes = defaults.extra_si_prefixes
-
-        if extra_iec_prefixes is None:
-            extra_iec_prefixes = defaults.extra_iec_prefixes
-
-        return cls(
-            fill_mode=fill_mode,
-            sign_mode=sign_mode,
-            top_dig_place=top_dig_place,
-            upper_separator=upper_separator,
-            decimal_separator=decimal_separator,
-            lower_separator=lower_separator,
-            round_mode=round_mode,
-            precision=precision,
-            format_mode=format_mode,
-            capital_exp_char=capital_exp_char,
-            exp=exp,
-            use_prefix=use_prefix,
-            extra_si_prefixes=extra_si_prefixes,
-            extra_iec_prefixes=extra_iec_prefixes
-        )
-
-    pattern = re.compile(r'''^
-                             (?:(?P<fill>[ 0])=)?
-                             (?P<sign>[+\- ])?
-                             (?P<alternate>\#)?                         
-                             (?P<top_dig_place>\d+)?
-                             (?P<upper_separator>[n,.s_])?                     
-                             (?P<decimal_separator>[.,])?            
-                             (?P<lower_separator>[ns_])?                  
-                             (?:(?P<round_mode>[.!])(?P<prec>[+-]?\d+))?
-                             (?P<format_mode>[fF%eErRbB])?
-                             (?:x(?P<exp>[+-]?\d+))?
-                             (?P<prefix_mode>p)?
-                             $''', re.VERBOSE)
-
-    @classmethod
-    def from_format_spec_str(cls, fmt: str) -> 'FormatOptions':
-        # TODO: Catch more formatting errors as early as possible
-        match = cls.pattern.match(fmt)
-        if match is None:
-            raise ValueError(f'Invalid format specifier: \'{fmt}\'')
-
-        fill_mode = match.group('fill')
-        sign_mode = match.group('sign')
-        alternate_mode = match.group('alternate')
-        top_dig_place = match.group('top_dig_place')
-        if top_dig_place is not None:
-            top_dig_place = int(top_dig_place)
-
-        upper_separator = match.group('upper_separator')
-        if upper_separator is not None:
-            if upper_separator == 'n':
-                upper_separator = 'none'
-            elif upper_separator == ',':
-                upper_separator = ','
-            elif upper_separator == '.':
-                upper_separator = '.'
-            elif upper_separator == 's':
-                upper_separator = ' '
-            elif upper_separator == '_':
-                upper_separator = '_'
-            else:
-                raise NotImplemented
-
-        decimal_separator = match.group('decimal_separator')
-        if decimal_separator is not None:
-            if decimal_separator == '.':
-                decimal_separator = '.'
-            elif decimal_separator == ',':
-                decimal_separator = ','
-            else:
-                raise NotImplemented
-
-        lower_separator = match.group('lower_separator')
-        if lower_separator is not None:
-            if lower_separator == 'n':
-                lower_separator = 'none'
-            elif lower_separator == 's':
-                lower_separator = ' '
-            elif lower_separator == '_':
-                lower_separator = '_'
-            else:
-                raise NotImplemented
-
-        round_mode = match.group('round_mode')
-        if round_mode is not None:
-            if round_mode == '!':
-                round_mode = 'sig_fig'
-            elif round_mode == '.':
-                round_mode = 'precision'
-            else:
-                raise NotImplemented
-
-        # TODO Think about default values here, force a default precision or
-        #  number of sig figs?
-        precision = match.group('prec')
-        if precision is not None:
-            precision = int(precision)
-
-        format_mode = match.group('format_mode')
-        if format_mode is not None:
-            capital_exp_char = format_mode.isupper()
-            if format_mode in ['f', 'F']:
-                format_mode = 'fixed_point'
-            elif format_mode in ['e', 'E']:
-                format_mode = 'scientific'
-            elif format_mode in ['r', 'R']:
-                if alternate_mode:
-                    format_mode = 'engineering_shifted'
-                else:
-                    format_mode = 'engineering'
-            elif format_mode in ['b', 'B']:
-                if alternate_mode:
-                    format_mode = 'binary_iec'
-                else:
-                    format_mode = 'binary'
-        else:
-            capital_exp_char = None
-
-        exp = match.group('exp')
-        if exp is not None:
-            exp = int(exp)
-
-        use_prefix = match.group('prefix_mode')
-
-        return cls.from_user_input(
-            fill_mode=fill_mode,
-            sign_mode=sign_mode,
-            top_dig_place=top_dig_place,
-            upper_separator=upper_separator,
-            decimal_separator=decimal_separator,
-            lower_separator=lower_separator,
-            round_mode=round_mode,
-            precision=precision,
-            format_mode=format_mode,
-            capital_exp_char=capital_exp_char,
-            exp=exp,
-            use_prefix=use_prefix
-        )
+    def include_small_si_prefixes(self):
+        self.add_si_prefixes({-2: 'c', -1: 'd', +1: 'da', +2: 'h'})
 
     @classmethod
     def from_template(
@@ -270,9 +75,9 @@ class FormatOptions:
             fill_mode: FillMode = None,
             sign_mode: SignMode = None,
             top_dig_place: int = None,
-            upper_separator: GroupingSeparator = None,
-            decimal_separator: GroupingSeparator = None,
-            lower_separator: GroupingSeparator = None,
+            upper_separator: UpperGroupingSeparators = None,
+            decimal_separator: DecimalGroupingSeparators = None,
+            lower_separator: LowerGroupingSeparators = None,
             round_mode: RoundMode = None,
             precision: Union[int, type(AUTO)] = None,
             format_mode: FormatMode = None,
@@ -301,9 +106,132 @@ class FormatOptions:
             exp=template.exp if exp is None else exp,
             use_prefix=use_prefix or template.use_prefix,
             extra_si_prefixes=(extra_si_prefixes or
-                               template.extra_si_prefixes),
+                               copy(template.extra_si_prefixes)),
             extra_iec_prefixes=(extra_iec_prefixes or
-                                extra_iec_prefixes)
+                                copy(template.extra_iec_prefixes))
+        )
+
+    pattern = re.compile(r'''^
+                             (?:(?P<fill_mode>[ 0])=)?
+                             (?P<sign_mode>[-+ ])?
+                             (?P<alternate_mode>\#)?                         
+                             (?P<top_dig_place>\d+)?
+                             (?P<upper_separator>[n,.s_])?                     
+                             (?P<decimal_separator>[.,])?            
+                             (?P<lower_separator>[ns_])?                  
+                             (?:(?P<round_mode>[.!])(?P<prec>[+-]?\d+))?
+                             (?P<format_mode>[fF%eErRbB])?
+                             (?:x(?P<exp>[+-]?\d+))?
+                             (?P<prefix_mode>p)?
+                             $''', re.VERBOSE)
+
+    fill_mode_mapping = {' ': FillMode.SPACE,
+                         '0': FillMode.ZERO,
+                         None: None}
+
+    sign_mode_mapping = {'-': SignMode.NEGATIVE,
+                         '+': SignMode.ALWAYS,
+                         ' ': SignMode.SPACE,
+                         None: None}
+
+    separator_mapping = {'n': GroupingSeparator.NONE,
+                         ',': GroupingSeparator.COMMA,
+                         '.': GroupingSeparator.POINT,
+                         's': GroupingSeparator.SPACE,
+                         '_': GroupingSeparator.UNDERSCORE,
+                         None: None}
+
+    round_mode_mapping = {'!': RoundMode.SIG_FIG,
+                          '.': RoundMode.PREC,
+                          None: None}
+
+    @classmethod
+    def from_format_spec_str(
+            cls,
+            fmt: str,
+            template: Optional['FormatOptions'] = None) -> 'FormatOptions':
+        # TODO: Catch more formatting errors as early as possible
+        match = cls.pattern.match(fmt)
+        if match is None:
+            raise ValueError(f'Invalid format specifier: \'{fmt}\'')
+
+        fill_mode_flag = match.group('fill_mode')
+        fill_mode = cls.fill_mode_mapping[fill_mode_flag]
+
+        sign_mode_flag = match.group('sign_mode')
+        sign_mode = cls.sign_mode_mapping[sign_mode_flag]
+
+        alternate_mode = match.group('alternate_mode')
+        if alternate_mode is not None:
+            alternate_mode = True
+
+        top_dig_place = match.group('top_dig_place')
+        if top_dig_place is not None:
+            top_dig_place = int(top_dig_place)
+
+        upper_separator_flag = match.group('upper_separator')
+        upper_separator = cls.separator_mapping[upper_separator_flag]
+
+        decimal_separator_flag = match.group('decimal_separator')
+        decimal_separator = cls.separator_mapping[decimal_separator_flag]
+
+        lower_separator_flag = match.group('lower_separator')
+        lower_separator = cls.separator_mapping[lower_separator_flag]
+
+        round_mode_flag = match.group('round_mode')
+        round_mode = cls.round_mode_mapping[round_mode_flag]
+
+        # TODO Think about default values here, force a default precision or
+        #  number of sig figs?
+        precision = match.group('prec')
+        if precision is not None:
+            precision = int(precision)
+
+        format_mode = match.group('format_mode')
+        if format_mode is not None:
+            capital_exp_char = format_mode.isupper()
+            if format_mode in ['f', 'F']:
+                format_mode = FormatMode.FIXEDPOINT
+            elif format_mode in ['e', 'E']:
+                format_mode = FormatMode.SCIENTIFIC
+            elif format_mode in ['r', 'R']:
+                if alternate_mode:
+                    format_mode = FormatMode.ENGINEERING_SHIFTED
+                else:
+                    format_mode = FormatMode.ENGINEERING
+            elif format_mode in ['b', 'B']:
+                if alternate_mode:
+                    format_mode = FormatMode.BINARY_IEC
+                else:
+                    format_mode = FormatMode.BINARY
+        else:
+            capital_exp_char = None
+
+        exp = match.group('exp')
+        if exp is not None:
+            exp = int(exp)
+
+        use_prefix = match.group('prefix_mode')
+        if use_prefix is not None:
+            use_prefix = True
+
+        if template is None:
+            template = DEFAULT_GLOBAL_OPTIONS
+
+        return cls.from_template(
+            template=template,
+            fill_mode=fill_mode,
+            sign_mode=sign_mode,
+            top_dig_place=top_dig_place,
+            upper_separator=upper_separator,
+            decimal_separator=decimal_separator,
+            lower_separator=lower_separator,
+            round_mode=round_mode,
+            precision=precision,
+            format_mode=format_mode,
+            capital_exp_char=capital_exp_char,
+            exp=exp,
+            use_prefix=use_prefix
         )
 
 
@@ -333,12 +261,19 @@ def get_global_defaults():
 
 
 def set_global_defaults(template: Optional[FormatOptions] = None,
+                        include_c_prefix: bool = False,
+                        include_small_si_prefixes: bool = False,
                         **kwargs):
     global DEFAULT_GLOBAL_OPTIONS
     if template is None:
         template = DEFAULT_GLOBAL_OPTIONS
-    new_default_options = FormatOptions.from_user_input(defaults=template,
-                                                        **kwargs)
+    new_default_options = FormatOptions.from_template(template=template,
+                                                      **kwargs)
+    if include_c_prefix:
+        new_default_options.include_c_prefix()
+    if include_small_si_prefixes:
+        new_default_options.include_small_si_prefixes()
+
     DEFAULT_GLOBAL_OPTIONS = new_default_options
 
 
@@ -356,7 +291,7 @@ class GlobalDefaultsContext:
         self.initial_global_defaults = None
 
     def __enter__(self):
-        self.initial_global_defaults = copy(get_global_defaults())
+        self.initial_global_defaults = get_global_defaults()
         set_global_defaults(self.template, **self.kwargs)
 
     def __exit__(self, exc_type, exc_value, exc_tb):
