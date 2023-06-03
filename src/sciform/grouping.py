@@ -47,24 +47,24 @@ def add_separators(float_string,
                    lower_separator='',
                    group_size=3):
     dec_split = float_string.split('.')
-    thousands_string = dec_split[0]
+    upper_string = dec_split[0]
     if len(dec_split) == 1:
-        thousandths_string = ''
+        lower_string = ''
     elif len(dec_split) == 2:
-        thousandths_string = dec_split[1]
+        lower_string = dec_split[1]
     else:
         raise ValueError
 
-    thousands_grouped_string = add_group_chars_between_numbers(
-        thousands_string, upper_separator, GroupingDirection.BACKWARD,
+    upper_grouped_string = add_group_chars_between_numbers(
+        upper_string, upper_separator, GroupingDirection.BACKWARD,
         group_size)
-    thousandths_grouped_string = add_group_chars_between_numbers(
-        thousandths_string, lower_separator, GroupingDirection.FORWARD,
+    lower_grouped_string = add_group_chars_between_numbers(
+        lower_string, lower_separator, GroupingDirection.FORWARD,
         group_size)
-    if len(thousandths_string) > 0:
-        grouped_str = (f'{thousands_grouped_string}'
+    if len(lower_string) > 0:
+        grouped_str = (f'{upper_grouped_string}'
                        f'{decimal_separator}'
-                       f'{thousandths_grouped_string}')
+                       f'{lower_grouped_string}')
     else:
-        grouped_str = thousands_grouped_string
+        grouped_str = upper_grouped_string
     return grouped_str
