@@ -337,7 +337,7 @@ Supported translations:
      - m
    * - 10\ :sup:`-6`
      - micro
-     - :math:`\mu`
+     - μ
    * - 10\ :sup:`-9`
      - nano
      - n
