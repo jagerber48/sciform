@@ -65,7 +65,8 @@ def get_mantissa_exp_base(
         if exp is AUTO:
             exp = 0
         base = 10
-    elif format_mode is FormatMode.FIXEDPOINT:
+    elif (format_mode is FormatMode.FIXEDPOINT
+          or format_mode is FormatMode.PERCENT):
         if exp is not AUTO:
             if exp != 0:
                 warn('Attempt to set exponent explicity in fixed point '

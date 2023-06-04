@@ -150,7 +150,7 @@ class FormatOptions:
             cls,
             fmt: str,
             template: Optional['FormatOptions'] = None) -> 'FormatOptions':
-        # TODO: Catch more formatting errors as early as possible
+
         match = cls.pattern.match(fmt)
         if match is None:
             raise ValueError(f'Invalid format specifier: \'{fmt}\'')
@@ -181,8 +181,6 @@ class FormatOptions:
         round_mode_flag = match.group('round_mode')
         round_mode = cls.round_mode_mapping[round_mode_flag]
 
-        # TODO Think about default values here, force a default precision or
-        #  number of sig figs?
         precision = match.group('prec')
         if precision is not None:
             precision = int(precision)
@@ -192,6 +190,8 @@ class FormatOptions:
             capital_exp_char = format_mode.isupper()
             if format_mode in ['f', 'F']:
                 format_mode = FormatMode.FIXEDPOINT
+            elif format_mode == '%':
+                format_mode = FormatMode.PERCENT
             elif format_mode in ['e', 'E']:
                 format_mode = FormatMode.SCIENTIFIC
             elif format_mode in ['r', 'R']:

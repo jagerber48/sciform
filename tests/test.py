@@ -5,7 +5,6 @@ from sciform import (sfloat, GlobalDefaultsContext, vufloat, FormatMode,
 
 
 class TestFormatting(unittest.TestCase):
-    # TODO: Test PERCENT format mode
     # TODO: Test direct call to format float (i.e. not via sfloat or Formatter)
     def do_test_case_dict(self, cases_dict: dict[float, dict[str, str]]):
         for num, fmt_dict in cases_dict.items():
@@ -68,6 +67,50 @@ class TestFormatting(unittest.TestCase):
                 '!4f': '0.0006261',
                 '!5f': '0.00062607',
                 '!6f': '0.000626070',
+            }
+        }
+
+        self.do_test_case_dict(cases_dict)
+
+    def test_percent(self):
+        cases_dict: dict[float, dict[str, str]] = {
+            0.123456: {
+                '%': '12.3456%',
+                '.-3%': '0%',
+                '.-2%': '0%',
+                '.-1%': '10%',
+                '.0%': '12%',
+                '.1%': '12.3%',
+                '.2%': '12.35%',
+                '.3%': '12.346%',
+                '.4%': '12.3456%',
+                '!1%': '10%',
+                '!2%': '12%',
+                '!3%': '12.3%',
+                '!4%': '12.35%',
+                '!5%': '12.346%',
+                '!6%': '12.3456%',
+                '!7%': '12.34560%'
+            },
+            0.00062607: {
+                '%': '0.062607%',
+                '.-1%': '0%',
+                '.0%': '0%',
+                '.1%': '0.1%',
+                '.2%': '0.06%',
+                '.3%': '0.063%',
+                '.4%': '0.0626%',
+                '.5%': '0.06261%',
+                '.6%': '0.062607%',
+                '.7%': '0.0626070%',
+                '.8%': '0.06260700%',
+                '.9%': '0.062607000%',
+                '!1%': '0.06%',
+                '!2%': '0.063%',
+                '!3%': '0.0626%',
+                '!4%': '0.06261%',
+                '!5%': '0.062607%',
+                '!6%': '0.0626070%',
             }
         }
 
