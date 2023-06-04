@@ -105,9 +105,9 @@ class FormatOptions:
                               template.capital_exp_char),
             exp=template.exp if exp is None else exp,
             use_prefix=use_prefix or template.use_prefix,
-            extra_si_prefixes=(extra_si_prefixes or
+            extra_si_prefixes=(copy(extra_si_prefixes) or
                                copy(template.extra_si_prefixes)),
-            extra_iec_prefixes=(extra_iec_prefixes or
+            extra_iec_prefixes=(copy(extra_iec_prefixes) or
                                 copy(template.extra_iec_prefixes))
         )
 
