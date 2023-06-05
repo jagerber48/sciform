@@ -147,6 +147,8 @@ translations, in addition to those provided by default.
 >>> print(sform(1300))
 1.270 Ki
 
+.. _rounding:
+
 Rounding
 ========
 
@@ -160,8 +162,8 @@ In some cases, the rounding results in a modification to the chosen
 exponent.
 This is taken into account before the final presentation.
 
-Significant Figure
-------------------
+Significant Figures
+-------------------
 
 For significant figure rounding, first the digits place for the
 most-significant digit is identified.
@@ -184,6 +186,8 @@ a number was rounded to just by looking at the resulting string.
 
 Here ``precision`` input is used to indicate how many significant
 figures should be included.
+for significant figure rounding, ``precision`` must be an integer
+greater than or equal 1.
 
 Precision
 ---------
@@ -201,6 +205,15 @@ precision presentation.
 ...                   precision=4)
 >>> print(sform(12345.678))
 12.3457e+03
+
+For precision rounding, ``precision`` can be any integer.
+
+>>> from sciform import RoundMode
+>>> sform = Formatter(format_mode=FormatMode.FIXEDPOINT,
+...                   round_mode=RoundMode.PREC,
+...                   precision=-2)
+>>> print(sform(12345.678))
+12300
 
 Separators
 ==========
@@ -274,3 +287,24 @@ The capitalization of the exponent character can be controlled
 ...                   capital_exp_char=True)
 >>> print(sform(1024))
 1B+10
+
+Left Filling
+============
+
+The :ref:`rounding` options described above can be used to control how
+many digits to the left of either the most-significant digit or the
+decimal point are displayed.
+It is also possible, using "fill" options, to add digits to the left of
+the most-significant digit.
+The ``fill_mode`` can be used to select either whitespaces ``' '`` or
+zeros ``'0'`` as fill characters.
+The ``top_dig_place`` option is used to indicate to which digit fill
+characters should be added.
+E.g. ``top_dig_place=4`` indicates fill characters should be added up
+to the 10\ :sup:`4` (ten-thousands) place.
+
+>>> from sciform import FillMode
+>>> sform = Formatter(fill_mode=FillMode.ZERO,
+...                   top_dig_place=4)
+>>> print(sform(42))
+00042
