@@ -119,6 +119,31 @@ nearest multiple of 3 or 10.
 >>> print(sform(123.456))
 0.123456e+03
 
+Prefix Mode
+===========
+
+Prefix mode enables the replacement of certain base-10 and binary
+exponents by alphabetic scientific SI or IEC prefixes outlined in
+:ref:`Supported Prefixes <prefixes>`.
+
+.. todo::
+   * prefix mode coerces scientific notation into engineering notation
+   * prefix mode coerces binary notation into binary iec notation
+   * handles values larger and smaller than largest and smallest
+     supported translations
+
+>>> sform = Formatter(format_mode=FormatMode.ENGINEERING,
+...                   use_prefix=True)
+>>> print(sform(4242.13))
+4.24213 k
+
+>>> sform = Formatter(format_mode=FormatMode.BINARY_IEC,
+...                   round_mode=RoundMode.SIG_FIG,
+...                   precision=4,
+...                   use_prefix=True)
+>>> print(sform(1300))
+1.270 Ki
+
 Rounding
 ========
 
@@ -176,18 +201,3 @@ precision presentation.
 
 
 
-Mode Enums
-==========
-
-Formatting is controlled by the :class:`sciform.FormatOptions` object
-
-.. autoclass:: sciform.FormatOptions()
-
-.. autoclass:: sciform.FillMode()
-   :members:
-
-.. autoclass:: sciform.SignMode()
-   :members:
-
-.. autoclass:: sciform.GroupingSeparator()
-   :members:

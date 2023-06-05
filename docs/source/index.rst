@@ -7,13 +7,14 @@ Welcome to sciform's documentation!
 ===================================
 
 .. toctree::
-   :titlesonly:
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
 
    usage
    Formatting Options
    format specification mini language
+   Supported Prefixes
+   api
 
 Indices and tables
 ==================
