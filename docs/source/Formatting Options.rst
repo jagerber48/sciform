@@ -308,3 +308,30 @@ to the 10\ :sup:`4` (ten-thousands) place.
 ...                   top_dig_place=4)
 >>> print(sform(42))
 00042
+
+Extra Prefixes
+==============
+
+In addition to the default prefixes, the user can include some
+additional standard prefixes as well as user-supplied prefixes.
+Standard additional SI prefixes are::
+
+   {-2: 'c', -1: 'd', +1: 'da', +2: 'h'}
+
+Here the integer keys indicate the exponent and the string values
+indicate the corresponding prefix.
+These additional prefixes can be included using the
+``add_small_si_prefixes`` options.
+Furthermore, just the ``c`` prefix can be included using the
+``add_c_prefix`` options.
+
+>>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC,
+...                   use_prefix=True,
+...                   add_c_prefix=True)
+>>> print(sform(0.025))
+2.5 c
+>>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC,
+...                   use_prefix=True,
+...                   add_small_si_prefixes=True)
+>>> print(sform(25))
+2.5 da
