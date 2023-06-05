@@ -125,6 +125,9 @@ Prefix Mode
 Prefix mode enables the replacement of certain base-10 and binary
 exponents by alphabetic scientific SI or IEC prefixes outlined in
 :ref:`Supported Prefixes <prefixes>`.
+Furthermore, it is possible to customize :class:`~sciform.Formatter`
+objects or the global configuration settings to map additional prefix
+translations, in addition to those provided by default.
 
 .. todo::
    * prefix mode coerces scientific notation into engineering notation
@@ -199,5 +202,75 @@ precision presentation.
 >>> print(sform(12345.678))
 12.3457e+03
 
+Separators
+==========
 
+``sciform`` provides support for some customization for separator
+characters within formatting strings.
+Different locales use different conventions for the symbol separating
+the integral and fractional part of a float number, called the decimal
+symbol.
+``sciform`` supports using a period ``'.'`` or comma ``','`` as the
+decimal symbol.
 
+Additionally, ``sciform`` also supports including separation characters
+between groups of three digits both above the decimal symbol and below
+the decimal symbols.
+No separator, ``','``, ``'.'``, ``' '``, ``'_'`` can all be used as
+"upper" separator characters and no separator, ``' '``, and ``'_'`` can
+all be used as "lower" separator characters.
+Note that the upper separator character must be different than the
+decimal separator.
+
+>>> from sciform import GroupingSeparator
+>>> sform = Formatter(upper_separator=GroupingSeparator.COMMA)
+>>> print(sform(12345678.987))
+12,345,678.987
+
+>>> from sciform import GroupingSeparator
+>>> sform = Formatter(upper_separator=GroupingSeparator.SPACE,
+...                   decimal_separator=GroupingSeparator.COMMA,
+...                   lower_separator=GroupingSeparator.UNDERSCORE)
+>>> print(sform(1234567.7654321))
+1 234 567,765_432_1
+
+Sign Mode
+=========
+
+``sciform`` provides control over the symbol used to indicate whether a
+float is positive or negative.
+In all cases a ``'-'`` sign is used for negative numbers.
+By default, positive numbers are formatted with no sign symbol.
+However, ``sciform`` includes a mode where positive numbers are always
+presented with a ``'+'`` symbol.
+``sciform`` also provides a mode where positive numbers include an extra
+whitespace in place of a sign symbol.
+This mode may be useful to match string lengths when positive and
+negatives numbers are being presented together, but without explicitly
+including a ``'+'`` symbol.
+Note that ``0`` is always considered positive.
+
+>>> from sciform import SignMode
+>>> sform = Formatter(sign_mode=SignMode.NEGATIVE)
+>>> print(sform(42))
+42
+>>> sform = Formatter(sign_mode=SignMode.ALWAYS)
+>>> print(sform(42))
++42
+>>> sform = Formatter(sign_mode=SignMode.SPACE)
+>>> print(sform(42))
+ 42
+
+Exponent Character Capitalization
+=================================
+
+The capitalization of the exponent character can be controlled
+
+>>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC,
+...                   capital_exp_char=True)
+>>> print(sform(42))
+4.2E+01
+>>> sform = Formatter(format_mode=FormatMode.BINARY,
+...                   capital_exp_char=True)
+>>> print(sform(1024))
+1B+10
