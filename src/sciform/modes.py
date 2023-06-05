@@ -2,7 +2,8 @@ from typing import get_args, Literal
 from enum import Enum
 
 
-AUTO = object()
+class AUTO:
+    pass
 
 
 def option_warn_str(value, options: type(Literal)):
@@ -10,7 +11,10 @@ def option_warn_str(value, options: type(Literal)):
 
 
 class FillMode(Enum):
+    #: Fill with white space
     SPACE = 'space'
+
+    #: Fill with zeros
     ZERO = 'zero'
 
     @staticmethod
@@ -24,16 +28,30 @@ class FillMode(Enum):
 
 
 class SignMode(Enum):
+    #: Only include sign symbol on negative numbers
     NEGATIVE = 'negative'
+
+    #: Always include sign symbol
     ALWAYS = 'always'
+
+    #: Include extra white space in front of positive numbers
     SPACE = 'space'
 
 
 class GroupingSeparator(Enum):
+    #: No separator
     NONE = 'no_grouping'
+
+    #: Comma separator (not valid as lower separator)
     COMMA = 'comma'
+
+    #: Point separator (not valid as lower separator)
     POINT = 'point'
+
+    #: Underscore separator
     UNDERSCORE = 'underscore'
+
+    # White space separator
     SPACE = 'space'
 
     def to_char(self) -> str:

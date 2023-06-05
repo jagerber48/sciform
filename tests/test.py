@@ -549,7 +549,7 @@ class TestFormatting(unittest.TestCase):
 
     def test_c_prefix(self):
         num = sfloat(123.456)
-        with GlobalDefaultsContext(include_c_prefix=True):
+        with GlobalDefaultsContext(add_c_prefix=True):
             num_str = f'{num:ex-2p}'
 
         expected_num_str = '12345.6 c'
@@ -564,7 +564,7 @@ class TestFormatting(unittest.TestCase):
                       +1: '12.3456 da',
                       +2: '1.23456 h'}
 
-        with GlobalDefaultsContext(include_small_si_prefixes=True):
+        with GlobalDefaultsContext(add_small_si_prefixes=True):
             for exp, expected_num_str in cases_dict.items():
                 num_str = f'{num:ex{exp:+}p}'
                 self.assertEqual(num_str, expected_num_str)

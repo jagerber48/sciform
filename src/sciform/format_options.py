@@ -1,5 +1,5 @@
 from typing import Union, Optional, get_args
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import re
 from copy import copy
 
@@ -9,8 +9,23 @@ from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            AUTO)
 
 
+# noinspection PyUnresolvedReferences
 @dataclass
 class FormatOptions:
+    """
+    Format options dataclass
+
+    :param fill_mode: :class:`sciform.FillMode` indicating whether to
+      fill with
+    :param sign_mode: SignMode.NEGATIVE indicates to include sign
+      symbols for negative numbers only. SignMode.POSITIVE indicates to
+      include sign symbols for all numbers. SignMode.SPACE indicates to
+      include an extra whitespace character for positive numbers instead
+      of a positive sign symbol.
+    :param top_dig_place: Digits place to which the string will be left
+      padded before the sign symbol.
+    """
+
     fill_mode: FillMode
     sign_mode: SignMode
     top_dig_place: int
@@ -25,8 +40,17 @@ class FormatOptions:
     use_prefix: bool
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
+    add_c_prefix: bool = field(default=False, repr=False,
+                               compare=False, hash=False)
+    add_small_si_prefixes: bool = field(default=False, repr=False,
+                                        compare=False, hash=False)
 
     def __post_init__(self):
+        if self.add_c_prefix:
+            self.do_add_c_prefix()
+        if self.add_small_si_prefixes:
+            self.do_add_small_si_prefixes()
+
         if self.round_mode is RoundMode.SIG_FIG:
             if isinstance(self.precision, int):
                 if self.precision < 1:
@@ -61,11 +85,17 @@ class FormatOptions:
     def add_iec_prefixes(self, iec_prefixes: dict[int, str]):
         self.extra_iec_prefixes.update(iec_prefixes)
 
-    def include_c_prefix(self):
+    def do_add_c_prefix(self):
         self.add_si_prefix(exp=-2, prefix='c')
 
-    def include_small_si_prefixes(self):
+    def do_add_small_si_prefixes(self):
         self.add_si_prefixes({-2: 'c', -1: 'd', +1: 'da', +2: 'h'})
+
+    def reset_si_prefixes(self):
+        self.extra_si_prefixes = dict()
+
+    def reset_iec_prefixes(self):
+        self.extra_iec_prefixes = dict()
 
     @classmethod
     def from_template(
@@ -86,6 +116,8 @@ class FormatOptions:
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
+            add_c_prefix: bool = False,
+            add_small_si_prefixes: bool = False
     ):
         return cls(
             fill_mode=template.fill_mode if fill_mode is None else fill_mode,
@@ -108,7 +140,9 @@ class FormatOptions:
             extra_si_prefixes=(copy(extra_si_prefixes) or
                                copy(template.extra_si_prefixes)),
             extra_iec_prefixes=(copy(extra_iec_prefixes) or
-                                copy(template.extra_iec_prefixes))
+                                copy(template.extra_iec_prefixes)),
+            add_c_prefix=add_c_prefix,
+            add_small_si_prefixes=add_small_si_prefixes
         )
 
     pattern = re.compile(r'''^
@@ -256,30 +290,43 @@ DEFAULT_GLOBAL_OPTIONS = FormatOptions.from_template(
     template=DEFAULT_PKG_OPTIONS)
 
 
-def get_global_defaults():
+def get_global_defaults() -> FormatOptions:
     return DEFAULT_GLOBAL_OPTIONS
 
 
 def set_global_defaults(template: Optional[FormatOptions] = None,
-                        include_c_prefix: bool = False,
-                        include_small_si_prefixes: bool = False,
                         **kwargs):
     global DEFAULT_GLOBAL_OPTIONS
     if template is None:
         template = DEFAULT_GLOBAL_OPTIONS
     new_default_options = FormatOptions.from_template(template=template,
                                                       **kwargs)
-    if include_c_prefix:
-        new_default_options.include_c_prefix()
-    if include_small_si_prefixes:
-        new_default_options.include_small_si_prefixes()
-
     DEFAULT_GLOBAL_OPTIONS = new_default_options
 
 
 def reset_global_defaults():
     global DEFAULT_GLOBAL_OPTIONS
     DEFAULT_GLOBAL_OPTIONS = DEFAULT_PKG_OPTIONS
+
+
+def global_add_c_prefix():
+    global_defaults = get_global_defaults()
+    global_defaults.do_add_c_prefix()
+
+
+def global_add_small_si_prefixes():
+    global_defaults = get_global_defaults()
+    global_defaults.do_add_small_si_prefixes()
+
+
+def global_reset_si_prefixes():
+    global_defaults = get_global_defaults()
+    global_defaults.reset_si_prefixes()
+
+
+def global_reset_iec_prefixes():
+    global_defaults = get_global_defaults()
+    global_defaults.reset_iec_prefixes()
 
 
 class GlobalDefaultsContext:
