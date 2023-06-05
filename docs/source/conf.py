@@ -3,6 +3,18 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import re
+from pathlib import Path
+init_path = Path(Path(__file__).parents[2], 'src', 'sciform', '__init__.py')
+with open(init_path, 'r') as f:
+    extracted_version = None
+    for line in f.readlines():
+        match = re.match(r'^__version__\s*=\s*(?P<version>("\d+\.\d+\.\d+"|\'\d+\.\d+\.\d+\')).*$', line)
+        if match is not None:
+            extracted_version = match.group('version')
+            break
+    if extracted_version is None:
+        raise RuntimeError("Unable to find version string.")
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -11,7 +23,7 @@ project = 'sciform'
 copyright = '2023, Justin Gerber'
 author = 'Justin Gerber'
 
-version = '0.10.0'
+version = extracted_version
 release = version
 
 # -- General configuration ---------------------------------------------------
