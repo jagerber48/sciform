@@ -2,13 +2,56 @@
 sciform
 =======
 
-This package is used to format floats into scientific presentation
-formats.
-Features include fixed point, and decimal and binary scientific and
-engineering notations.
+Overview
+--------
+
+``sciform`` is used to convert python float objects into strings
+according to a variety of user-selected scientific formatting options
+including fixed-pointa and decimal and binary scientific and engineering
+notations.
 Where possible, formatting follows documented standards such as those
 published by `BIPM <https://www.bipm.org/en/>`_ or
 `IEC <https://iec.ch/homepage>`_.
+``sciform`` provides certain options, such as engineering notation and
+well-controlled significant figure rounding, which are not provided by
+the python built-in
+`format specification mini-language (FSML) <https://docs.python.org/3/library/string.html#format-specification-mini-language>`_.
+
+Installation
+------------
+
+Install with pip::
+
+   pip install sciform
+
+Usage
+=====
+
+``sciform`` provides two primary methods for formatting floats into
+scientific formatting strings.
+The first is via the ``Formatter`` object and the second is using string
+formatting and the custom FSML with the ``sfloat`` object.
+
+>>> from sciform import Formatter, RoundMode, GroupingSeparator, FormatMode
+>>> sform = Formatter(round_mode=RoundMode.PREC,
+...                   precision=6,
+...                   upper_separator=GroupingSeparator.SPACE,
+...                   lower_separator=GroupingSeparator.SPACE)
+>>> print(sform(3.14159265359))
+3.141 593
+>>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
+...                   precision=4,
+...                   format_mode=FormatMode.ENGINEERING)
+>>> print(sform(123456.78))
+123.5e+03
+
+>>> from sciform import sfloat
+>>> num = sfloat(123456)
+>>> print(f'{num:_!2f}')
+120_000
+
+OLD
+===
 
 Floats are formatted into strings of the form::
 
