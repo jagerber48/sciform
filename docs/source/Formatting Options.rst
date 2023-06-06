@@ -1,3 +1,5 @@
+.. _formatting_options:
+
 ==================
 Formatting Options
 ==================
@@ -312,7 +314,7 @@ to the 10\ :sup:`4` (ten-thousands) place.
 Extra Prefixes
 ==============
 
-In addition to the default prefixes, the user can include some
+In addition to the :ref:`default prefixes <prefixes>`, the user can include some
 additional standard prefixes as well as user-supplied prefixes.
 Standard additional SI prefixes are::
 

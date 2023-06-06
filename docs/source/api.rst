@@ -1,14 +1,29 @@
+===
+API
+===
+
+.. module:: sciform
+
+Formatting is controlled by the :class:`Formatter` object.
+
+.. autoclass:: Formatter()
+
 
 Mode Enums
 ==========
 
-Formatting is controlled by the :class:`sciform.FormatOptions` object
 
-.. autoclass:: sciform.FillMode()
+.. autoclass:: FillMode()
    :members:
 
-.. autoclass:: sciform.SignMode()
+.. autoclass:: SignMode()
    :members:
 
-.. autoclass:: sciform.GroupingSeparator()
+.. autoclass:: GroupingSeparator()
+   :members:
+
+.. autoclass:: RoundMode()
+   :members:
+
+.. autoclass:: FormatMode()
    :members:

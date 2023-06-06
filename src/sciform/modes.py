@@ -51,7 +51,7 @@ class GroupingSeparator(Enum):
     #: Underscore separator
     UNDERSCORE = 'underscore'
 
-    # White space separator
+    #: White space separator
     SPACE = 'space'
 
     def to_char(self) -> str:
@@ -85,15 +85,31 @@ LowerGroupingSeparators = Literal[GroupingSeparator.NONE,
 
 
 class RoundMode(Enum):
+    #: Significant figure rounding
     SIG_FIG = 'sig_fig'
+
+    #: Digits-past-the-decimal rounding
     PREC = 'prec'
 
 
 class FormatMode(Enum):
+    #: Fixed point
     FIXEDPOINT = 'fixed_point'
+
+    #: Percentage
     PERCENT = 'percent'
+
+    #: Scientific
     SCIENTIFIC = 'scientific'
+
+    #: Engineering
     ENGINEERING = 'engineering'
+
+    #: Shifted Engineering
     ENGINEERING_SHIFTED = 'engineering_shifted'
+
+    #: Binary
     BINARY = 'binary'
+
+    #: Binary IEC
     BINARY_IEC = 'binary_iec'

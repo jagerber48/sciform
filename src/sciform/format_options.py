@@ -12,20 +12,6 @@ from sciform.modes import (FillMode, SignMode, GroupingSeparator,
 # noinspection PyUnresolvedReferences
 @dataclass(frozen=True)
 class FormatOptions:
-    """
-    Format options dataclass
-
-    :param fill_mode: :class:`sciform.FillMode` indicating whether to
-      fill with
-    :param sign_mode: SignMode.NEGATIVE indicates to include sign
-      symbols for negative numbers only. SignMode.POSITIVE indicates to
-      include sign symbols for all numbers. SignMode.SPACE indicates to
-      include an extra whitespace character for positive numbers instead
-      of a positive sign symbol.
-    :param top_dig_place: Digits place to which the string will be left
-      padded before the sign symbol.
-    """
-
     fill_mode: FillMode
     sign_mode: SignMode
     top_dig_place: int

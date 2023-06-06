@@ -88,6 +88,65 @@ def format_float(num: float, options: FormatOptions) -> str:
 
 
 class Formatter:
+    """
+    Formatter object use to convert floats into formatting strings. See
+    :ref:`formatting_options` for more details on the different options.
+    Any options which are not provided by the user will be filled with
+    the corresponding values from the global default configuration.
+
+    >>> from sciform import Formatter, FormatMode, RoundMode
+    >>> sform = Formatter(format_mode=FormatMode.ENGINEERING,
+    ...                   round_mode=RoundMode.SIG_FIG,
+    ...                   precision=4)
+    >>> print(sform(12345.678))
+    12.35e+03
+
+    :param fill_mode: :class:`FillMode` indicating whether
+      to fill with zeros or spaces.
+    :param sign_mode: :class:`SignMode` indicating sign
+      symbol behavior.
+    :param top_dig_place: Positive ``int`` indicating the digits place
+      to which the string will be left padded before the sign symbol.
+      e.g. top_dig_place=4 will convert ``12`` into ``00012``.
+    :param upper_separator: :class:`GroupingSeparator` indicating the
+      character to be used to group digits above the decimal symbol.
+    :param decimal_separator: :class:`GroupingSeparator` indicating
+      the character to be used as the decimal symbol.
+      :class:`GroupingSeparator.POINT` or
+      :class:`GroupingSeparator.COMMA`. Note that ``decimal_separator``
+      cannot be the same as ``upper_separator``
+    :param lower_separator: :class:`GroupingSeparator` indicating the
+      character to be used to group digits below the decimal symbol.
+      :class:`GroupingSeparator.NONE`, :class:`GroupingSeparator.SPACE`,
+      :class:`GroupingSeparator.UNDERSCORE`.
+    :param round_mode: :class:`RoundMode` indicating whether to round
+      the number based on significant figures or digits past the
+      decimal point
+    :param precision: ``int`` indicating how many significant figures or
+      digits past the decimal point to include for rounding. Must be
+      >= 1 for significant figure rounding. May be positive, negative,
+      or zero for digits past the decimal rounding.
+    :param format_mode: :class:`FormatMode` indicating the formatting
+      mode to be used.
+    :param capital_exp_char: ``bool`` indicating whether the exponentiation
+      symbol should be upper- or lower-case.
+    :param exp: ``int`` indicating the value which should be used for the
+      exponent. This parameter is ignored for fixed point and percent
+      format modes. For engineering, engineering shifted, and binary
+      iec modes, if this parameter is not consistent with the rules of
+      that mode (e.g. if it is not a multiple of 3), then the exponent
+      is rounded down to the nearest conforming value and a warning is
+      printed.
+    :param extra_si_prefixes: ``dict[int, str]`` mapping additional
+      exponent values to si prefixes.
+    :param extra_iec_prefixes: ``dict[int, str]`` mapping additional
+      exponent values to iec prefixes
+    :param add_c_prefix: ``bool`` if ``True`` adds ``{-2: 'c'}`` to
+      ``extra_si_prefixes``.
+    :param add_small_si_prefixes: ``bool`` if ``True`` adds
+      ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` to
+      ``extra_si_prefixes``.
+    """
     def __init__(
             self,
             *,
