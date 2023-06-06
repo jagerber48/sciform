@@ -56,7 +56,7 @@ formatting and the custom FSML with the ``sfloat`` object.
 Acknowledgements
 ================
 
-``sciform`` was heavily motivated by the float formatting provided in
+``sciform`` was heavily motivated by the prefix formatting provided in
 the `prefixed <https://github.com/Rockhopper-Technologies/prefixed>`_
-and the value +/- uncertainty formatting in the
+package and the value +/- uncertainty formatting in the
 `uncertainties <https://github.com/lebigot/uncertainties>`_ package.
