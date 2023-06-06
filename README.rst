@@ -2,7 +2,7 @@
 sciform
 =======
 
-Documentation: https://sciform.readthedocs.io/en/stable/
+**Documentation: https://sciform.readthedocs.io/en/stable/**
 
 Overview
 --------
