@@ -1,7 +1,8 @@
 from typing import Union, Optional, get_args
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 import re
 from copy import copy
+from pprint import pprint
 
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
@@ -260,6 +261,10 @@ DEFAULT_GLOBAL_OPTIONS = FormatOptions.make(
 
 def get_global_defaults() -> FormatOptions:
     return DEFAULT_GLOBAL_OPTIONS
+
+
+def print_global_defaults():
+    pprint(asdict(get_global_defaults()), sort_dicts=False)
 
 
 def set_global_defaults(
