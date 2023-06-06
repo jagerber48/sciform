@@ -1,13 +1,15 @@
 .. _fsml:
 
 Format Specification Mini Language
-==================================
+##################################
 
 Specification
--------------
+=============
 
-:class:`FormatOptions` can be applied to the formatting of an
-:class:`sfloat` object
+:mod:`sciform` :ref:`formatting options <formatting_options>` can be
+applied to the formatting of :class:`sfloat` objects by using string
+formatting analogous to the built-in formatting of :class:`float`
+objects.
 The :mod:`sciform` format specification mini language is given by::
 
     format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][format_mode]["x" exp][prefix_mode]
@@ -23,7 +25,6 @@ The :mod:`sciform` format specification mini language is given by::
     format_mode        ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" | "b" | "B" |
     exp                ::=  [+-]digit+
     prefix_mode        ::=  p
-
 
 Details about the terms in the FSML are described below.
 
@@ -143,7 +144,7 @@ Details about the terms in the FSML are described below.
 
 
 Incompatibilities With Built-in Format Specification Mini Language
-------------------------------------------------------------------
+==================================================================
 
 The :mod:`sciform` FSML extends the functionality of the
 `built-in FSML <https://docs.python.org/3/library/string.html#format-specification-mini-language>`_.

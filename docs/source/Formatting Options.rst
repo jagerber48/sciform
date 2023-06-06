@@ -1,8 +1,7 @@
 .. _formatting_options:
 
-==================
 Formatting Options
-==================
+##################
 
 :mod:`sciform` provides a variety of options for converting floats into
 formatted strings.

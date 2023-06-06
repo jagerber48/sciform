@@ -1,12 +1,6 @@
-.. sciform documentation master file, created by
-   sphinx-quickstart on Sat Jun  3 20:35:20 2023.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to sciform's documentation!
-===================================
-
 .. module:: sciform
+
+.. include:: ../../README.rst
 
 .. toctree::
    :maxdepth: 2

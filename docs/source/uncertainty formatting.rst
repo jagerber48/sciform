@@ -1,6 +1,5 @@
-======================
 Uncertainty Formatting
-======================
+######################
 
 One of, if not the, most important use cases for scientific formatting
 is formatting a value together with its specified uncertainty, e.g.
