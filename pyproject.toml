@@ -14,8 +14,9 @@ classifiers = [
 dynamic = ["version", "readme"]
 
 [project.urls]
-Homepage = "https://github.com/jagerber48/sciform"
+homepage = "https://github.com/jagerber48/sciform"
+documentation = "https://sciform.readthedocs.io"
 
 [tool.setuptools.dynamic]
 version = {attr = "sciform.__version__"}
-readme = {file = "README.rst", content-type = "text/x-rst"}
+readme = {file = "README.rst"}
