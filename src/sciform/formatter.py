@@ -1,7 +1,10 @@
+from typing import Union
 from math import isfinite
 
-from sciform.modes import FillMode, FormatMode
-from sciform.format_options import FormatOptions, get_global_defaults
+from sciform.modes import (SignMode, FillMode, UpperGroupingSeparators,
+                           DecimalGroupingSeparators, LowerGroupingSeparators,
+                           FormatMode, RoundMode, AUTO)
+from sciform.format_options import FormatOptions
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_and_bottom_digit,
                                   get_round_digit,
@@ -85,13 +88,45 @@ def format_float(num: float, options: FormatOptions) -> str:
 
 
 class Formatter:
-    def __init__(self, default_options: FormatOptions = None,
-                 **kwargs):
-        if default_options is None:
-            default_options = get_global_defaults()
-        self.options = FormatOptions.from_template(
-            template=default_options,
-            **kwargs)
+    def __init__(
+            self,
+            *,
+            defaults: 'FormatOptions' = None,
+            fill_mode: FillMode = None,
+            sign_mode: SignMode = None,
+            top_dig_place: int = None,
+            upper_separator: UpperGroupingSeparators = None,
+            decimal_separator: DecimalGroupingSeparators = None,
+            lower_separator: LowerGroupingSeparators = None,
+            round_mode: RoundMode = None,
+            precision: Union[int, type(AUTO)] = None,
+            format_mode: FormatMode = None,
+            capital_exp_char: bool = None,
+            exp: Union[int, type(AUTO)] = None,
+            use_prefix: bool = None,
+            extra_si_prefixes: dict[int, str] = None,
+            extra_iec_prefixes: dict[int, str] = None,
+            add_c_prefix: bool = False,
+            add_small_si_prefixes: bool = False
+    ):
+        self.options = FormatOptions.make(
+            defaults=defaults,
+            fill_mode=fill_mode,
+            sign_mode=sign_mode,
+            top_dig_place=top_dig_place,
+            upper_separator=upper_separator,
+            decimal_separator=decimal_separator,
+            lower_separator=lower_separator,
+            round_mode=round_mode,
+            precision=precision,
+            format_mode=format_mode,
+            capital_exp_char=capital_exp_char,
+            exp=exp,
+            use_prefix=use_prefix,
+            extra_si_prefixes=extra_si_prefixes,
+            extra_iec_prefixes=extra_iec_prefixes,
+            add_c_prefix=add_c_prefix,
+            add_small_si_prefixes=add_small_si_prefixes)
 
     def __call__(self, num: float):
         return self.format(num)
@@ -102,4 +137,4 @@ class Formatter:
     @classmethod
     def from_format_spec_str(cls, fmt: str):
         format_options = FormatOptions.from_format_spec_str(fmt)
-        return cls(default_options=format_options)
+        return cls(defaults=format_options)

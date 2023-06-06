@@ -69,8 +69,8 @@ def format_val_unc(val: float, unc: float, fmt: str):
     if format_mode is FormatMode.PERCENT:
         format_mode = FormatMode.FIXEDPOINT
 
-    val_format_options = FormatOptions.from_template(
-        template=options,
+    val_format_options = FormatOptions.make(
+        defaults=options,
         top_dig_place=new_top_digit,
         round_mode=RoundMode.PREC,
         precision=prec,
@@ -78,8 +78,8 @@ def format_val_unc(val: float, unc: float, fmt: str):
         exp=exp,
         use_prefix=False)
 
-    unc_format_options = FormatOptions.from_template(
-        template=val_format_options,
+    unc_format_options = FormatOptions.make(
+        defaults=val_format_options,
         sign_mode=SignMode.NEGATIVE
     )
 

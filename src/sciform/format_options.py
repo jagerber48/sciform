@@ -1,5 +1,5 @@
 from typing import Union, Optional, get_args
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 import re
 from copy import copy
 
@@ -10,7 +10,7 @@ from sciform.modes import (FillMode, SignMode, GroupingSeparator,
 
 
 # noinspection PyUnresolvedReferences
-@dataclass
+@dataclass(frozen=True)
 class FormatOptions:
     """
     Format options dataclass
@@ -40,17 +40,8 @@ class FormatOptions:
     use_prefix: bool
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
-    add_c_prefix: bool = field(default=False, repr=False,
-                               compare=False, hash=False)
-    add_small_si_prefixes: bool = field(default=False, repr=False,
-                                        compare=False, hash=False)
 
     def __post_init__(self):
-        if self.add_c_prefix:
-            self.do_add_c_prefix()
-        if self.add_small_si_prefixes:
-            self.do_add_small_si_prefixes()
-
         if self.round_mode is RoundMode.SIG_FIG:
             if isinstance(self.precision, int):
                 if self.precision < 1:
@@ -73,35 +64,11 @@ class FormatOptions:
             raise ValueError(f'upper_separator and decimal_separator '
                              f'{self.upper_separator} cannot be equal.')
 
-    def add_si_prefix(self, exp: int, prefix: str):
-        self.extra_si_prefixes[exp] = prefix
-
-    def add_iec_prefix(self, exp: int, prefix: str):
-        self.extra_iec_prefixes[exp] = prefix
-
-    def add_si_prefixes(self, si_prefixes: dict[int, str]):
-        self.extra_si_prefixes.update(si_prefixes)
-
-    def add_iec_prefixes(self, iec_prefixes: dict[int, str]):
-        self.extra_iec_prefixes.update(iec_prefixes)
-
-    def do_add_c_prefix(self):
-        self.add_si_prefix(exp=-2, prefix='c')
-
-    def do_add_small_si_prefixes(self):
-        self.add_si_prefixes({-2: 'c', -1: 'd', +1: 'da', +2: 'h'})
-
-    def reset_si_prefixes(self):
-        self.extra_si_prefixes = dict()
-
-    def reset_iec_prefixes(self):
-        self.extra_iec_prefixes = dict()
-
     @classmethod
-    def from_template(
+    def make(
             cls,
             *,
-            template: 'FormatOptions',
+            defaults: 'FormatOptions' = None,
             fill_mode: FillMode = None,
             sign_mode: SignMode = None,
             top_dig_place: int = None,
@@ -119,30 +86,44 @@ class FormatOptions:
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False
     ):
+        if defaults is None:
+            defaults = DEFAULT_GLOBAL_OPTIONS
+
+        extra_si_prefixes = (copy(extra_si_prefixes)
+                             or copy(defaults.extra_si_prefixes))
+        if add_c_prefix and -2 not in extra_si_prefixes:
+            extra_si_prefixes[-2] = 'c'
+
+        if add_small_si_prefixes:
+            if -2 not in extra_si_prefixes:
+                extra_si_prefixes[-2] = 'c'
+            if -1 not in extra_si_prefixes:
+                extra_si_prefixes[-1] = 'd'
+            if +1 not in extra_si_prefixes:
+                extra_si_prefixes[+1] = 'da'
+            if +2 not in extra_si_prefixes:
+                extra_si_prefixes[+2] = 'h'
+
         return cls(
-            fill_mode=template.fill_mode if fill_mode is None else fill_mode,
-            sign_mode=sign_mode or template.sign_mode,
-            top_dig_place=(template.top_dig_place if top_dig_place is None
+            fill_mode=defaults.fill_mode if fill_mode is None else fill_mode,
+            sign_mode=sign_mode or defaults.sign_mode,
+            top_dig_place=(defaults.top_dig_place if top_dig_place is None
                            else top_dig_place),
             upper_separator=(upper_separator or
-                             template.upper_separator),
+                             defaults.upper_separator),
             decimal_separator=(decimal_separator or
-                               template.decimal_separator),
+                               defaults.decimal_separator),
             lower_separator=(lower_separator or
-                             template.lower_separator),
-            round_mode=round_mode or template.round_mode,
-            precision=template.precision if precision is None else precision,
-            format_mode=format_mode or template.format_mode,
+                             defaults.lower_separator),
+            round_mode=round_mode or defaults.round_mode,
+            precision=defaults.precision if precision is None else precision,
+            format_mode=format_mode or defaults.format_mode,
             capital_exp_char=(capital_exp_char or
-                              template.capital_exp_char),
-            exp=template.exp if exp is None else exp,
-            use_prefix=use_prefix or template.use_prefix,
-            extra_si_prefixes=(copy(extra_si_prefixes) or
-                               copy(template.extra_si_prefixes)),
-            extra_iec_prefixes=(copy(extra_iec_prefixes) or
-                                copy(template.extra_iec_prefixes)),
-            add_c_prefix=add_c_prefix,
-            add_small_si_prefixes=add_small_si_prefixes
+                              defaults.capital_exp_char),
+            exp=defaults.exp if exp is None else exp,
+            use_prefix=use_prefix or defaults.use_prefix,
+            extra_si_prefixes=extra_si_prefixes,
+            extra_iec_prefixes=extra_iec_prefixes
         )
 
     pattern = re.compile(r'''^
@@ -183,7 +164,7 @@ class FormatOptions:
     def from_format_spec_str(
             cls,
             fmt: str,
-            template: Optional['FormatOptions'] = None) -> 'FormatOptions':
+            defaults: Optional['FormatOptions'] = None) -> 'FormatOptions':
 
         match = cls.pattern.match(fmt)
         if match is None:
@@ -249,11 +230,11 @@ class FormatOptions:
         if use_prefix is not None:
             use_prefix = True
 
-        if template is None:
-            template = DEFAULT_GLOBAL_OPTIONS
+        if defaults is None:
+            defaults = DEFAULT_GLOBAL_OPTIONS
 
-        return cls.from_template(
-            template=template,
+        return cls.make(
+            defaults=defaults,
             fill_mode=fill_mode,
             sign_mode=sign_mode,
             top_dig_place=top_dig_place,
@@ -286,21 +267,55 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     extra_iec_prefixes=dict()
 )
 
-DEFAULT_GLOBAL_OPTIONS = FormatOptions.from_template(
-    template=DEFAULT_PKG_OPTIONS)
+DEFAULT_GLOBAL_OPTIONS = FormatOptions.make(
+    defaults=DEFAULT_PKG_OPTIONS)
 
 
 def get_global_defaults() -> FormatOptions:
     return DEFAULT_GLOBAL_OPTIONS
 
 
-def set_global_defaults(template: Optional[FormatOptions] = None,
-                        **kwargs):
+def set_global_defaults(
+            *,
+            defaults: 'FormatOptions' = None,
+            fill_mode: FillMode = None,
+            sign_mode: SignMode = None,
+            top_dig_place: int = None,
+            upper_separator: UpperGroupingSeparators = None,
+            decimal_separator: DecimalGroupingSeparators = None,
+            lower_separator: LowerGroupingSeparators = None,
+            round_mode: RoundMode = None,
+            precision: Union[int, type(AUTO)] = None,
+            format_mode: FormatMode = None,
+            capital_exp_char: bool = None,
+            exp: Union[int, type(AUTO)] = None,
+            use_prefix: bool = None,
+            extra_si_prefixes: dict[int, str] = None,
+            extra_iec_prefixes: dict[int, str] = None,
+            add_c_prefix: bool = False,
+            add_small_si_prefixes: bool = False
+):
     global DEFAULT_GLOBAL_OPTIONS
-    if template is None:
-        template = DEFAULT_GLOBAL_OPTIONS
-    new_default_options = FormatOptions.from_template(template=template,
-                                                      **kwargs)
+    if defaults is None:
+        defaults = DEFAULT_GLOBAL_OPTIONS
+    new_default_options = FormatOptions.make(
+        defaults=defaults,
+        fill_mode=fill_mode,
+        sign_mode=sign_mode,
+        top_dig_place=top_dig_place,
+        upper_separator=upper_separator,
+        decimal_separator=decimal_separator,
+        lower_separator=lower_separator,
+        round_mode=round_mode,
+        precision=precision,
+        format_mode=format_mode,
+        capital_exp_char=capital_exp_char,
+        exp=exp,
+        use_prefix=use_prefix,
+        extra_si_prefixes=extra_si_prefixes,
+        extra_iec_prefixes=extra_iec_prefixes,
+        add_c_prefix=add_c_prefix,
+        add_small_si_prefixes=add_small_si_prefixes)
     DEFAULT_GLOBAL_OPTIONS = new_default_options
 
 
@@ -310,36 +325,66 @@ def reset_global_defaults():
 
 
 def global_add_c_prefix():
-    global_defaults = get_global_defaults()
-    global_defaults.do_add_c_prefix()
+    set_global_defaults(add_c_prefix=True)
 
 
 def global_add_small_si_prefixes():
-    global_defaults = get_global_defaults()
-    global_defaults.do_add_small_si_prefixes()
+    set_global_defaults(add_small_si_prefixes=True)
 
 
 def global_reset_si_prefixes():
-    global_defaults = get_global_defaults()
-    global_defaults.reset_si_prefixes()
+    set_global_defaults(extra_si_prefixes=dict())
 
 
 def global_reset_iec_prefixes():
-    global_defaults = get_global_defaults()
-    global_defaults.reset_iec_prefixes()
+    set_global_defaults(extra_iec_prefixes=dict())
 
 
 class GlobalDefaultsContext:
-    def __init__(self,
-                 template: Optional[FormatOptions] = None,
-                 **kwargs):
-        self.template = template
-        self.kwargs = kwargs
+    def __init__(
+            self,
+            *,
+            defaults: 'FormatOptions' = None,
+            fill_mode: FillMode = None,
+            sign_mode: SignMode = None,
+            top_dig_place: int = None,
+            upper_separator: UpperGroupingSeparators = None,
+            decimal_separator: DecimalGroupingSeparators = None,
+            lower_separator: LowerGroupingSeparators = None,
+            round_mode: RoundMode = None,
+            precision: Union[int, type(AUTO)] = None,
+            format_mode: FormatMode = None,
+            capital_exp_char: bool = None,
+            exp: Union[int, type(AUTO)] = None,
+            use_prefix: bool = None,
+            extra_si_prefixes: dict[int, str] = None,
+            extra_iec_prefixes: dict[int, str] = None,
+            add_c_prefix: bool = False,
+            add_small_si_prefixes: bool = False
+    ):
+        self.options = FormatOptions.make(
+            defaults=defaults,
+            fill_mode=fill_mode,
+            sign_mode=sign_mode,
+            top_dig_place=top_dig_place,
+            upper_separator=upper_separator,
+            decimal_separator=decimal_separator,
+            lower_separator=lower_separator,
+            round_mode=round_mode,
+            precision=precision,
+            format_mode=format_mode,
+            capital_exp_char=capital_exp_char,
+            exp=exp,
+            use_prefix=use_prefix,
+            extra_si_prefixes=extra_si_prefixes,
+            extra_iec_prefixes=extra_iec_prefixes,
+            add_c_prefix=add_c_prefix,
+            add_small_si_prefixes=add_small_si_prefixes)
         self.initial_global_defaults = None
 
     def __enter__(self):
         self.initial_global_defaults = get_global_defaults()
-        set_global_defaults(self.template, **self.kwargs)
+        set_global_defaults(defaults=self.options)
 
     def __exit__(self, exc_type, exc_value, exc_tb):
-        set_global_defaults(self.initial_global_defaults)
+        set_global_defaults(defaults=self.initial_global_defaults)
