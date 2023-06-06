@@ -6,6 +6,8 @@
 Welcome to sciform's documentation!
 ===================================
 
+.. module:: sciform
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

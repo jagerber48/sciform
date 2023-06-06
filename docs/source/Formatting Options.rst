@@ -4,7 +4,7 @@
 Formatting Options
 ==================
 
-``sciform`` provides a variety of options for converting floats into
+:mod:`sciform` provides a variety of options for converting floats into
 formatted strings.
 These options including control over the rounding strategy, scientific
 notation formatting, separation characters and more.
@@ -12,7 +12,7 @@ notation formatting, separation characters and more.
 Format Mode
 ===========
 
-``sciform`` supports a variety of format modes.
+:mod:`sciform` supports a variety of format modes.
 To display numbers across a wide range of magnitudes, scientific
 formatting presents numbers in the form::
 
@@ -127,7 +127,7 @@ Prefix Mode
 Prefix mode enables the replacement of certain base-10 and binary
 exponents by alphabetic scientific SI or IEC prefixes outlined in
 :ref:`Supported Prefixes <prefixes>`.
-Furthermore, it is possible to customize :class:`~sciform.Formatter`
+Furthermore, it is possible to customize :class:`Formatter`
 objects or the global configuration settings to map additional prefix
 translations, in addition to those provided by default.
 
@@ -154,7 +154,7 @@ translations, in addition to those provided by default.
 Rounding
 ========
 
-``sciform`` provides two rounding strategies: rounding based on
+:mod:`sciform` provides two rounding strategies: rounding based on
 significant figures, and rounding based on digits past the decimal
 point or "precision".
 In both cases, the rounding applies to the mantissa determined after
@@ -220,15 +220,15 @@ For precision rounding, ``precision`` can be any integer.
 Separators
 ==========
 
-``sciform`` provides support for some customization for separator
+:mod:`sciform` provides support for some customization for separator
 characters within formatting strings.
 Different locales use different conventions for the symbol separating
 the integral and fractional part of a float number, called the decimal
 symbol.
-``sciform`` supports using a period ``'.'`` or comma ``','`` as the
+:mod:`sciform` supports using a period ``'.'`` or comma ``','`` as the
 decimal symbol.
 
-Additionally, ``sciform`` also supports including separation characters
+Additionally, :mod:`sciform` also supports including separation characters
 between groups of three digits both above the decimal symbol and below
 the decimal symbols.
 No separator, ``','``, ``'.'``, ``' '``, ``'_'`` can all be used as
@@ -252,13 +252,13 @@ decimal separator.
 Sign Mode
 =========
 
-``sciform`` provides control over the symbol used to indicate whether a
+:mod:`sciform` provides control over the symbol used to indicate whether a
 float is positive or negative.
 In all cases a ``'-'`` sign is used for negative numbers.
 By default, positive numbers are formatted with no sign symbol.
-However, ``sciform`` includes a mode where positive numbers are always
+However, :mod:`sciform` includes a mode where positive numbers are always
 presented with a ``'+'`` symbol.
-``sciform`` also provides a mode where positive numbers include an extra
+:mod:`sciform` also provides a mode where positive numbers include an extra
 whitespace in place of a sign symbol.
 This mode may be useful to match string lengths when positive and
 negatives numbers are being presented together, but without explicitly

@@ -5,7 +5,7 @@ Format Specification Mini Language
 
 :class:`FormatOptions` can be applied to the formatting of an
 :class:`sfloat` object
-The ``sciform`` format specification mini language is given by::
+The :mod:`sciform` format specification mini language is given by::
 
     format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][format_mode]["x" exp][prefix_mode]
 
@@ -24,7 +24,7 @@ The ``sciform`` format specification mini language is given by::
 
 Details about the terms in the FSML are described below.
 
-.. list-table:: ``sciform`` Format Specification Mini Language Terms
+.. list-table:: :mod:`sciform` Format Specification Mini Language Terms
    :widths: 15 30
    :header-rows: 1
 

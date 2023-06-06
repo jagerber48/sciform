@@ -3,6 +3,10 @@ API
 ===
 
 .. module:: sciform
+   :noindex:
+
+Formatter
+=========
 
 Formatting is controlled by the :class:`Formatter` object.
 

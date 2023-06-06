@@ -4,7 +4,7 @@
 Supported Prefixes
 ==================
 
-``sciform`` offers a prefix mode which provides a simple translation
+:mod:`sciform` offers a prefix mode which provides a simple translation
 between exponent strings and one or two letter prefixes.
 For scientific and engineering formats the prefixes are matched to
 integer multiple of 3 exponent according to the
