@@ -109,7 +109,8 @@ class FormatOptions:
             exp=defaults.exp if exp is None else exp,
             use_prefix=use_prefix or defaults.use_prefix,
             extra_si_prefixes=extra_si_prefixes,
-            extra_iec_prefixes=extra_iec_prefixes
+            extra_iec_prefixes=(copy(extra_iec_prefixes)
+                                or copy(defaults.extra_iec_prefixes))
         )
 
     pattern = re.compile(r'''^
