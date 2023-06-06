@@ -1,10 +1,15 @@
 .. _fsml:
 
 Format Specification Mini Language
-==================================
+##################################
 
-:class:`FormatOptions` can be applied to the formatting of an
-:class:`sfloat` object
+Specification
+=============
+
+:mod:`sciform` :ref:`formatting options <formatting_options>` can be
+applied to the formatting of :class:`sfloat` objects by using string
+formatting analogous to the built-in formatting of :class:`float`
+objects.
 The :mod:`sciform` format specification mini language is given by::
 
     format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][format_mode]["x" exp][prefix_mode]
@@ -20,7 +25,6 @@ The :mod:`sciform` format specification mini language is given by::
     format_mode        ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" | "b" | "B" |
     exp                ::=  [+-]digit+
     prefix_mode        ::=  p
-
 
 Details about the terms in the FSML are described below.
 
@@ -136,3 +140,69 @@ Details about the terms in the FSML are described below.
      -  Flag (default off) indicating whether exponent strings should be
         replaced with SI or IEC prefix characters. E.g.
         ``'123e+03' -> '123 k'`` or ``'857.2B+20' -> '857.2 Mi'``.
+
+
+
+Incompatibilities With Built-in Format Specification Mini Language
+==================================================================
+
+The :mod:`sciform` FSML extends the functionality of the
+`built-in FSML <https://docs.python.org/3/library/string.html#format-specification-mini-language>`_.
+However, :mod:`sciform` FSML is not entirely backwards compatible with
+the built-in FSML.
+Certain allowed built-in format specifications are illegal in the
+:mod:`sciform` FSML and certain allowed built-in format specifications
+give different results when used with :class:`sfloat` rather than
+:class:`float`.
+These incompatibilities were intentionally introduced to simplify the
+:class:`sciform` FSML by cutting out features less likely to be required
+for scientific formatting.
+
+* The built-in FSML accepts ``g``, ``G`` and ``n`` precision types
+  These precision types are not supported by :mod:`sciform`.
+  These precision types offer automated formatting decisions which are
+  not compatible with the explicit formatting options preferred by
+  :mod:`sciform`. The built-in automation features include
+
+  * Automated selection of fixed-point or scientific notation. For
+    :mod:`sciform`, the user must explicity indicate the format mode.
+  * Truncation of trailing zeros without the ``#`` option. For
+    :mod:`sciform`, trailing zeros are never truncated if they fall
+    within the user-selected precision or significant figures.
+  * Inclusion of a hanging decimal point, e.g. ``123.``.
+    :mod:`sciform` never includes a hanging decimal point.
+
+* Python float formatting uses a pre-selected, hard-coded precion of 6
+  for ``f``, ``F``, ``%``, ``e``, and ``E`` modes. When no precision or
+  significant figure specification is provided, :mod:`sciform`, instead,
+  infers the precision or sig fig specification from the float by
+  determining the least significant decimal digit required to represent
+  it. Note that there may be surprising results for floats that require
+  more decimals to represent than ``sys.float_info.dig`` such as
+  ``0.1 * 3``.
+
+  * ``f'{float(0.3):f}'`` yield ``0.300000`` while ``f'{sfloat(0.3):f}``
+    yields ``0.3``.
+
+* The built-in FSML supports left-aligned, right-aligned,
+  center-aligned, and sign-aware string padding by any character. In the
+  built-in FSML, the width field indicates the minimum length to which
+  the resulting string (including all punctuation such as ``+``, ``-``,
+  ``.``, ``e``, etc.) should be filled to. ``sciform`` takes the
+  perspective that these padding features are mostly tasks for string
+  formatters, not number formatters. :mod:`sciform`, instead, only
+  supports padding by a space ``' '`` or zero. For :mod:`sciform`, the
+  user specifies the digits place to which the number should be padded.
+  The fill character may only be ``' '`` or ``'0'`` and must always be
+  followed by the sign aware `=` flag. There is no ``0`` flag that may
+  be placed before the width field to indicate sign-aware zero padding.
+
+  * ``f'{float(12): =4}`` yields ``'  12'`` while ``f{sfloat(12): =4}``
+    yeilds ``'   12'``. I.e. fill characters are padded up to the
+    ``10^4`` digits place.
+
+* The built-in FSML supports displaying negative zero, but also supports
+  an option to coerce negative zero to be positive by including a
+  ``'z'`` flag. :mod:`sciform` always coerces negative zero to be
+  positive and therefore has no corresponding option to coerce negative
+  zero to be positive.

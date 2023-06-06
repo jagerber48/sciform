@@ -1,8 +1,7 @@
 .. _prefixes:
 
-==================
 Supported Prefixes
-==================
+##################
 
 :mod:`sciform` offers a prefix mode which provides a simple translation
 between exponent strings and one or two letter prefixes.

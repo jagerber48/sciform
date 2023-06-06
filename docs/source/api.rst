@@ -1,6 +1,5 @@
-===
 API
-===
+###
 
 .. module:: sciform
    :noindex:
