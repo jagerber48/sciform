@@ -7,7 +7,7 @@ from pprint import pprint
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
                            DecimalGroupingSeparators, RoundMode, FormatMode,
-                           AUTO)
+                           AutoExp, AutoPrec)
 
 
 # noinspection PyUnresolvedReferences
@@ -20,10 +20,10 @@ class FormatOptions:
     decimal_separator: DecimalGroupingSeparators
     lower_separator: LowerGroupingSeparators
     round_mode: RoundMode
-    precision: Union[int, type(AUTO)]
+    precision: Union[int, type(AutoPrec)]
     format_mode: FormatMode
     capital_exp_char: bool
-    exp: Union[int, type(AUTO)]
+    exp: Union[int, type(AutoExp)]
     use_prefix: bool
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
@@ -63,10 +63,10 @@ class FormatOptions:
             decimal_separator: DecimalGroupingSeparators = None,
             lower_separator: LowerGroupingSeparators = None,
             round_mode: RoundMode = None,
-            precision: Union[int, type(AUTO)] = None,
+            precision: Union[int, type(AutoPrec)] = None,
             format_mode: FormatMode = None,
             capital_exp_char: bool = None,
-            exp: Union[int, type(AUTO)] = None,
+            exp: Union[int, type(AutoExp)] = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
@@ -246,10 +246,10 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     decimal_separator=GroupingSeparator.POINT,
     lower_separator=GroupingSeparator.NONE,
     round_mode=RoundMode.SIG_FIG,
-    precision=AUTO,
+    precision=AutoPrec,
     format_mode=FormatMode.FIXEDPOINT,
     capital_exp_char=False,
-    exp=AUTO,
+    exp=AutoExp,
     use_prefix=False,
     extra_si_prefixes=dict(),
     extra_iec_prefixes=dict()
@@ -277,10 +277,10 @@ def set_global_defaults(
             decimal_separator: DecimalGroupingSeparators = None,
             lower_separator: LowerGroupingSeparators = None,
             round_mode: RoundMode = None,
-            precision: Union[int, type(AUTO)] = None,
+            precision: Union[int, type(AutoPrec)] = None,
             format_mode: FormatMode = None,
             capital_exp_char: bool = None,
-            exp: Union[int, type(AUTO)] = None,
+            exp: Union[int, type(AutoExp)] = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
@@ -344,10 +344,10 @@ class GlobalDefaultsContext:
             decimal_separator: DecimalGroupingSeparators = None,
             lower_separator: LowerGroupingSeparators = None,
             round_mode: RoundMode = None,
-            precision: Union[int, type(AUTO)] = None,
+            precision: Union[int, type(AutoPrec)] = None,
             format_mode: FormatMode = None,
             capital_exp_char: bool = None,
-            exp: Union[int, type(AUTO)] = None,
+            exp: Union[int, type(AutoExp)] = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,

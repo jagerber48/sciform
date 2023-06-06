@@ -3,7 +3,7 @@ from math import isfinite
 
 from sciform.modes import (SignMode, FillMode, UpperGroupingSeparators,
                            DecimalGroupingSeparators, LowerGroupingSeparators,
-                           FormatMode, RoundMode, AUTO)
+                           FormatMode, RoundMode, AutoExp, AutoPrec)
 from sciform.format_options import FormatOptions
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_and_bottom_digit,
@@ -158,10 +158,10 @@ class Formatter:
             decimal_separator: DecimalGroupingSeparators = None,
             lower_separator: LowerGroupingSeparators = None,
             round_mode: RoundMode = None,
-            precision: Union[int, type(AUTO)] = None,
+            precision: Union[int, type(AutoPrec)] = None,
             format_mode: FormatMode = None,
             capital_exp_char: bool = None,
-            exp: Union[int, type(AUTO)] = None,
+            exp: Union[int, type(AutoExp)] = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,

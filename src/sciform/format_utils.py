@@ -3,7 +3,7 @@ from typing import Union
 from math import floor, log10, log2, isfinite
 from warnings import warn
 
-from sciform.modes import FormatMode, RoundMode, SignMode, AUTO
+from sciform.modes import FormatMode, RoundMode, SignMode, AutoExp, AutoPrec
 
 
 def get_top_digit(num: float) -> int:
@@ -60,26 +60,26 @@ def get_top_and_bottom_digit(num: float) -> tuple[int, int]:
 def get_mantissa_exp_base(
         num: float,
         format_mode: FormatMode,
-        exp: Union[int, type(AUTO)] = None) -> (float, int, int):
+        exp: Union[int, type(AutoExp)] = None) -> (float, int, int):
     if num == 0:
-        if exp is AUTO:
+        if exp is AutoExp:
             exp = 0
         base = 10
     elif (format_mode is FormatMode.FIXEDPOINT
           or format_mode is FormatMode.PERCENT):
-        if exp is not AUTO:
+        if exp is not AutoExp:
             if exp != 0:
                 warn('Attempt to set exponent explicity in fixed point '
                      'exponent mode. Coercing exponent to 0.')
         exp = 0
         base = 10
     elif format_mode is FormatMode.SCIENTIFIC:
-        if exp is AUTO:
+        if exp is AutoExp:
             exp = floor(log10(abs(num)))
         base = 10
     elif (format_mode is FormatMode.ENGINEERING
           or format_mode is FormatMode.ENGINEERING_SHIFTED):
-        if exp is not AUTO:
+        if exp is not AutoExp:
             if exp % 3 != 0:
                 warn(f'Attempt to set exponent explicity to a non-integer '
                      f'multiple of 3 in engineering mode. Coercing to the '
@@ -97,7 +97,7 @@ def get_mantissa_exp_base(
         base = 10
     elif (format_mode is FormatMode.BINARY
           or format_mode is FormatMode.BINARY_IEC):
-        if exp is AUTO:
+        if exp is AutoExp:
             exp = floor(log2(abs(num)))
             if format_mode is FormatMode.BINARY_IEC:
                 exp = (exp // 10) * 10
@@ -148,15 +148,15 @@ def get_sign_str(num: float, sign_mode: SignMode) -> str:
 
 
 def get_round_digit(top_digit: int, bottom_digit: int,
-                    prec: Union[int, type(AUTO)], prec_mode: RoundMode) -> int:
+                    prec: Union[int, type(AutoPrec)], prec_mode: RoundMode) -> int:
     # TODO: Decide on default precision/sig figs.  Minimum round-trippable or
     #  hard-coded to 6?
     if prec_mode is RoundMode.SIG_FIG:
-        if prec is AUTO:
+        if prec is AutoPrec:
             prec = top_digit - bottom_digit + 1
         round_digit = top_digit - (prec - 1)
     elif prec_mode is RoundMode.PREC:
-        if prec is AUTO:
+        if prec is AutoPrec:
             round_digit = bottom_digit
         else:
             round_digit = -prec

@@ -2,7 +2,12 @@ from typing import get_args, Literal
 from enum import Enum
 
 
-class AUTO:
+# TODO: AUTO_EXP and AUTO_PREC
+class AutoExp:
+    pass
+
+
+class AutoPrec:
     pass
 
 
