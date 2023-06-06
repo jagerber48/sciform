@@ -1,8 +1,8 @@
 sciform
 #######
 
-|**Repository:** `<https://github.com/jagerber48/sciform>`_
-|**Documentation:** `<https://sciform.readthedocs.io/en/stable/>`_
+   | **Repository:** `<https://github.com/jagerber48/sciform>`_
+   | **Documentation:** `<https://sciform.readthedocs.io/en/stable/>`_
 
 Overview
 --------
