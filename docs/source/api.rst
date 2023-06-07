@@ -1,6 +1,9 @@
 API
 ###
 
+.. module:: sciform
+   :noindex:
+
 Formatter
 =========
 
