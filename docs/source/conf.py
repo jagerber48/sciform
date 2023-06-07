@@ -5,11 +5,6 @@
 
 import re
 from pathlib import Path
-import os
-import sys
-
-sys.path.append(os.path.abspath('../..'))
-print(os.path.abspath('../../sciform'))
 
 init_path = Path(Path(__file__).parents[2], 'src', 'sciform', '__init__.py')
 with open(init_path, 'r') as f:
