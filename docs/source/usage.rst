@@ -52,37 +52,112 @@ Global Configuration
 ====================
 
 It is possible to modify the global default configuration for
-``sciform`` to avoid repetition of verbose (and
-difficult-to-parse-for-humans) format specification strings.
+:mod:`sciform` to avoid repetition of verbose configuration options or
+format specification strings.
+When the user creates a :class:`Formatter` object or formats a string
+using the :ref:`FSML <fsml>`, they typically do not specify settings for
+available options.
+In thes cases, the unspecified options extract their settings from the
+global default settings.
 
-The global defaults can be accessed using ``get_global_defaults`` and
-permanently modified using ``set_global_defaults``.
-Any format calls will use the stored defaults for any settings which
-have not been explicitly set by the user. The global defaults can also
-be temporarily modified using the ``GlobalDefaultsContext`` context
-manager. Within the scope of the context manager the new global
-configuration will be used, but when the context manager scope exits,
-the original configuration will be restored.
+The global default settings can be viewed using
+:func:`print_global_defaults()`:
 
-Modifying the global configuration allows the user to modify the mapping
-between exponents and SI or IEC prefixes.
-In particular, it is possible to include the ``c`` SI prefix (e.g.
-1 cm = 10\ :sup:`-2` m) using the ``include_c`` kwarg as well as to
-include all of the ``c``, ``d``, ``da``, and ``h`` SI prefixes corresponding to
-10\ :sup:`-2`, 10\ :sup:`-1`, 10\ :sup:`+1`, and 10\ :sup:`+2`
-respectively using the ``include_small_si_prefixes`` kwarg.
+>>> from sciform import print_global_defaults
+>>> print_global_defaults()
+{'fill_mode': <FillMode.SPACE: 'space'>,
+ 'sign_mode': <SignMode.NEGATIVE: 'negative'>,
+ 'top_dig_place': 0,
+ 'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
+ 'decimal_separator': <GroupingSeparator.POINT: 'point'>,
+ 'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,
+ 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
+ 'precision': <class 'sciform.modes.AutoPrec'>,
+ 'format_mode': <FormatMode.FIXEDPOINT: 'fixed_point'>,
+ 'capital_exp_char': False,
+ 'exp': <class 'sciform.modes.AutoExp'>,
+ 'use_prefix': False,
+ 'extra_si_prefixes': {},
+ 'extra_iec_prefixes': {}}
 
-The user can format floats directly by constructing a ``Formatter``,
-passing in the desired formatting settings, then calling its
-``format()`` method on the float of interest.
+The global default settings can be modified using
+:func:`set_global_defaults()` with the same keyword arguments passed
+into :class:`Formatter`.
+Any explicit options passed in will be updated while any unspecified
+options will retain their existing values.
+The same checks applied when constructing a :class:`Formatter` are
+applied to setting global default settings.
 
-In the future, configuration may be added for persistant class- and
-instance-level default configuration options. However, it needs to be
-decided how configuration will be shared between the different levels.
-For example, if an ``sfloat`` object is instantiated which does not
-specify behavior for the ``prefix`` field, but then the ``prefix`` field at
-the global level is modified, should this ``sfloat`` instance adopt the
-new global config?
-Also, how should config conflicts be managed?
-One idea is to resolve conflicts by deferring to the parent config.
+>>> from sciform import (set_global_defaults, FillMode, FormatMode,
+...                      GroupingSeparator)
+>>> set_global_defaults(fill_mode=FillMode.ZERO,
+...                    format_mode=FormatMode.ENGINEERING_SHIFTED,
+...                    precision=4,
+...                    decimal_separator=GroupingSeparator.COMMA)
+>>> print_global_defaults()
+{'fill_mode': <FillMode.ZERO: 'zero'>,
+ 'sign_mode': <SignMode.NEGATIVE: 'negative'>,
+ 'top_dig_place': 0,
+ 'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
+ 'decimal_separator': <GroupingSeparator.COMMA: 'comma'>,
+ 'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,
+ 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
+ 'precision': 4,
+ 'format_mode': <FormatMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
+ 'capital_exp_char': False,
+ 'exp': <class 'sciform.modes.AutoExp'>,
+ 'use_prefix': False,
+ 'extra_si_prefixes': {},
+ 'extra_iec_prefixes': {}}
 
+The global default settings can be reset to the :mod:`sciform` defaults
+using :func:`reset_global_defaults`.
+
+>>> from sciform import reset_global_defaults
+>>> reset_global_defaults()
+
+There are also helper function for managing supported SI and IEC
+prefixes:
+
+* :func:`global_add_c_prefix()` add ``{-2: 'c'}`` to the
+  ``extra_si_prefixes`` dictionary if there is not already a prefix
+  assigned to ``-2``.
+* :func:`global_add_small_si_prefixes()` adds any of ``{-2: 'c',
+  -1: 'd', +1: 'da', +2: 'h'}`` to the ``extra_si_prefixes`` that do not
+  already have assigned prefixes.
+* :func:`global_reset_si_prefixes()` resets ``extra_si_prefixes`` to be
+  empty.
+* :func:`global_reset_iec_prefixes()` resets ``extra_iec_prefixes`` to
+  be empty.
+
+The global default settings can be temporarily modified using the
+:class:`GlobalDefaultsContext` context manager.
+This context manager accepts the same keyword arguments as
+:class:`Formatter`.
+Within the context of :class:`GlobalDefaultsContext` manager, the
+global defaults take on the specified in put settings, but when the
+context is exited, the global default settings revert to their previous
+values.
+
+>>> from sciform import GlobalDefaultsContext, sfloat
+>>> snum = sfloat(0.0123)
+>>> print(f'{snum:.2ep}')
+1.23e-02
+>>> with GlobalDefaultsContext(add_c_prefix=True):
+...     print(f'{snum:.2ep}')
+1.23 c
+
+:class:`sfloat` objects load global settings when being *formatted*,
+not initialized.
+In contrast, :class:`Formatter` settings are configured and frozen when
+the class is initialized.
+Thus changing global default settings with :func:`set_global_defaults`
+or with the :class:`GlobalDefaultsContext` will not change the behavior
+of any :class:`Formatter` that was intantiated before the change, but it
+will change :class:`sfloat` formatting.
+Global configuration settings are, thus, most useful for controlling the
+behavior of :class:`sfloat` formatting.
+Global configuration settings (1) allow :class:`sfloat` format
+specification strings to be shortened and simplified and (2) provide the
+only means to modify the prefixes available for :class:`sfloat`
+formatting.

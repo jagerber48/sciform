@@ -35,6 +35,26 @@ class FormatOptions:
                     raise ValueError(f'Precision must be >= 1 for sig fig '
                                      f'rounding, not {self.precision}.')
 
+        if self.exp is not AutoExp:
+            # TODO: Needs testing
+            if (self.format_mode is FormatMode.FIXEDPOINT
+                    or self.format_mode is FormatMode.PERCENT):
+                if self.exp != 0:
+                    raise ValueError(f'Exponent must must be 0, not '
+                                     f'exp={self.exp}, for fixed point and '
+                                     f'percent format modes.')
+            elif (self.format_mode is FormatMode.ENGINEERING
+                    or self.format_mode is FormatMode.ENGINEERING_SHIFTED):
+                if self.exp % 3 != 0:
+                    raise ValueError(f'Exponent must be a multiple of 3, not '
+                                     f'exp={self.exp}, for engineering format '
+                                     f'modes.')
+            elif self.format_mode is FormatMode.BINARY_IEC:
+                if self.exp % 10 != 0:
+                    raise ValueError(f'Exponent must be a multiple of 10, not '
+                                     f'exp={self.exp}, for binary IEC format'
+                                     f'mode.')
+
         if self.upper_separator not in get_args(UpperGroupingSeparators):
             raise ValueError(f'upper_separator {self.upper_separator} not in '
                              f'{get_args(UpperGroupingSeparators)}.')

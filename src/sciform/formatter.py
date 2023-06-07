@@ -101,6 +101,23 @@ class Formatter:
     >>> print(sform(12345.678))
     12.35e+03
 
+    The following checks are performed when creating a
+    :class:`Formatter` object:
+
+    * precision >= 1 for significant figure rounding mode
+    * exp must be consistent with the format mode:
+
+      * exp must be 0 for fixed point and percent modes
+      * exp must be a multiple of 3 for engineering and shifted
+        engineering modes
+      * exp must be a multiple of 10 for binary iec mode
+
+    * upper_separator must be different than decimal_separator
+    * decimal_separator may only be GroupingSeparator.POINT or
+      GroupingSeparator.COMMA
+    * lower_separator may only be GroupingSeparator.NONE,
+      GroupingSeparator.SPACE, or GroupingSeparator.UNDERSCORE.
+
     :param fill_mode: :class:`FillMode` indicating whether
       to fill with zeros or spaces.
     :param sign_mode: :class:`SignMode` indicating sign
@@ -150,7 +167,6 @@ class Formatter:
     def __init__(
             self,
             *,
-            defaults: 'FormatOptions' = None,
             fill_mode: FillMode = None,
             sign_mode: SignMode = None,
             top_dig_place: int = None,
@@ -169,7 +185,7 @@ class Formatter:
             add_small_si_prefixes: bool = False
     ):
         self.options = FormatOptions.make(
-            defaults=defaults,
+            defaults=None,
             fill_mode=fill_mode,
             sign_mode=sign_mode,
             top_dig_place=top_dig_place,
@@ -194,6 +210,23 @@ class Formatter:
         return format_float(num, self.options)
 
     @classmethod
+    def _from_options(cls, options: FormatOptions):
+        return cls(fill_mode=options.fill_mode,
+                   sign_mode=options.sign_mode,
+                   top_dig_place=options.top_dig_place,
+                   upper_separator=options.upper_separator,
+                   decimal_separator=options.decimal_separator,
+                   lower_separator=options.lower_separator,
+                   round_mode=options.round_mode,
+                   precision=options.precision,
+                   format_mode=options.format_mode,
+                   capital_exp_char=options.capital_exp_char,
+                   exp=options.exp,
+                   use_prefix=options.use_prefix,
+                   extra_si_prefixes=options.extra_si_prefixes,
+                   extra_iec_prefixes=options.extra_iec_prefixes)
+
+    @classmethod
     def from_format_spec_str(cls, fmt: str):
-        format_options = FormatOptions.from_format_spec_str(fmt)
-        return cls(defaults=format_options)
+        options = FormatOptions.from_format_spec_str(fmt)
+        return cls._from_options(options=options)
