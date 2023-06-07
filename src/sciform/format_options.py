@@ -284,6 +284,9 @@ def get_global_defaults() -> FormatOptions:
 
 
 def print_global_defaults():
+    """
+    Print current global default formatting options as a dictionary.
+    """
     pprint(asdict(get_global_defaults()), sort_dicts=False)
 
 
@@ -307,6 +310,12 @@ def set_global_defaults(
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False
 ):
+    """
+    Update global default options. Accepts the same input keyword
+    arguments as :class:`Formatter` and undergoes the same input
+    validation. Any unspecified parameters retain their existing
+    global settings.
+    """
     global DEFAULT_GLOBAL_OPTIONS
     if defaults is None:
         defaults = DEFAULT_GLOBAL_OPTIONS
@@ -332,27 +341,57 @@ def set_global_defaults(
 
 
 def reset_global_defaults():
+    """
+    Reset global default options to package defaults.
+    """
     global DEFAULT_GLOBAL_OPTIONS
     DEFAULT_GLOBAL_OPTIONS = DEFAULT_PKG_OPTIONS
 
 
 def global_add_c_prefix():
+    """
+    Include 'c' as a prefix for the exponent value -2. Has no effect if
+    exponent value -2 is already mapped to a prefix string. To modify
+    This mapping first use :func:`global_reset_si_prefixes` or
+    use :func:`set_global_defaults`.
+    """
     set_global_defaults(add_c_prefix=True)
 
 
 def global_add_small_si_prefixes():
+    """
+    Include {-2: 'c', -1: 'd', +1: 'da', +2: 'h'} exponnet value to
+    prefix subsitutions. Note, if any of these exponent values are
+    mapped then that mapping will NOT be overwritten. To modify existing
+    mappings either first use :func:`global_reset_si_prefixes` or use
+    :func:`set_global_defaults`.
+    """
     set_global_defaults(add_small_si_prefixes=True)
 
 
 def global_reset_si_prefixes():
+    """
+    Clear all extra SI prefix mappings.
+    """
     set_global_defaults(extra_si_prefixes=dict())
 
 
 def global_reset_iec_prefixes():
+    """
+    Clear all extra IEC prefix mappings.
+    """
     set_global_defaults(extra_iec_prefixes=dict())
 
 
 class GlobalDefaultsContext:
+    """
+    Temporarily update global default options. Accepts the same input
+    keyword arguments as :class:`Formatter` and undergoes the same input
+    validation. Any unspecified parameters retain their existing
+    global settings. New settings are applied when the context is
+    entered and original global settings are re-applied when the context
+    is exited.
+    """
     def __init__(
             self,
             *,

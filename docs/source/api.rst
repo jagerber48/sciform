@@ -4,17 +4,15 @@ API
 .. module:: sciform
    :noindex:
 
-Formatter
-=========
-
-Formatting is controlled by the :class:`Formatter` object.
+Formatting
+==========
 
 .. autoclass:: Formatter()
 
+.. autoclass:: sfloat()
 
 Mode Enums
 ==========
-
 
 .. autoclass:: FillMode()
    :members:
@@ -30,3 +28,22 @@ Mode Enums
 
 .. autoclass:: FormatMode()
    :members:
+
+Global Configuration
+====================
+
+.. autoclass:: GlobalDefaultsContext()
+
+.. autofunction:: print_global_defaults()
+
+.. autofunction:: set_global_defaults()
+
+.. autofunction:: reset_global_defaults()
+
+.. autofunction:: global_add_c_prefix()
+
+.. autofunction:: global_add_small_si_prefixes()
+
+.. autofunction:: global_reset_si_prefixes()
+
+.. autofunction:: global_reset_iec_prefixes()
