@@ -10,9 +10,7 @@ from sciform.format_options import FormatOptions
 from sciform.prefix import replace_prefix
 
 
-def format_val_unc(val: float, unc: float, options: FormatOptions,
-                   match_widths: bool = False,
-                   paren_unc: bool = False):
+def format_val_unc(val: float, unc: float, options: FormatOptions):
     """
     Convert two floats, the value and the uncertainty into a
 
@@ -107,7 +105,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions,
 
     user_top_digit = options.top_dig_place
 
-    if match_widths:
+    if options.val_unc_match_widths:
         val_top_digit = get_top_digit(val_mantissa)
         unc_top_digit = get_top_digit(unc_mantissa)
         new_top_digit = max(user_top_digit, val_top_digit, unc_top_digit)
@@ -141,7 +139,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions,
     unc_match = mantissa_exp_pattern.match(unc_str)
     unc_str = unc_match.group('mantissa_str')
 
-    if not paren_unc:
+    if not options.bracket_unc:
         val_unc_str = f'{val_str} +/- {unc_str}'
     else:
         unc_str = unc_str.lstrip('0.')
@@ -178,19 +176,7 @@ class vufloat:
         self.uncertainty = unc
 
     def __format__(self, format_spec: str):
-        if format_spec.endswith('S'):
-            format_spec = format_spec[:-1]
-            paren_unc = True
-        else:
-            paren_unc = False
         options = FormatOptions.from_format_spec_str(format_spec)
-        match = re.match(options.pattern, format_spec)
-        if match.group('top_dig_place'):
-            match_widths = True
-        else:
-            match_widths = False
         return format_val_unc(self.value,
                               self.uncertainty,
-                              options,
-                              match_widths,
-                              paren_unc,)
+                              options)

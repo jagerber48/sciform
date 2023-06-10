@@ -27,6 +27,7 @@ class FormatOptions:
     use_prefix: bool
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
+    val_unc_match_widths: bool
     nan_include_exp: bool
     val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)]
     bracket_unc: bool
@@ -97,6 +98,7 @@ class FormatOptions:
             extra_iec_prefixes: dict[int, str] = None,
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False,
+            val_unc_match_widths: bool = None,
             nan_include_exp: bool = None,
             val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)] = None,
             bracket_unc: bool = None,
@@ -142,6 +144,8 @@ class FormatOptions:
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=(copy(extra_iec_prefixes)
                                 or copy(defaults.extra_iec_prefixes)),
+            val_unc_match_widths=(val_unc_match_widths or
+                                  defaults.val_unc_match_widths),
             nan_include_exp=nan_include_exp or defaults.nan_include_exp,
             val_unc_nan_include_exp=(val_unc_nan_include_exp or
                                      defaults.val_unc_nan_include_exp),
@@ -163,6 +167,7 @@ class FormatOptions:
                              (?P<format_mode>[fF%eErRbB])?
                              (?:x(?P<exp>[+-]?\d+))?
                              (?P<prefix_mode>p)?
+                             (?P<bracket_unc>S)?
                              $''', re.VERBOSE)
 
     fill_mode_mapping = {' ': FillMode.SPACE,
@@ -208,6 +213,9 @@ class FormatOptions:
         top_dig_place = match.group('top_dig_place')
         if top_dig_place is not None:
             top_dig_place = int(top_dig_place)
+            val_unc_match_widths = True
+        else:
+            val_unc_match_widths = None
 
         upper_separator_flag = match.group('upper_separator')
         upper_separator = cls.separator_mapping[upper_separator_flag]
@@ -255,6 +263,10 @@ class FormatOptions:
         if use_prefix is not None:
             use_prefix = True
 
+        bracket_unc = match.group('bracket_unc')
+        if bracket_unc is not None:
+            bracket_unc = True
+
         if defaults is None:
             defaults = DEFAULT_GLOBAL_OPTIONS
 
@@ -271,7 +283,9 @@ class FormatOptions:
             format_mode=format_mode,
             capital_exp_char=capital_exp_char,
             exp=exp,
-            use_prefix=use_prefix
+            use_prefix=use_prefix,
+            val_unc_match_widths=val_unc_match_widths,
+            bracket_unc=bracket_unc
         )
 
 
@@ -290,6 +304,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     use_prefix=False,
     extra_si_prefixes=dict(),
     extra_iec_prefixes=dict(),
+    val_unc_match_widths=False,
     nan_include_exp=False,
     val_unc_nan_include_exp=AutoValUncNanIncludeExp,
     bracket_unc=False,
