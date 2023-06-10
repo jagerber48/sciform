@@ -13,7 +13,8 @@ from sciform.grouping import add_separators
 from sciform.prefix import replace_prefix
 
 
-def format_float(num: float, options: FormatOptions) -> str:
+def format_float(num: float, options: FormatOptions,
+                 non_inf_exp=False) -> str:
     format_mode = options.format_mode
     round_mode = options.round_mode
     precision = options.precision
@@ -22,10 +23,26 @@ def format_float(num: float, options: FormatOptions) -> str:
     capital_exp_char = options.capital_exp_char
     fill_char = FillMode.to_char(options.fill_mode)
     if not isfinite(num):
-        if capital_exp_char:
-            return str(num).upper()
+        if non_inf_exp:
+            if options.exp is AutoExp:
+                exp = 0
+            else:
+                exp = options.exp
+            if (format_mode is FormatMode.FIXEDPOINT
+                    or format_mode is FormatMode.PERCENT):
+                exp_str = ''
+            elif (format_mode is FormatMode.SCIENTIFIC
+                  or format_mode is FormatMode.ENGINEERING
+                  or format_mode is FormatMode.ENGINEERING_SHIFTED):
+                exp_str = f'e+{exp:02d}'
+            else:
+                exp_str = f'b+{exp:02d}'
         else:
-            return str(num).lower()
+            exp_str = ''
+        if capital_exp_char:
+            return f'{num}{exp_str}'.upper()
+        else:
+            return f'{num}{exp_str}'.lower()
 
     if format_mode is FormatMode.PERCENT:
         num *= 100

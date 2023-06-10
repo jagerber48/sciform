@@ -23,8 +23,7 @@ class sfloat(float):
 
     def __format__(self, fmt: str):
         formatter = Formatter.from_format_spec_str(fmt)
-        formatter.format(self)
-        return formatter.format(self)
+        return formatter.format(float(self))
 
     @classmethod
     def _to_sfloat(cls, num: float) -> 'sfloat':
