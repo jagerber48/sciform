@@ -3,7 +3,8 @@ from math import isfinite
 
 from sciform.modes import (SignMode, FillMode, UpperGroupingSeparators,
                            DecimalGroupingSeparators, LowerGroupingSeparators,
-                           FormatMode, RoundMode, AutoExp, AutoPrec)
+                           FormatMode, RoundMode, AutoExp, AutoPrec,
+                           AutoValUncNanIncludeExp)
 from sciform.format_options import FormatOptions
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_and_bottom_digit,
@@ -23,7 +24,7 @@ def format_float(num: float, options: FormatOptions,
     capital_exp_char = options.capital_exp_char
     fill_char = FillMode.to_char(options.fill_mode)
     if not isfinite(num):
-        if non_inf_exp:
+        if options.nan_include_exp:
             if options.exp is AutoExp:
                 exp = 0
             else:
@@ -199,7 +200,13 @@ class Formatter:
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
             add_c_prefix: bool = False,
-            add_small_si_prefixes: bool = False
+            add_small_si_prefixes: bool = False,
+            bracket_unc: bool = None,
+            val_unc_match_width: bool = None,
+            bracket_unc_remove_dec_symb: bool = None,
+            unc_pm_whitespace: bool = None,
+            nan_include_exp: bool = None,
+            val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)] = None
     ):
         self.options = FormatOptions.make(
             defaults=None,
@@ -218,7 +225,13 @@ class Formatter:
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
             add_c_prefix=add_c_prefix,
-            add_small_si_prefixes=add_small_si_prefixes)
+            add_small_si_prefixes=add_small_si_prefixes,
+            bracket_unc=bracket_unc,
+            val_unc_match_widths=val_unc_match_width,
+            unc_pm_whitespace=unc_pm_whitespace,
+            nan_include_exp=nan_include_exp,
+            val_unc_nan_include_exp=val_unc_nan_include_exp
+        )
 
     def __call__(self, num: float):
         return self.format(num)
@@ -241,7 +254,13 @@ class Formatter:
                    exp=options.exp,
                    use_prefix=options.use_prefix,
                    extra_si_prefixes=options.extra_si_prefixes,
-                   extra_iec_prefixes=options.extra_iec_prefixes)
+                   extra_iec_prefixes=options.extra_iec_prefixes,
+                   bracket_unc=options.bracket_unc,
+                   val_unc_match_width=options.val_unc_match_widths,
+                   bracket_unc_remove_dec_symb=options.bracket_unc_remove_dec_symb,
+                   unc_pm_whitespace=options.unc_pm_whitespace,
+                   nan_include_exp=options.nan_include_exp,
+                   val_unc_nan_include_exp=options.val_unc_nan_include_exp)
 
     @classmethod
     def from_format_spec_str(cls, fmt: str):

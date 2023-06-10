@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import vufloat
+from sciform import vufloat, GlobalDefaultsContext
 
 
 NAN = float('nan')
@@ -193,8 +193,8 @@ class TestFormatting(unittest.TestCase):
                 'e': '(nan +/- nan)e+00'
             }
         }
-
-        self.do_unc_val_test_case_dict(cases_dict)
+        with GlobalDefaultsContext(val_unc_nan_include_exp=True):
+            self.do_unc_val_test_case_dict(cases_dict)
 
     def test_rounding(self):
         cases_dict = {
