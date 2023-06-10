@@ -332,6 +332,7 @@ class TestFormatting(unittest.TestCase):
         self.do_test_case_dict(cases_dict)
 
     def test_non_finite(self):
+        # TODO: These behaviors need to be documented
         cases_dict = {
             float('nan'): {
                 '': 'nan',
