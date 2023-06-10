@@ -7,7 +7,7 @@ from pprint import pprint
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
                            DecimalGroupingSeparators, RoundMode, FormatMode,
-                           AutoExp, AutoPrec)
+                           AutoExp, AutoPrec, AutoValUncNanIncludeExp)
 
 
 # noinspection PyUnresolvedReferences
@@ -27,6 +27,11 @@ class FormatOptions:
     use_prefix: bool
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
+    nan_include_exp: bool
+    val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)]
+    bracket_unc: bool
+    bracket_unc_remove_dec_symb: bool
+    unc_pm_whitespace: bool
 
     def __post_init__(self):
         if self.round_mode is RoundMode.SIG_FIG:
@@ -91,7 +96,12 @@ class FormatOptions:
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
             add_c_prefix: bool = False,
-            add_small_si_prefixes: bool = False
+            add_small_si_prefixes: bool = False,
+            nan_include_exp: bool = None,
+            val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)] = None,
+            bracket_unc: bool = None,
+            bracket_unc_remove_dec_symb: bool = None,
+            unc_pm_whitespace: bool = None
     ):
         if defaults is None:
             defaults = DEFAULT_GLOBAL_OPTIONS
@@ -131,7 +141,14 @@ class FormatOptions:
             use_prefix=use_prefix or defaults.use_prefix,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=(copy(extra_iec_prefixes)
-                                or copy(defaults.extra_iec_prefixes))
+                                or copy(defaults.extra_iec_prefixes)),
+            nan_include_exp=nan_include_exp or defaults.nan_include_exp,
+            val_unc_nan_include_exp=(val_unc_nan_include_exp or
+                                     defaults.val_unc_nan_include_exp),
+            bracket_unc=bracket_unc or defaults.bracket_unc,
+            bracket_unc_remove_dec_symb=(bracket_unc_remove_dec_symb or
+                                         defaults.bracket_unc_remove_dec_symb),
+            unc_pm_whitespace=unc_pm_whitespace or defaults.unc_pm_whitespace
         )
 
     pattern = re.compile(r'''^
@@ -272,7 +289,12 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     exp=AutoExp,
     use_prefix=False,
     extra_si_prefixes=dict(),
-    extra_iec_prefixes=dict()
+    extra_iec_prefixes=dict(),
+    nan_include_exp=False,
+    val_unc_nan_include_exp=AutoValUncNanIncludeExp,
+    bracket_unc=False,
+    bracket_unc_remove_dec_symb=False,
+    unc_pm_whitespace=True
 )
 
 DEFAULT_GLOBAL_OPTIONS = FormatOptions.make(
