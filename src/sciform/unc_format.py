@@ -141,11 +141,15 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     val_str = format_float(val_rounded, val_format_options, non_inf_exp=True)
     val_match = mantissa_exp_pattern.match(val_str)
     val_str = val_match.group('mantissa_str')
-    exp_str = val_match.group('exp_str')
 
     unc_str = format_float(unc_rounded, unc_format_options, non_inf_exp=True)
     unc_match = mantissa_exp_pattern.match(unc_str)
     unc_str = unc_match.group('mantissa_str')
+
+    if isfinite(val):
+        exp_str = val_match.group('exp_str')
+    else:
+        exp_str = unc_match.group('exp_str')
 
     if not options.bracket_unc:
         val_unc_str = f'{val_str} +/- {unc_str}'
