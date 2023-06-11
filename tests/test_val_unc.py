@@ -172,25 +172,45 @@ class TestFormatting(unittest.TestCase):
         cases_dict = {
             (12.34, NAN): {
                 '': '12.34 +/- nan',
-                'S': '12.34(nan)'
+                'e': '(1.234 +/- nan)e+01',
+                'S': '12.34(nan)',
+                'eS': '(1.234(nan))e+01'
             },
             (12.34, INF): {
                 '': '12.34 +/- inf',
-                'S': '12.34(inf)'
+                'e': '(1.234 +/- inf)e+01',
+                'S': '12.34(inf)',
+                'eS': '(1.234(inf))e+01'
             },
             (NAN, 12.34): {
                 '': 'nan +/- 12.34',
-                'e': '(nan +/- 1.234)e+01'
+                'e': '(nan +/- 1.234)e+01',
+                'S': 'nan(12.34)',
+                'eS': '(nan(1.234))e+01',
             },
             (INF, 12.34): {
                 '': 'inf +/- 12.34',
-                'e': '(inf +/- 1.234)e+01'
+                'e': '(inf +/- 1.234)e+01',
+                'S': 'inf(12.34)',
+                'eS': '(inf(1.234))e+01'
             },
             (NAN, NAN): {
                 '': 'nan +/- nan',
                 'S': 'nan(nan)',
-                'FS': 'NAN(NAN)',
-                'e': '(nan +/- nan)e+00'
+                'e': 'nan +/- nan',
+                'eS': 'nan(nan)'
+            }
+        }
+
+        self.do_unc_val_test_case_dict(cases_dict)
+
+    def test_nan_exp(self):
+        cases_dict = {
+            (NAN, NAN): {
+                '': 'nan +/- nan',
+                'e': '(nan +/- nan)e+00',
+                'S': 'nan(nan)',
+                'eS': '(nan(nan))e+00'
             }
         }
         with GlobalDefaultsContext(val_unc_nan_include_exp=True):
