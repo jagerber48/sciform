@@ -39,9 +39,6 @@ class sfloat(float):
         div, mod = super().__divmod__(x)
         return self._to_sfloat(div), self._to_sfloat(mod)
 
-    def __float__(self) -> 'sfloat':
-        return self._to_sfloat(super().__float__())
-
     def __floordiv__(self, x: float) -> 'sfloat':
         return self._to_sfloat(super().__floordiv__(x))
 
