@@ -216,6 +216,26 @@ class TestFormatting(unittest.TestCase):
         with GlobalDefaultsContext(val_unc_nan_include_exp=True):
             self.do_unc_val_test_case_dict(cases_dict)
 
+    def test_capitalization(self):
+        cases_dict = {
+            (123.456, 0.789):
+                {
+                    'e': '(1.23456 +/- 0.00789)e+02',
+                    'E': '(1.23456 +/- 0.00789)E+02'
+                },
+            (NAN, NAN): {
+                'e': '(nan +/- nan)e+00',
+                'E': '(NAN +/- NAN)E+00',
+            },
+            (INF, INF): {
+                'e': '(inf +/- inf)e+00',
+                'E': '(INF +/- INF)E+00',
+            }
+        }
+
+        with GlobalDefaultsContext(val_unc_nan_include_exp=True):
+            self.do_unc_val_test_case_dict(cases_dict)
+
     def test_rounding(self):
         cases_dict = {
             (0.0999, 0.0999): {
@@ -227,7 +247,7 @@ class TestFormatting(unittest.TestCase):
         }
         self.do_unc_val_test_case_dict(cases_dict)
 
-    def test_match_wdiths(self):
+    def test_match_widths(self):
         cases_dict = {
             (123.456, 0.789): {
                 '0=0': '123.456 +/- 000.789',

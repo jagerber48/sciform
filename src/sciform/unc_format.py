@@ -59,7 +59,6 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     unc_rounded = round(unc_rounded, -round_digit)
     val_rounded = round(val_rounded, -round_digit)
 
-
     format_mode = options.format_mode
 
     '''
