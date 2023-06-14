@@ -204,7 +204,19 @@ class TestFormatting(unittest.TestCase):
 
         self.do_unc_val_test_case_dict(cases_dict)
 
-    def test_nan_exp(self):
+    def test_nan_include_exp(self):
+        cases_dict = {
+            (NAN, NAN): {
+                '': 'nan +/- nan',
+                'e': '(nan +/- nan)e+00',
+                'S': 'nan(nan)',
+                'eS': '(nan(nan))e+00'
+            }
+        }
+        with GlobalDefaultsContext(nan_include_exp=True):
+            self.do_unc_val_test_case_dict(cases_dict)
+
+    def test_val_unc_nan_include_exp(self):
         cases_dict = {
             (NAN, NAN): {
                 '': 'nan +/- nan',
