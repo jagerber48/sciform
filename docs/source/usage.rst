@@ -78,7 +78,13 @@ The global default settings can be viewed using
  'exp': <class 'sciform.modes.AutoExp'>,
  'use_prefix': False,
  'extra_si_prefixes': {},
- 'extra_iec_prefixes': {}}
+ 'extra_iec_prefixes': {},
+ 'bracket_unc': False,
+ 'val_unc_match_widths': False,
+ 'bracket_unc_remove_dec_symb': False,
+ 'unc_pm_whitespace': True,
+ 'nan_include_exp': False,
+ 'val_unc_nan_include_exp': <class 'sciform.modes.AutoValUncNanIncludeExp'>}
 
 The global default settings can be modified using
 :func:`set_global_defaults()` with the same keyword arguments passed
@@ -108,7 +114,13 @@ applied to setting global default settings.
  'exp': <class 'sciform.modes.AutoExp'>,
  'use_prefix': False,
  'extra_si_prefixes': {},
- 'extra_iec_prefixes': {}}
+ 'extra_iec_prefixes': {},
+ 'bracket_unc': False,
+ 'val_unc_match_widths': False,
+ 'bracket_unc_remove_dec_symb': False,
+ 'unc_pm_whitespace': True,
+ 'nan_include_exp': False,
+ 'val_unc_nan_include_exp': <class 'sciform.modes.AutoValUncNanIncludeExp'>}
 
 The global default settings can be reset to the :mod:`sciform` defaults
 using :func:`reset_global_defaults`.
