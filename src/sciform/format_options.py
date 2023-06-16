@@ -108,8 +108,51 @@ class FormatOptions:
         if defaults is None:
             defaults = DEFAULT_GLOBAL_OPTIONS
 
-        extra_si_prefixes = (copy(extra_si_prefixes)
-                             or copy(defaults.extra_si_prefixes))
+        if fill_mode is None:
+            fill_mode = defaults.fill_mode
+        if sign_mode is None:
+            sign_mode = defaults.sign_mode
+        if top_dig_place is None:
+            top_dig_place = defaults.top_dig_place
+        if upper_separator is None:
+            upper_separator = defaults.upper_separator
+        if decimal_separator is None:
+            decimal_separator = defaults.decimal_separator
+        if lower_separator is None:
+            lower_separator = defaults.lower_separator
+        if round_mode is None:
+            round_mode = defaults.round_mode
+        if precision is None:
+            precision = defaults.precision
+        if format_mode is None:
+            format_mode = defaults.format_mode
+        if capital_exp_char is None:
+            capital_exp_char = defaults.capital_exp_char
+        if exp is None:
+            exp = defaults.exp
+        if use_prefix is None:
+            use_prefix = defaults.use_prefix
+        if extra_si_prefixes is None:
+            extra_si_prefixes = copy(defaults.extra_si_prefixes)
+        else:
+            extra_si_prefixes = copy(extra_si_prefixes)
+        if extra_iec_prefixes is None:
+            extra_iec_prefixes = copy(defaults.extra_iec_prefixes)
+        else:
+            extra_iec_prefixes = copy(extra_iec_prefixes)
+        if bracket_unc is None:
+            bracket_unc = defaults.bracket_unc
+        if val_unc_match_widths is None:
+            val_unc_match_widths = defaults.val_unc_match_widths
+        if bracket_unc_remove_dec_symb is None:
+            bracket_unc_remove_dec_symb = defaults.bracket_unc_remove_dec_symb
+        if unc_pm_whitespace is None:
+            unc_pm_whitespace = defaults.unc_pm_whitespace
+        if nan_include_exp is None:
+            nan_include_exp = defaults.nan_include_exp
+        if val_unc_nan_include_exp is None:
+            val_unc_nan_include_exp = defaults.val_unc_nan_include_exp
+
         if add_c_prefix and -2 not in extra_si_prefixes:
             extra_si_prefixes[-2] = 'c'
 
@@ -124,35 +167,26 @@ class FormatOptions:
                 extra_si_prefixes[+2] = 'h'
 
         return cls(
-            fill_mode=defaults.fill_mode if fill_mode is None else fill_mode,
-            sign_mode=sign_mode or defaults.sign_mode,
-            top_dig_place=(defaults.top_dig_place if top_dig_place is None
-                           else top_dig_place),
-            upper_separator=(upper_separator or
-                             defaults.upper_separator),
-            decimal_separator=(decimal_separator or
-                               defaults.decimal_separator),
-            lower_separator=(lower_separator or
-                             defaults.lower_separator),
-            round_mode=round_mode or defaults.round_mode,
-            precision=defaults.precision if precision is None else precision,
-            format_mode=format_mode or defaults.format_mode,
-            capital_exp_char=(capital_exp_char or
-                              defaults.capital_exp_char),
-            exp=defaults.exp if exp is None else exp,
-            use_prefix=use_prefix or defaults.use_prefix,
+            fill_mode=fill_mode,
+            sign_mode=sign_mode,
+            top_dig_place=top_dig_place,
+            upper_separator=upper_separator,
+            decimal_separator=decimal_separator,
+            lower_separator=lower_separator,
+            round_mode=round_mode,
+            precision=precision,
+            format_mode=format_mode,
+            capital_exp_char=capital_exp_char,
+            exp=exp,
+            use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
-            extra_iec_prefixes=(copy(extra_iec_prefixes)
-                                or copy(defaults.extra_iec_prefixes)),
-            bracket_unc=bracket_unc or defaults.bracket_unc,
-            val_unc_match_widths=(val_unc_match_widths or
-                                  defaults.val_unc_match_widths),
-            bracket_unc_remove_dec_symb=(bracket_unc_remove_dec_symb or
-                                         defaults.bracket_unc_remove_dec_symb),
-            unc_pm_whitespace=unc_pm_whitespace or defaults.unc_pm_whitespace,
-            nan_include_exp=nan_include_exp or defaults.nan_include_exp,
-            val_unc_nan_include_exp=(val_unc_nan_include_exp or
-                                     defaults.val_unc_nan_include_exp),
+            extra_iec_prefixes=extra_iec_prefixes,
+            bracket_unc=bracket_unc,
+            val_unc_match_widths=val_unc_match_widths,
+            bracket_unc_remove_dec_symb=bracket_unc_remove_dec_symb,
+            unc_pm_whitespace=unc_pm_whitespace,
+            nan_include_exp=nan_include_exp,
+            val_unc_nan_include_exp=val_unc_nan_include_exp,
         )
 
     pattern = re.compile(r'''^
