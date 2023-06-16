@@ -152,6 +152,22 @@ class TestFormatting(unittest.TestCase):
 
         self.do_unc_val_test_case_dict(cases_dict)
 
+    def test_bracket_unc(self):
+        cases_dict = {
+            (123.456, 0.789):
+                {
+                    'S': '123.456(789)',
+                    'eS': '(1.23456(789))e+02',
+                    'rS': '(123.456(789))e+00',
+                    '#rS': '(0.123456(789))e+03',
+                    'ex+1S': '(12.3456(789))e+01',
+                    'ex-1S': '(1234.56(7.89))e-01',
+                }
+        }
+
+        self.do_unc_val_test_case_dict(cases_dict)
+
+
     def test_match_width(self):
         cases_dict = {
             (123.456, 0.789):
