@@ -151,9 +151,14 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         exp_str = unc_match.group('exp_str')
 
     if not options.bracket_unc:
-        val_unc_str = f'{val_str} +/- {unc_str}'
+        if options.unc_pm_whitespace:
+            val_unc_str = f'{val_str} +/- {unc_str}'
+        else:
+            val_unc_str = f'{val_str}+/-{unc_str}'
     else:
         unc_str = unc_str.lstrip('0.')
+        if options.bracket_unc_remove_dec_symb:
+            unc_str = unc_str.replace('.', '')
         val_unc_str = f'{val_str}({unc_str})'
 
     if exp_str is not None:
