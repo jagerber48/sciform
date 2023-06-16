@@ -1,6 +1,7 @@
 from sciform.formatter import Formatter
 
 
+# noinspection PyPep8Naming
 class sfloat(float):
     """
     float object for scientific formatting. Supports the :mod:`sciform`
@@ -89,6 +90,7 @@ class sfloat(float):
         return self._to_sfloat(super().__truediv__(x))
 
 
+# noinspection PyPep8Naming
 class vufloat:
     """
     Here we do not inherit from float, and we do not support float operations.

@@ -3,7 +3,7 @@ from typing import Union
 from sciform.modes import (SignMode, FillMode, UpperGroupingSeparators,
                            DecimalGroupingSeparators, LowerGroupingSeparators,
                            FormatMode, RoundMode, AutoExp, AutoPrec,
-                           AutoValUncNanIncludeExp)
+                           AutoUncNanInfExp)
 from sciform.format_options import FormatOptions
 from sciform.formatting import format_float, format_val_unc
 
@@ -99,7 +99,7 @@ class Formatter:
             format_mode: FormatMode = None,
             capital_exp_char: bool = None,
             exp: Union[int, type(AutoExp)] = None,
-            nan_include_exp: bool = None,
+            nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
@@ -109,7 +109,7 @@ class Formatter:
             val_unc_match_width: bool = None,
             bracket_unc_remove_seps: bool = None,
             unc_pm_whitespace: bool = None,
-            val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)] = None
+            unc_nan_inf_exp: Union[bool, type(AutoUncNanInfExp)] = None
     ):
         self.options = FormatOptions.make(
             defaults=None,
@@ -124,7 +124,7 @@ class Formatter:
             format_mode=format_mode,
             capital_exp_char=capital_exp_char,
             exp=exp,
-            nan_include_exp=nan_include_exp,
+            nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
@@ -134,7 +134,7 @@ class Formatter:
             val_unc_match_widths=val_unc_match_width,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
             unc_pm_whitespace=unc_pm_whitespace,
-            val_unc_nan_include_exp=val_unc_nan_include_exp
+            unc_nan_inf_exp=unc_nan_inf_exp
         )
 
     def __call__(self, val: float, unc: float = None, /):
@@ -159,7 +159,7 @@ class Formatter:
                    format_mode=options.format_mode,
                    capital_exp_char=options.capital_exp_char,
                    exp=options.exp,
-                   nan_include_exp=options.nan_include_exp,
+                   nan_inf_exp=options.nan_inf_exp,
                    use_prefix=options.use_prefix,
                    extra_si_prefixes=options.extra_si_prefixes,
                    extra_iec_prefixes=options.extra_iec_prefixes,
@@ -167,7 +167,7 @@ class Formatter:
                    val_unc_match_width=options.val_unc_match_widths,
                    bracket_unc_remove_seps=options.bracket_unc_remove_seps,
                    unc_pm_whitespace=options.unc_pm_whitespace,
-                   val_unc_nan_include_exp=options.val_unc_nan_include_exp)
+                   unc_nan_inf_exp=options.unc_nan_inf_exp)
 
     @classmethod
     def from_format_spec_str(cls, fmt: str):

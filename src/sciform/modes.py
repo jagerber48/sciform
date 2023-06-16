@@ -11,7 +11,7 @@ class AutoPrec:
     pass
 
 
-class AutoValUncNanIncludeExp:
+class AutoUncNanInfExp:
     pass
 
 

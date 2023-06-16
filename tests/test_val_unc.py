@@ -229,7 +229,7 @@ class TestFormatting(unittest.TestCase):
                 'eS': '(nan(nan))e+00'
             }
         }
-        with GlobalDefaultsContext(nan_include_exp=True):
+        with GlobalDefaultsContext(nan_inf_exp=True):
             self.do_unc_val_test_case_dict(cases_dict)
 
     def test_val_unc_nan_include_exp(self):
@@ -241,7 +241,7 @@ class TestFormatting(unittest.TestCase):
                 'eS': '(nan(nan))e+00'
             }
         }
-        with GlobalDefaultsContext(val_unc_nan_include_exp=True):
+        with GlobalDefaultsContext(unc_nan_inf_exp=True):
             self.do_unc_val_test_case_dict(cases_dict)
 
     def test_capitalization(self):
@@ -261,7 +261,7 @@ class TestFormatting(unittest.TestCase):
             }
         }
 
-        with GlobalDefaultsContext(val_unc_nan_include_exp=True):
+        with GlobalDefaultsContext(unc_nan_inf_exp=True):
             self.do_unc_val_test_case_dict(cases_dict)
 
     def test_rounding(self):

@@ -76,7 +76,7 @@ The global default settings can be viewed using
  'format_mode': <FormatMode.FIXEDPOINT: 'fixed_point'>,
  'capital_exp_char': False,
  'exp': <class 'sciform.modes.AutoExp'>,
- 'nan_include_exp': False,
+ 'nan_inf_exp': False,
  'use_prefix': False,
  'extra_si_prefixes': {},
  'extra_iec_prefixes': {},
@@ -84,7 +84,7 @@ The global default settings can be viewed using
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
  'unc_pm_whitespace': True,
- 'val_unc_nan_include_exp': <class 'sciform.modes.AutoValUncNanIncludeExp'>}
+ 'unc_nan_inf_exp': <class 'sciform.modes.AutoUncNanInfExp'>}
 
 The global default settings can be modified using
 :func:`set_global_defaults()` with the same keyword arguments passed
@@ -112,7 +112,7 @@ applied to setting global default settings.
  'format_mode': <FormatMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
  'capital_exp_char': False,
  'exp': <class 'sciform.modes.AutoExp'>,
- 'nan_include_exp': False,
+ 'nan_inf_exp': False,
  'use_prefix': False,
  'extra_si_prefixes': {},
  'extra_iec_prefixes': {},
@@ -120,7 +120,7 @@ applied to setting global default settings.
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
  'unc_pm_whitespace': True,
- 'val_unc_nan_include_exp': <class 'sciform.modes.AutoValUncNanIncludeExp'>}
+ 'unc_nan_inf_exp': <class 'sciform.modes.AutoUncNanInfExp'>}
 
 The global default settings can be reset to the :mod:`sciform` defaults
 using :func:`reset_global_defaults`.

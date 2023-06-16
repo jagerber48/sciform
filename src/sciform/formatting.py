@@ -3,8 +3,7 @@ from warnings import warn
 import re
 
 from sciform.modes import (FillMode, FormatMode, SignMode, AutoExp,
-                           GroupingSeparator,
-                           AutoValUncNanIncludeExp)
+                           AutoUncNanInfExp)
 from sciform.format_options import FormatOptions, RoundMode
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_digit,
@@ -24,7 +23,7 @@ def format_float(num: float, options: FormatOptions) -> str:
     capital_exp_char = options.capital_exp_char
     fill_char = FillMode.to_char(options.fill_mode)
     if not isfinite(num):
-        if options.nan_include_exp:
+        if options.nan_inf_exp:
             if options.exp is AutoExp:
                 exp = 0
             else:
@@ -205,10 +204,10 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     else:
         new_top_digit = user_top_digit
 
-    if options.val_unc_nan_include_exp is not AutoValUncNanIncludeExp:
-        nan_include_exp = options.val_unc_nan_include_exp
+    if options.unc_nan_inf_exp is not AutoUncNanInfExp:
+        nan_include_exp = options.unc_nan_inf_exp
     else:
-        nan_include_exp = options.nan_include_exp
+        nan_include_exp = options.nan_inf_exp
 
     val_format_options = FormatOptions.make(
         defaults=options,
@@ -218,13 +217,13 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         format_mode=free_exp_format_mode,
         exp=exp,
         use_prefix=False,
-        nan_include_exp=nan_include_exp)
+        nan_inf_exp=nan_include_exp)
 
     unc_format_options = FormatOptions.make(
         defaults=val_format_options,
         format_mode=free_exp_format_mode,
         sign_mode=SignMode.NEGATIVE,
-        nan_include_exp=nan_include_exp
+        nan_inf_exp=nan_include_exp
     )
 
     mantissa_exp_pattern = re.compile(

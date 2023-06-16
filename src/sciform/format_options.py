@@ -7,10 +7,9 @@ from pprint import pprint
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
                            DecimalGroupingSeparators, RoundMode, FormatMode,
-                           AutoExp, AutoPrec, AutoValUncNanIncludeExp)
+                           AutoExp, AutoPrec, AutoUncNanInfExp)
 
 
-# noinspection PyUnresolvedReferences
 @dataclass(frozen=True)
 class FormatOptions:
     fill_mode: FillMode
@@ -24,7 +23,7 @@ class FormatOptions:
     format_mode: FormatMode  # TODO: rename to exp_mode
     capital_exp_char: bool
     exp: Union[int, type(AutoExp)]
-    nan_include_exp: bool
+    nan_inf_exp: bool
     use_prefix: bool
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
@@ -32,7 +31,7 @@ class FormatOptions:
     val_unc_match_widths: bool
     bracket_unc_remove_seps: bool
     unc_pm_whitespace: bool
-    val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)]
+    unc_nan_inf_exp: Union[bool, type(AutoUncNanInfExp)]
 
     def __post_init__(self):
         if self.round_mode is RoundMode.SIG_FIG:
@@ -93,7 +92,7 @@ class FormatOptions:
             format_mode: FormatMode = None,
             capital_exp_char: bool = None,
             exp: Union[int, type(AutoExp)] = None,
-            nan_include_exp: bool = None,
+            nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
@@ -103,7 +102,7 @@ class FormatOptions:
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
             unc_pm_whitespace: bool = None,
-            val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)] = None,
+            unc_nan_inf_exp: Union[bool, type(AutoUncNanInfExp)] = None,
     ):
         if defaults is None:
             defaults = DEFAULT_GLOBAL_OPTIONS
@@ -148,10 +147,10 @@ class FormatOptions:
             bracket_unc_remove_seps = defaults.bracket_unc_remove_seps
         if unc_pm_whitespace is None:
             unc_pm_whitespace = defaults.unc_pm_whitespace
-        if nan_include_exp is None:
-            nan_include_exp = defaults.nan_include_exp
-        if val_unc_nan_include_exp is None:
-            val_unc_nan_include_exp = defaults.val_unc_nan_include_exp
+        if nan_inf_exp is None:
+            nan_inf_exp = defaults.nan_inf_exp
+        if unc_nan_inf_exp is None:
+            unc_nan_inf_exp = defaults.unc_nan_inf_exp
 
         if add_c_prefix and -2 not in extra_si_prefixes:
             extra_si_prefixes[-2] = 'c'
@@ -178,7 +177,7 @@ class FormatOptions:
             format_mode=format_mode,
             capital_exp_char=capital_exp_char,
             exp=exp,
-            nan_include_exp=nan_include_exp,
+            nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
@@ -186,7 +185,7 @@ class FormatOptions:
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
             unc_pm_whitespace=unc_pm_whitespace,
-            val_unc_nan_include_exp=val_unc_nan_include_exp,
+            unc_nan_inf_exp=unc_nan_inf_exp,
         )
 
     pattern = re.compile(r'''^
@@ -335,7 +334,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     format_mode=FormatMode.FIXEDPOINT,
     capital_exp_char=False,
     exp=AutoExp,
-    nan_include_exp=False,
+    nan_inf_exp=False,
     use_prefix=False,
     extra_si_prefixes=dict(),
     extra_iec_prefixes=dict(),
@@ -343,7 +342,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     val_unc_match_widths=False,
     bracket_unc_remove_seps=False,
     unc_pm_whitespace=True,
-    val_unc_nan_include_exp=AutoValUncNanIncludeExp
+    unc_nan_inf_exp=AutoUncNanInfExp
 )
 
 DEFAULT_GLOBAL_OPTIONS = FormatOptions.make(
@@ -375,7 +374,7 @@ def set_global_defaults(
         format_mode: FormatMode = None,
         capital_exp_char: bool = None,
         exp: Union[int, type(AutoExp)] = None,
-        nan_include_exp=None,
+        nan_inf_exp=None,
         use_prefix: bool = None,
         extra_si_prefixes: dict[int, str] = None,
         extra_iec_prefixes: dict[int, str] = None,
@@ -385,7 +384,7 @@ def set_global_defaults(
         val_unc_match_widths=None,
         bracket_unc_remove_seps=None,
         unc_pm_whitespace=None,
-        val_unc_nan_include_exp=None
+        unc_nan_inf_exp=None
 ):
     """
     Update global default options. Accepts the same input keyword
@@ -409,7 +408,7 @@ def set_global_defaults(
         format_mode=format_mode,
         capital_exp_char=capital_exp_char,
         exp=exp,
-        nan_include_exp=nan_include_exp,
+        nan_inf_exp=nan_inf_exp,
         use_prefix=use_prefix,
         extra_si_prefixes=extra_si_prefixes,
         extra_iec_prefixes=extra_iec_prefixes,
@@ -419,7 +418,7 @@ def set_global_defaults(
         val_unc_match_widths=val_unc_match_widths,
         bracket_unc_remove_seps=bracket_unc_remove_seps,
         unc_pm_whitespace=unc_pm_whitespace,
-        val_unc_nan_include_exp=val_unc_nan_include_exp
+        unc_nan_inf_exp=unc_nan_inf_exp
     )
     DEFAULT_GLOBAL_OPTIONS = new_default_options
 
@@ -491,7 +490,7 @@ class GlobalDefaultsContext:
             format_mode: FormatMode = None,
             capital_exp_char: bool = None,
             exp: Union[int, type(AutoExp)] = None,
-            nan_include_exp: bool = None,
+            nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
@@ -501,7 +500,7 @@ class GlobalDefaultsContext:
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
             unc_pm_whitespace: bool = None,
-            val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)] = None
+            unc_nan_inf_exp: Union[bool, type(AutoUncNanInfExp)] = None
     ):
         self.options = FormatOptions.make(
             defaults=defaults,
@@ -516,7 +515,7 @@ class GlobalDefaultsContext:
             format_mode=format_mode,
             capital_exp_char=capital_exp_char,
             exp=exp,
-            nan_include_exp=nan_include_exp,
+            nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
@@ -526,7 +525,7 @@ class GlobalDefaultsContext:
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
             unc_pm_whitespace=unc_pm_whitespace,
-            val_unc_nan_include_exp=val_unc_nan_include_exp
+            unc_nan_inf_exp=unc_nan_inf_exp
         )
         self.initial_global_defaults = None
 
