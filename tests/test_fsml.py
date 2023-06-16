@@ -360,24 +360,24 @@ class TestFormatting(unittest.TestCase):
         cases_dict = {
             float('nan'): {
                 '': 'nan',
-                'e': 'nane+00',
-                'E': 'NANE+00',
-                'b': 'nanb+00',
-                'B': 'NANB+00'
+                'e': '(nan)e+00',
+                'E': '(NAN)E+00',
+                'b': '(nan)b+00',
+                'B': '(NAN)B+00'
         },
             float('inf'): {
                 '': 'inf',
-                'e': 'infe+00',
-                'E': 'INFE+00',
-                'b': 'infb+00',
-                'B': 'INFB+00'
+                'e': '(inf)e+00',
+                'E': '(INF)E+00',
+                'b': '(inf)b+00',
+                'B': '(INF)B+00'
             },
             float('-inf'): {
                 '': '-inf',
-                'e': '-infe+00',
-                'E': '-INFE+00',
-                'b': '-infb+00',
-                'B': '-INFB+00'
+                'e': '(-inf)e+00',
+                'E': '(-INF)E+00',
+                'b': '(-inf)b+00',
+                'B': '(-INF)B+00'
             }
         }
 

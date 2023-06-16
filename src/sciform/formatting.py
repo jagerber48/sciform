@@ -38,10 +38,14 @@ def format_float(num: float, options: FormatOptions) -> str:
                 exp_str = f'b+{exp:02d}'
         else:
             exp_str = ''
-        if capital_exp_char:
-            return f'{num}{exp_str}'.upper()
+        if exp_str != '':
+            full_str = f'({num}){exp_str}'
         else:
-            return f'{num}{exp_str}'.lower()
+            full_str = f'{num}'
+        if capital_exp_char:
+            return full_str.upper()
+        else:
+            return full_str.lower()
 
     if format_mode is FormatMode.PERCENT:
         num *= 100
@@ -221,8 +225,9 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         nan_inf_exp=options.nan_inf_exp
     )
 
+    # Optional parentheses needed to handle (nan)e+00 case
     mantissa_exp_pattern = re.compile(
-        r'^(?P<mantissa_str>.*?)(?P<exp_str>[eEbB].*?)?$')
+        r'^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$')
 
     val_str = format_float(val_rounded, val_format_options)
     val_match = mantissa_exp_pattern.match(val_str)
