@@ -83,8 +83,7 @@ The global default settings can be viewed using
  'bracket_unc': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
- 'unc_pm_whitespace': True,
- 'unc_nan_inf_exp': <class 'sciform.modes.AutoUncNanInfExp'>}
+ 'unc_pm_whitespace': True}
 
 The global default settings can be modified using
 :func:`set_global_defaults()` with the same keyword arguments passed
@@ -119,8 +118,7 @@ applied to setting global default settings.
  'bracket_unc': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
- 'unc_pm_whitespace': True,
- 'unc_nan_inf_exp': <class 'sciform.modes.AutoUncNanInfExp'>}
+ 'unc_pm_whitespace': True}
 
 The global default settings can be reset to the :mod:`sciform` defaults
 using :func:`reset_global_defaults`.

@@ -11,10 +11,6 @@ class AutoPrec:
     pass
 
 
-class AutoUncNanInfExp:
-    pass
-
-
 def option_warn_str(value, options: type(Literal)):
     return f'Flag \'{value}\' not in {get_args(options)}.'
 

@@ -7,7 +7,7 @@ from pprint import pprint
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
                            DecimalGroupingSeparators, RoundMode, FormatMode,
-                           AutoExp, AutoPrec, AutoUncNanInfExp)
+                           AutoExp, AutoPrec)
 
 
 @dataclass(frozen=True)
@@ -31,7 +31,6 @@ class FormatOptions:
     val_unc_match_widths: bool
     bracket_unc_remove_seps: bool
     unc_pm_whitespace: bool
-    unc_nan_inf_exp: Union[bool, type(AutoUncNanInfExp)]
 
     def __post_init__(self):
         if self.round_mode is RoundMode.SIG_FIG:
@@ -101,8 +100,7 @@ class FormatOptions:
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
-            unc_pm_whitespace: bool = None,
-            unc_nan_inf_exp: Union[bool, type(AutoUncNanInfExp)] = None,
+            unc_pm_whitespace: bool = None
     ):
         if defaults is None:
             defaults = DEFAULT_GLOBAL_OPTIONS
@@ -149,8 +147,6 @@ class FormatOptions:
             unc_pm_whitespace = defaults.unc_pm_whitespace
         if nan_inf_exp is None:
             nan_inf_exp = defaults.nan_inf_exp
-        if unc_nan_inf_exp is None:
-            unc_nan_inf_exp = defaults.unc_nan_inf_exp
 
         if add_c_prefix and -2 not in extra_si_prefixes:
             extra_si_prefixes[-2] = 'c'
@@ -184,8 +180,7 @@ class FormatOptions:
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
-            unc_pm_whitespace=unc_pm_whitespace,
-            unc_nan_inf_exp=unc_nan_inf_exp,
+            unc_pm_whitespace=unc_pm_whitespace
         )
 
     pattern = re.compile(r'''^
@@ -341,8 +336,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     bracket_unc=False,
     val_unc_match_widths=False,
     bracket_unc_remove_seps=False,
-    unc_pm_whitespace=True,
-    unc_nan_inf_exp=AutoUncNanInfExp
+    unc_pm_whitespace=True
 )
 
 DEFAULT_GLOBAL_OPTIONS = FormatOptions.make(
@@ -383,8 +377,7 @@ def set_global_defaults(
         bracket_unc=None,
         val_unc_match_widths=None,
         bracket_unc_remove_seps=None,
-        unc_pm_whitespace=None,
-        unc_nan_inf_exp=None
+        unc_pm_whitespace=None
 ):
     """
     Update global default options. Accepts the same input keyword
@@ -417,8 +410,7 @@ def set_global_defaults(
         bracket_unc=bracket_unc,
         val_unc_match_widths=val_unc_match_widths,
         bracket_unc_remove_seps=bracket_unc_remove_seps,
-        unc_pm_whitespace=unc_pm_whitespace,
-        unc_nan_inf_exp=unc_nan_inf_exp
+        unc_pm_whitespace=unc_pm_whitespace
     )
     DEFAULT_GLOBAL_OPTIONS = new_default_options
 
@@ -499,8 +491,7 @@ class GlobalDefaultsContext:
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
-            unc_pm_whitespace: bool = None,
-            unc_nan_inf_exp: Union[bool, type(AutoUncNanInfExp)] = None
+            unc_pm_whitespace: bool = None
     ):
         self.options = FormatOptions.make(
             defaults=defaults,
@@ -524,8 +515,7 @@ class GlobalDefaultsContext:
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
-            unc_pm_whitespace=unc_pm_whitespace,
-            unc_nan_inf_exp=unc_nan_inf_exp
+            unc_pm_whitespace=unc_pm_whitespace
         )
         self.initial_global_defaults = None
 

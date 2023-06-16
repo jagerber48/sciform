@@ -2,8 +2,7 @@ from typing import Union
 
 from sciform.modes import (SignMode, FillMode, UpperGroupingSeparators,
                            DecimalGroupingSeparators, LowerGroupingSeparators,
-                           FormatMode, RoundMode, AutoExp, AutoPrec,
-                           AutoUncNanInfExp)
+                           FormatMode, RoundMode, AutoExp, AutoPrec)
 from sciform.format_options import FormatOptions
 from sciform.formatting import format_float, format_val_unc
 
@@ -108,8 +107,7 @@ class Formatter:
             bracket_unc: bool = None,
             val_unc_match_width: bool = None,
             bracket_unc_remove_seps: bool = None,
-            unc_pm_whitespace: bool = None,
-            unc_nan_inf_exp: Union[bool, type(AutoUncNanInfExp)] = None
+            unc_pm_whitespace: bool = None
     ):
         self.options = FormatOptions.make(
             defaults=None,
@@ -133,8 +131,7 @@ class Formatter:
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_width,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
-            unc_pm_whitespace=unc_pm_whitespace,
-            unc_nan_inf_exp=unc_nan_inf_exp
+            unc_pm_whitespace=unc_pm_whitespace
         )
 
     def __call__(self, val: float, unc: float = None, /):
@@ -166,8 +163,7 @@ class Formatter:
                    bracket_unc=options.bracket_unc,
                    val_unc_match_width=options.val_unc_match_widths,
                    bracket_unc_remove_seps=options.bracket_unc_remove_seps,
-                   unc_pm_whitespace=options.unc_pm_whitespace,
-                   unc_nan_inf_exp=options.unc_nan_inf_exp)
+                   unc_pm_whitespace=options.unc_pm_whitespace)
 
     @classmethod
     def from_format_spec_str(cls, fmt: str):

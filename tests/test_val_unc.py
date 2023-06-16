@@ -220,7 +220,7 @@ class TestFormatting(unittest.TestCase):
 
         self.do_unc_val_test_case_dict(cases_dict)
 
-    def test_nan_include_exp(self):
+    def test_nan_inf_exp(self):
         cases_dict = {
             (NAN, NAN): {
                 '': 'nan +/- nan',
@@ -230,18 +230,6 @@ class TestFormatting(unittest.TestCase):
             }
         }
         with GlobalDefaultsContext(nan_inf_exp=True):
-            self.do_unc_val_test_case_dict(cases_dict)
-
-    def test_val_unc_nan_include_exp(self):
-        cases_dict = {
-            (NAN, NAN): {
-                '': 'nan +/- nan',
-                'e': '(nan +/- nan)e+00',
-                'S': 'nan(nan)',
-                'eS': '(nan(nan))e+00'
-            }
-        }
-        with GlobalDefaultsContext(unc_nan_inf_exp=True):
             self.do_unc_val_test_case_dict(cases_dict)
 
     def test_capitalization(self):
@@ -261,7 +249,7 @@ class TestFormatting(unittest.TestCase):
             }
         }
 
-        with GlobalDefaultsContext(unc_nan_inf_exp=True):
+        with GlobalDefaultsContext(nan_inf_exp=True):
             self.do_unc_val_test_case_dict(cases_dict)
 
     def test_rounding(self):

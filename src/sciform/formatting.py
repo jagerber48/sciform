@@ -2,8 +2,7 @@ from math import isfinite
 from warnings import warn
 import re
 
-from sciform.modes import (FillMode, FormatMode, SignMode, AutoExp,
-                           AutoUncNanInfExp)
+from sciform.modes import FillMode, FormatMode, SignMode, AutoExp
 from sciform.format_options import FormatOptions, RoundMode
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_digit,
@@ -204,11 +203,6 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     else:
         new_top_digit = user_top_digit
 
-    if options.unc_nan_inf_exp is not AutoUncNanInfExp:
-        nan_include_exp = options.unc_nan_inf_exp
-    else:
-        nan_include_exp = options.nan_inf_exp
-
     val_format_options = FormatOptions.make(
         defaults=options,
         top_dig_place=new_top_digit,
@@ -217,13 +211,14 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         format_mode=free_exp_format_mode,
         exp=exp,
         use_prefix=False,
-        nan_inf_exp=nan_include_exp)
+        nan_inf_exp=options.nan_inf_exp
+    )
 
     unc_format_options = FormatOptions.make(
         defaults=val_format_options,
         format_mode=free_exp_format_mode,
         sign_mode=SignMode.NEGATIVE,
-        nan_inf_exp=nan_include_exp
+        nan_inf_exp=options.nan_inf_exp
     )
 
     mantissa_exp_pattern = re.compile(
