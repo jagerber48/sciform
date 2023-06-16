@@ -228,6 +228,7 @@ class Formatter:
             add_small_si_prefixes=add_small_si_prefixes,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_width,
+            bracket_unc_remove_dec_symb=bracket_unc_remove_dec_symb,
             unc_pm_whitespace=unc_pm_whitespace,
             nan_include_exp=nan_include_exp,
             val_unc_nan_include_exp=val_unc_nan_include_exp
