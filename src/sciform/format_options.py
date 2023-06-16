@@ -21,7 +21,7 @@ class FormatOptions:
     round_mode: RoundMode
     precision: Union[int, type(AutoPrec)]
     format_mode: FormatMode  # TODO: rename to exp_mode
-    capital_exp_char: bool
+    capitalize: bool
     exp: Union[int, type(AutoExp)]
     nan_inf_exp: bool
     use_prefix: bool
@@ -89,7 +89,7 @@ class FormatOptions:
             round_mode: RoundMode = None,
             precision: Union[int, type(AutoPrec)] = None,
             format_mode: FormatMode = None,
-            capital_exp_char: bool = None,
+            capitalize: bool = None,
             exp: Union[int, type(AutoExp)] = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
@@ -123,8 +123,8 @@ class FormatOptions:
             precision = defaults.precision
         if format_mode is None:
             format_mode = defaults.format_mode
-        if capital_exp_char is None:
-            capital_exp_char = defaults.capital_exp_char
+        if capitalize is None:
+            capitalize = defaults.capitalize
         if exp is None:
             exp = defaults.exp
         if use_prefix is None:
@@ -171,7 +171,7 @@ class FormatOptions:
             round_mode=round_mode,
             precision=precision,
             format_mode=format_mode,
-            capital_exp_char=capital_exp_char,
+            capitalize=capitalize,
             exp=exp,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
@@ -263,7 +263,7 @@ class FormatOptions:
 
         format_mode = match.group('format_mode')
         if format_mode is not None:
-            capital_exp_char = format_mode.isupper()
+            capitalize = format_mode.isupper()
             if format_mode in ['f', 'F']:
                 format_mode = FormatMode.FIXEDPOINT
             elif format_mode == '%':
@@ -281,7 +281,7 @@ class FormatOptions:
                 else:
                     format_mode = FormatMode.BINARY
         else:
-            capital_exp_char = None
+            capitalize = None
 
         exp = match.group('exp')
         if exp is not None:
@@ -309,7 +309,7 @@ class FormatOptions:
             round_mode=round_mode,
             precision=precision,
             format_mode=format_mode,
-            capital_exp_char=capital_exp_char,
+            capitalize=capitalize,
             exp=exp,
             use_prefix=use_prefix,
             bracket_unc=bracket_unc,
@@ -327,7 +327,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     round_mode=RoundMode.SIG_FIG,
     precision=AutoPrec,
     format_mode=FormatMode.FIXEDPOINT,
-    capital_exp_char=False,
+    capitalize=False,
     exp=AutoExp,
     nan_inf_exp=False,
     use_prefix=False,
@@ -366,7 +366,7 @@ def set_global_defaults(
         round_mode: RoundMode = None,
         precision: Union[int, type(AutoPrec)] = None,
         format_mode: FormatMode = None,
-        capital_exp_char: bool = None,
+        capitalize: bool = None,
         exp: Union[int, type(AutoExp)] = None,
         nan_inf_exp=None,
         use_prefix: bool = None,
@@ -399,7 +399,7 @@ def set_global_defaults(
         round_mode=round_mode,
         precision=precision,
         format_mode=format_mode,
-        capital_exp_char=capital_exp_char,
+        capitalize=capitalize,
         exp=exp,
         nan_inf_exp=nan_inf_exp,
         use_prefix=use_prefix,
@@ -480,7 +480,7 @@ class GlobalDefaultsContext:
             round_mode: RoundMode = None,
             precision: Union[int, type(AutoPrec)] = None,
             format_mode: FormatMode = None,
-            capital_exp_char: bool = None,
+            capitalize: bool = None,
             exp: Union[int, type(AutoExp)] = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
@@ -504,7 +504,7 @@ class GlobalDefaultsContext:
             round_mode=round_mode,
             precision=precision,
             format_mode=format_mode,
-            capital_exp_char=capital_exp_char,
+            capitalize=capitalize,
             exp=exp,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,

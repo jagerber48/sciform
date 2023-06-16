@@ -65,7 +65,7 @@ class Formatter:
       or zero for digits past the decimal rounding.
     :param format_mode: :class:`FormatMode` indicating the formatting
       mode to be used.
-    :param capital_exp_char: ``bool`` indicating whether the exponentiation
+    :param capitalize: ``bool`` indicating whether the exponentiation
       symbol should be upper- or lower-case.
     :param exp: ``int`` indicating the value which should be used for the
       exponent. This parameter is ignored for fixed point and percent
@@ -96,7 +96,7 @@ class Formatter:
             round_mode: RoundMode = None,
             precision: Union[int, type(AutoPrec)] = None,
             format_mode: FormatMode = None,
-            capital_exp_char: bool = None,
+            capitalize: bool = None,
             exp: Union[int, type(AutoExp)] = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
@@ -120,7 +120,7 @@ class Formatter:
             round_mode=round_mode,
             precision=precision,
             format_mode=format_mode,
-            capital_exp_char=capital_exp_char,
+            capitalize=capitalize,
             exp=exp,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
@@ -154,7 +154,7 @@ class Formatter:
                    round_mode=options.round_mode,
                    precision=options.precision,
                    format_mode=options.format_mode,
-                   capital_exp_char=options.capital_exp_char,
+                   capitalize=options.capitalize,
                    exp=options.exp,
                    nan_inf_exp=options.nan_inf_exp,
                    use_prefix=options.use_prefix,

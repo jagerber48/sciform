@@ -19,7 +19,7 @@ def format_float(num: float, options: FormatOptions) -> str:
     precision = options.precision
     top_padded_digit = options.top_dig_place
     sign_mode = options.sign_mode
-    capital_exp_char = options.capital_exp_char
+    capitalize = options.capitalize
     fill_char = FillMode.to_char(options.fill_mode)
     if not isfinite(num):
         if options.nan_inf_exp:
@@ -42,7 +42,7 @@ def format_float(num: float, options: FormatOptions) -> str:
             full_str = f'({num}){exp_str}'
         else:
             full_str = f'{num}'
-        if capital_exp_char:
+        if capitalize:
             return full_str.upper()
         else:
             return full_str.lower()
@@ -74,7 +74,7 @@ def format_float(num: float, options: FormatOptions) -> str:
     if mantissa_rounded == 0:
         exp = 0
 
-    exp_str = get_exp_str(exp, format_mode, capital_exp_char)
+    exp_str = get_exp_str(exp, format_mode, capitalize)
 
     if mantissa_rounded == -0.0:
         mantissa_rounded = abs(mantissa_rounded)

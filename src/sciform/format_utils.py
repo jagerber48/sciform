@@ -114,18 +114,18 @@ def get_mantissa_exp_base(
 
 
 def get_exp_str(exp: int, format_mode: FormatMode,
-                capital_exp_char: bool) -> str:
+                capitalize: bool) -> str:
     if (format_mode is format_mode.FIXEDPOINT
             or format_mode is format_mode.PERCENT):
         exp_str = ''
     elif (format_mode is FormatMode.SCIENTIFIC
           or format_mode is FormatMode.ENGINEERING
           or format_mode is FormatMode.ENGINEERING_SHIFTED):
-        exp_char = 'E' if capital_exp_char else 'e'
+        exp_char = 'E' if capitalize else 'e'
         exp_str = f'{exp_char}{exp:+03d}'
     elif (format_mode is FormatMode.BINARY
           or format_mode is FormatMode.BINARY_IEC):
-        exp_char = 'B' if capital_exp_char else 'b'
+        exp_char = 'B' if capitalize else 'b'
         exp_str = f'{exp_char}{exp:+03d}'
     else:
         raise ValueError(f'Unhandled format type {format_mode}')

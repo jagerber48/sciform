@@ -281,11 +281,11 @@ Exponent Character Capitalization
 The capitalization of the exponent character can be controlled
 
 >>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC,
-...                   capital_exp_char=True)
+...                   capitalize=True)
 >>> print(sform(42))
 4.2E+01
 >>> sform = Formatter(format_mode=FormatMode.BINARY,
-...                   capital_exp_char=True)
+...                   capitalize=True)
 >>> print(sform(1024))
 1B+10
 
