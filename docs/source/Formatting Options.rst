@@ -356,8 +356,10 @@ be formatted as, e.g. ``'(nan)e+00'``.
 >>> print(sform(float('-inf')))
 (-INF)E+00
 
-Value/Uncertainty Formatting
-============================
+.. _val_unc_formatting_options:
+
+Value/Uncertainty Formatting Options
+====================================
 
 For value/uncertainty formatting the value + uncertainty pair are
 formatted as follows.
