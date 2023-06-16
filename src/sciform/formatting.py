@@ -1,14 +1,107 @@
-import re
 from math import isfinite
 from warnings import warn
+import re
 
-from sciform.modes import (RoundMode, SignMode, FormatMode,
+from sciform.modes import (FillMode, FormatMode, SignMode, AutoExp,
                            AutoValUncNanIncludeExp)
-from sciform.format_utils import (get_round_digit, get_top_and_bottom_digit,
-                                  get_top_digit, get_mantissa_exp_base)
-from sciform.formatter import format_float
-from sciform.format_options import FormatOptions
+from sciform.format_options import FormatOptions, RoundMode
+from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
+                                  get_top_digit,
+                                  get_top_and_bottom_digit,
+                                  get_round_digit,
+                                  format_float_by_top_bottom_dig)
+from sciform.grouping import add_separators
 from sciform.prefix import replace_prefix
+
+
+def format_float(num: float, options: FormatOptions) -> str:
+    format_mode = options.format_mode
+    round_mode = options.round_mode
+    precision = options.precision
+    top_padded_digit = options.top_dig_place
+    sign_mode = options.sign_mode
+    capital_exp_char = options.capital_exp_char
+    fill_char = FillMode.to_char(options.fill_mode)
+    if not isfinite(num):
+        if options.nan_include_exp:
+            if options.exp is AutoExp:
+                exp = 0
+            else:
+                exp = options.exp
+            if (format_mode is FormatMode.FIXEDPOINT
+                    or format_mode is FormatMode.PERCENT):
+                exp_str = ''
+            elif (format_mode is FormatMode.SCIENTIFIC
+                  or format_mode is FormatMode.ENGINEERING
+                  or format_mode is FormatMode.ENGINEERING_SHIFTED):
+                exp_str = f'e+{exp:02d}'
+            else:
+                exp_str = f'b+{exp:02d}'
+        else:
+            exp_str = ''
+        if capital_exp_char:
+            return f'{num}{exp_str}'.upper()
+        else:
+            return f'{num}{exp_str}'.lower()
+
+    if format_mode is FormatMode.PERCENT:
+        num *= 100
+
+    exp = options.exp
+    mantissa, temp_exp, base = get_mantissa_exp_base(num, format_mode, exp)
+
+    top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
+    round_digit = get_round_digit(top_digit, bottom_digit,
+                                  precision, round_mode)
+
+    mantissa_rounded = round(mantissa, -round_digit)
+
+    '''
+    Repeat mantissa + exponent discovery after rounding in case rounding
+    altered the required exponent.
+    '''
+    rounded_num = mantissa_rounded * base**temp_exp
+    mantissa, exp, base = get_mantissa_exp_base(rounded_num, format_mode, exp)
+
+    top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
+    round_digit = get_round_digit(top_digit, bottom_digit,
+                                  precision, round_mode)
+
+    mantissa_rounded = round(mantissa, -round_digit)
+    if mantissa_rounded == 0:
+        exp = 0
+
+    exp_str = get_exp_str(exp, format_mode, capital_exp_char)
+
+    if mantissa_rounded == -0.0:
+        mantissa_rounded = abs(mantissa_rounded)
+    mantissa_str = format_float_by_top_bottom_dig(mantissa_rounded,
+                                                  top_padded_digit,
+                                                  round_digit, sign_mode,
+                                                  fill_char)
+
+    # TODO: Think about the interaction between separators and fill
+    #  characters
+    upper_separator = options.upper_separator.to_char()
+    decimal_separator = options.decimal_separator.to_char()
+    lower_separator = options.lower_separator.to_char()
+    mantissa_str = add_separators(mantissa_str,
+                                  upper_separator,
+                                  decimal_separator,
+                                  lower_separator,
+                                  group_size=3)
+
+    full_str = f'{mantissa_str}{exp_str}'
+
+    if options.use_prefix:
+        full_str = replace_prefix(full_str,
+                                  options.extra_si_prefixes,
+                                  options.extra_iec_prefixes)
+
+    if format_mode is FormatMode.PERCENT:
+        full_str = full_str + '%'
+
+    return full_str
 
 
 def format_val_unc(val: float, unc: float, options: FormatOptions):
@@ -18,7 +111,6 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     :param val:
     :param unc:
     :param options:
-    :param match_widths:
     :return:
     """
     # TODO: Handle non-finite floats
@@ -137,11 +229,11 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     mantissa_exp_pattern = re.compile(
         r'^(?P<mantissa_str>.*?)(?P<exp_str>[eEbB].*?)?$')
 
-    val_str = format_float(val_rounded, val_format_options, non_inf_exp=True)
+    val_str = format_float(val_rounded, val_format_options)
     val_match = mantissa_exp_pattern.match(val_str)
     val_str = val_match.group('mantissa_str')
 
-    unc_str = format_float(unc_rounded, unc_format_options, non_inf_exp=True)
+    unc_str = format_float(unc_rounded, unc_format_options)
     unc_match = mantissa_exp_pattern.match(unc_str)
     unc_str = unc_match.group('mantissa_str')
 
@@ -175,24 +267,3 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         result_str = val_unc_exp_str
 
     return result_str
-
-
-class vufloat:
-    """
-    Here we do not inherit from float, and we do not support float operations.
-    This class is purely for the convenience of formatting value/uncertainty
-    pairs. Mathematical operations are not supported on vufloat objects because
-    the effect of such operations on the uncertainties is non-trivial. For the
-    accurate propagation of error using value/uncertainty pairs, users are
-    recommended to the uncertainties package:
-    https://pypi.org/project/uncertainties/
-    """
-    def __init__(self, val, unc, /):
-        self.value = val
-        self.uncertainty = unc
-
-    def __format__(self, format_spec: str):
-        options = FormatOptions.from_format_spec_str(format_spec)
-        return format_val_unc(self.value,
-                              self.uncertainty,
-                              options)

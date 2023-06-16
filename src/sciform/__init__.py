@@ -1,7 +1,7 @@
 __version__ = "0.12.1"
 
 from sciform.formatter import Formatter
-from sciform.sfloat import sfloat
+from sciform.float_formatting import sfloat, vufloat
 from sciform.format_options import (
     set_global_defaults, reset_global_defaults,
     global_add_c_prefix, global_add_small_si_prefixes,
@@ -9,7 +9,6 @@ from sciform.format_options import (
     print_global_defaults, GlobalDefaultsContext)
 from sciform.modes import (FillMode, SignMode, GroupingSeparator, RoundMode,
                            FormatMode)
-from sciform.unc_format import vufloat
 
 __all__ = ['__version__', 'Formatter', 'sfloat', 'set_global_defaults',
            'reset_global_defaults', 'global_add_c_prefix',

@@ -147,8 +147,10 @@ def get_sign_str(num: float, sign_mode: SignMode) -> str:
     return sign_str
 
 
-def get_round_digit(top_digit: int, bottom_digit: int,
-                    prec: Union[int, type(AutoPrec)], prec_mode: RoundMode) -> int:
+def get_round_digit(top_digit: int,
+                    bottom_digit: int,
+                    prec: Union[int, type(AutoPrec)],
+                    prec_mode: RoundMode) -> int:
     # TODO: Decide on default precision/sig figs.  Minimum round-trippable or
     #  hard-coded to 6?
     if prec_mode is RoundMode.SIG_FIG:

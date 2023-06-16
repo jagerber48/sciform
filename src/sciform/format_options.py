@@ -21,7 +21,7 @@ class FormatOptions:
     lower_separator: LowerGroupingSeparators
     round_mode: RoundMode
     precision: Union[int, type(AutoPrec)]
-    format_mode: FormatMode
+    format_mode: FormatMode  # TODO: rename to exp_mode
     capital_exp_char: bool
     exp: Union[int, type(AutoExp)]
     use_prefix: bool

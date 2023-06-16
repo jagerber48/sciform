@@ -87,3 +87,22 @@ class sfloat(float):
 
     def __truediv__(self, x: float) -> 'sfloat':
         return self._to_sfloat(super().__truediv__(x))
+
+
+class vufloat:
+    """
+    Here we do not inherit from float, and we do not support float operations.
+    This class is purely for the convenience of formatting value/uncertainty
+    pairs. Mathematical operations are not supported on vufloat objects because
+    the effect of such operations on the uncertainties is non-trivial. For the
+    accurate propagation of error using value/uncertainty pairs, users are
+    recommended to the uncertainties package:
+    https://pypi.org/project/uncertainties/
+    """
+    def __init__(self, val: float, unc: float, /):
+        self.value = val
+        self.uncertainty = unc
+
+    def __format__(self, format_spec: str):
+        formatter = Formatter.from_format_spec_str(format_spec)
+        return formatter(self.value, self.uncertainty)

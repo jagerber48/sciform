@@ -1,7 +1,6 @@
 import unittest
 
 from sciform import Formatter, FormatMode
-from sciform.unc_format import format_val_unc
 
 
 class TestFormatting(unittest.TestCase):
@@ -9,7 +8,7 @@ class TestFormatting(unittest.TestCase):
                                                  dict[Formatter, str]]):
         for (val, unc), fmt_dict in cases_dict.items():
             for formatter, expected_num_str in fmt_dict.items():
-                snum_str = format_val_unc(val, unc, formatter.options)
+                snum_str = formatter(val, unc)
                 with self.subTest(val=val, unc=unc,
                                   expected_num_str=expected_num_str,
                                   actual_num_str=snum_str):

@@ -1,108 +1,11 @@
 from typing import Union
-from math import isfinite
 
 from sciform.modes import (SignMode, FillMode, UpperGroupingSeparators,
                            DecimalGroupingSeparators, LowerGroupingSeparators,
                            FormatMode, RoundMode, AutoExp, AutoPrec,
                            AutoValUncNanIncludeExp)
 from sciform.format_options import FormatOptions
-from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
-                                  get_top_and_bottom_digit,
-                                  get_round_digit,
-                                  format_float_by_top_bottom_dig)
-from sciform.grouping import add_separators
-from sciform.prefix import replace_prefix
-
-
-def format_float(num: float, options: FormatOptions,
-                 non_inf_exp=False) -> str:
-    format_mode = options.format_mode
-    round_mode = options.round_mode
-    precision = options.precision
-    top_padded_digit = options.top_dig_place
-    sign_mode = options.sign_mode
-    capital_exp_char = options.capital_exp_char
-    fill_char = FillMode.to_char(options.fill_mode)
-    if not isfinite(num):
-        if options.nan_include_exp:
-            if options.exp is AutoExp:
-                exp = 0
-            else:
-                exp = options.exp
-            if (format_mode is FormatMode.FIXEDPOINT
-                    or format_mode is FormatMode.PERCENT):
-                exp_str = ''
-            elif (format_mode is FormatMode.SCIENTIFIC
-                  or format_mode is FormatMode.ENGINEERING
-                  or format_mode is FormatMode.ENGINEERING_SHIFTED):
-                exp_str = f'e+{exp:02d}'
-            else:
-                exp_str = f'b+{exp:02d}'
-        else:
-            exp_str = ''
-        if capital_exp_char:
-            return f'{num}{exp_str}'.upper()
-        else:
-            return f'{num}{exp_str}'.lower()
-
-    if format_mode is FormatMode.PERCENT:
-        num *= 100
-
-    exp = options.exp
-    mantissa, temp_exp, base = get_mantissa_exp_base(num, format_mode, exp)
-
-    top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
-    round_digit = get_round_digit(top_digit, bottom_digit,
-                                  precision, round_mode)
-
-    mantissa_rounded = round(mantissa, -round_digit)
-
-    '''
-    Repeat mantissa + exponent discovery after rounding in case rounding
-    altered the required exponent.
-    '''
-    rounded_num = mantissa_rounded * base**temp_exp
-    mantissa, exp, base = get_mantissa_exp_base(rounded_num, format_mode, exp)
-
-    top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
-    round_digit = get_round_digit(top_digit, bottom_digit,
-                                  precision, round_mode)
-
-    mantissa_rounded = round(mantissa, -round_digit)
-    if mantissa_rounded == 0:
-        exp = 0
-
-    exp_str = get_exp_str(exp, format_mode, capital_exp_char)
-
-    if mantissa_rounded == -0.0:
-        mantissa_rounded = abs(mantissa_rounded)
-    mantissa_str = format_float_by_top_bottom_dig(mantissa_rounded,
-                                                  top_padded_digit,
-                                                  round_digit, sign_mode,
-                                                  fill_char)
-
-    # TODO: Think about the interaction between separators and fill
-    #  characters
-    upper_separator = options.upper_separator.to_char()
-    decimal_separator = options.decimal_separator.to_char()
-    lower_separator = options.lower_separator.to_char()
-    mantissa_str = add_separators(mantissa_str,
-                                  upper_separator,
-                                  decimal_separator,
-                                  lower_separator,
-                                  group_size=3)
-
-    full_str = f'{mantissa_str}{exp_str}'
-
-    if options.use_prefix:
-        full_str = replace_prefix(full_str,
-                                  options.extra_si_prefixes,
-                                  options.extra_iec_prefixes)
-
-    if format_mode is FormatMode.PERCENT:
-        full_str = full_str + '%'
-
-    return full_str
+from sciform.formatting import format_float, format_val_unc
 
 
 class Formatter:
@@ -130,7 +33,7 @@ class Formatter:
         engineering modes
       * exp must be a multiple of 10 for binary iec mode
 
-    * upper_separator must be different than decimal_separator
+    * upper_separator must be different from decimal_separator
     * decimal_separator may only be GroupingSeparator.POINT or
       GroupingSeparator.COMMA
     * lower_separator may only be GroupingSeparator.NONE,
@@ -234,11 +137,14 @@ class Formatter:
             val_unc_nan_include_exp=val_unc_nan_include_exp
         )
 
-    def __call__(self, num: float):
-        return self.format(num)
+    def __call__(self, val: float, unc: float = None, /):
+        return self.format(val, unc)
 
-    def format(self, num: float):
-        return format_float(num, self.options)
+    def format(self, val: float, unc: float = None, /):
+        if unc is None:
+            return format_float(val, self.options)
+        else:
+            return format_val_unc(val, unc, self.options)
 
     @classmethod
     def _from_options(cls, options: FormatOptions):
