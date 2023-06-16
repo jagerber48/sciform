@@ -105,7 +105,7 @@ class Formatter:
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False,
             bracket_unc: bool = None,
-            val_unc_match_width: bool = None,
+            val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
             unc_pm_whitespace: bool = None
     ):
@@ -129,7 +129,7 @@ class Formatter:
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,
             bracket_unc=bracket_unc,
-            val_unc_match_widths=val_unc_match_width,
+            val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
             unc_pm_whitespace=unc_pm_whitespace
         )
@@ -161,7 +161,7 @@ class Formatter:
                    extra_si_prefixes=options.extra_si_prefixes,
                    extra_iec_prefixes=options.extra_iec_prefixes,
                    bracket_unc=options.bracket_unc,
-                   val_unc_match_width=options.val_unc_match_widths,
+                   val_unc_match_widths=options.val_unc_match_widths,
                    bracket_unc_remove_seps=options.bracket_unc_remove_seps,
                    unc_pm_whitespace=options.unc_pm_whitespace)
 
