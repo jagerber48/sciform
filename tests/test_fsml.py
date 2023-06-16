@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import sfloat
+from sciform import sfloat, GlobalDefaultsContext
 
 
 class TestFormatting(unittest.TestCase):
@@ -354,6 +354,35 @@ class TestFormatting(unittest.TestCase):
             }
         }
         self.do_test_case_dict(cases_dict)
+
+    def test_non_finite_with_exp(self):
+        # TODO: These behaviors need to be documented
+        cases_dict = {
+            float('nan'): {
+                '': 'nan',
+                'e': 'nane+00',
+                'E': 'NANE+00',
+                'b': 'nanb+00',
+                'B': 'NANB+00'
+        },
+            float('inf'): {
+                '': 'inf',
+                'e': 'infe+00',
+                'E': 'INFE+00',
+                'b': 'infb+00',
+                'B': 'INFB+00'
+            },
+            float('-inf'): {
+                '': '-inf',
+                'e': '-infe+00',
+                'E': '-INFE+00',
+                'b': '-infb+00',
+                'B': '-INFB+00'
+            }
+        }
+
+        with GlobalDefaultsContext(nan_inf_exp=True):
+            self.do_test_case_dict(cases_dict)
 
     def test_separators(self):
         cases_dict: dict[float, dict[str, str]] = {
