@@ -3,6 +3,7 @@ from warnings import warn
 import re
 
 from sciform.modes import (FillMode, FormatMode, SignMode, AutoExp,
+                           GroupingSeparator,
                            AutoValUncNanIncludeExp)
 from sciform.format_options import FormatOptions, RoundMode
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
@@ -249,8 +250,11 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
             val_unc_str = f'{val_str}+/-{unc_str}'
     else:
         unc_str = unc_str.lstrip('0.')
-        if options.bracket_unc_remove_dec_symb:
+        if options.bracket_unc_remove_seps:
             unc_str = unc_str.replace('.', '')
+            unc_str = unc_str.replace(',', '')
+            unc_str = unc_str.replace(' ', '')
+            unc_str = unc_str.replace('_', '')
         val_unc_str = f'{val_str}({unc_str})'
 
     if exp_str is not None:

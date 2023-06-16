@@ -46,7 +46,7 @@ class TestFormatting(unittest.TestCase):
                     Formatter(
                         format_mode=FormatMode.SCIENTIFIC,
                         exp=-1,
-                        bracket_unc_remove_dec_symb=True,
+                        bracket_unc_remove_seps=True,
                         bracket_unc=True): '(1234.56(789))e-01',
                 }
         }

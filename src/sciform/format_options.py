@@ -29,7 +29,7 @@ class FormatOptions:
     extra_iec_prefixes: dict[int, str]
     bracket_unc: bool
     val_unc_match_widths: bool
-    bracket_unc_remove_dec_symb: bool
+    bracket_unc_remove_seps: bool
     unc_pm_whitespace: bool
     nan_include_exp: bool
     val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)]
@@ -100,7 +100,7 @@ class FormatOptions:
             add_small_si_prefixes: bool = False,
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
-            bracket_unc_remove_dec_symb: bool = None,
+            bracket_unc_remove_seps: bool = None,
             unc_pm_whitespace: bool = None,
             nan_include_exp: bool = None,
             val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)] = None,
@@ -144,8 +144,8 @@ class FormatOptions:
             bracket_unc = defaults.bracket_unc
         if val_unc_match_widths is None:
             val_unc_match_widths = defaults.val_unc_match_widths
-        if bracket_unc_remove_dec_symb is None:
-            bracket_unc_remove_dec_symb = defaults.bracket_unc_remove_dec_symb
+        if bracket_unc_remove_seps is None:
+            bracket_unc_remove_seps = defaults.bracket_unc_remove_seps
         if unc_pm_whitespace is None:
             unc_pm_whitespace = defaults.unc_pm_whitespace
         if nan_include_exp is None:
@@ -183,7 +183,7 @@ class FormatOptions:
             extra_iec_prefixes=extra_iec_prefixes,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
-            bracket_unc_remove_dec_symb=bracket_unc_remove_dec_symb,
+            bracket_unc_remove_seps=bracket_unc_remove_seps,
             unc_pm_whitespace=unc_pm_whitespace,
             nan_include_exp=nan_include_exp,
             val_unc_nan_include_exp=val_unc_nan_include_exp,
@@ -340,7 +340,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     extra_iec_prefixes=dict(),
     bracket_unc=False,
     val_unc_match_widths=False,
-    bracket_unc_remove_dec_symb=False,
+    bracket_unc_remove_seps=False,
     unc_pm_whitespace=True,
     nan_include_exp=False,
     val_unc_nan_include_exp=AutoValUncNanIncludeExp
@@ -382,7 +382,7 @@ def set_global_defaults(
         add_small_si_prefixes: bool = False,
         bracket_unc=None,
         val_unc_match_widths=None,
-        bracket_unc_remove_dec_symb=None,
+        bracket_unc_remove_seps=None,
         unc_pm_whitespace=None,
         nan_include_exp=None,
         val_unc_nan_include_exp=None
@@ -416,7 +416,7 @@ def set_global_defaults(
         add_small_si_prefixes=add_small_si_prefixes,
         bracket_unc=bracket_unc,
         val_unc_match_widths=val_unc_match_widths,
-        bracket_unc_remove_dec_symb=bracket_unc_remove_dec_symb,
+        bracket_unc_remove_seps=bracket_unc_remove_seps,
         unc_pm_whitespace=unc_pm_whitespace,
         nan_include_exp=nan_include_exp,
         val_unc_nan_include_exp=val_unc_nan_include_exp
@@ -498,7 +498,7 @@ class GlobalDefaultsContext:
             add_small_si_prefixes: bool = False,
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
-            bracket_unc_remove_dec_symb: bool = None,
+            bracket_unc_remove_seps: bool = None,
             unc_pm_whitespace: bool = None,
             nan_include_exp: bool = None,
             val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)] = None
@@ -523,7 +523,7 @@ class GlobalDefaultsContext:
             add_small_si_prefixes=add_small_si_prefixes,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
-            bracket_unc_remove_dec_symb=bracket_unc_remove_dec_symb,
+            bracket_unc_remove_seps=bracket_unc_remove_seps,
             unc_pm_whitespace=unc_pm_whitespace,
             nan_include_exp=nan_include_exp,
             val_unc_nan_include_exp=val_unc_nan_include_exp

@@ -106,7 +106,7 @@ class Formatter:
             add_small_si_prefixes: bool = False,
             bracket_unc: bool = None,
             val_unc_match_width: bool = None,
-            bracket_unc_remove_dec_symb: bool = None,
+            bracket_unc_remove_seps: bool = None,
             unc_pm_whitespace: bool = None,
             nan_include_exp: bool = None,
             val_unc_nan_include_exp: Union[bool, type(AutoValUncNanIncludeExp)] = None
@@ -131,7 +131,7 @@ class Formatter:
             add_small_si_prefixes=add_small_si_prefixes,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_width,
-            bracket_unc_remove_dec_symb=bracket_unc_remove_dec_symb,
+            bracket_unc_remove_seps=bracket_unc_remove_seps,
             unc_pm_whitespace=unc_pm_whitespace,
             nan_include_exp=nan_include_exp,
             val_unc_nan_include_exp=val_unc_nan_include_exp
@@ -164,7 +164,7 @@ class Formatter:
                    extra_iec_prefixes=options.extra_iec_prefixes,
                    bracket_unc=options.bracket_unc,
                    val_unc_match_width=options.val_unc_match_widths,
-                   bracket_unc_remove_dec_symb=options.bracket_unc_remove_dec_symb,
+                   bracket_unc_remove_seps=options.bracket_unc_remove_seps,
                    unc_pm_whitespace=options.unc_pm_whitespace,
                    nan_include_exp=options.nan_include_exp,
                    val_unc_nan_include_exp=options.val_unc_nan_include_exp)

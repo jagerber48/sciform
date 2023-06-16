@@ -81,7 +81,7 @@ The global default settings can be viewed using
  'extra_iec_prefixes': {},
  'bracket_unc': False,
  'val_unc_match_widths': False,
- 'bracket_unc_remove_dec_symb': False,
+ 'bracket_unc_remove_seps': False,
  'unc_pm_whitespace': True,
  'nan_include_exp': False,
  'val_unc_nan_include_exp': <class 'sciform.modes.AutoValUncNanIncludeExp'>}
@@ -117,7 +117,7 @@ applied to setting global default settings.
  'extra_iec_prefixes': {},
  'bracket_unc': False,
  'val_unc_match_widths': False,
- 'bracket_unc_remove_dec_symb': False,
+ 'bracket_unc_remove_seps': False,
  'unc_pm_whitespace': True,
  'nan_include_exp': False,
  'val_unc_nan_include_exp': <class 'sciform.modes.AutoValUncNanIncludeExp'>}
