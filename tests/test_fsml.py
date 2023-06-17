@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import sfloat
+from sciform import sfloat, GlobalDefaultsContext
 
 
 class TestFormatting(unittest.TestCase):
@@ -269,6 +269,30 @@ class TestFormatting(unittest.TestCase):
 
         self.do_test_case_dict(cases_dict)
 
+    def test_exp(self):
+        cases_dict: dict[float, dict[str, str]] = {
+            123.456: {
+                'ex-4': '1234560e-04',
+                'ex-3': '123456e-03',
+                'ex-2': '12345.6e-02',
+                'ex-1': '1234.56e-01',
+                'ex+0': '123.456e+00',
+                'ex+1': '12.3456e+01',
+                'ex+2': '1.23456e+02',
+                'ex+3': '0.123456e+03',
+                'ex+4': '0.0123456e+04',
+                'ex1': '12.3456e+01',
+                'ex2': '1.23456e+02',
+                'ex3': '0.123456e+03',
+                'ex4': '0.0123456e+04',
+                'rx0': '123.456e+00',
+                'rx-3': '123456e-03',
+                'rx+3': '0.123456e+03'
+            }
+        }
+
+        self.do_test_case_dict(cases_dict)
+
     def test_rounding(self):
         cases_dict: dict[float, dict[str, str]] = {
             99.99: {
@@ -332,7 +356,6 @@ class TestFormatting(unittest.TestCase):
         self.do_test_case_dict(cases_dict)
 
     def test_non_finite(self):
-        # TODO: These behaviors need to be documented
         cases_dict = {
             float('nan'): {
                 '': 'nan',
@@ -354,6 +377,34 @@ class TestFormatting(unittest.TestCase):
             }
         }
         self.do_test_case_dict(cases_dict)
+
+    def test_non_finite_with_exp(self):
+        cases_dict = {
+            float('nan'): {
+                '': 'nan',
+                'e': '(nan)e+00',
+                'E': '(NAN)E+00',
+                'b': '(nan)b+00',
+                'B': '(NAN)B+00'
+        },
+            float('inf'): {
+                '': 'inf',
+                'e': '(inf)e+00',
+                'E': '(INF)E+00',
+                'b': '(inf)b+00',
+                'B': '(INF)B+00'
+            },
+            float('-inf'): {
+                '': '-inf',
+                'e': '(-inf)e+00',
+                'E': '(-INF)E+00',
+                'b': '(-inf)b+00',
+                'B': '(-INF)B+00'
+            }
+        }
+
+        with GlobalDefaultsContext(nan_inf_exp=True):
+            self.do_test_case_dict(cases_dict)
 
     def test_separators(self):
         cases_dict: dict[float, dict[str, str]] = {

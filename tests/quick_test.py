@@ -1,11 +1,14 @@
-from sciform import format_val_unc
+from sciform import Formatter, GroupingSeparator
 
 
 def main():
-    val = float(123.462)
-    unc = float(13)
-    print(format_val_unc(val, unc, '0=0_._!2rp'))
-    expected_str = '(1+/-1)e-01'
+    sform = Formatter(bracket_unc=True,
+                      upper_separator=GroupingSeparator.POINT,
+                      decimal_separator=GroupingSeparator.COMMA,
+                      bracket_unc_remove_seps=True)
+    val = float(123123.462)
+    unc = float(10000.01)
+    print(sform(val, unc))
 
 
 if __name__ == "__main__":

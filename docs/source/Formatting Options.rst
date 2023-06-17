@@ -1,5 +1,6 @@
 .. _formatting_options:
 
+##################
 Formatting Options
 ##################
 
@@ -22,7 +23,7 @@ The different formatting modes control how ``mantissa``, ``base`` and
 ``exp`` are chosen for a given input float ``num``.
 
 Fixed Point
---------------
+-----------
 
 Fixed point notation is standard notation in which a float is displayed
 directly as a decimal number with no extra exponent.
@@ -281,11 +282,11 @@ Exponent Character Capitalization
 The capitalization of the exponent character can be controlled
 
 >>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC,
-...                   capital_exp_char=True)
+...                   capitalize=True)
 >>> print(sform(42))
 4.2E+01
 >>> sform = Formatter(format_mode=FormatMode.BINARY,
-...                   capital_exp_char=True)
+...                   capitalize=True)
 >>> print(sform(1024))
 1B+10
 
@@ -336,3 +337,153 @@ Furthermore, just the ``c`` prefix can be included using the
 ...                   add_small_si_prefixes=True)
 >>> print(sform(25))
 2.5 da
+
+Include Exponent on nan and inf
+===============================
+
+Python supports ``float('nan')``, ``float('inf')``, and
+``float('-inf')``.
+Typically these are formatted to ``'nan'``, ``'inf'``, and ``'-inf'`` or
+``'NAN'``, ``'INF'``, and ``'-INF'`` respectively depending on
+``capitalize``.
+However, if ``nan_inf_exp=True`` (default ``False``), then, for
+scientific, engineering, and binary formatting modes, these will instead
+be formatted as, e.g. ``'(nan)e+00'``.
+
+>>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC,
+...                   nan_inf_exp=True,
+...                   capitalize=True)
+>>> print(sform(float('-inf')))
+(-INF)E+00
+
+.. _val_unc_formatting_options:
+
+Value/Uncertainty Formatting Options
+====================================
+
+For value/uncertainty formatting the value + uncertainty pair are
+formatted as follows.
+First, significant figure rounding is applied to the uncertainty
+according to the specified precision.
+Next the value is rounded to the same position as the uncertainty.
+The exponent is then determined using the format mode and the value.
+The value and the uncertainty are then formatted into a single string
+according to the options below.
+
+>>> sform = Formatter()
+>>> print(sform(123.456, 0.789))
+123.456 +/- 0.789
+
+Plus Minus Whitespace
+---------------------
+
+The user can enable (default) or disable white space around the plus/minus
+symbol when formatting value/uncertainties.
+
+>>> sform = Formatter()
+>>> print(sform(123.456, 0.789))
+123.456 +/- 0.789
+>>> sform = Formatter(unc_pm_whitespace=False)
+>>> print(sform(123.456, 0.789))
+123.456+/-0.789
+
+Bracket Uncertainty
+-------------------
+
+Instead of displaying ``123.456 +/- 0.789``, there is a notation where
+the uncertainty is shown in brackets after the value as
+``123.456(789)``.
+Here the ``(789)`` in parentheses is meant to be "matched up" with the
+finaly three digits of the value so that the 9 in the uncertainty is
+understood to appear in the thousandths place.
+This format is described in the
+`BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
+We call this format "bracket uncertainty" mode.
+:mod:`sciform` provides this functionality via the ``bracket_unc``
+option:
+
+>>> sform = Formatter(bracket_unc=True)
+>>> print(sform(123.456, 0.789))
+123.456(789)
+
+Or with other options:
+
+>>> sform = Formatter(precision=2,
+...                   bracket_unc=True)
+>>> print(sform(123.456, 0.789))
+123.46(79)
+>>> sform = Formatter(precision=2,
+...                   format_mode=FormatMode.SCIENTIFIC,
+...                   bracket_unc=True)
+>>> print(sform(123.456, 0.789))
+(1.2346(79))e+02
+
+Remove Separators for Bracket Uncertainty
+--------------------------------------------
+
+In some cases using bracket uncertainty results in digits such that the
+decimal point could appear in the uncertainty in the brackets.
+For example: ``18.4 +/- 2.1 -> 18.4(2.1)``.
+In such cases, there is no official guidance on if the decimal symbol
+should be included in the bracket symbols or not.
+That is, one may format ``18.4 +/- 2.1 -> 18.4 (21)``.
+The interpretation here is that the uncertainty is 21 tenths, since the
+digit of the value is in the tenths place.
+:mod:`sciform` allows the user to optionally remove the decimal symbol
+
+>>> sform = Formatter(bracket_unc=True,
+...                   bracket_unc_remove_seps=False)
+>>> print(sform(18.4, 2.1))
+18.4(2.1)
+>>> sform = Formatter(bracket_unc=True,
+...                   bracket_unc_remove_seps=True)
+>>> print(sform(18.4, 2.1))
+18.4(21)
+
+Note that the ``bracket_unc_remove_seps`` removes *all* separator
+symbols from the uncertainty in the brackets.
+
+>>> sform = Formatter(upper_separator=GroupingSeparator.POINT,
+...                   decimal_separator=GroupingSeparator.COMMA,
+...                   lower_separator=GroupingSeparator.UNDERSCORE,
+...                   bracket_unc=True,
+...                   bracket_unc_remove_seps=False)
+>>> print(sform(987654, 1234.4321))
+987.654,000_0(1.234,432_1)
+>>> sform = Formatter(upper_separator=GroupingSeparator.POINT,
+...                   decimal_separator=GroupingSeparator.COMMA,
+...                   lower_separator=GroupingSeparator.UNDERSCORE,
+...                   bracket_unc=True,
+...                   bracket_unc_remove_seps=True)
+>>> print(sform(987654, 1234.4321))
+987.654,000_0(12344321)
+
+This latest example demonstrates that the bracket uncertainty mode can
+become difficult to read in some cases.
+Bracket uncertainty is most useful when the value is at least a few
+orders of magnitude larger than the uncertainty and when the uncertainty
+is displayed with a small number (e.g. 1 or 2) significant digits.
+
+Match Value/Uncertainty Width
+-----------------------------
+
+If the user passes ``top_dig_place`` into a :class:`Formatter` then that
+top digit place will be used to left pad both the value and the
+uncertainty.
+:mod:`sciform` provides additional control over the left padding of the
+value and the uncertainty by allowing the user to left pad to the
+maximum of (1) the specified ``top_dig_place``, (2) the most significant
+digit of the value, and (3) the most significant digit of the
+uncertainty.
+This feature is accessed with the ``val_unc_match_widths`` option.
+
+>>> sform = Formatter(fill_mode=FillMode.ZERO,
+...                   top_dig_place=2,
+...                   val_unc_match_widths=False)
+>>> print(sform(12345, 1.23))
+12345.00 +/- 001.23
+>>> sform = Formatter(fill_mode=FillMode.ZERO,
+...                   top_dig_place=2,
+...                   val_unc_match_widths=True)
+>>> print(sform(12345, 1.23))
+12345.00 +/- 00001.23

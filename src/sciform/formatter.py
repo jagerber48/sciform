@@ -1,115 +1,19 @@
 from typing import Union
-from math import isfinite
 
 from sciform.modes import (SignMode, FillMode, UpperGroupingSeparators,
                            DecimalGroupingSeparators, LowerGroupingSeparators,
                            FormatMode, RoundMode, AutoExp, AutoPrec)
 from sciform.format_options import FormatOptions
-from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
-                                  get_top_and_bottom_digit,
-                                  get_round_digit,
-                                  format_float_by_top_bottom_dig)
-from sciform.grouping import add_separators
-from sciform.prefix import replace_prefix
-
-
-def format_float(num: float, options: FormatOptions,
-                 non_inf_exp=False) -> str:
-    format_mode = options.format_mode
-    round_mode = options.round_mode
-    precision = options.precision
-    top_padded_digit = options.top_dig_place
-    sign_mode = options.sign_mode
-    capital_exp_char = options.capital_exp_char
-    fill_char = FillMode.to_char(options.fill_mode)
-    if not isfinite(num):
-        if non_inf_exp:
-            if options.exp is AutoExp:
-                exp = 0
-            else:
-                exp = options.exp
-            if (format_mode is FormatMode.FIXEDPOINT
-                    or format_mode is FormatMode.PERCENT):
-                exp_str = ''
-            elif (format_mode is FormatMode.SCIENTIFIC
-                  or format_mode is FormatMode.ENGINEERING
-                  or format_mode is FormatMode.ENGINEERING_SHIFTED):
-                exp_str = f'e+{exp:02d}'
-            else:
-                exp_str = f'b+{exp:02d}'
-        else:
-            exp_str = ''
-        if capital_exp_char:
-            return f'{num}{exp_str}'.upper()
-        else:
-            return f'{num}{exp_str}'.lower()
-
-    if format_mode is FormatMode.PERCENT:
-        num *= 100
-
-    exp = options.exp
-    mantissa, temp_exp, base = get_mantissa_exp_base(num, format_mode, exp)
-
-    top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
-    round_digit = get_round_digit(top_digit, bottom_digit,
-                                  precision, round_mode)
-
-    mantissa_rounded = round(mantissa, -round_digit)
-
-    '''
-    Repeat mantissa + exponent discovery after rounding in case rounding
-    altered the required exponent.
-    '''
-    rounded_num = mantissa_rounded * base**temp_exp
-    mantissa, exp, base = get_mantissa_exp_base(rounded_num, format_mode, exp)
-
-    top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
-    round_digit = get_round_digit(top_digit, bottom_digit,
-                                  precision, round_mode)
-
-    mantissa_rounded = round(mantissa, -round_digit)
-    if mantissa_rounded == 0:
-        exp = 0
-
-    exp_str = get_exp_str(exp, format_mode, capital_exp_char)
-
-    if mantissa_rounded == -0.0:
-        mantissa_rounded = abs(mantissa_rounded)
-    mantissa_str = format_float_by_top_bottom_dig(mantissa_rounded,
-                                                  top_padded_digit,
-                                                  round_digit, sign_mode,
-                                                  fill_char)
-
-    # TODO: Think about the interaction between separators and fill
-    #  characters
-    upper_separator = options.upper_separator.to_char()
-    decimal_separator = options.decimal_separator.to_char()
-    lower_separator = options.lower_separator.to_char()
-    mantissa_str = add_separators(mantissa_str,
-                                  upper_separator,
-                                  decimal_separator,
-                                  lower_separator,
-                                  group_size=3)
-
-    full_str = f'{mantissa_str}{exp_str}'
-
-    if options.use_prefix:
-        full_str = replace_prefix(full_str,
-                                  options.extra_si_prefixes,
-                                  options.extra_iec_prefixes)
-
-    if format_mode is FormatMode.PERCENT:
-        full_str = full_str + '%'
-
-    return full_str
+from sciform.formatting import format_float, format_val_unc
 
 
 class Formatter:
     """
-    Formatter object use to convert floats into formatting strings. See
-    :ref:`formatting_options` for more details on the different options.
-    Any options which are not provided by the user will be filled with
-    the corresponding values from the global default configuration.
+    Formatter object used to convert floats and pairs of floats into
+    formatted strings. See :ref:`formatting_options` for more details on
+    the available options. Any options which are not provided by the
+    user will be filled with the corresponding values from the global
+    default configuration.
 
     >>> from sciform import Formatter, FormatMode, RoundMode
     >>> sform = Formatter(format_mode=FormatMode.ENGINEERING,
@@ -117,6 +21,15 @@ class Formatter:
     ...                   precision=4)
     >>> print(sform(12345.678))
     12.35e+03
+
+    The Formatter can be called with two aguments for value/uncertainty
+    formatting
+
+    >>> sform = Formatter(format_mode=FormatMode.ENGINEERING,
+    ...                   round_mode=RoundMode.SIG_FIG,
+    ...                   precision=2)
+    >>> print(sform(12345.678, 3.4))
+    (12.3457 +/- 0.0034)e+03
 
     The following checks are performed when creating a
     :class:`Formatter` object:
@@ -129,7 +42,7 @@ class Formatter:
         engineering modes
       * exp must be a multiple of 10 for binary iec mode
 
-    * upper_separator must be different than decimal_separator
+    * upper_separator must be different from decimal_separator
     * decimal_separator may only be GroupingSeparator.POINT or
       GroupingSeparator.COMMA
     * lower_separator may only be GroupingSeparator.NONE,
@@ -162,7 +75,7 @@ class Formatter:
       or zero for digits past the decimal rounding.
     :param format_mode: :class:`FormatMode` indicating the formatting
       mode to be used.
-    :param capital_exp_char: ``bool`` indicating whether the exponentiation
+    :param capitalize: ``bool`` indicating whether the exponentiation
       symbol should be upper- or lower-case.
     :param exp: ``int`` indicating the value which should be used for the
       exponent. This parameter is ignored for fixed point and percent
@@ -171,15 +84,32 @@ class Formatter:
       that mode (e.g. if it is not a multiple of 3), then the exponent
       is rounded down to the nearest conforming value and a warning is
       printed.
+    :param nan_inf_exp: ``bool`` indicating whether non-finite floats
+      such as ``float('nan')`` or ``float('inf')`` should be formatted
+      with exponent symbols when exponent format modes are selected.
+    :param use_prefix: ``bool`` indicating if exponents should be
+      replaced with either SI or IEC prefixes as appropriate.
     :param extra_si_prefixes: ``dict[int, str]`` mapping additional
       exponent values to si prefixes.
     :param extra_iec_prefixes: ``dict[int, str]`` mapping additional
       exponent values to iec prefixes
-    :param add_c_prefix: ``bool`` if ``True`` adds ``{-2: 'c'}`` to
+    :param add_c_prefix: ``bool`` (default ``False``) if ``True`` adds
+      ``{-2: 'c'}`` to ``extra_si_prefixes``.
+    :param add_small_si_prefixes: ``bool`` (default ``False``) if
+      ``True`` adds ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` to
       ``extra_si_prefixes``.
-    :param add_small_si_prefixes: ``bool`` if ``True`` adds
-      ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` to
-      ``extra_si_prefixes``.
+    :param bracket_unc: ``bool`` indicating if bracket uncertainty mode
+      (e.g. ``12.34(82)`` instead of ``12.34 +/- 0.82``) should be used.
+    :param val_unc_match_widths: ``bool`` indicating if the value or
+      uncertainty should be left padded to ensure they are both left
+      padded to the same digits place.
+    :param bracket_unc_remove_seps: ``bool`` indicating if separator
+      symbols should be removed from the uncertainty when using bracket
+      uncertainty mode. E.g. expressing ``123.4 +/- 2.3`` as
+      ``123.4(23)`` instead of ``123.4(2.3)``.
+    :param unc_pm_whitespace: ``bool`` indicating if there should be
+      whitespace surrounding the ``'+/-'`` symbols when formatting. E.g.
+      ``123.4+/-2.3`` compared to ``123.4 +/- 2.3``.
     """
     def __init__(
             self,
@@ -193,13 +123,18 @@ class Formatter:
             round_mode: RoundMode = None,
             precision: Union[int, type(AutoPrec)] = None,
             format_mode: FormatMode = None,
-            capital_exp_char: bool = None,
+            capitalize: bool = None,
             exp: Union[int, type(AutoExp)] = None,
+            nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
             add_c_prefix: bool = False,
-            add_small_si_prefixes: bool = False
+            add_small_si_prefixes: bool = False,
+            bracket_unc: bool = None,
+            val_unc_match_widths: bool = None,
+            bracket_unc_remove_seps: bool = None,
+            unc_pm_whitespace: bool = None
     ):
         self.options = FormatOptions.make(
             defaults=None,
@@ -212,19 +147,28 @@ class Formatter:
             round_mode=round_mode,
             precision=precision,
             format_mode=format_mode,
-            capital_exp_char=capital_exp_char,
+            capitalize=capitalize,
             exp=exp,
+            nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
             add_c_prefix=add_c_prefix,
-            add_small_si_prefixes=add_small_si_prefixes)
+            add_small_si_prefixes=add_small_si_prefixes,
+            bracket_unc=bracket_unc,
+            val_unc_match_widths=val_unc_match_widths,
+            bracket_unc_remove_seps=bracket_unc_remove_seps,
+            unc_pm_whitespace=unc_pm_whitespace
+        )
 
-    def __call__(self, num: float):
-        return self.format(num)
+    def __call__(self, val: float, unc: float = None, /):
+        return self.format(val, unc)
 
-    def format(self, num: float):
-        return format_float(num, self.options)
+    def format(self, val: float, unc: float = None, /):
+        if unc is None:
+            return format_float(val, self.options)
+        else:
+            return format_val_unc(val, unc, self.options)
 
     @classmethod
     def _from_options(cls, options: FormatOptions):
@@ -237,11 +181,16 @@ class Formatter:
                    round_mode=options.round_mode,
                    precision=options.precision,
                    format_mode=options.format_mode,
-                   capital_exp_char=options.capital_exp_char,
+                   capitalize=options.capitalize,
                    exp=options.exp,
+                   nan_inf_exp=options.nan_inf_exp,
                    use_prefix=options.use_prefix,
                    extra_si_prefixes=options.extra_si_prefixes,
-                   extra_iec_prefixes=options.extra_iec_prefixes)
+                   extra_iec_prefixes=options.extra_iec_prefixes,
+                   bracket_unc=options.bracket_unc,
+                   val_unc_match_widths=options.val_unc_match_widths,
+                   bracket_unc_remove_seps=options.bracket_unc_remove_seps,
+                   unc_pm_whitespace=options.unc_pm_whitespace)
 
     @classmethod
     def from_format_spec_str(cls, fmt: str):

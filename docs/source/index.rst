@@ -10,7 +10,6 @@
    Formatting Options
    format specification mini language
    Supported Prefixes
-   uncertainty formatting
    api
 
 Indices and tables

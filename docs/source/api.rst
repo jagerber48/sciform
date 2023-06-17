@@ -11,6 +11,8 @@ Formatting
 
 .. autoclass:: sfloat()
 
+.. autoclass:: vufloat()
+
 Mode Enums
 ==========
 

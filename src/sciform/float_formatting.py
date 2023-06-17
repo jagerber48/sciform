@@ -1,10 +1,12 @@
 from sciform.formatter import Formatter
 
 
+# noinspection PyPep8Naming
 class sfloat(float):
     """
-    float object for scientific formatting. Supports the :mod:`sciform`
-    format specification mini language for string formatting
+    :class:`sfloat` objects are used in combination with the
+    :mod:`sciform` format specification mini language for scientific
+    formatting of input floats.
 
     >>> from sciform import sfloat
     >>> snum = sfloat(123456.654321)
@@ -38,9 +40,6 @@ class sfloat(float):
     def __divmod__(self, x: float) -> tuple['sfloat', 'sfloat']:
         div, mod = super().__divmod__(x)
         return self._to_sfloat(div), self._to_sfloat(mod)
-
-    def __float__(self) -> 'sfloat':
-        return self._to_sfloat(super().__float__())
 
     def __floordiv__(self, x: float) -> 'sfloat':
         return self._to_sfloat(super().__floordiv__(x))
@@ -90,3 +89,32 @@ class sfloat(float):
 
     def __truediv__(self, x: float) -> 'sfloat':
         return self._to_sfloat(super().__truediv__(x))
+
+
+# noinspection PyPep8Naming
+class vufloat:
+    """
+    A :class:`vufloat` objects stores a pair of floats, a value and an
+    uncertainty for scientific formatting. This class is used in
+    combination with the :mod:`sciform` format specification mini
+    language to apply scientific formatting of input floats.
+
+    >>> from sciform import vufloat
+    >>> snum = vufloat(123456.654321, 0.000002)
+    >>> print(f'{snum:,._!1fS}')
+    123,456.654_321(2)
+
+    :class:`vufloat` does not currently support any float operations
+    such as addition or multiplication. This is because the effect of
+    such operations on the uncertainties is non-trivial. For the
+    accurate propagation of error using value/uncertainty pairs, users are
+    recommended to the uncertainties package:
+    https://pypi.org/project/uncertainties/
+    """
+    def __init__(self, val: float, unc: float, /):
+        self.value = val
+        self.uncertainty = unc
+
+    def __format__(self, format_spec: str):
+        formatter = Formatter.from_format_spec_str(format_spec)
+        return formatter(self.value, self.uncertainty)

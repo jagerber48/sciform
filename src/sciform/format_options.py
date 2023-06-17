@@ -10,7 +10,6 @@ from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            AutoExp, AutoPrec)
 
 
-# noinspection PyUnresolvedReferences
 @dataclass(frozen=True)
 class FormatOptions:
     fill_mode: FillMode
@@ -21,12 +20,17 @@ class FormatOptions:
     lower_separator: LowerGroupingSeparators
     round_mode: RoundMode
     precision: Union[int, type(AutoPrec)]
-    format_mode: FormatMode
-    capital_exp_char: bool
+    format_mode: FormatMode  # TODO: rename to exp_mode
+    capitalize: bool
     exp: Union[int, type(AutoExp)]
+    nan_inf_exp: bool
     use_prefix: bool
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
+    bracket_unc: bool
+    val_unc_match_widths: bool
+    bracket_unc_remove_seps: bool
+    unc_pm_whitespace: bool
 
     def __post_init__(self):
         if self.round_mode is RoundMode.SIG_FIG:
@@ -36,7 +40,6 @@ class FormatOptions:
                                      f'rounding, not {self.precision}.')
 
         if self.exp is not AutoExp:
-            # TODO: Needs testing
             if (self.format_mode is FormatMode.FIXEDPOINT
                     or self.format_mode is FormatMode.PERCENT):
                 if self.exp != 0:
@@ -85,19 +88,65 @@ class FormatOptions:
             round_mode: RoundMode = None,
             precision: Union[int, type(AutoPrec)] = None,
             format_mode: FormatMode = None,
-            capital_exp_char: bool = None,
+            capitalize: bool = None,
             exp: Union[int, type(AutoExp)] = None,
+            nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
             add_c_prefix: bool = False,
-            add_small_si_prefixes: bool = False
+            add_small_si_prefixes: bool = False,
+            bracket_unc: bool = None,
+            val_unc_match_widths: bool = None,
+            bracket_unc_remove_seps: bool = None,
+            unc_pm_whitespace: bool = None
     ):
         if defaults is None:
             defaults = DEFAULT_GLOBAL_OPTIONS
 
-        extra_si_prefixes = (copy(extra_si_prefixes)
-                             or copy(defaults.extra_si_prefixes))
+        if fill_mode is None:
+            fill_mode = defaults.fill_mode
+        if sign_mode is None:
+            sign_mode = defaults.sign_mode
+        if top_dig_place is None:
+            top_dig_place = defaults.top_dig_place
+        if upper_separator is None:
+            upper_separator = defaults.upper_separator
+        if decimal_separator is None:
+            decimal_separator = defaults.decimal_separator
+        if lower_separator is None:
+            lower_separator = defaults.lower_separator
+        if round_mode is None:
+            round_mode = defaults.round_mode
+        if precision is None:
+            precision = defaults.precision
+        if format_mode is None:
+            format_mode = defaults.format_mode
+        if capitalize is None:
+            capitalize = defaults.capitalize
+        if exp is None:
+            exp = defaults.exp
+        if use_prefix is None:
+            use_prefix = defaults.use_prefix
+        if extra_si_prefixes is None:
+            extra_si_prefixes = copy(defaults.extra_si_prefixes)
+        else:
+            extra_si_prefixes = copy(extra_si_prefixes)
+        if extra_iec_prefixes is None:
+            extra_iec_prefixes = copy(defaults.extra_iec_prefixes)
+        else:
+            extra_iec_prefixes = copy(extra_iec_prefixes)
+        if bracket_unc is None:
+            bracket_unc = defaults.bracket_unc
+        if val_unc_match_widths is None:
+            val_unc_match_widths = defaults.val_unc_match_widths
+        if bracket_unc_remove_seps is None:
+            bracket_unc_remove_seps = defaults.bracket_unc_remove_seps
+        if unc_pm_whitespace is None:
+            unc_pm_whitespace = defaults.unc_pm_whitespace
+        if nan_inf_exp is None:
+            nan_inf_exp = defaults.nan_inf_exp
+
         if add_c_prefix and -2 not in extra_si_prefixes:
             extra_si_prefixes[-2] = 'c'
 
@@ -112,26 +161,25 @@ class FormatOptions:
                 extra_si_prefixes[+2] = 'h'
 
         return cls(
-            fill_mode=defaults.fill_mode if fill_mode is None else fill_mode,
-            sign_mode=sign_mode or defaults.sign_mode,
-            top_dig_place=(defaults.top_dig_place if top_dig_place is None
-                           else top_dig_place),
-            upper_separator=(upper_separator or
-                             defaults.upper_separator),
-            decimal_separator=(decimal_separator or
-                               defaults.decimal_separator),
-            lower_separator=(lower_separator or
-                             defaults.lower_separator),
-            round_mode=round_mode or defaults.round_mode,
-            precision=defaults.precision if precision is None else precision,
-            format_mode=format_mode or defaults.format_mode,
-            capital_exp_char=(capital_exp_char or
-                              defaults.capital_exp_char),
-            exp=defaults.exp if exp is None else exp,
-            use_prefix=use_prefix or defaults.use_prefix,
+            fill_mode=fill_mode,
+            sign_mode=sign_mode,
+            top_dig_place=top_dig_place,
+            upper_separator=upper_separator,
+            decimal_separator=decimal_separator,
+            lower_separator=lower_separator,
+            round_mode=round_mode,
+            precision=precision,
+            format_mode=format_mode,
+            capitalize=capitalize,
+            exp=exp,
+            nan_inf_exp=nan_inf_exp,
+            use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
-            extra_iec_prefixes=(copy(extra_iec_prefixes)
-                                or copy(defaults.extra_iec_prefixes))
+            extra_iec_prefixes=extra_iec_prefixes,
+            bracket_unc=bracket_unc,
+            val_unc_match_widths=val_unc_match_widths,
+            bracket_unc_remove_seps=bracket_unc_remove_seps,
+            unc_pm_whitespace=unc_pm_whitespace
         )
 
     pattern = re.compile(r'''^
@@ -146,6 +194,7 @@ class FormatOptions:
                              (?P<format_mode>[fF%eErRbB])?
                              (?:x(?P<exp>[+-]?\d+))?
                              (?P<prefix_mode>p)?
+                             (?P<bracket_unc>S)?
                              $''', re.VERBOSE)
 
     fill_mode_mapping = {' ': FillMode.SPACE,
@@ -191,6 +240,9 @@ class FormatOptions:
         top_dig_place = match.group('top_dig_place')
         if top_dig_place is not None:
             top_dig_place = int(top_dig_place)
+            val_unc_match_widths = True
+        else:
+            val_unc_match_widths = None
 
         upper_separator_flag = match.group('upper_separator')
         upper_separator = cls.separator_mapping[upper_separator_flag]
@@ -210,7 +262,7 @@ class FormatOptions:
 
         format_mode = match.group('format_mode')
         if format_mode is not None:
-            capital_exp_char = format_mode.isupper()
+            capitalize = format_mode.isupper()
             if format_mode in ['f', 'F']:
                 format_mode = FormatMode.FIXEDPOINT
             elif format_mode == '%':
@@ -228,7 +280,7 @@ class FormatOptions:
                 else:
                     format_mode = FormatMode.BINARY
         else:
-            capital_exp_char = None
+            capitalize = None
 
         exp = match.group('exp')
         if exp is not None:
@@ -237,6 +289,10 @@ class FormatOptions:
         use_prefix = match.group('prefix_mode')
         if use_prefix is not None:
             use_prefix = True
+
+        bracket_unc = match.group('bracket_unc')
+        if bracket_unc is not None:
+            bracket_unc = True
 
         if defaults is None:
             defaults = DEFAULT_GLOBAL_OPTIONS
@@ -252,9 +308,11 @@ class FormatOptions:
             round_mode=round_mode,
             precision=precision,
             format_mode=format_mode,
-            capital_exp_char=capital_exp_char,
+            capitalize=capitalize,
             exp=exp,
-            use_prefix=use_prefix
+            use_prefix=use_prefix,
+            bracket_unc=bracket_unc,
+            val_unc_match_widths=val_unc_match_widths
         )
 
 
@@ -268,11 +326,16 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     round_mode=RoundMode.SIG_FIG,
     precision=AutoPrec,
     format_mode=FormatMode.FIXEDPOINT,
-    capital_exp_char=False,
+    capitalize=False,
     exp=AutoExp,
+    nan_inf_exp=False,
     use_prefix=False,
     extra_si_prefixes=dict(),
-    extra_iec_prefixes=dict()
+    extra_iec_prefixes=dict(),
+    bracket_unc=False,
+    val_unc_match_widths=False,
+    bracket_unc_remove_seps=False,
+    unc_pm_whitespace=True
 )
 
 DEFAULT_GLOBAL_OPTIONS = FormatOptions.make(
@@ -291,24 +354,29 @@ def print_global_defaults():
 
 
 def set_global_defaults(
-            *,
-            defaults: 'FormatOptions' = None,
-            fill_mode: FillMode = None,
-            sign_mode: SignMode = None,
-            top_dig_place: int = None,
-            upper_separator: UpperGroupingSeparators = None,
-            decimal_separator: DecimalGroupingSeparators = None,
-            lower_separator: LowerGroupingSeparators = None,
-            round_mode: RoundMode = None,
-            precision: Union[int, type(AutoPrec)] = None,
-            format_mode: FormatMode = None,
-            capital_exp_char: bool = None,
-            exp: Union[int, type(AutoExp)] = None,
-            use_prefix: bool = None,
-            extra_si_prefixes: dict[int, str] = None,
-            extra_iec_prefixes: dict[int, str] = None,
-            add_c_prefix: bool = False,
-            add_small_si_prefixes: bool = False
+        *,
+        defaults: 'FormatOptions' = None,
+        fill_mode: FillMode = None,
+        sign_mode: SignMode = None,
+        top_dig_place: int = None,
+        upper_separator: UpperGroupingSeparators = None,
+        decimal_separator: DecimalGroupingSeparators = None,
+        lower_separator: LowerGroupingSeparators = None,
+        round_mode: RoundMode = None,
+        precision: Union[int, type(AutoPrec)] = None,
+        format_mode: FormatMode = None,
+        capitalize: bool = None,
+        exp: Union[int, type(AutoExp)] = None,
+        nan_inf_exp=None,
+        use_prefix: bool = None,
+        extra_si_prefixes: dict[int, str] = None,
+        extra_iec_prefixes: dict[int, str] = None,
+        add_c_prefix: bool = False,
+        add_small_si_prefixes: bool = False,
+        bracket_unc=None,
+        val_unc_match_widths=None,
+        bracket_unc_remove_seps=None,
+        unc_pm_whitespace=None
 ):
     """
     Update global default options. Accepts the same input keyword
@@ -330,13 +398,19 @@ def set_global_defaults(
         round_mode=round_mode,
         precision=precision,
         format_mode=format_mode,
-        capital_exp_char=capital_exp_char,
+        capitalize=capitalize,
         exp=exp,
+        nan_inf_exp=nan_inf_exp,
         use_prefix=use_prefix,
         extra_si_prefixes=extra_si_prefixes,
         extra_iec_prefixes=extra_iec_prefixes,
         add_c_prefix=add_c_prefix,
-        add_small_si_prefixes=add_small_si_prefixes)
+        add_small_si_prefixes=add_small_si_prefixes,
+        bracket_unc=bracket_unc,
+        val_unc_match_widths=val_unc_match_widths,
+        bracket_unc_remove_seps=bracket_unc_remove_seps,
+        unc_pm_whitespace=unc_pm_whitespace
+    )
     DEFAULT_GLOBAL_OPTIONS = new_default_options
 
 
@@ -405,13 +479,18 @@ class GlobalDefaultsContext:
             round_mode: RoundMode = None,
             precision: Union[int, type(AutoPrec)] = None,
             format_mode: FormatMode = None,
-            capital_exp_char: bool = None,
+            capitalize: bool = None,
             exp: Union[int, type(AutoExp)] = None,
+            nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
             add_c_prefix: bool = False,
-            add_small_si_prefixes: bool = False
+            add_small_si_prefixes: bool = False,
+            bracket_unc: bool = None,
+            val_unc_match_widths: bool = None,
+            bracket_unc_remove_seps: bool = None,
+            unc_pm_whitespace: bool = None
     ):
         self.options = FormatOptions.make(
             defaults=defaults,
@@ -424,13 +503,19 @@ class GlobalDefaultsContext:
             round_mode=round_mode,
             precision=precision,
             format_mode=format_mode,
-            capital_exp_char=capital_exp_char,
+            capitalize=capitalize,
             exp=exp,
+            nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
             add_c_prefix=add_c_prefix,
-            add_small_si_prefixes=add_small_si_prefixes)
+            add_small_si_prefixes=add_small_si_prefixes,
+            bracket_unc=bracket_unc,
+            val_unc_match_widths=val_unc_match_widths,
+            bracket_unc_remove_seps=bracket_unc_remove_seps,
+            unc_pm_whitespace=unc_pm_whitespace
+        )
         self.initial_global_defaults = None
 
     def __enter__(self):

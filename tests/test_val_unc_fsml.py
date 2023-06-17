@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import vufloat
+from sciform import vufloat, GlobalDefaultsContext
 
 
 NAN = float('nan')
@@ -152,6 +152,25 @@ class TestFormatting(unittest.TestCase):
 
         self.do_unc_val_test_case_dict(cases_dict)
 
+    def test_bracket_unc(self):
+        cases_dict = {
+            (123.456, 0.789):
+                {
+                    'S': '123.456(789)',
+                    'eS': '(1.23456(789))e+02',
+                    'rS': '(123.456(789))e+00',
+                    '#rS': '(0.123456(789))e+03',
+                    'ex+1S': '(12.3456(789))e+01',
+                    'ex-1S': '(1234.56(7.89))e-01',
+                },
+            (123456.654321, 0.000002):
+                {
+                    ',._!1fS': '123,456.654_321(2)'
+                }
+        }
+
+        self.do_unc_val_test_case_dict(cases_dict)
+
     def test_match_width(self):
         cases_dict = {
             (123.456, 0.789):
@@ -172,36 +191,97 @@ class TestFormatting(unittest.TestCase):
         cases_dict = {
             (12.34, NAN): {
                 '': '12.34 +/- nan',
-                'S': '12.34(nan)'
+                'e': '(1.234 +/- nan)e+01',
+                'S': '12.34(nan)',
+                'eS': '(1.234(nan))e+01'
             },
             (12.34, INF): {
                 '': '12.34 +/- inf',
-                'S': '12.34(inf)'
+                'e': '(1.234 +/- inf)e+01',
+                'S': '12.34(inf)',
+                'eS': '(1.234(inf))e+01'
             },
             (NAN, 12.34): {
                 '': 'nan +/- 12.34',
-                'e': '(nan +/- 1.234)e+01'
+                'e': '(nan +/- 1.234)e+01',
+                'S': 'nan(12.34)',
+                'eS': '(nan(1.234))e+01',
             },
             (INF, 12.34): {
                 '': 'inf +/- 12.34',
-                'e': '(inf +/- 1.234)e+01'
+                'e': '(inf +/- 1.234)e+01',
+                'S': 'inf(12.34)',
+                'eS': '(inf(1.234))e+01'
             },
             (NAN, NAN): {
                 '': 'nan +/- nan',
                 'S': 'nan(nan)',
-                'FS': 'NAN(NAN)',
-                'e': '(nan +/- nan)e+00'
+                'e': 'nan +/- nan',
+                'eS': 'nan(nan)'
             }
         }
 
         self.do_unc_val_test_case_dict(cases_dict)
 
+    def test_nan_inf_exp(self):
+        cases_dict = {
+            (NAN, NAN): {
+                '': 'nan +/- nan',
+                'e': '(nan +/- nan)e+00',
+                'S': 'nan(nan)',
+                'eS': '(nan(nan))e+00'
+            }
+        }
+        with GlobalDefaultsContext(nan_inf_exp=True):
+            self.do_unc_val_test_case_dict(cases_dict)
+
+    def test_capitalization(self):
+        cases_dict = {
+            (123.456, 0.789):
+                {
+                    'e': '(1.23456 +/- 0.00789)e+02',
+                    'E': '(1.23456 +/- 0.00789)E+02'
+                },
+            (NAN, NAN): {
+                'e': '(nan +/- nan)e+00',
+                'E': '(NAN +/- NAN)E+00',
+            },
+            (INF, INF): {
+                'e': '(inf +/- inf)e+00',
+                'E': '(INF +/- INF)E+00',
+            }
+        }
+
+        with GlobalDefaultsContext(nan_inf_exp=True):
+            self.do_unc_val_test_case_dict(cases_dict)
+
     def test_rounding(self):
         cases_dict = {
             (0.0999, 0.0999): {
-                '!1e': '(1 +/- 1)e-01'},
+                '!1e': '(1 +/- 1)e-01'
+            },
             (0.0999, 0.999): {
-                '!1e': '(0 +/- 1)e+00'}
+                '!1e': '(0 +/- 1)e+00'
+            }
+        }
+        self.do_unc_val_test_case_dict(cases_dict)
+
+    def test_match_widths(self):
+        cases_dict = {
+            (123.456, 0.789): {
+                '0=0': '123.456 +/- 000.789',
+                '0= 0': ' 123.456 +/- 000.789',
+                ' 0': ' 123.456 +/-   0.789',
+                '+0': '+123.456 +/-   0.789',
+                '0': '123.456 +/-   0.789'
+            },
+            (0.789, 123.456): {
+                '0=0': '000.789 +/- 123.456',
+                '0= 0': ' 000.789 +/- 123.456',
+                ' 0': '   0.789 +/- 123.456',
+                '+0': '+  0.789 +/- 123.456',
+                '0': '  0.789 +/- 123.456'
+            }
         }
         self.do_unc_val_test_case_dict(cases_dict)
 
