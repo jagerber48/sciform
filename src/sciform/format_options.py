@@ -40,7 +40,6 @@ class FormatOptions:
                                      f'rounding, not {self.precision}.')
 
         if self.exp is not AutoExp:
-            # TODO: Needs testing
             if (self.format_mode is FormatMode.FIXEDPOINT
                     or self.format_mode is FormatMode.PERCENT):
                 if self.exp != 0:
