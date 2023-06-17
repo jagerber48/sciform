@@ -248,7 +248,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         else:
             val_unc_str = f'{val_str}+/-{unc_str}'
     else:
-        unc_str = unc_str.lstrip('0.')
+        unc_str = unc_str.lstrip('0.,_ ')
         if options.bracket_unc_remove_seps:
             unc_str = unc_str.replace('.', '')
             unc_str = unc_str.replace(',', '')

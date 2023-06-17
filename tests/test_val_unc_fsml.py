@@ -162,11 +162,14 @@ class TestFormatting(unittest.TestCase):
                     '#rS': '(0.123456(789))e+03',
                     'ex+1S': '(12.3456(789))e+01',
                     'ex-1S': '(1234.56(7.89))e-01',
+                },
+            (123456.654321, 0.000002):
+                {
+                    ',._!1fS': '123,456.654_321(2)'
                 }
         }
 
         self.do_unc_val_test_case_dict(cases_dict)
-
 
     def test_match_width(self):
         cases_dict = {
