@@ -21,17 +21,16 @@ The :class:`Formatter` object is initialized with user-selected
 formatting options and then used to format floats. Additional details
 about formatting options at :ref:`formatting_options`.
 
->>> from sciform import Formatter, RoundMode, GroupingSeparator, FormatMode
+>>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
 >>> sform = Formatter(round_mode=RoundMode.PREC,
 ...                   precision=6,
 ...                   upper_separator=GroupingSeparator.SPACE,
 ...                   lower_separator=GroupingSeparator.SPACE)
->>> print(sform(3.14159265359))
-3.141 593
-
+>>> print(sform(51413.14159265359))
+51 413.141 593
 >>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
 ...                   precision=4,
-...                   format_mode=FormatMode.ENGINEERING)
+...                   exp_mode=ExpMode.ENGINEERING)
 >>> print(sform(123456.78))
 123.5e+03
 
@@ -91,7 +90,7 @@ algorithm:
    is not rounded.
 #. The value is rounded to the same digit place as the uncertainty
 #. The value for the exponent is resolved by applying the
-   ``format_mode`` to the value.
+   ``exp_mode`` to the value.
 #. The value and uncertainties mantissas are determined according to the
    value of the exponent determined in the previous step.
 #. The value and uncertainty mantissas are formatted together with the
@@ -122,9 +121,10 @@ The global default settings can be viewed using
  'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,
  'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
  'precision': <class 'sciform.modes.AutoPrec'>,
- 'format_mode': <FormatMode.FIXEDPOINT: 'fixed_point'>,
- 'capitalize': False,
+ 'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,
  'exp': <class 'sciform.modes.AutoExp'>,
+ 'capitalize': False,
+ 'percent': False,
  'nan_inf_exp': False,
  'use_prefix': False,
  'extra_si_prefixes': {},
@@ -142,10 +142,10 @@ options will retain their existing values.
 The same checks applied when constructing a :class:`Formatter` are
 applied to setting global default settings.
 
->>> from sciform import (set_global_defaults, FillMode, FormatMode,
+>>> from sciform import (set_global_defaults, FillMode, ExpMode,
 ...                      GroupingSeparator)
 >>> set_global_defaults(fill_mode=FillMode.ZERO,
-...                    format_mode=FormatMode.ENGINEERING_SHIFTED,
+...                    exp_mode=ExpMode.ENGINEERING_SHIFTED,
 ...                    precision=4,
 ...                    decimal_separator=GroupingSeparator.COMMA)
 >>> print_global_defaults()
@@ -157,9 +157,10 @@ applied to setting global default settings.
  'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,
  'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
  'precision': 4,
- 'format_mode': <FormatMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
- 'capitalize': False,
+ 'exp_mode': <ExpMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
  'exp': <class 'sciform.modes.AutoExp'>,
+ 'capitalize': False,
+ 'percent': False,
  'nan_inf_exp': False,
  'use_prefix': False,
  'extra_si_prefixes': {},

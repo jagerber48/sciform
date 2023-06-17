@@ -9,17 +9,17 @@ formatted strings.
 These options including control over the rounding strategy, scientific
 notation formatting, separation characters and more.
 
-Format Mode
-===========
+Exponent Mode
+=============
 
-:mod:`sciform` supports a variety of format modes.
+:mod:`sciform` supports a variety of exponent modes.
 To display numbers across a wide range of magnitudes, scientific
 formatting presents numbers in the form::
 
    num = mantissa * base**exp
 
 Where exp is an integer and ``base`` is typically 10 or 2.
-The different formatting modes control how ``mantissa``, ``base`` and
+The different exponent modes control how ``mantissa``, ``base`` and
 ``exp`` are chosen for a given input float ``num``.
 
 Fixed Point
@@ -28,8 +28,8 @@ Fixed Point
 Fixed point notation is standard notation in which a float is displayed
 directly as a decimal number with no extra exponent.
 
->>> from sciform import Formatter, FormatMode, RoundMode
->>> sform = Formatter(format_mode=FormatMode.FIXEDPOINT)
+>>> from sciform import Formatter, ExpMode, RoundMode
+>>> sform = Formatter(exp_mode=ExpMode.FIXEDPOINT)
 >>> print(sform(123.456))
 123.456
 
@@ -40,7 +40,7 @@ Scientific notation is used to display base-10 decimal numbers.
 In scientific notation, the exponent is uniquely chosen so that the
 mantissa ``m`` satisfies ``1 <= m < 10``.
 
->>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC)
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC)
 >>> print(sform(123.456))
 1.23456e+02
 
@@ -61,7 +61,7 @@ Here it may be more convenient to display the number with an exponent of
 to an exponent of 8 which would be chosen for standard scientific
 notation.
 
->>> sform = Formatter(format_mode=FormatMode.ENGINEERING)
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING)
 >>> print(sform(123.456))
 123.456e+00
 
@@ -72,7 +72,7 @@ Shifted engineering notation is the same as engineering notation except
 the exponent is chosen so that the mantissa ``m`` satisfies
 ``0.1 <= m < 100``.
 
->>> sform = Formatter(format_mode=FormatMode.ENGINEERING_SHIFTED)
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING_SHIFTED)
 >>> print(sform(123.456))
 0.123456e+03
 
@@ -82,7 +82,7 @@ Binary
 Binary formatting can be chosen to display a number in scientific
 notation in base-2.
 
->>> sform = Formatter(format_mode=FormatMode.BINARY)
+>>> sform = Formatter(exp_mode=ExpMode.BINARY)
 >>> print(sform(256))
 1b+08
 
@@ -101,7 +101,7 @@ The mantissa ``m`` satisfies ``1 <= m < 1024``.
 Binary formatting can be chosen to display a number in scientific
 notation in base-2.
 
->>> sform = Formatter(format_mode=FormatMode.BINARY_IEC)
+>>> sform = Formatter(exp_mode=ExpMode.BINARY_IEC)
 >>> print(sform(2048))
 2b+10
 
@@ -116,7 +116,7 @@ If a fixed exponent is requested for engineering, shifted engineering,
 or binary IEC mode, then the requested exponent is rounded down to the
 nearest multiple of 3 or 10.
 
->>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC,
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
 ...                   exp=3)
 >>> print(sform(123.456))
 0.123456e+03
@@ -137,12 +137,12 @@ translations, in addition to those provided by default.
    * handles values larger and smaller than largest and smallest
      supported translations
 
->>> sform = Formatter(format_mode=FormatMode.ENGINEERING,
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
 ...                   use_prefix=True)
 >>> print(sform(4242.13))
 4.24213 k
 
->>> sform = Formatter(format_mode=FormatMode.BINARY_IEC,
+>>> sform = Formatter(exp_mode=ExpMode.BINARY_IEC,
 ...                   round_mode=RoundMode.SIG_FIG,
 ...                   precision=4,
 ...                   use_prefix=True)
@@ -159,7 +159,7 @@ significant figures, and rounding based on digits past the decimal
 point or "precision".
 In both cases, the rounding applies to the mantissa determined after
 identifying the appropriate exponent for display based on the selected
-format mode.
+exponent mode.
 In some cases, the rounding results in a modification to the chosen
 exponent.
 This is taken into account before the final presentation.
@@ -180,7 +180,7 @@ This demonstrates that we can't determine how many significant figures
 a number was rounded to just by looking at the resulting string.
 
 >>> from sciform import RoundMode
->>> sform = Formatter(format_mode=FormatMode.ENGINEERING,
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
 ...                   round_mode=RoundMode.SIG_FIG,
 ...                   precision=4)
 >>> print(sform(12345.678))
@@ -202,7 +202,7 @@ Most of the built-in string formatting mini-language is based on
 precision presentation.
 
 >>> from sciform import RoundMode
->>> sform = Formatter(format_mode=FormatMode.ENGINEERING,
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
 ...                   round_mode=RoundMode.PREC,
 ...                   precision=4)
 >>> print(sform(12345.678))
@@ -211,7 +211,7 @@ precision presentation.
 For precision rounding, ``precision`` can be any integer.
 
 >>> from sciform import RoundMode
->>> sform = Formatter(format_mode=FormatMode.FIXEDPOINT,
+>>> sform = Formatter(exp_mode=ExpMode.FIXEDPOINT,
 ...                   round_mode=RoundMode.PREC,
 ...                   precision=-2)
 >>> print(sform(12345.678))
@@ -276,19 +276,27 @@ Note that ``0`` is always considered positive.
 >>> print(sform(42))
  42
 
-Exponent Character Capitalization
-=================================
+Capitalization
+==============
 
 The capitalization of the exponent character can be controlled
 
->>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC,
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
 ...                   capitalize=True)
 >>> print(sform(42))
 4.2E+01
->>> sform = Formatter(format_mode=FormatMode.BINARY,
+>>> sform = Formatter(exp_mode=ExpMode.BINARY,
 ...                   capitalize=True)
 >>> print(sform(1024))
 1B+10
+
+The ``capitalize`` flag also controls the capitalization of ``nan`` and
+``inf`` formatted floats:
+
+>>> print(sform(float('nan')))
+NAN
+>>> print(sform(float('-inf')))
+-INF
 
 Left Filling
 ============
@@ -311,6 +319,20 @@ to the 10\ :sup:`4` (ten-thousands) place.
 >>> print(sform(42))
 00042
 
+Percent Mode
+============
+
+The user can activate percent mode using the ``percent`` flag.
+This flag is only valid for fixed point exponent mode.
+In this case, the float is multipled by 100 and a % symbols is
+appended to the end of the formatted string.
+
+>>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
+...                   precision=3,
+...                   percent=True)
+>>> print(sform(0.12345))
+12.3%
+
 .. _extra_si_prefixes:
 
 Extra Prefixes
@@ -329,12 +351,12 @@ These additional prefixes can be included using the
 Furthermore, just the ``c`` prefix can be included using the
 ``add_c_prefix`` options.
 
->>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC,
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
 ...                   use_prefix=True,
 ...                   add_c_prefix=True)
 >>> print(sform(0.025))
 2.5 c
->>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC,
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
 ...                   use_prefix=True,
 ...                   add_small_si_prefixes=True)
 >>> print(sform(25))
@@ -349,10 +371,10 @@ Typically these are formatted to ``'nan'``, ``'inf'``, and ``'-inf'`` or
 ``'NAN'``, ``'INF'``, and ``'-INF'`` respectively depending on
 ``capitalize``.
 However, if ``nan_inf_exp=True`` (default ``False``), then, for
-scientific, engineering, and binary formatting modes, these will instead
+scientific, engineering, and binary exponent modes, these will instead
 be formatted as, e.g. ``'(nan)e+00'``.
 
->>> sform = Formatter(format_mode=FormatMode.SCIENTIFIC,
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
 ...                   nan_inf_exp=True,
 ...                   capitalize=True)
 >>> print(sform(float('-inf')))
@@ -368,7 +390,7 @@ formatted as follows.
 First, significant figure rounding is applied to the uncertainty
 according to the specified precision.
 Next the value is rounded to the same position as the uncertainty.
-The exponent is then determined using the format mode and the value.
+The exponent is then determined using the expponent mode and the value.
 The value and the uncertainty are then formatted into a single string
 according to the options below.
 
@@ -415,7 +437,7 @@ Or with other options:
 >>> print(sform(123.456, 0.789))
 123.46(79)
 >>> sform = Formatter(precision=2,
-...                   format_mode=FormatMode.SCIENTIFIC,
+...                   exp_mode=ExpMode.SCIENTIFIC,
 ...                   bracket_unc=True)
 >>> print(sform(123.456, 0.789))
 (1.2346(79))e+02

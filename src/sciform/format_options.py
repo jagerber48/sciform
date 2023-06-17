@@ -6,7 +6,7 @@ from pprint import pprint
 
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
-                           DecimalGroupingSeparators, RoundMode, FormatMode,
+                           DecimalGroupingSeparators, RoundMode, ExpMode,
                            AutoExp, AutoPrec)
 
 
@@ -20,9 +20,10 @@ class FormatOptions:
     lower_separator: LowerGroupingSeparators
     round_mode: RoundMode
     precision: Union[int, type(AutoPrec)]
-    format_mode: FormatMode  # TODO: rename to exp_mode
-    capitalize: bool
+    exp_mode: ExpMode  # TODO: rename to exp_mode
     exp: Union[int, type(AutoExp)]
+    capitalize: bool
+    percent: bool
     nan_inf_exp: bool
     use_prefix: bool
     extra_si_prefixes: dict[int, str]
@@ -40,23 +41,22 @@ class FormatOptions:
                                      f'rounding, not {self.precision}.')
 
         if self.exp is not AutoExp:
-            if (self.format_mode is FormatMode.FIXEDPOINT
-                    or self.format_mode is FormatMode.PERCENT):
+            if self.exp_mode is ExpMode.FIXEDPOINT:
                 if self.exp != 0:
                     raise ValueError(f'Exponent must must be 0, not '
-                                     f'exp={self.exp}, for fixed point and '
-                                     f'percent format modes.')
-            elif (self.format_mode is FormatMode.ENGINEERING
-                    or self.format_mode is FormatMode.ENGINEERING_SHIFTED):
+                                     f'exp={self.exp}, for fixed point'
+                                     f'exponent mode.')
+            elif (self.exp_mode is ExpMode.ENGINEERING
+                  or self.exp_mode is ExpMode.ENGINEERING_SHIFTED):
                 if self.exp % 3 != 0:
                     raise ValueError(f'Exponent must be a multiple of 3, not '
-                                     f'exp={self.exp}, for engineering format '
-                                     f'modes.')
-            elif self.format_mode is FormatMode.BINARY_IEC:
+                                     f'exp={self.exp}, for engineering '
+                                     f'exponent modes.')
+            elif self.exp_mode is ExpMode.BINARY_IEC:
                 if self.exp % 10 != 0:
                     raise ValueError(f'Exponent must be a multiple of 10, not '
-                                     f'exp={self.exp}, for binary IEC format'
-                                     f'mode.')
+                                     f'exp={self.exp}, for binary IEC '
+                                     f'exponent mode.')
 
         if self.upper_separator not in get_args(UpperGroupingSeparators):
             raise ValueError(f'upper_separator {self.upper_separator} not in '
@@ -87,9 +87,10 @@ class FormatOptions:
             lower_separator: LowerGroupingSeparators = None,
             round_mode: RoundMode = None,
             precision: Union[int, type(AutoPrec)] = None,
-            format_mode: FormatMode = None,
-            capitalize: bool = None,
+            exp_mode: ExpMode = None,
             exp: Union[int, type(AutoExp)] = None,
+            capitalize: bool = None,
+            percent: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -120,12 +121,16 @@ class FormatOptions:
             round_mode = defaults.round_mode
         if precision is None:
             precision = defaults.precision
-        if format_mode is None:
-            format_mode = defaults.format_mode
-        if capitalize is None:
-            capitalize = defaults.capitalize
+        if exp_mode is None:
+            exp_mode = defaults.exp_mode
         if exp is None:
             exp = defaults.exp
+        if capitalize is None:
+            capitalize = defaults.capitalize
+        if percent is None:
+            percent = defaults.percent
+        if nan_inf_exp is None:
+            nan_inf_exp = defaults.nan_inf_exp
         if use_prefix is None:
             use_prefix = defaults.use_prefix
         if extra_si_prefixes is None:
@@ -144,8 +149,6 @@ class FormatOptions:
             bracket_unc_remove_seps = defaults.bracket_unc_remove_seps
         if unc_pm_whitespace is None:
             unc_pm_whitespace = defaults.unc_pm_whitespace
-        if nan_inf_exp is None:
-            nan_inf_exp = defaults.nan_inf_exp
 
         if add_c_prefix and -2 not in extra_si_prefixes:
             extra_si_prefixes[-2] = 'c'
@@ -169,9 +172,10 @@ class FormatOptions:
             lower_separator=lower_separator,
             round_mode=round_mode,
             precision=precision,
-            format_mode=format_mode,
-            capitalize=capitalize,
+            exp_mode=exp_mode,
             exp=exp,
+            capitalize=capitalize,
+            percent=percent,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
@@ -191,7 +195,7 @@ class FormatOptions:
                              (?P<decimal_separator>[.,])?            
                              (?P<lower_separator>[ns_])?                  
                              (?:(?P<round_mode>[.!])(?P<prec>[+-]?\d+))?
-                             (?P<format_mode>[fF%eErRbB])?
+                             (?P<exp_mode>[fF%eErRbB])?
                              (?:x(?P<exp>[+-]?\d+))?
                              (?P<prefix_mode>p)?
                              (?P<bracket_unc>S)?
@@ -260,25 +264,27 @@ class FormatOptions:
         if precision is not None:
             precision = int(precision)
 
-        format_mode = match.group('format_mode')
-        if format_mode is not None:
-            capitalize = format_mode.isupper()
-            if format_mode in ['f', 'F']:
-                format_mode = FormatMode.FIXEDPOINT
-            elif format_mode == '%':
-                format_mode = FormatMode.PERCENT
-            elif format_mode in ['e', 'E']:
-                format_mode = FormatMode.SCIENTIFIC
-            elif format_mode in ['r', 'R']:
+        exp_mode = match.group('exp_mode')
+        percent = False
+        if exp_mode is not None:
+            capitalize = exp_mode.isupper()
+            if exp_mode in ['f', 'F']:
+                exp_mode = ExpMode.FIXEDPOINT
+            elif exp_mode == '%':
+                exp_mode = ExpMode.FIXEDPOINT
+                percent = True
+            elif exp_mode in ['e', 'E']:
+                exp_mode = ExpMode.SCIENTIFIC
+            elif exp_mode in ['r', 'R']:
                 if alternate_mode:
-                    format_mode = FormatMode.ENGINEERING_SHIFTED
+                    exp_mode = ExpMode.ENGINEERING_SHIFTED
                 else:
-                    format_mode = FormatMode.ENGINEERING
-            elif format_mode in ['b', 'B']:
+                    exp_mode = ExpMode.ENGINEERING
+            elif exp_mode in ['b', 'B']:
                 if alternate_mode:
-                    format_mode = FormatMode.BINARY_IEC
+                    exp_mode = ExpMode.BINARY_IEC
                 else:
-                    format_mode = FormatMode.BINARY
+                    exp_mode = ExpMode.BINARY
         else:
             capitalize = None
 
@@ -307,9 +313,10 @@ class FormatOptions:
             lower_separator=lower_separator,
             round_mode=round_mode,
             precision=precision,
-            format_mode=format_mode,
-            capitalize=capitalize,
+            exp_mode=exp_mode,
             exp=exp,
+            capitalize=capitalize,
+            percent=percent,
             use_prefix=use_prefix,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths
@@ -325,9 +332,10 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     lower_separator=GroupingSeparator.NONE,
     round_mode=RoundMode.SIG_FIG,
     precision=AutoPrec,
-    format_mode=FormatMode.FIXEDPOINT,
-    capitalize=False,
+    exp_mode=ExpMode.FIXEDPOINT,
     exp=AutoExp,
+    capitalize=False,
+    percent=False,
     nan_inf_exp=False,
     use_prefix=False,
     extra_si_prefixes=dict(),
@@ -364,9 +372,10 @@ def set_global_defaults(
         lower_separator: LowerGroupingSeparators = None,
         round_mode: RoundMode = None,
         precision: Union[int, type(AutoPrec)] = None,
-        format_mode: FormatMode = None,
-        capitalize: bool = None,
+        exp_mode: ExpMode = None,
         exp: Union[int, type(AutoExp)] = None,
+        capitalize: bool = None,
+        percent: bool = None,
         nan_inf_exp=None,
         use_prefix: bool = None,
         extra_si_prefixes: dict[int, str] = None,
@@ -397,9 +406,10 @@ def set_global_defaults(
         lower_separator=lower_separator,
         round_mode=round_mode,
         precision=precision,
-        format_mode=format_mode,
-        capitalize=capitalize,
+        exp_mode=exp_mode,
         exp=exp,
+        capitalize=capitalize,
+        percent=percent,
         nan_inf_exp=nan_inf_exp,
         use_prefix=use_prefix,
         extra_si_prefixes=extra_si_prefixes,
@@ -478,9 +488,10 @@ class GlobalDefaultsContext:
             lower_separator: LowerGroupingSeparators = None,
             round_mode: RoundMode = None,
             precision: Union[int, type(AutoPrec)] = None,
-            format_mode: FormatMode = None,
-            capitalize: bool = None,
+            exp_mode: ExpMode = None,
             exp: Union[int, type(AutoExp)] = None,
+            capitalize: bool = None,
+            percent: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -502,9 +513,10 @@ class GlobalDefaultsContext:
             lower_separator=lower_separator,
             round_mode=round_mode,
             precision=precision,
-            format_mode=format_mode,
-            capitalize=capitalize,
+            exp_mode=exp_mode,
             exp=exp,
+            capitalize=capitalize,
+            percent=percent,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,

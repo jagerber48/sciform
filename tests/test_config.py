@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import (sfloat, GlobalDefaultsContext, FormatMode,
+from sciform import (sfloat, GlobalDefaultsContext, ExpMode,
                      GroupingSeparator, RoundMode, SignMode)
 
 
@@ -9,7 +9,7 @@ class TestConfig(unittest.TestCase):
         num = sfloat(123.456)
         before_str = f'{num}'
         with GlobalDefaultsContext(sign_mode=SignMode.ALWAYS,
-                                   format_mode=FormatMode.SCIENTIFIC,
+                                   exp_mode=ExpMode.SCIENTIFIC,
                                    round_mode=RoundMode.SIG_FIG,
                                    precision=2,
                                    decimal_separator=GroupingSeparator.COMMA):

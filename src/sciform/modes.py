@@ -96,12 +96,9 @@ class RoundMode(Enum):
     PREC = 'prec'
 
 
-class FormatMode(Enum):
+class ExpMode(Enum):
     #: Fixed point
     FIXEDPOINT = 'fixed_point'
-
-    #: Percentage
-    PERCENT = 'percent'
 
     #: Scientific
     SCIENTIFIC = 'scientific'

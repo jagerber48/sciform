@@ -3,7 +3,7 @@ from typing import Union
 from math import floor, log10, log2, isfinite
 from warnings import warn
 
-from sciform.modes import FormatMode, RoundMode, SignMode, AutoExp, AutoPrec
+from sciform.modes import ExpMode, RoundMode, SignMode, AutoExp, AutoPrec
 
 
 def get_top_digit(num: float) -> int:
@@ -59,76 +59,74 @@ def get_top_and_bottom_digit(num: float) -> tuple[int, int]:
 
 def get_mantissa_exp_base(
         num: float,
-        format_mode: FormatMode,
+        exp_mode: ExpMode,
         exp: Union[int, type(AutoExp)] = None) -> (float, int, int):
     if num == 0:
         if exp is AutoExp:
             exp = 0
         base = 10
-    elif (format_mode is FormatMode.FIXEDPOINT
-          or format_mode is FormatMode.PERCENT):
+    elif exp_mode is ExpMode.FIXEDPOINT:
         if exp is not AutoExp:
             if exp != 0:
                 warn('Attempt to set exponent explicity in fixed point '
                      'exponent mode. Coercing exponent to 0.')
         exp = 0
         base = 10
-    elif format_mode is FormatMode.SCIENTIFIC:
+    elif exp_mode is ExpMode.SCIENTIFIC:
         if exp is AutoExp:
             exp = floor(log10(abs(num)))
         base = 10
-    elif (format_mode is FormatMode.ENGINEERING
-          or format_mode is FormatMode.ENGINEERING_SHIFTED):
+    elif (exp_mode is ExpMode.ENGINEERING
+          or exp_mode is ExpMode.ENGINEERING_SHIFTED):
         if exp is not AutoExp:
             if exp % 3 != 0:
                 warn(f'Attempt to set exponent explicity to a non-integer '
                      f'multiple of 3 in engineering mode. Coercing to the '
                      f'next lower multiple of 3.')
                 exp = (exp // 3) * 3
-            if format_mode is FormatMode.ENGINEERING_SHIFTED:
+            if exp_mode is ExpMode.ENGINEERING_SHIFTED:
                 warn(f'Engineering shifted mode is ignored when setting '
                      f'exponent explicitly.')
         else:
             exp = floor(log10(abs(num)))
-            if format_mode is FormatMode.ENGINEERING:
+            if exp_mode is ExpMode.ENGINEERING:
                 exp = (exp // 3) * 3
             else:
                 exp = ((exp + 1) // 3) * 3
         base = 10
-    elif (format_mode is FormatMode.BINARY
-          or format_mode is FormatMode.BINARY_IEC):
+    elif (exp_mode is ExpMode.BINARY
+          or exp_mode is ExpMode.BINARY_IEC):
         if exp is AutoExp:
             exp = floor(log2(abs(num)))
-            if format_mode is FormatMode.BINARY_IEC:
+            if exp_mode is ExpMode.BINARY_IEC:
                 exp = (exp // 10) * 10
-        elif format_mode is FormatMode.BINARY_IEC:
+        elif exp_mode is ExpMode.BINARY_IEC:
             warn(f'Binary IEC mode is ignored when setting exponent '
                  f'explicitly')
         base = 2
     else:
-        raise ValueError(f'Unhandled format mode: {format_mode}')
+        raise ValueError(f'Unhandled exponent mode: {exp_mode}')
 
     mantissa = num * base**-exp
 
     return mantissa, exp, base
 
 
-def get_exp_str(exp: int, format_mode: FormatMode,
+def get_exp_str(exp: int, exp_mode: ExpMode,
                 capitalize: bool) -> str:
-    if (format_mode is format_mode.FIXEDPOINT
-            or format_mode is format_mode.PERCENT):
+    if exp_mode is exp_mode.FIXEDPOINT:
         exp_str = ''
-    elif (format_mode is FormatMode.SCIENTIFIC
-          or format_mode is FormatMode.ENGINEERING
-          or format_mode is FormatMode.ENGINEERING_SHIFTED):
+    elif (exp_mode is ExpMode.SCIENTIFIC
+          or exp_mode is ExpMode.ENGINEERING
+          or exp_mode is ExpMode.ENGINEERING_SHIFTED):
         exp_char = 'E' if capitalize else 'e'
         exp_str = f'{exp_char}{exp:+03d}'
-    elif (format_mode is FormatMode.BINARY
-          or format_mode is FormatMode.BINARY_IEC):
+    elif (exp_mode is ExpMode.BINARY
+          or exp_mode is ExpMode.BINARY_IEC):
         exp_char = 'B' if capitalize else 'b'
         exp_str = f'{exp_char}{exp:+03d}'
     else:
-        raise ValueError(f'Unhandled format type {format_mode}')
+        raise ValueError(f'Unhandled format type {exp_mode}')
     return exp_str
 
 

@@ -2,7 +2,7 @@ from math import isfinite
 from warnings import warn
 import re
 
-from sciform.modes import FillMode, FormatMode, SignMode, AutoExp
+from sciform.modes import FillMode, ExpMode, SignMode, AutoExp
 from sciform.format_options import FormatOptions, RoundMode
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_digit,
@@ -17,7 +17,7 @@ from sciform.prefix import replace_prefix
 
 
 def format_float(num: float, options: FormatOptions) -> str:
-    format_mode = options.format_mode
+    exp_mode = options.exp_mode
     round_mode = options.round_mode
     precision = options.precision
     top_padded_digit = options.top_dig_place
@@ -30,12 +30,11 @@ def format_float(num: float, options: FormatOptions) -> str:
                 exp = 0
             else:
                 exp = options.exp
-            if (format_mode is FormatMode.FIXEDPOINT
-                    or format_mode is FormatMode.PERCENT):
+            if exp_mode is ExpMode.FIXEDPOINT:
                 exp_str = ''
-            elif (format_mode is FormatMode.SCIENTIFIC
-                  or format_mode is FormatMode.ENGINEERING
-                  or format_mode is FormatMode.ENGINEERING_SHIFTED):
+            elif (exp_mode is ExpMode.SCIENTIFIC
+                  or exp_mode is ExpMode.ENGINEERING
+                  or exp_mode is ExpMode.ENGINEERING_SHIFTED):
                 exp_str = f'e+{exp:02d}'
             else:
                 exp_str = f'b+{exp:02d}'
@@ -50,11 +49,11 @@ def format_float(num: float, options: FormatOptions) -> str:
         else:
             return full_str.lower()
 
-    if format_mode is FormatMode.PERCENT:
+    if options.percent:
         num *= 100
 
     exp = options.exp
-    mantissa, temp_exp, base = get_mantissa_exp_base(num, format_mode, exp)
+    mantissa, temp_exp, base = get_mantissa_exp_base(num, exp_mode, exp)
 
     top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
     round_digit = get_round_digit(top_digit, bottom_digit,
@@ -67,7 +66,7 @@ def format_float(num: float, options: FormatOptions) -> str:
     altered the required exponent.
     '''
     rounded_num = mantissa_rounded * base**temp_exp
-    mantissa, exp, base = get_mantissa_exp_base(rounded_num, format_mode, exp)
+    mantissa, exp, base = get_mantissa_exp_base(rounded_num, exp_mode, exp)
 
     top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
     round_digit = get_round_digit(top_digit, bottom_digit,
@@ -77,7 +76,7 @@ def format_float(num: float, options: FormatOptions) -> str:
     if mantissa_rounded == 0:
         exp = 0
 
-    exp_str = get_exp_str(exp, format_mode, capitalize)
+    exp_str = get_exp_str(exp, exp_mode, capitalize)
 
     if mantissa_rounded == -0.0:
         mantissa_rounded = abs(mantissa_rounded)
@@ -104,7 +103,7 @@ def format_float(num: float, options: FormatOptions) -> str:
                                   options.extra_si_prefixes,
                                   options.extra_iec_prefixes)
 
-    if format_mode is FormatMode.PERCENT:
+    if options.percent:
         full_str = full_str + '%'
 
     return full_str
@@ -126,7 +125,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
     unc = abs(unc)
 
-    if options.format_mode is FormatMode.PERCENT:
+    if options.percent:
         val *= 100
         unc *= 100
 
@@ -156,21 +155,19 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     unc_rounded = round(unc_rounded, -round_digit)
     val_rounded = round(val_rounded, -round_digit)
 
-    format_mode = options.format_mode
+    exp_mode = options.exp_mode
 
     '''
-    Get a corresponding format mode which can have the exponent set
+    Get a corresponding exponent mode which can have the exponent set
     explicitly.
     '''
-    if format_mode is FormatMode.PERCENT:
-        free_exp_format_mode = FormatMode.FIXEDPOINT
-    elif (format_mode is FormatMode.ENGINEERING
-          or format_mode is FormatMode.ENGINEERING_SHIFTED):
-        free_exp_format_mode = FormatMode.SCIENTIFIC
-    elif format_mode is FormatMode.BINARY_IEC:
-        free_exp_format_mode = FormatMode.BINARY
+    if (exp_mode is ExpMode.ENGINEERING
+            or exp_mode is ExpMode.ENGINEERING_SHIFTED):
+        free_exp_mode = ExpMode.SCIENTIFIC
+    elif exp_mode is ExpMode.BINARY_IEC:
+        free_exp_mode = ExpMode.BINARY
     else:
-        free_exp_format_mode = format_mode
+        free_exp_mode = exp_mode
 
     if isfinite(val) or isfinite(unc):
         if isfinite(val):
@@ -180,17 +177,17 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
         _, exp, _ = get_mantissa_exp_base(
             exp_driver,
-            format_mode=options.format_mode,
+            exp_mode=options.exp_mode,
             exp=options.exp)
 
         val_mantissa, _, _ = get_mantissa_exp_base(
             val_rounded,
-            format_mode=free_exp_format_mode,
+            exp_mode=free_exp_mode,
             exp=exp)
 
         unc_mantissa, _, _ = get_mantissa_exp_base(
             unc_rounded,
-            format_mode=free_exp_format_mode,
+            exp_mode=free_exp_mode,
             exp=exp)
 
         prec = -round_digit + exp
@@ -214,7 +211,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         top_dig_place=new_top_digit,
         round_mode=RoundMode.PREC,
         precision=prec,
-        format_mode=free_exp_format_mode,
+        exp_mode=free_exp_mode,
         exp=exp,
         use_prefix=False,
         nan_inf_exp=options.nan_inf_exp
@@ -222,7 +219,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
     unc_format_options = FormatOptions.make(
         defaults=val_format_options,
-        format_mode=free_exp_format_mode,
+        exp_mode=free_exp_mode,
         sign_mode=SignMode.NEGATIVE,
         nan_inf_exp=options.nan_inf_exp
     )
@@ -266,7 +263,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     if options.use_prefix:
         val_unc_exp_str = replace_prefix(val_unc_exp_str)
 
-    if options.format_mode is FormatMode.PERCENT:
+    if options.percent:
         result_str = f'({val_unc_exp_str})%'
     else:
         result_str = val_unc_exp_str

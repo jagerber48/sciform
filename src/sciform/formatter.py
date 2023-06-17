@@ -2,7 +2,7 @@ from typing import Union
 
 from sciform.modes import (SignMode, FillMode, UpperGroupingSeparators,
                            DecimalGroupingSeparators, LowerGroupingSeparators,
-                           FormatMode, RoundMode, AutoExp, AutoPrec)
+                           ExpMode, RoundMode, AutoExp, AutoPrec)
 from sciform.format_options import FormatOptions
 from sciform.formatting import format_float, format_val_unc
 
@@ -15,8 +15,8 @@ class Formatter:
     user will be filled with the corresponding values from the global
     default configuration.
 
-    >>> from sciform import Formatter, FormatMode, RoundMode
-    >>> sform = Formatter(format_mode=FormatMode.ENGINEERING,
+    >>> from sciform import Formatter, ExpMode, RoundMode
+    >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
     ...                   round_mode=RoundMode.SIG_FIG,
     ...                   precision=4)
     >>> print(sform(12345.678))
@@ -25,7 +25,7 @@ class Formatter:
     The Formatter can be called with two aguments for value/uncertainty
     formatting
 
-    >>> sform = Formatter(format_mode=FormatMode.ENGINEERING,
+    >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
     ...                   round_mode=RoundMode.SIG_FIG,
     ...                   precision=2)
     >>> print(sform(12345.678, 3.4))
@@ -35,7 +35,7 @@ class Formatter:
     :class:`Formatter` object:
 
     * precision >= 1 for significant figure rounding mode
-    * exp must be consistent with the format mode:
+    * exp must be consistent with the exponent mode:
 
       * exp must be 0 for fixed point and percent modes
       * exp must be a multiple of 3 for engineering and shifted
@@ -73,20 +73,25 @@ class Formatter:
       digits past the decimal point to include for rounding. Must be
       >= 1 for significant figure rounding. May be positive, negative,
       or zero for digits past the decimal rounding.
-    :param format_mode: :class:`FormatMode` indicating the formatting
+    :param exp_mode: :class:`ExpMode` indicating the formatting
       mode to be used.
-    :param capitalize: ``bool`` indicating whether the exponentiation
-      symbol should be upper- or lower-case.
     :param exp: ``int`` indicating the value which should be used for the
       exponent. This parameter is ignored for fixed point and percent
-      format modes. For engineering, engineering shifted, and binary
+      exponent modes. For engineering, engineering shifted, and binary
       iec modes, if this parameter is not consistent with the rules of
       that mode (e.g. if it is not a multiple of 3), then the exponent
       is rounded down to the nearest conforming value and a warning is
       printed.
+    :param capitalize: ``bool`` indicating whether the exponentiation
+      symbol should be upper- or lower-case.
+    :param percent: ``bool`` indicating whether the float should be
+      formatted as a percentage or not. Only valid for fixed point
+      exponent mode. When ``True``, the float is multipled by 100 and
+      a % symbol is appended to the end of the string after formatting.
     :param nan_inf_exp: ``bool`` indicating whether non-finite floats
       such as ``float('nan')`` or ``float('inf')`` should be formatted
-      with exponent symbols when exponent format modes are selected.
+      with exponent symbols when exponent modes including exponent
+      symbols are selected.
     :param use_prefix: ``bool`` indicating if exponents should be
       replaced with either SI or IEC prefixes as appropriate.
     :param extra_si_prefixes: ``dict[int, str]`` mapping additional
@@ -122,9 +127,10 @@ class Formatter:
             lower_separator: LowerGroupingSeparators = None,
             round_mode: RoundMode = None,
             precision: Union[int, type(AutoPrec)] = None,
-            format_mode: FormatMode = None,
-            capitalize: bool = None,
+            exp_mode: ExpMode = None,
             exp: Union[int, type(AutoExp)] = None,
+            capitalize: bool = None,
+            percent: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -146,9 +152,10 @@ class Formatter:
             lower_separator=lower_separator,
             round_mode=round_mode,
             precision=precision,
-            format_mode=format_mode,
-            capitalize=capitalize,
+            exp_mode=exp_mode,
             exp=exp,
+            capitalize=capitalize,
+            percent=percent,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
@@ -180,9 +187,10 @@ class Formatter:
                    lower_separator=options.lower_separator,
                    round_mode=options.round_mode,
                    precision=options.precision,
-                   format_mode=options.format_mode,
-                   capitalize=options.capitalize,
+                   exp_mode=options.exp_mode,
                    exp=options.exp,
+                   capitalize=options.capitalize,
+                   percent=options.percent,
                    nan_inf_exp=options.nan_inf_exp,
                    use_prefix=options.use_prefix,
                    extra_si_prefixes=options.extra_si_prefixes,
