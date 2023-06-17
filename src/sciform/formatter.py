@@ -84,6 +84,10 @@ class Formatter:
       printed.
     :param capitalize: ``bool`` indicating whether the exponentiation
       symbol should be upper- or lower-case.
+    :param percent: ``bool`` indicating whether the float should be
+      formatted as a percentage or not. Only valid for fixed point
+      exponent mode. When ``True``, the float is multipled by 100 and
+      a % symbol is appended to the end of the string after formatting.
     :param nan_inf_exp: ``bool`` indicating whether non-finite floats
       such as ``float('nan')`` or ``float('inf')`` should be formatted
       with exponent symbols when exponent modes including exponent
@@ -126,6 +130,7 @@ class Formatter:
             exp_mode: ExpMode = None,
             exp: Union[int, type(AutoExp)] = None,
             capitalize: bool = None,
+            percent: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -150,6 +155,7 @@ class Formatter:
             exp_mode=exp_mode,
             exp=exp,
             capitalize=capitalize,
+            percent=percent,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
@@ -184,6 +190,7 @@ class Formatter:
                    exp_mode=options.exp_mode,
                    exp=options.exp,
                    capitalize=options.capitalize,
+                   percent=options.percent,
                    nan_inf_exp=options.nan_inf_exp,
                    use_prefix=options.use_prefix,
                    extra_si_prefixes=options.extra_si_prefixes,

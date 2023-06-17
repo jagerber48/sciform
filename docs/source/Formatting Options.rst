@@ -276,8 +276,8 @@ Note that ``0`` is always considered positive.
 >>> print(sform(42))
  42
 
-Exponent Character Capitalization
-=================================
+Capitalization
+==============
 
 The capitalization of the exponent character can be controlled
 
@@ -289,6 +289,14 @@ The capitalization of the exponent character can be controlled
 ...                   capitalize=True)
 >>> print(sform(1024))
 1B+10
+
+The ``capitalize`` flag also controls the capitalization of ``nan`` and
+``inf`` formatted floats:
+
+>>> print(sform(float('nan')))
+NAN
+>>> print(sform(float('-inf')))
+-INF
 
 Left Filling
 ============
@@ -310,6 +318,20 @@ to the 10\ :sup:`4` (ten-thousands) place.
 ...                   top_dig_place=4)
 >>> print(sform(42))
 00042
+
+Percent Mode
+============
+
+The user can activate percent mode using the ``percent`` flag.
+This flag is only valid for fixed point exponent mode.
+In this case, the float is multipled by 100 and a % symbols is
+appended to the end of the formatted string.
+
+>>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
+...                   precision=3,
+...                   percent=True)
+>>> print(sform(0.12345))
+12.3%
 
 .. _extra_si_prefixes:
 

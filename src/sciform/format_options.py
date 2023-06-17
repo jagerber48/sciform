@@ -23,6 +23,7 @@ class FormatOptions:
     exp_mode: ExpMode  # TODO: rename to exp_mode
     exp: Union[int, type(AutoExp)]
     capitalize: bool
+    percent: bool
     nan_inf_exp: bool
     use_prefix: bool
     extra_si_prefixes: dict[int, str]
@@ -40,12 +41,11 @@ class FormatOptions:
                                      f'rounding, not {self.precision}.')
 
         if self.exp is not AutoExp:
-            if (self.exp_mode is ExpMode.FIXEDPOINT
-                    or self.exp_mode is ExpMode.PERCENT):
+            if self.exp_mode is ExpMode.FIXEDPOINT:
                 if self.exp != 0:
                     raise ValueError(f'Exponent must must be 0, not '
-                                     f'exp={self.exp}, for fixed point and '
-                                     f'percent exponent modes.')
+                                     f'exp={self.exp}, for fixed point'
+                                     f'exponent mode.')
             elif (self.exp_mode is ExpMode.ENGINEERING
                   or self.exp_mode is ExpMode.ENGINEERING_SHIFTED):
                 if self.exp % 3 != 0:
@@ -90,6 +90,7 @@ class FormatOptions:
             exp_mode: ExpMode = None,
             exp: Union[int, type(AutoExp)] = None,
             capitalize: bool = None,
+            percent: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -126,6 +127,8 @@ class FormatOptions:
             exp = defaults.exp
         if capitalize is None:
             capitalize = defaults.capitalize
+        if percent is None:
+            percent = defaults.percent
         if nan_inf_exp is None:
             nan_inf_exp = defaults.nan_inf_exp
         if use_prefix is None:
@@ -172,6 +175,7 @@ class FormatOptions:
             exp_mode=exp_mode,
             exp=exp,
             capitalize=capitalize,
+            percent=percent,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
@@ -261,12 +265,14 @@ class FormatOptions:
             precision = int(precision)
 
         exp_mode = match.group('exp_mode')
+        percent = False
         if exp_mode is not None:
             capitalize = exp_mode.isupper()
             if exp_mode in ['f', 'F']:
                 exp_mode = ExpMode.FIXEDPOINT
             elif exp_mode == '%':
-                exp_mode = ExpMode.PERCENT
+                exp_mode = ExpMode.FIXEDPOINT
+                percent = True
             elif exp_mode in ['e', 'E']:
                 exp_mode = ExpMode.SCIENTIFIC
             elif exp_mode in ['r', 'R']:
@@ -310,6 +316,7 @@ class FormatOptions:
             exp_mode=exp_mode,
             exp=exp,
             capitalize=capitalize,
+            percent=percent,
             use_prefix=use_prefix,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths
@@ -328,6 +335,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     exp_mode=ExpMode.FIXEDPOINT,
     exp=AutoExp,
     capitalize=False,
+    percent=False,
     nan_inf_exp=False,
     use_prefix=False,
     extra_si_prefixes=dict(),
@@ -367,6 +375,7 @@ def set_global_defaults(
         exp_mode: ExpMode = None,
         exp: Union[int, type(AutoExp)] = None,
         capitalize: bool = None,
+        percent: bool = None,
         nan_inf_exp=None,
         use_prefix: bool = None,
         extra_si_prefixes: dict[int, str] = None,
@@ -400,6 +409,7 @@ def set_global_defaults(
         exp_mode=exp_mode,
         exp=exp,
         capitalize=capitalize,
+        percent=percent,
         nan_inf_exp=nan_inf_exp,
         use_prefix=use_prefix,
         extra_si_prefixes=extra_si_prefixes,
@@ -481,6 +491,7 @@ class GlobalDefaultsContext:
             exp_mode: ExpMode = None,
             exp: Union[int, type(AutoExp)] = None,
             capitalize: bool = None,
+            percent: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -505,6 +516,7 @@ class GlobalDefaultsContext:
             exp_mode=exp_mode,
             exp=exp,
             capitalize=capitalize,
+            percent=percent,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,

@@ -30,8 +30,7 @@ def format_float(num: float, options: FormatOptions) -> str:
                 exp = 0
             else:
                 exp = options.exp
-            if (exp_mode is ExpMode.FIXEDPOINT
-                    or exp_mode is ExpMode.PERCENT):
+            if exp_mode is ExpMode.FIXEDPOINT:
                 exp_str = ''
             elif (exp_mode is ExpMode.SCIENTIFIC
                   or exp_mode is ExpMode.ENGINEERING
@@ -50,7 +49,7 @@ def format_float(num: float, options: FormatOptions) -> str:
         else:
             return full_str.lower()
 
-    if exp_mode is ExpMode.PERCENT:
+    if options.percent:
         num *= 100
 
     exp = options.exp
@@ -104,7 +103,7 @@ def format_float(num: float, options: FormatOptions) -> str:
                                   options.extra_si_prefixes,
                                   options.extra_iec_prefixes)
 
-    if exp_mode is ExpMode.PERCENT:
+    if options.percent:
         full_str = full_str + '%'
 
     return full_str
@@ -126,7 +125,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
     unc = abs(unc)
 
-    if options.exp_mode is ExpMode.PERCENT:
+    if options.percent:
         val *= 100
         unc *= 100
 
@@ -162,10 +161,8 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     Get a corresponding exponent mode which can have the exponent set
     explicitly.
     '''
-    if exp_mode is ExpMode.PERCENT:
-        free_exp_mode = ExpMode.FIXEDPOINT
-    elif (exp_mode is ExpMode.ENGINEERING
-          or exp_mode is ExpMode.ENGINEERING_SHIFTED):
+    if (exp_mode is ExpMode.ENGINEERING
+            or exp_mode is ExpMode.ENGINEERING_SHIFTED):
         free_exp_mode = ExpMode.SCIENTIFIC
     elif exp_mode is ExpMode.BINARY_IEC:
         free_exp_mode = ExpMode.BINARY
@@ -266,7 +263,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     if options.use_prefix:
         val_unc_exp_str = replace_prefix(val_unc_exp_str)
 
-    if options.exp_mode is ExpMode.PERCENT:
+    if options.percent:
         result_str = f'({val_unc_exp_str})%'
     else:
         result_str = val_unc_exp_str
