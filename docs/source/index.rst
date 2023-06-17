@@ -11,6 +11,7 @@
    format specification mini language
    Supported Prefixes
    api
+   examples
 
 Indices and tables
 ==================
