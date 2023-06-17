@@ -28,7 +28,7 @@ Mode Enums
 .. autoclass:: RoundMode()
    :members:
 
-.. autoclass:: FormatMode()
+.. autoclass:: ExpMode()
    :members:
 
 Global Configuration

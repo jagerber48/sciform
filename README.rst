@@ -34,16 +34,16 @@ scientific formatting strings.
 The first is via the ``Formatter`` object and the second is using string
 formatting and the custom FSML with the ``sfloat`` object.
 
->>> from sciform import Formatter, RoundMode, GroupingSeparator, FormatMode
+>>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
 >>> sform = Formatter(round_mode=RoundMode.PREC,
 ...                   precision=6,
 ...                   upper_separator=GroupingSeparator.SPACE,
 ...                   lower_separator=GroupingSeparator.SPACE)
->>> print(sform(3.14159265359))
-3.141 593
+>>> print(sform(51413.14159265359))
+51 413.141 593
 >>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
 ...                   precision=4,
-...                   format_mode=FormatMode.ENGINEERING)
+...                   exp_mode=ExpMode.ENGINEERING)
 >>> print(sform(123456.78))
 123.5e+03
 

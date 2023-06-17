@@ -116,7 +116,7 @@ for displaying the plot axes as described::
     from scipy.optimize import curve_fit
     from tabulate import tabulate
 
-    from sciform import Formatter, FormatMode, RoundMode, SignMode
+    from sciform import Formatter, ExpMode, RoundMode, SignMode
 
     def get_scale_and_offset_from_offset_str(ax, axis: Literal['x', 'y']) -> tuple[float, float]:
         """
@@ -148,13 +148,13 @@ for displaying the plot axes as described::
         into SI prefix format as well.
         """
         if not shifted:
-            format_mode = FormatMode.ENGINEERING
+            exp_mode = ExpMode.ENGINEERING
         else:
-            format_mode = FormatMode.ENGINEERING_SHIFTED
-        tick_formatter = Formatter(format_mode=format_mode,
+            exp_mode = ExpMode.ENGINEERING_SHIFTED
+        tick_formatter = Formatter(exp_mode=exp_mode,
                                    use_prefix=True)
         offset_formatter = Formatter(sign_mode=SignMode.ALWAYS,
-                                     format_mode=format_mode,
+                                     exp_mode=exp_mode,
                                      use_prefix=True)
 
         ax.ticklabel_format(axis=axis, style='sci')
@@ -207,7 +207,7 @@ for displaying the plot axes as described::
     def quadratic(x, c, x0, y0):
         return (c/2) * (x-x0)**2 + y0
 
-    fit_results_formatter = Formatter(format_mode=FormatMode.ENGINEERING,
+    fit_results_formatter = Formatter(exp_mode=ExpMode.ENGINEERING,
                                       round_mode=RoundMode.SIG_FIG,
                                       bracket_unc=True,
                                       precision=2)

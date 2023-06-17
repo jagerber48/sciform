@@ -12,7 +12,7 @@ formatting analogous to the built-in formatting of :class:`float`
 objects.
 The :mod:`sciform` format specification mini language is given by::
 
-    format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][format_mode]["x" exp][prefix_mode]
+    format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][exp_mode]["x" exp][prefix_mode]
 
     fill               ::=  "0" | " "
     sign               ::=  "+" | "-" | " "
@@ -22,7 +22,7 @@ The :mod:`sciform` format specification mini language is given by::
     lower_separator    ::=  "n" | "s" | "_"
     round_mode         ::=  "!" | "."
     prec               ::=  -?digit+
-    format_mode        ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" | "b" | "B" |
+    exp_mode           ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" | "b" | "B" |
     exp                ::=  [+-]digit+
     prefix_mode        ::=  p
 
@@ -93,7 +93,7 @@ Details about the terms in the FSML are described below.
        | (``[+-]?\d+``)
      - Integer indicating the precision or number of significant figures
        to which the float shall be rounded and displayed. Can be
-       negative for precision formatting mode. Must be greater than zero
+       negative for precision rounding mode. Must be greater than zero
        for significant figure mode. If no precision is supplied then an
        algorithm will be used to attempt to infer the least significant
        digit for the float and the precision will be chosen to match
@@ -101,12 +101,12 @@ Details about the terms in the FSML are described below.
        behavior for floats with a large number (e.g. 15) of significant
        digits or due to the underlying binary nature of floats, e.g.
        ``0.1+0.2 = 0.30000000000000004``.
-   * - | format_mode
+   * - | exp_mode
        | (``'f'``, ``'F'``, ``'%'``, ``'e'``, ``'E'``, ``'r'``, ``'R'``,
          ``'b'``, ``'B'``)
-     - Indicates which formatting mode should be used. In all cases the
+     - Indicates which exponent mode should be used. In all cases the
        capitalization of the exponent symbol matches the capitalization
-       of the format mode flag.
+       of the exponent mode flag.
 
        * ``'f'`` and ``'F'`` indicate fixed point mode in which no
          exponent is used to display the number.
@@ -130,11 +130,11 @@ Details about the terms in the FSML are described below.
        | (``x[+-]\d+``)
      - Positive or negative integer that can be used to force the
        exponent to take a particular value. This flag is ignored in
-       fixed format mode. If an explicit exponent is used in engineering
-       mode or alternate binary mode which is incompatible with those
-       modes (e.g. an exponent that is not a multiple of 3 for
-       engineering notation), the exponent will be rounded down to the
-       nearest compatible value.
+       fixed exponent mode. If an explicit exponent is used in
+       engineering mode or alternate binary mode which is incompatible
+       with those modes (e.g. an exponent that is not a multiple of 3
+       for engineering notation), the exponent will be rounded down to
+       the nearest compatible value.
    * - | prefix_mode
        | (``'p'``)
      -  Flag (default off) indicating whether exponent strings should be
@@ -165,7 +165,7 @@ for scientific formatting.
   :mod:`sciform`. The built-in automation features include
 
   * Automated selection of fixed-point or scientific notation. For
-    :mod:`sciform`, the user must explicity indicate the format mode.
+    :mod:`sciform`, the user must explicity indicate the exponent mode.
   * Truncation of trailing zeros without the ``#`` option. For
     :mod:`sciform`, trailing zeros are never truncated if they fall
     within the user-selected precision or significant figures.

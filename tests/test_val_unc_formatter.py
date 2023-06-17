@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import Formatter, FormatMode
+from sciform import Formatter, ExpMode
 
 
 class TestFormatting(unittest.TestCase):
@@ -19,16 +19,16 @@ class TestFormatting(unittest.TestCase):
             (123.456, 0.789):
                 {
                     Formatter(bracket_unc=True): '123.456(789)',
-                    Formatter(format_mode=FormatMode.SCIENTIFIC,
+                    Formatter(exp_mode=ExpMode.SCIENTIFIC,
                               bracket_unc=True): '(1.23456(789))e+02',
-                    Formatter(format_mode=FormatMode.ENGINEERING,
+                    Formatter(exp_mode=ExpMode.ENGINEERING,
                               bracket_unc=True): '(123.456(789))e+00',
-                    Formatter(format_mode=FormatMode.ENGINEERING_SHIFTED,
+                    Formatter(exp_mode=ExpMode.ENGINEERING_SHIFTED,
                               bracket_unc=True): '(0.123456(789))e+03',
-                    Formatter(format_mode=FormatMode.SCIENTIFIC,
+                    Formatter(exp_mode=ExpMode.SCIENTIFIC,
                               exp=+1,
                               bracket_unc=True): '(12.3456(789))e+01',
-                    Formatter(format_mode=FormatMode.SCIENTIFIC,
+                    Formatter(exp_mode=ExpMode.SCIENTIFIC,
                               exp=-1,
                               bracket_unc=True): '(1234.56(7.89))e-01',
                 }
@@ -40,11 +40,11 @@ class TestFormatting(unittest.TestCase):
         cases_dict = {
             (123.456, 0.789):
                 {
-                    Formatter(format_mode=FormatMode.SCIENTIFIC,
+                    Formatter(exp_mode=ExpMode.SCIENTIFIC,
                               exp=-1,
                               bracket_unc=True): '(1234.56(7.89))e-01',
                     Formatter(
-                        format_mode=FormatMode.SCIENTIFIC,
+                        exp_mode=ExpMode.SCIENTIFIC,
                         exp=-1,
                         bracket_unc_remove_seps=True,
                         bracket_unc=True): '(1234.56(789))e-01',
