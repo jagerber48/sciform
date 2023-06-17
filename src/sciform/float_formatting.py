@@ -4,8 +4,9 @@ from sciform.formatter import Formatter
 # noinspection PyPep8Naming
 class sfloat(float):
     """
-    float object for scientific formatting. Supports the :mod:`sciform`
-    format specification mini language for string formatting
+    :class:`sfloat` objects are used in combination with the
+    :mod:`sciform` format specification mini language for scientific
+    formatting of input floats.
 
     >>> from sciform import sfloat
     >>> snum = sfloat(123456.654321)
@@ -93,10 +94,19 @@ class sfloat(float):
 # noinspection PyPep8Naming
 class vufloat:
     """
-    Here we do not inherit from float, and we do not support float operations.
-    This class is purely for the convenience of formatting value/uncertainty
-    pairs. Mathematical operations are not supported on vufloat objects because
-    the effect of such operations on the uncertainties is non-trivial. For the
+    A :class:`vufloat` objects stores a pair of floats, a value and an
+    uncertainty for scientific formatting. This class is used in
+    combination with the :mod:`sciform` format specification mini
+    language to apply scientific formatting of input floats.
+
+    >>> from sciform import vufloat
+    >>> snum = vufloat(123456.654321, 0.000002)
+    >>> print(f'{snum:,._!1fS}')
+    123,456.654_321(2)
+
+    :class:`vufloat` does not currently support any float operations
+    such as addition or multiplication. This is because the effect of
+    such operations on the uncertainties is non-trivial. For the
     accurate propagation of error using value/uncertainty pairs, users are
     recommended to the uncertainties package:
     https://pypi.org/project/uncertainties/
