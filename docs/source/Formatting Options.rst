@@ -429,6 +429,9 @@ should be included in the bracket symbols or not.
 That is, one may format ``18.4 +/- 2.1 -> 18.4 (21)``.
 The interpretation here is that the uncertainty is 21 tenths, since the
 digit of the value is in the tenths place.
+Note that the author recommends keeping the decimal symbol because it
+allows for rapid "lining up" of the decimal places by eye.
+
 :mod:`sciform` allows the user to optionally remove the decimal symbol
 
 >>> sform = Formatter(bracket_unc=True,
