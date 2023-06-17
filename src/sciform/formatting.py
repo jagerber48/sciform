@@ -116,7 +116,6 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     :param options:
     :return:
     """
-    # TODO: Handle non-finite floats
     if options.round_mode is RoundMode.PREC:
         warn('Precision round mode not available for value/uncertainty '
              'formatting. Rounding is always applied as significant figures'
