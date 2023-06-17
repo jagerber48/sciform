@@ -9,10 +9,11 @@ from sciform.formatting import format_float, format_val_unc
 
 class Formatter:
     """
-    Formatter object use to convert floats into formatting strings. See
-    :ref:`formatting_options` for more details on the different options.
-    Any options which are not provided by the user will be filled with
-    the corresponding values from the global default configuration.
+    Formatter object used to convert floats and pairs of floats into
+    formatted strings. See :ref:`formatting_options` for more details on
+    the available options. Any options which are not provided by the
+    user will be filled with the corresponding values from the global
+    default configuration.
 
     >>> from sciform import Formatter, FormatMode, RoundMode
     >>> sform = Formatter(format_mode=FormatMode.ENGINEERING,
@@ -74,15 +75,32 @@ class Formatter:
       that mode (e.g. if it is not a multiple of 3), then the exponent
       is rounded down to the nearest conforming value and a warning is
       printed.
+    :param nan_inf_exp: ``bool`` indicating whether non-finite floats
+      such as ``float('nan')`` or ``float('inf')`` should be formatted
+      with exponent symbols when exponent format modes are selected.
+    :param use_prefix: ``bool`` indicating if exponents should be
+      replaced with either SI or IEC prefixes as appropriate.
     :param extra_si_prefixes: ``dict[int, str]`` mapping additional
       exponent values to si prefixes.
     :param extra_iec_prefixes: ``dict[int, str]`` mapping additional
       exponent values to iec prefixes
-    :param add_c_prefix: ``bool`` if ``True`` adds ``{-2: 'c'}`` to
+    :param add_c_prefix: ``bool`` (default ``False``) if ``True`` adds
+      ``{-2: 'c'}`` to ``extra_si_prefixes``.
+    :param add_small_si_prefixes: ``bool`` (default ``False``) if
+      ``True`` adds ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` to
       ``extra_si_prefixes``.
-    :param add_small_si_prefixes: ``bool`` if ``True`` adds
-      ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` to
-      ``extra_si_prefixes``.
+    :param bracket_unc: ``bool`` indicating if bracket uncertainty mode
+      (e.g. ``12.34(82)`` instead of ``12.34 +/- 0.82``) should be used.
+    :param val_unc_match_widths: ``bool`` indicating if the value or
+      uncertainty should be left padded to ensure they are both left
+      padded to the same digits place.
+    :param bracket_unc_remove_seps: ``bool`` indicating if separator
+      symbols should be removed from the uncertainty when using bracket
+      uncertainty mode. E.g. expressing ``123.4 +/- 2.3`` as
+      ``123.4(23)`` instead of ``123.4(2.3)``.
+    :param unc_pm_whitespace: ``bool`` indicating if there should be
+      whitespace surrounding the ``'+/-'`` symbols when formatting. E.g.
+      ``123.4+/-2.3`` compared to ``123.4 +/- 2.3``.
     """
     def __init__(
             self,
