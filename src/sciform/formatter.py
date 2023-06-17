@@ -22,6 +22,15 @@ class Formatter:
     >>> print(sform(12345.678))
     12.35e+03
 
+    The Formatter can be called with two aguments for value/uncertainty
+    formatting
+
+    >>> sform = Formatter(format_mode=FormatMode.ENGINEERING,
+    ...                   round_mode=RoundMode.SIG_FIG,
+    ...                   precision=2)
+    >>> print(sform(12345.678, 3.4))
+    (12.3457 +/- 0.0034)e+03
+
     The following checks are performed when creating a
     :class:`Formatter` object:
 
