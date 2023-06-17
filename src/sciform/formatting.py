@@ -13,6 +13,9 @@ from sciform.grouping import add_separators
 from sciform.prefix import replace_prefix
 
 
+# TODO: Pretty Printing, Latex Printing
+
+
 def format_float(num: float, options: FormatOptions) -> str:
     format_mode = options.format_mode
     round_mode = options.round_mode
