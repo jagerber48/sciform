@@ -3,6 +3,8 @@
 Supported Prefixes
 ##################
 
+.. |micro| unicode:: 0xB5 .. micro symbol
+
 :mod:`sciform` offers a prefix mode which provides a simple translation
 between exponent strings and one or two letter prefixes.
 For scientific and engineering formats the prefixes are matched to
@@ -53,7 +55,7 @@ according to the `IEC prefixes <https://physics.nist.gov/cuu/Units/binary.html>`
      - m
    * - 10\ :sup:`-6`
      - micro
-     - μ
+     - |micro|
    * - 10\ :sup:`-9`
      - nano
      - n
@@ -78,6 +80,30 @@ according to the `IEC prefixes <https://physics.nist.gov/cuu/Units/binary.html>`
    * - 10\ :sup:`-30`
      - quecto
      - q
+
+The user can additionally add the following extra si prefixes using the
+:ref:`extra_si_prefixes` options:
+
+.. list-table:: Extra SI Prefixes
+   :widths: 30, 15, 10
+   :header-rows: 1
+
+   * - Exponent Value
+     - Prefix Name
+     - Prefix
+   * - 10\ :sup:`+2`
+     - hecto
+     - h
+   * - 10\ :sup:`+1`
+     - deka
+     - da
+   * - 10\ :sup:`-1`
+     - deci
+     - d
+   * - 10\ :sup:`-2`
+     - centi
+     - c
+
 
 .. list-table:: IEC Prefixes
    :widths: 30, 15, 10

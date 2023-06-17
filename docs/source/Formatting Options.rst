@@ -311,6 +311,8 @@ to the 10\ :sup:`4` (ten-thousands) place.
 >>> print(sform(42))
 00042
 
+.. _extra_si_prefixes:
+
 Extra Prefixes
 ==============
 
