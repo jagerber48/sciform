@@ -13,7 +13,6 @@ def add_group_chars_between_numbers(string, group_char='_',
     result_str = ''
 
     group_counter = 0
-    char_counter = 0
 
     if direction is GroupingDirection.FORWARD:
         for num in range(num_chars):
