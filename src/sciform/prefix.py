@@ -28,3 +28,8 @@ iec_val_to_prefix_dict = {0: '',
                           60: 'Ei',
                           70: 'Zi',
                           80: 'Yi'}
+
+pp_val_to_prefix_dict = {-6: 'ppm',
+                         -9: 'ppb',
+                         -12: 'ppt',
+                         -15: 'ppq'}

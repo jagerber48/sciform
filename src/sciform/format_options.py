@@ -31,6 +31,7 @@ class FormatOptions:
     pp_prefix: bool
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
+    extra_pp_prefixes: dict[int, str]
     bracket_unc: bool
     val_unc_match_widths: bool
     bracket_unc_remove_seps: bool
@@ -106,8 +107,10 @@ class FormatOptions:
             pp_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
+            extra_pp_prefixes: dict[int, str] = None,
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False,
+            add_ppth_prefix: bool = False,
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
@@ -159,6 +162,10 @@ class FormatOptions:
             extra_iec_prefixes = copy(defaults.extra_iec_prefixes)
         else:
             extra_iec_prefixes = copy(extra_iec_prefixes)
+        if extra_pp_prefixes is None:
+            extra_pp_prefixes = copy(defaults.extra_pp_prefixes)
+        else:
+            extra_pp_prefixes = copy(extra_pp_prefixes)
         if bracket_unc is None:
             bracket_unc = defaults.bracket_unc
         if val_unc_match_widths is None:
@@ -183,6 +190,10 @@ class FormatOptions:
             if +2 not in extra_si_prefixes:
                 extra_si_prefixes[+2] = 'h'
 
+        if add_ppth_prefix:
+            if -3 not in extra_pp_prefixes:
+                extra_pp_prefixes[-3] = 'ppth'
+
         return cls(
             fill_mode=fill_mode,
             sign_mode=sign_mode,
@@ -203,6 +214,7 @@ class FormatOptions:
             pp_prefix=pp_prefix,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
+            extra_pp_prefixes=extra_pp_prefixes,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
@@ -367,6 +379,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     pp_prefix=False,
     extra_si_prefixes=dict(),
     extra_iec_prefixes=dict(),
+    extra_pp_prefixes=dict(),
     bracket_unc=False,
     val_unc_match_widths=False,
     bracket_unc_remove_seps=False,
@@ -411,8 +424,10 @@ def set_global_defaults(
         pp_prefix: bool = None,
         extra_si_prefixes: dict[int, str] = None,
         extra_iec_prefixes: dict[int, str] = None,
+        extra_pp_prefixes: dict[int, str] = None,
         add_c_prefix: bool = False,
         add_small_si_prefixes: bool = False,
+        add_ppth_prefix: bool = False,
         bracket_unc=None,
         val_unc_match_widths=None,
         bracket_unc_remove_seps=None,
@@ -449,8 +464,10 @@ def set_global_defaults(
         pp_prefix=pp_prefix,
         extra_si_prefixes=extra_si_prefixes,
         extra_iec_prefixes=extra_iec_prefixes,
+        extra_pp_prefixes=extra_pp_prefixes,
         add_c_prefix=add_c_prefix,
         add_small_si_prefixes=add_small_si_prefixes,
+        add_ppth_prefix=add_ppth_prefix,
         bracket_unc=bracket_unc,
         val_unc_match_widths=val_unc_match_widths,
         bracket_unc_remove_seps=bracket_unc_remove_seps,
@@ -489,6 +506,16 @@ def global_add_small_si_prefixes():
     set_global_defaults(add_small_si_prefixes=True)
 
 
+def global_add_ppth_prefix():
+    """
+    Include 'ppth' as a "parts-per" prefix for the exponent value -3.
+    Has no effect if exponent value -3 is already mapped to a
+    "parts-per" prefix string. To modify This mapping first use
+    :func:`global_reset_si_prefixes` or use :func:`set_global_defaults`.
+    """
+    set_global_defaults(add_ppth_prefix=True)
+
+
 def global_reset_si_prefixes():
     """
     Clear all extra SI prefix mappings.
@@ -501,6 +528,13 @@ def global_reset_iec_prefixes():
     Clear all extra IEC prefix mappings.
     """
     set_global_defaults(extra_iec_prefixes=dict())
+
+
+def global_reset_pp_prefixes():
+    """
+    Clear all extra "parts-per" prefix mappings.
+    """
+    set_global_defaults(extra_pp_prefixes=dict())
 
 
 class GlobalDefaultsContext:
@@ -535,8 +569,10 @@ class GlobalDefaultsContext:
             pp_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
+            extra_pp_prefixes: dict[int, str] = None,
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False,
+            add_ppth_prefix: bool = False,
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
@@ -564,8 +600,10 @@ class GlobalDefaultsContext:
             pp_prefix=pp_prefix,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
+            extra_pp_prefixes=extra_pp_prefixes,
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,
+            add_ppth_prefix=add_ppth_prefix,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
