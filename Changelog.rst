@@ -1,4 +1,10 @@
+0.15.1 (2023-06-17)
+-------------------
+
+* Changelog formatting typo
+
 0.15.0 (2023-06-17)
+-------------------
 
 * Add ``superscript_exp`` option with documentation and tests.
 * Forbid percent mode unless using fixed point exponent mode.
