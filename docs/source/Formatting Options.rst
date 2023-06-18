@@ -332,6 +332,8 @@ appended to the end of the formatted string.
 ...                   percent=True)
 >>> print(sform(0.12345))
 12.3%
+>>> print(sform(0.12345, 0.001))
+(12.345 +/- 0.100)%
 
 .. _extra_si_prefixes:
 
