@@ -36,6 +36,21 @@ class TestFormatting(unittest.TestCase):
 
         self.do_test_case_dict(cases_dict)
 
+    def test_percent(self):
+        cases_dict = {
+            (0.123_456_78, 0.000_002_55):
+                {
+                    Formatter(percent=True,
+                              lower_separator=GroupingSeparator.UNDERSCORE):
+                        '(12.345_678 +/- 0.000_255)%',
+                    Formatter(percent=True,
+                              bracket_unc=True,
+                              lower_separator=GroupingSeparator.UNDERSCORE):
+                        '(12.345_678(255))%'
+                }
+        }
+        self.do_test_case_dict(cases_dict)
+
     def test_bracket_unc_remove_dec_symb(self):
         cases_dict = {
             (123.456, 0.789):
@@ -98,6 +113,15 @@ class TestFormatting(unittest.TestCase):
                           upper_separator=GroupingSeparator.UNDERSCORE,
                           unicode_pm=True,
                           latex=True): r'\left(123\_450 \pm 2\right)\times 10^{-1}'
+            },
+            (0.123_456_78, 0.000_002_55): {
+                Formatter(lower_separator=GroupingSeparator.UNDERSCORE,
+                          percent=True,
+                          latex=True): r'\left(12.345\_678 \pm 0.000\_255\right)\%',
+                Formatter(lower_separator=GroupingSeparator.UNDERSCORE,
+                          percent=True,
+                          bracket_unc=True,
+                          latex=True): r'\left(12.345\_678\left(255\right)\right)\%'
             }
         }
 
