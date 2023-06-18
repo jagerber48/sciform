@@ -9,7 +9,8 @@ from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_and_bottom_digit,
                                   get_round_digit,
                                   format_float_by_top_bottom_dig,
-                                  convert_exp_str_to_superscript)
+                                  convert_exp_str_to_superscript,
+                                  convert_exp_str_to_latex)
 from sciform.grouping import add_separators
 from sciform.prefix import replace_prefix
 
@@ -42,14 +43,29 @@ def format_float(num: float, options: FormatOptions) -> str:
                 exp_str = f'b+{exp:02d}'
         else:
             exp_str = ''
+        if options.latex:
+            exp_str = convert_exp_str_to_latex(exp_str)
+        elif options.superscript_exp:
+            exp_str = convert_exp_str_to_superscript(exp_str)
+
         if exp_str != '':
             full_str = f'({num}){exp_str}'
         else:
             full_str = f'{num}'
+            if options.percent:
+                full_str = f'{full_str}%'
+
         if capitalize:
-            return full_str.upper()
+            full_str = full_str.upper()
         else:
-            return full_str.lower()
+            full_str = full_str.lower()
+
+        if options.latex:
+            full_str = full_str.replace('(', r'\left(')
+            full_str = full_str.replace(')', r'\right)')
+            full_str = full_str.replace('%', r'\%)')
+
+        return full_str
 
     if options.percent:
         num *= 100
@@ -79,7 +95,9 @@ def format_float(num: float, options: FormatOptions) -> str:
         exp = 0
 
     exp_str = get_exp_str(exp, exp_mode, capitalize)
-    if options.superscript_exp:
+    if options.latex:
+        exp_str = convert_exp_str_to_latex(exp_str)
+    elif options.superscript_exp:
         exp_str = convert_exp_str_to_superscript(exp_str)
 
     if mantissa_rounded == -0.0:
@@ -107,6 +125,10 @@ def format_float(num: float, options: FormatOptions) -> str:
 
     if options.percent:
         full_str = full_str + '%'
+
+    if options.latex:
+        full_str = full_str.replace('%', r'\%')
+        full_str = full_str.replace('_', r'\_')
 
     return full_str
 
@@ -217,6 +239,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         exp=exp,
         percent=False,
         superscript_exp=False,
+        latex=False,
         use_prefix=False,
     )
 
@@ -243,10 +266,13 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         exp_str = unc_match.group('exp_str')
 
     if not options.bracket_unc:
-        if not options.unicode_pm:
-            pm_symb = '+/-'
-        else:
+        if options.latex:
+            pm_symb = r'\pm'
+        elif options.unicode_pm:
             pm_symb = '±'
+        else:
+            pm_symb = '+/-'
+
         if options.unc_pm_whitespace:
             val_unc_str = f'{val_str} {pm_symb} {unc_str}'
         else:
@@ -261,7 +287,9 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         val_unc_str = f'{val_str}({unc_str})'
 
     if exp_str is not None:
-        if options.superscript_exp:
+        if options.latex:
+            exp_str = convert_exp_str_to_latex(exp_str)
+        elif options.superscript_exp:
             exp_str = convert_exp_str_to_superscript(exp_str)
         val_unc_exp_str = f'({val_unc_str}){exp_str}'
     else:
@@ -274,5 +302,11 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         result_str = f'({val_unc_exp_str})%'
     else:
         result_str = val_unc_exp_str
+
+    if options.latex:
+        result_str = result_str.replace('(', r'\left(')
+        result_str = result_str.replace(')', r'\right)')
+        result_str = result_str.replace('%', r'\%')
+        result_str = result_str.replace('_', r'\_')
 
     return result_str

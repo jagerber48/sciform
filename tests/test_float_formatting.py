@@ -53,3 +53,24 @@ class TestFormatting(unittest.TestCase):
 
         self.do_test_case_dict(cases_dict)
 
+    def test_latex(self):
+        cases_dict = {
+            789: {
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          latex=True): r'7.89\times 10^{+2}',
+
+                # Latex mode takes precedence over superscript_exp
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          latex=True,
+                          superscript_exp=True): r'7.89\times 10^{+2}'
+            },
+            12345: {
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          exp=-1,
+                          upper_separator=GroupingSeparator.UNDERSCORE,
+                          latex=True): r'123\_450\times 10^{-1}'
+            }
+        }
+
+        self.do_test_case_dict(cases_dict)
+

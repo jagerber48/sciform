@@ -192,10 +192,9 @@ def format_float_by_top_bottom_dig(num: float,
     return float_str
 
 
-def convert_exp_str_to_superscript(exp_str: str):
+def get_exp_symb_sign_digits(exp_str: str):
     if exp_str == '':
         return exp_str
-
     match = re.match(
         r'''
          ^
@@ -207,16 +206,47 @@ def convert_exp_str_to_superscript(exp_str: str):
         exp_str, re.VERBOSE)
     exp_symb = match.group('exp_symb')
     exp_sign = match.group('exp_sign')
+    exp_digits = match.group('exp_digits')
+    return exp_symb, exp_sign, exp_digits
+
+
+def convert_exp_str_to_superscript(exp_str: str):
+    if exp_str == '':
+        return exp_str
+
+    exp_symb, exp_sign, exp_digits = get_exp_symb_sign_digits(exp_str)
+
     if exp_sign == '+':
+        # Superscript + does not look good, so drop it.
         exp_sign = ''
-    exp_digits = match.group('exp_digits').lstrip('0')
+    exp_digits = exp_digits.lstrip('0')
     if exp_digits == '':
         exp_digits = '0'
+
     sup_trans = str.maketrans("+-0123456789", "⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹")
     if exp_symb in ['e', 'E']:
         base = '10'
     else:
         base = '2'
     exp_val_str = f'{exp_sign}{exp_digits}'.translate(sup_trans)
-    exp_str = f'×{base}{exp_val_str}'
-    return exp_str
+    super_script_exp_str = f'×{base}{exp_val_str}'
+    return super_script_exp_str
+
+
+def convert_exp_str_to_latex(exp_str):
+    if exp_str == '':
+        return exp_str
+
+    exp_symb, exp_sign, exp_digits = get_exp_symb_sign_digits(exp_str)
+
+    exp_digits = exp_digits.lstrip('0')
+    if exp_digits == '':
+        exp_digits = '0'
+
+    if exp_symb in ['e', 'E']:
+        base = '10'
+    else:
+        base = '2'
+
+    latex_exp_str = rf'\times {base}^{{{exp_sign}{exp_digits}}}'
+    return latex_exp_str
