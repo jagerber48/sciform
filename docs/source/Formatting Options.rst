@@ -131,12 +131,6 @@ Furthermore, it is possible to customize :class:`Formatter`
 objects or the global configuration settings to map additional prefix
 translations, in addition to those provided by default.
 
-.. todo::
-   * prefix mode coerces scientific notation into engineering notation
-   * prefix mode coerces binary notation into binary iec notation
-   * handles values larger and smaller than largest and smallest
-     supported translations
-
 >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
 ...                   use_prefix=True)
 >>> print(sform(4242.13))

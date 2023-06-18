@@ -13,7 +13,6 @@ from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
 from sciform.grouping import add_separators
 
 
-# TODO: Latex Printing
 # TODO: ppm format
 
 

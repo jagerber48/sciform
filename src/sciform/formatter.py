@@ -140,7 +140,7 @@ class Formatter:
             capitalize: bool = None,
             percent: bool = None,
             superscript_exp: bool = None,
-            latex: bool = None,  # TODO: docstring
+            latex: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
