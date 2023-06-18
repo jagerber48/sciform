@@ -1,3 +1,9 @@
+0.15.0 (2023-06-17)
+
+* Add ``superscript_exp`` option with documentation and tests.
+* Forbid percent mode unless using fixed point exponent mode.
+* Add PyPi link to readme.
+
 0.14.0 (2023-06-17)
 -------------------
 

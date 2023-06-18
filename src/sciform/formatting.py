@@ -8,12 +8,13 @@ from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_digit,
                                   get_top_and_bottom_digit,
                                   get_round_digit,
-                                  format_float_by_top_bottom_dig)
+                                  format_float_by_top_bottom_dig,
+                                  convert_exp_str_to_superscript)
 from sciform.grouping import add_separators
 from sciform.prefix import replace_prefix
 
 
-# TODO: Pretty Printing, Latex Printing
+# TODO: Latex Printing
 
 
 def format_float(num: float, options: FormatOptions) -> str:
@@ -77,6 +78,8 @@ def format_float(num: float, options: FormatOptions) -> str:
         exp = 0
 
     exp_str = get_exp_str(exp, exp_mode, capitalize)
+    if options.superscript_exp:
+        exp_str = convert_exp_str_to_superscript(exp_str)
 
     if mantissa_rounded == -0.0:
         mantissa_rounded = abs(mantissa_rounded)
@@ -214,6 +217,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         exp_mode=free_exp_mode,
         exp=exp,
         percent=False,
+        superscript_exp=False,
         use_prefix=False,
     )
 
@@ -258,6 +262,8 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         val_unc_str = f'{val_str}({unc_str})'
 
     if exp_str is not None:
+        if options.superscript_exp:
+            exp_str = convert_exp_str_to_superscript(exp_str)
         val_unc_exp_str = f'({val_unc_str}){exp_str}'
     else:
         val_unc_exp_str = val_unc_str

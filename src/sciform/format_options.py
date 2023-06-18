@@ -24,6 +24,7 @@ class FormatOptions:
     exp: Union[int, type(AutoExp)]
     capitalize: bool
     percent: bool
+    superscript_exp: bool
     nan_inf_exp: bool
     use_prefix: bool
     extra_si_prefixes: dict[int, str]
@@ -59,6 +60,10 @@ class FormatOptions:
                                      f'exp={self.exp}, for binary IEC '
                                      f'exponent mode.')
 
+        if self.percent and self.exp_mode is not ExpMode.FIXEDPOINT:
+            raise ValueError(f'percent mode can only be sued with fixed point '
+                             f'exponent mode.')
+
         if self.upper_separator not in get_args(UpperGroupingSeparators):
             raise ValueError(f'upper_separator {self.upper_separator} not in '
                              f'{get_args(UpperGroupingSeparators)}.')
@@ -92,6 +97,7 @@ class FormatOptions:
             exp: Union[int, type(AutoExp)] = None,
             capitalize: bool = None,
             percent: bool = None,
+            superscript_exp: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -131,6 +137,8 @@ class FormatOptions:
             capitalize = defaults.capitalize
         if percent is None:
             percent = defaults.percent
+        if superscript_exp is None:
+            superscript_exp = defaults.superscript_exp
         if nan_inf_exp is None:
             nan_inf_exp = defaults.nan_inf_exp
         if use_prefix is None:
@@ -180,6 +188,7 @@ class FormatOptions:
             exp=exp,
             capitalize=capitalize,
             percent=percent,
+            superscript_exp=superscript_exp,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
@@ -341,6 +350,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     exp=AutoExp,
     capitalize=False,
     percent=False,
+    superscript_exp=False,
     nan_inf_exp=False,
     use_prefix=False,
     extra_si_prefixes=dict(),
@@ -382,6 +392,7 @@ def set_global_defaults(
         exp: Union[int, type(AutoExp)] = None,
         capitalize: bool = None,
         percent: bool = None,
+        superscript_exp: bool = None,
         nan_inf_exp=None,
         use_prefix: bool = None,
         extra_si_prefixes: dict[int, str] = None,
@@ -417,6 +428,7 @@ def set_global_defaults(
         exp=exp,
         capitalize=capitalize,
         percent=percent,
+        superscript_exp=superscript_exp,
         nan_inf_exp=nan_inf_exp,
         use_prefix=use_prefix,
         extra_si_prefixes=extra_si_prefixes,
@@ -500,6 +512,7 @@ class GlobalDefaultsContext:
             exp: Union[int, type(AutoExp)] = None,
             capitalize: bool = None,
             percent: bool = None,
+            superscript_exp: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -526,6 +539,7 @@ class GlobalDefaultsContext:
             exp=exp,
             capitalize=capitalize,
             percent=percent,
+            superscript_exp=superscript_exp,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
