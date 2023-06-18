@@ -137,6 +137,7 @@ class Formatter:
             capitalize: bool = None,
             percent: bool = None,
             superscript_exp: bool = None,
+            latex: bool = None,  # TODO: docstring
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -164,6 +165,7 @@ class Formatter:
             capitalize=capitalize,
             percent=percent,
             superscript_exp=superscript_exp,
+            latex=latex,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
@@ -201,6 +203,7 @@ class Formatter:
                    capitalize=options.capitalize,
                    percent=options.percent,
                    superscript_exp=options.superscript_exp,
+                   latex=options.latex,
                    nan_inf_exp=options.nan_inf_exp,
                    use_prefix=options.use_prefix,
                    extra_si_prefixes=options.extra_si_prefixes,
