@@ -358,6 +358,16 @@ parseable codes.
 >>> print(sform(0.12345678, 0.00000255))
 \left(12.345\_678 \pm 0.000\_255\right)\%
 
+The latex format makes the following changes:
+
+* Convert standard exponent strings such as ``'e+02'`` into latex
+  superscript strings like ``'\times 10^{+2}``
+* Replace ``'('`` and ``')'`` by latex size-aware delimiters
+  ``'\left('`` and ``'\right)'``.
+* Replace ``'+/-'`` by ``'\pm'``
+* Replace ``'_'`` by ``'\_'``
+* Replace ``'%'`` by ``'\%'``
+
 Note that use of ``latex`` renders the use of ``unicode_pm`` and
 ``superscript_exp`` meaningless.
 
