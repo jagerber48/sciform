@@ -1,10 +1,9 @@
 import unittest
 
-from sciform import Formatter, ExpMode
+from sciform import Formatter, ExpMode, GroupingSeparator, FillMode
 
 
 class TestFormatting(unittest.TestCase):
-    # TODO: Test direct call to format float (i.e. not via sfloat or Formatter)
     def do_test_case_dict(self, cases_dict: dict[float, dict[Formatter, str]]):
         for num, fmt_dict in cases_dict.items():
             for formatter, expected_num_str in fmt_dict.items():
@@ -23,3 +22,34 @@ class TestFormatting(unittest.TestCase):
         }
 
         self.do_test_case_dict(cases_dict)
+
+    def test_fill_and_separators(self):
+        cases_dict = {
+            123456789.654321: {
+                Formatter(
+                    upper_separator=GroupingSeparator.UNDERSCORE,
+                    lower_separator=GroupingSeparator.UNDERSCORE,
+                    fill_mode=FillMode.ZERO,
+                    top_dig_place=14): '000_000_123_456_789.654_321',
+                Formatter(
+                    upper_separator=GroupingSeparator.UNDERSCORE,
+                    lower_separator=GroupingSeparator.UNDERSCORE,
+                    fill_mode=FillMode.SPACE,
+                    top_dig_place=14): '      123_456_789.654_321',
+            },
+            4567899.7654321: {
+                Formatter(
+                    upper_separator=GroupingSeparator.UNDERSCORE,
+                    lower_separator=GroupingSeparator.UNDERSCORE,
+                    fill_mode=FillMode.ZERO,
+                    top_dig_place=14): '000_000_004_567_899.765_432_1',
+                Formatter(
+                    upper_separator=GroupingSeparator.UNDERSCORE,
+                    lower_separator=GroupingSeparator.UNDERSCORE,
+                    fill_mode=FillMode.SPACE,
+                    top_dig_place=14): '        4_567_899.765_432_1',
+            }
+        }
+
+        self.do_test_case_dict(cases_dict)
+

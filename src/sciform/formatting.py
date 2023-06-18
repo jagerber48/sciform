@@ -88,8 +88,6 @@ def format_float(num: float, options: FormatOptions) -> str:
                                                   round_digit, sign_mode,
                                                   fill_char)
 
-    # TODO: Think about the interaction between separators and fill
-    #  characters
     upper_separator = options.upper_separator.to_char()
     decimal_separator = options.decimal_separator.to_char()
     lower_separator = options.lower_separator.to_char()
