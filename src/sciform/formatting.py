@@ -9,10 +9,8 @@ from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_and_bottom_digit,
                                   get_round_digit,
                                   format_float_by_top_bottom_dig,
-                                  convert_exp_str_to_superscript,
-                                  convert_exp_str_to_latex)
+                                  convert_exp_str)
 from sciform.grouping import add_separators
-from sciform.prefix import replace_prefix
 
 
 # TODO: Latex Printing
@@ -43,10 +41,12 @@ def format_float(num: float, options: FormatOptions) -> str:
                 exp_str = f'b+{exp:02d}'
         else:
             exp_str = ''
-        if options.latex:
-            exp_str = convert_exp_str_to_latex(exp_str)
-        elif options.superscript_exp:
-            exp_str = convert_exp_str_to_superscript(exp_str)
+        exp_str = convert_exp_str(exp_str,
+                                  options.use_prefix,
+                                  options.latex,
+                                  options.superscript_exp,
+                                  options.extra_si_prefixes,
+                                  options.extra_iec_prefixes)
 
         if exp_str != '':
             full_str = f'({num}){exp_str}'
@@ -95,10 +95,12 @@ def format_float(num: float, options: FormatOptions) -> str:
         exp = 0
 
     exp_str = get_exp_str(exp, exp_mode, capitalize)
-    if options.latex:
-        exp_str = convert_exp_str_to_latex(exp_str)
-    elif options.superscript_exp:
-        exp_str = convert_exp_str_to_superscript(exp_str)
+    exp_str = convert_exp_str(exp_str,
+                              options.use_prefix,
+                              options.latex,
+                              options.superscript_exp,
+                              options.extra_si_prefixes,
+                              options.extra_iec_prefixes)
 
     if mantissa_rounded == -0.0:
         mantissa_rounded = abs(mantissa_rounded)
@@ -117,11 +119,6 @@ def format_float(num: float, options: FormatOptions) -> str:
                                   group_size=3)
 
     full_str = f'{mantissa_str}{exp_str}'
-
-    if options.use_prefix:
-        full_str = replace_prefix(full_str,
-                                  options.extra_si_prefixes,
-                                  options.extra_iec_prefixes)
 
     if options.percent:
         full_str = full_str + '%'
@@ -287,16 +284,15 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         val_unc_str = f'{val_str}({unc_str})'
 
     if exp_str is not None:
-        if options.latex:
-            exp_str = convert_exp_str_to_latex(exp_str)
-        elif options.superscript_exp:
-            exp_str = convert_exp_str_to_superscript(exp_str)
+        exp_str = convert_exp_str(exp_str,
+                                  options.use_prefix,
+                                  options.latex,
+                                  options.superscript_exp,
+                                  options.extra_si_prefixes,
+                                  options.extra_iec_prefixes)
         val_unc_exp_str = f'({val_unc_str}){exp_str}'
     else:
         val_unc_exp_str = val_unc_str
-
-    if options.use_prefix:
-        val_unc_exp_str = replace_prefix(val_unc_exp_str)
 
     if options.percent:
         result_str = f'({val_unc_exp_str})%'

@@ -3,8 +3,10 @@ from typing import Union
 from math import floor, log10, log2, isfinite
 from warnings import warn
 import re
+from copy import copy
 
 from sciform.modes import ExpMode, RoundMode, SignMode, AutoExp, AutoPrec
+from sciform.prefix import si_val_to_prefix_dict, iec_val_to_prefix_dict
 
 
 def get_top_digit(num: float) -> int:
@@ -250,3 +252,55 @@ def convert_exp_str_to_latex(exp_str):
 
     latex_exp_str = rf'\times {base}^{{{exp_sign}{exp_digits}}}'
     return latex_exp_str
+
+
+def convert_exp_str_to_prefix(exp_str: str,
+                              extra_si_prefixes: dict[int, str] = None,
+                              extra_iec_prefixes: dict[int, str] = None):
+    if exp_str == '':
+        return exp_str
+
+    exp_symb, exp_sign, exp_digits = get_exp_symb_sign_digits(exp_str)
+
+    exp_val = int(f'{exp_sign}{exp_digits}')
+    if exp_val == 0:
+        return ''
+
+    if exp_symb in ['e', 'E']:
+        val_to_prefix_dict = copy(si_val_to_prefix_dict)
+        if extra_si_prefixes is not None:
+            val_to_prefix_dict.update(extra_si_prefixes)
+    else:
+        val_to_prefix_dict = copy(iec_val_to_prefix_dict)
+        if extra_iec_prefixes is not None:
+            val_to_prefix_dict.update(extra_iec_prefixes)
+    try:
+        prefix = val_to_prefix_dict[exp_val]
+        return f' {prefix}'
+    except KeyError:
+        return exp_str
+
+
+def convert_exp_str(exp_str: str,
+                    use_prefix: bool,
+                    latex: bool,
+                    superscript_exp: bool,
+                    extra_si_prefixes: dict[int, str] = None,
+                    extra_iec_prefixes: dict[int, str] = None) -> str:
+    prefix_applied = False
+    if use_prefix:
+        prefix_exp_str = convert_exp_str_to_prefix(exp_str,
+                                                   extra_si_prefixes,
+                                                   extra_iec_prefixes)
+        if prefix_exp_str != exp_str:
+            prefix_applied = True
+            exp_str = prefix_exp_str
+
+    if prefix_applied:
+        return exp_str
+    else:
+        if latex:
+            exp_str = convert_exp_str_to_latex(exp_str)
+        elif superscript_exp:
+            exp_str = convert_exp_str_to_superscript(exp_str)
+    return exp_str

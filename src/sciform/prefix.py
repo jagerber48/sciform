@@ -1,7 +1,3 @@
-import re
-from copy import copy
-
-
 si_val_to_prefix_dict = {30: 'Q',
                          27: 'R',
                          24: 'Y',
@@ -12,7 +8,6 @@ si_val_to_prefix_dict = {30: 'Q',
                          9: 'G',
                          6: 'M',
                          3: 'k',
-                         0: '',
                          -3: 'm',
                          -6: 'μ',
                          -9: 'n',
@@ -33,36 +28,3 @@ iec_val_to_prefix_dict = {0: '',
                           60: 'Ei',
                           70: 'Zi',
                           80: 'Yi'}
-
-
-def replace_prefix(num_str: str, extra_si_prefixes: dict[int, str] = None,
-                   extra_iec_prefixes: dict[int, str] = None):
-    match = re.match(r'''
-                         ^
-                         (?P<before>.*?)
-                         ((?P<exp_type>[eEbB])(?P<exp_val>[+-]?\d+))?
-                         $
-                      ''', num_str, re.VERBOSE)
-
-    before = match.group('before')
-    exp_type = match.group('exp_type')
-    if exp_type is None:
-        return num_str
-    exp_val = match.group('exp_val') or 0
-    exp_val = int(exp_val)
-    if exp_val == 0:
-        return before
-
-    if exp_type in ['e', 'E']:
-        val_to_prefix_dict = copy(si_val_to_prefix_dict)
-        if extra_si_prefixes is not None:
-            val_to_prefix_dict.update(extra_si_prefixes)
-    else:
-        val_to_prefix_dict = copy(iec_val_to_prefix_dict)
-        if extra_iec_prefixes is not None:
-            val_to_prefix_dict.update(extra_iec_prefixes)
-    try:
-        prefix = val_to_prefix_dict[exp_val]
-        return f'{before} {prefix}'
-    except KeyError:
-        return num_str

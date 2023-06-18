@@ -68,7 +68,11 @@ class TestFormatting(unittest.TestCase):
                 Formatter(exp_mode=ExpMode.SCIENTIFIC,
                           exp=-1,
                           upper_separator=GroupingSeparator.UNDERSCORE,
-                          latex=True): r'123\_450\times 10^{-1}'
+                          latex=True): r'123\_450\times 10^{-1}',
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          exp=3,
+                          use_prefix=True,
+                          latex=True): r'12.345 k'
             }
         }
 
