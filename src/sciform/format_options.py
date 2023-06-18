@@ -28,6 +28,7 @@ class FormatOptions:
     latex: bool
     nan_inf_exp: bool
     use_prefix: bool
+    pp_prefix: bool
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
     bracket_unc: bool
@@ -102,6 +103,7 @@ class FormatOptions:
             latex: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
+            pp_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
             add_c_prefix: bool = False,
@@ -147,6 +149,8 @@ class FormatOptions:
             nan_inf_exp = defaults.nan_inf_exp
         if use_prefix is None:
             use_prefix = defaults.use_prefix
+        if pp_prefix is None:
+            pp_prefix = defaults.pp_prefix
         if extra_si_prefixes is None:
             extra_si_prefixes = copy(defaults.extra_si_prefixes)
         else:
@@ -196,6 +200,7 @@ class FormatOptions:
             latex=latex,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
+            pp_prefix=pp_prefix,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
             bracket_unc=bracket_unc,
@@ -359,6 +364,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     latex=False,
     nan_inf_exp=False,
     use_prefix=False,
+    pp_prefix=False,
     extra_si_prefixes=dict(),
     extra_iec_prefixes=dict(),
     bracket_unc=False,
@@ -402,6 +408,7 @@ def set_global_defaults(
         latex: bool = None,
         nan_inf_exp=None,
         use_prefix: bool = None,
+        pp_prefix: bool = None,
         extra_si_prefixes: dict[int, str] = None,
         extra_iec_prefixes: dict[int, str] = None,
         add_c_prefix: bool = False,
@@ -439,6 +446,7 @@ def set_global_defaults(
         latex=latex,
         nan_inf_exp=nan_inf_exp,
         use_prefix=use_prefix,
+        pp_prefix=pp_prefix,
         extra_si_prefixes=extra_si_prefixes,
         extra_iec_prefixes=extra_iec_prefixes,
         add_c_prefix=add_c_prefix,
@@ -524,6 +532,7 @@ class GlobalDefaultsContext:
             latex: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
+            pp_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
             add_c_prefix: bool = False,
@@ -552,6 +561,7 @@ class GlobalDefaultsContext:
             latex=latex,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
+            pp_prefix=pp_prefix,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
             add_c_prefix=add_c_prefix,

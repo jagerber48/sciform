@@ -100,6 +100,8 @@ class Formatter:
       symbols are selected.
     :param use_prefix: ``bool`` indicating if exponents should be
       replaced with either SI or IEC prefixes as appropriate.
+    :param pp_prefix: ``bool`` indicating if "parts-per" prefixes should
+      be used.
     :param extra_si_prefixes: ``dict[int, str]`` mapping additional
       exponent values to si prefixes.
     :param extra_iec_prefixes: ``dict[int, str]`` mapping additional
@@ -143,6 +145,7 @@ class Formatter:
             latex: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
+            pp_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
             add_c_prefix: bool = False,
@@ -171,6 +174,7 @@ class Formatter:
             latex=latex,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
+            pp_prefix=pp_prefix,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
             add_c_prefix=add_c_prefix,
@@ -209,6 +213,7 @@ class Formatter:
                    latex=options.latex,
                    nan_inf_exp=options.nan_inf_exp,
                    use_prefix=options.use_prefix,
+                   pp_prefix=options.pp_prefix,
                    extra_si_prefixes=options.extra_si_prefixes,
                    extra_iec_prefixes=options.extra_iec_prefixes,
                    bracket_unc=options.bracket_unc,
