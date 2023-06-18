@@ -335,6 +335,17 @@ appended to the end of the formatted string.
 >>> print(sform(0.12345, 0.001))
 (12.345 +/- 0.100)%
 
+Superscript Exponent Format
+===========================
+
+The ``superscript_exp`` option can be chosen to present exponents in
+standard superscript notation as opposed to e.g. ``e+02`` notation.
+
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
+...                   superscript_exp=True)
+>>> print(sform(789))
+7.89×10²
+
 .. _extra_si_prefixes:
 
 Extra Prefixes

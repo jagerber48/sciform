@@ -88,6 +88,9 @@ class Formatter:
       formatted as a percentage or not. Only valid for fixed point
       exponent mode. When ``True``, the float is multipled by 100 and
       a % symbol is appended to the end of the string after formatting.
+    :param superscript_exp: ``bool`` indicating if the exponent string
+      should be converted into superscript notation. E.g. `1.23e+02` is
+      converted to `1.23×10²`
     :param nan_inf_exp: ``bool`` indicating whether non-finite floats
       such as ``float('nan')`` or ``float('inf')`` should be formatted
       with exponent symbols when exponent modes including exponent
@@ -133,6 +136,7 @@ class Formatter:
             exp: Union[int, type(AutoExp)] = None,
             capitalize: bool = None,
             percent: bool = None,
+            superscript_exp: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -159,6 +163,7 @@ class Formatter:
             exp=exp,
             capitalize=capitalize,
             percent=percent,
+            superscript_exp=superscript_exp,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
@@ -195,6 +200,7 @@ class Formatter:
                    exp=options.exp,
                    capitalize=options.capitalize,
                    percent=options.percent,
+                   superscript_exp=options.superscript_exp,
                    nan_inf_exp=options.nan_inf_exp,
                    use_prefix=options.use_prefix,
                    extra_si_prefixes=options.extra_si_prefixes,

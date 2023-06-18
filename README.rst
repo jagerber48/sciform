@@ -3,6 +3,7 @@ sciform
 
 |  **Repository:** `<https://github.com/jagerber48/sciform>`_
 |  **Documentation:** `<https://sciform.readthedocs.io/en/stable/>`_
+|  **PyPi:** `<https://pypi.org/project/sciform/>`_
 
 Overview
 --------

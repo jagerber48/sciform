@@ -2,6 +2,7 @@ import sys
 from typing import Union
 from math import floor, log10, log2, isfinite
 from warnings import warn
+import re
 
 from sciform.modes import ExpMode, RoundMode, SignMode, AutoExp, AutoPrec
 
@@ -191,3 +192,33 @@ def format_float_by_top_bottom_dig(num: float,
     float_str = f'{sign_str}{fill_str}{abs_mantissa_str}'
 
     return float_str
+
+
+def convert_exp_str_to_superscript(exp_str: str):
+    if exp_str == '':
+        return exp_str
+
+    match = re.match(
+        r'''
+         ^
+         (?P<exp_symb>[eEbB])
+         (?P<exp_sign>[+-])
+         (?P<exp_digits>\d+)
+         $
+         ''',
+        exp_str, re.VERBOSE)
+    exp_symb = match.group('exp_symb')
+    exp_sign = match.group('exp_sign')
+    if exp_sign == '+':
+        exp_sign = ''
+    exp_digits = match.group('exp_digits').lstrip('0')
+    if exp_digits == '':
+        exp_digits = '0'
+    sup_trans = str.maketrans("+-0123456789", "⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹")
+    if exp_symb in ['e', 'E']:
+        base = '10'
+    else:
+        base = '2'
+    exp_val_str = f'{exp_sign}{exp_digits}'.translate(sup_trans)
+    exp_str = f'×{base}{exp_val_str}'
+    return exp_str
