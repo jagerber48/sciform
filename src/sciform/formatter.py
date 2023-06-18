@@ -112,6 +112,8 @@ class Formatter:
       symbols should be removed from the uncertainty when using bracket
       uncertainty mode. E.g. expressing ``123.4 +/- 2.3`` as
       ``123.4(23)`` instead of ``123.4(2.3)``.
+    :param unicode_pm: ``bool`` indicating if the '+/-' separator should
+      be replaced with the unicode plus minus symbol '±'.
     :param unc_pm_whitespace: ``bool`` indicating if there should be
       whitespace surrounding the ``'+/-'`` symbols when formatting. E.g.
       ``123.4+/-2.3`` compared to ``123.4 +/- 2.3``.
@@ -140,6 +142,7 @@ class Formatter:
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
+            unicode_pm: bool = None,
             unc_pm_whitespace: bool = None
     ):
         self.options = FormatOptions.make(
@@ -165,6 +168,7 @@ class Formatter:
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
+            unicode_pm=unicode_pm,
             unc_pm_whitespace=unc_pm_whitespace
         )
 
@@ -198,6 +202,7 @@ class Formatter:
                    bracket_unc=options.bracket_unc,
                    val_unc_match_widths=options.val_unc_match_widths,
                    bracket_unc_remove_seps=options.bracket_unc_remove_seps,
+                   unicode_pm=options.unicode_pm,
                    unc_pm_whitespace=options.unc_pm_whitespace)
 
     @classmethod

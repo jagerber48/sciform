@@ -63,3 +63,13 @@ class TestFormatting(unittest.TestCase):
         }
 
         self.do_test_case_dict(cases_dict)
+
+    def test_unicode_pm(self):
+        cases_dict = {
+            (123.456, 0.789):
+                {
+                    Formatter(unicode_pm=True): '123.456 ± 0.789'
+                }
+        }
+
+        self.do_test_case_dict(cases_dict)
