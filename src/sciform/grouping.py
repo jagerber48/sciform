@@ -33,7 +33,7 @@ def add_group_chars_between_numbers(string, group_char='_',
 
             group_counter += 1
             if group_counter == group_size and char.isnumeric():
-                if num + 2 < num_chars:
+                if num + 2 <= num_chars:
                     if string[-(num+2)].isnumeric():
                         result_str = group_char + result_str
                         group_counter = 0
