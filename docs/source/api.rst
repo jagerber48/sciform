@@ -46,6 +46,10 @@ Global Configuration
 
 .. autofunction:: global_add_small_si_prefixes()
 
+.. autofunction:: global_add_ppth_prefix()
+
 .. autofunction:: global_reset_si_prefixes()
 
 .. autofunction:: global_reset_iec_prefixes()
+
+.. autofunction:: global_reset_pp_prefixes()
