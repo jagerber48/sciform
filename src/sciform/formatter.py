@@ -89,8 +89,11 @@ class Formatter:
       exponent mode. When ``True``, the float is multipled by 100 and
       a % symbol is appended to the end of the string after formatting.
     :param superscript_exp: ``bool`` indicating if the exponent string
-      should be converted into superscript notation. E.g. `1.23e+02` is
-      converted to `1.23×10²`
+      should be converted into superscript notation. E.g. ``'1.23e+02'``
+      is converted to ``'1.23×10²'``
+    :param latex: ``bool`` indicating if the resulting string should be
+      converted into a latex parseable code, e.g.
+      ``'\\left(1.23 \\pm 0.01\\right)\\times 10^{2}'``.
     :param nan_inf_exp: ``bool`` indicating whether non-finite floats
       such as ``float('nan')`` or ``float('inf')`` should be formatted
       with exponent symbols when exponent modes including exponent
