@@ -73,3 +73,13 @@ class TestFormatting(unittest.TestCase):
         }
 
         self.do_test_case_dict(cases_dict)
+
+    def test_superscript_exp(self):
+        cases_dict = {
+            (789, 0.01): {
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          superscript_exp=True): '(7.8900 +/- 0.0001)×10²'
+            }
+        }
+
+        self.do_test_case_dict(cases_dict)

@@ -217,6 +217,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         exp_mode=free_exp_mode,
         exp=exp,
         percent=False,
+        superscript_exp=False,
         use_prefix=False,
     )
 
