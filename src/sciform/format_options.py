@@ -20,7 +20,7 @@ class FormatOptions:
     lower_separator: LowerGroupingSeparators
     round_mode: RoundMode
     precision: Union[int, type(AutoPrec)]
-    exp_mode: ExpMode  # TODO: rename to exp_mode
+    exp_mode: ExpMode
     exp: Union[int, type(AutoExp)]
     capitalize: bool
     percent: bool
@@ -31,6 +31,7 @@ class FormatOptions:
     bracket_unc: bool
     val_unc_match_widths: bool
     bracket_unc_remove_seps: bool
+    unicode_pm: bool
     unc_pm_whitespace: bool
 
     def __post_init__(self):
@@ -100,6 +101,7 @@ class FormatOptions:
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
+            unicode_pm: bool = None,
             unc_pm_whitespace: bool = None
     ):
         if defaults is None:
@@ -147,6 +149,8 @@ class FormatOptions:
             val_unc_match_widths = defaults.val_unc_match_widths
         if bracket_unc_remove_seps is None:
             bracket_unc_remove_seps = defaults.bracket_unc_remove_seps
+        if unicode_pm is None:
+            unicode_pm = defaults.unicode_pm
         if unc_pm_whitespace is None:
             unc_pm_whitespace = defaults.unc_pm_whitespace
 
@@ -183,6 +187,7 @@ class FormatOptions:
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
+            unicode_pm=unicode_pm,
             unc_pm_whitespace=unc_pm_whitespace
         )
 
@@ -343,6 +348,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     bracket_unc=False,
     val_unc_match_widths=False,
     bracket_unc_remove_seps=False,
+    unicode_pm=False,
     unc_pm_whitespace=True
 )
 
@@ -385,6 +391,7 @@ def set_global_defaults(
         bracket_unc=None,
         val_unc_match_widths=None,
         bracket_unc_remove_seps=None,
+        unicode_pm=None,
         unc_pm_whitespace=None
 ):
     """
@@ -419,6 +426,7 @@ def set_global_defaults(
         bracket_unc=bracket_unc,
         val_unc_match_widths=val_unc_match_widths,
         bracket_unc_remove_seps=bracket_unc_remove_seps,
+        unicode_pm=unicode_pm,
         unc_pm_whitespace=unc_pm_whitespace
     )
     DEFAULT_GLOBAL_OPTIONS = new_default_options
@@ -501,6 +509,7 @@ class GlobalDefaultsContext:
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
+            unicode_pm: bool = None,
             unc_pm_whitespace: bool = None
     ):
         self.options = FormatOptions.make(
@@ -526,6 +535,7 @@ class GlobalDefaultsContext:
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
+            unicode_pm=unicode_pm,
             unc_pm_whitespace=unc_pm_whitespace
         )
         self.initial_global_defaults = None

@@ -132,6 +132,7 @@ The global default settings can be viewed using
  'bracket_unc': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
+ 'unicode_pm': False,
  'unc_pm_whitespace': True}
 
 The global default settings can be modified using
@@ -168,6 +169,7 @@ applied to setting global default settings.
  'bracket_unc': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
+ 'unicode_pm': False,
  'unc_pm_whitespace': True}
 
 The global default settings can be reset to the :mod:`sciform` defaults

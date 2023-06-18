@@ -12,6 +12,7 @@
    Supported Prefixes
    api
    examples
+   project
 
 Indices and tables
 ==================
