@@ -346,6 +346,27 @@ standard superscript notation as opposed to e.g. ``e+02`` notation.
 >>> print(sform(789))
 7.89×10²
 
+Latex Format
+============
+
+The ``latex`` option can be chosen to convert strings into latex
+parseable codes.
+
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
+...                   exp=-1,
+...                   upper_separator=GroupingSeparator.UNDERSCORE,
+...                   latex=True)
+>>> print(sform(12345))
+123\_450\times 10^{-1}
+>>> sform = Formatter(lower_separator=GroupingSeparator.UNDERSCORE,
+...                   percent=True,
+...                   latex=True)
+>>> print(sform(0.12345678, 0.00000255))
+\left(12.345\_678 \pm 0.000\_255\right)\%
+
+Note that use of ``latex`` renders the use of ``unicode_pm`` and
+``superscript_exp`` meaningless.
+
 .. _extra_si_prefixes:
 
 Extra Prefixes
