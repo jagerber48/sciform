@@ -16,25 +16,27 @@ def add_group_chars_between_numbers(string, group_char='_',
     char_counter = 0
 
     if direction is GroupingDirection.FORWARD:
-        for char in string[::1]:
+        for num in range(num_chars):
+            char = string[num]
             result_str = result_str + char
 
             group_counter += 1
-            char_counter += 1
-            if (group_counter == group_size and char_counter < num_chars
-                    and char.isnumeric()):
-                result_str = result_str + group_char
-                group_counter = 0
+            if group_counter == group_size and char.isnumeric():
+                if num + 1 < num_chars:
+                    if string[num+1].isnumeric():
+                        result_str = result_str + group_char
+                        group_counter = 0
     elif direction == GroupingDirection.BACKWARD:
-        for char in string[::-1]:
+        for num in range(num_chars):
+            char = string[-(num+1)]
             result_str = char + result_str
 
             group_counter += 1
-            char_counter += 1
-            if (group_counter == group_size and char_counter < num_chars
-                    and char.isnumeric()):
-                result_str = group_char + result_str
-                group_counter = 0
+            if group_counter == group_size and char.isnumeric():
+                if num + 2 < num_chars:
+                    if string[-(num+2)].isnumeric():
+                        result_str = group_char + result_str
+                        group_counter = 0
     else:
         raise ValueError(f'Invalid grouping direction: {direction}')
 
