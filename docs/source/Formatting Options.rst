@@ -131,12 +131,6 @@ Furthermore, it is possible to customize :class:`Formatter`
 objects or the global configuration settings to map additional prefix
 translations, in addition to those provided by default.
 
-.. todo::
-   * prefix mode coerces scientific notation into engineering notation
-   * prefix mode coerces binary notation into binary iec notation
-   * handles values larger and smaller than largest and smallest
-     supported translations
-
 >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
 ...                   use_prefix=True)
 >>> print(sform(4242.13))
@@ -345,6 +339,37 @@ standard superscript notation as opposed to e.g. ``e+02`` notation.
 ...                   superscript_exp=True)
 >>> print(sform(789))
 7.89×10²
+
+Latex Format
+============
+
+The ``latex`` option can be chosen to convert strings into latex
+parseable codes.
+
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
+...                   exp=-1,
+...                   upper_separator=GroupingSeparator.UNDERSCORE,
+...                   latex=True)
+>>> print(sform(12345))
+123\_450\times 10^{-1}
+>>> sform = Formatter(lower_separator=GroupingSeparator.UNDERSCORE,
+...                   percent=True,
+...                   latex=True)
+>>> print(sform(0.12345678, 0.00000255))
+\left(12.345\_678 \pm 0.000\_255\right)\%
+
+The latex format makes the following changes:
+
+* Convert standard exponent strings such as ``'e+02'`` into latex
+  superscript strings like ``'\times 10^{+2}``
+* Replace ``'('`` and ``')'`` by latex size-aware delimiters
+  ``'\left('`` and ``'\right)'``.
+* Replace ``'+/-'`` by ``'\pm'``
+* Replace ``'_'`` by ``'\_'``
+* Replace ``'%'`` by ``'\%'``
+
+Note that use of ``latex`` renders the use of ``unicode_pm`` and
+``superscript_exp`` meaningless.
 
 .. _extra_si_prefixes:
 

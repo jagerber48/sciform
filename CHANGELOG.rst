@@ -1,3 +1,10 @@
+0.16.0 (2023-06-18)
+-------------------
+
+* Add ``latex`` option with documentation and tests
+* Refactor exponent string conversion
+* Percent mode for non-finite numbers
+
 0.15.2 (2023-06-18)
 -------------------
 

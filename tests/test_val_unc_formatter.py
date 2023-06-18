@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import Formatter, ExpMode
+from sciform import Formatter, ExpMode, GroupingSeparator
 
 
 class TestFormatting(unittest.TestCase):
@@ -34,6 +34,21 @@ class TestFormatting(unittest.TestCase):
                 }
         }
 
+        self.do_test_case_dict(cases_dict)
+
+    def test_percent(self):
+        cases_dict = {
+            (0.123_456_78, 0.000_002_55):
+                {
+                    Formatter(percent=True,
+                              lower_separator=GroupingSeparator.UNDERSCORE):
+                        '(12.345_678 +/- 0.000_255)%',
+                    Formatter(percent=True,
+                              bracket_unc=True,
+                              lower_separator=GroupingSeparator.UNDERSCORE):
+                        '(12.345_678(255))%'
+                }
+        }
         self.do_test_case_dict(cases_dict)
 
     def test_bracket_unc_remove_dec_symb(self):
@@ -79,6 +94,34 @@ class TestFormatting(unittest.TestCase):
             (789, 0.01): {
                 Formatter(exp_mode=ExpMode.SCIENTIFIC,
                           superscript_exp=True): '(7.8900 +/- 0.0001)×10²'
+            }
+        }
+
+        self.do_test_case_dict(cases_dict)
+
+    def test_latex(self):
+        cases_dict = {
+            (12345, 0.2): {
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          exp=-1,
+                          upper_separator=GroupingSeparator.UNDERSCORE,
+                          latex=True): r'\left(123\_450 \pm 2\right)\times 10^{-1}',
+
+                # Latex mode takes precedence over unicode_pm
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          exp=-1,
+                          upper_separator=GroupingSeparator.UNDERSCORE,
+                          unicode_pm=True,
+                          latex=True): r'\left(123\_450 \pm 2\right)\times 10^{-1}'
+            },
+            (0.123_456_78, 0.000_002_55): {
+                Formatter(lower_separator=GroupingSeparator.UNDERSCORE,
+                          percent=True,
+                          latex=True): r'\left(12.345\_678 \pm 0.000\_255\right)\%',
+                Formatter(lower_separator=GroupingSeparator.UNDERSCORE,
+                          percent=True,
+                          bracket_unc=True,
+                          latex=True): r'\left(12.345\_678\left(255\right)\right)\%'
             }
         }
 

@@ -25,6 +25,7 @@ class FormatOptions:
     capitalize: bool
     percent: bool
     superscript_exp: bool
+    latex: bool
     nan_inf_exp: bool
     use_prefix: bool
     extra_si_prefixes: dict[int, str]
@@ -98,6 +99,7 @@ class FormatOptions:
             capitalize: bool = None,
             percent: bool = None,
             superscript_exp: bool = None,
+            latex: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -139,6 +141,8 @@ class FormatOptions:
             percent = defaults.percent
         if superscript_exp is None:
             superscript_exp = defaults.superscript_exp
+        if latex is None:
+            latex = defaults.latex
         if nan_inf_exp is None:
             nan_inf_exp = defaults.nan_inf_exp
         if use_prefix is None:
@@ -189,6 +193,7 @@ class FormatOptions:
             capitalize=capitalize,
             percent=percent,
             superscript_exp=superscript_exp,
+            latex=latex,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
@@ -351,6 +356,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     capitalize=False,
     percent=False,
     superscript_exp=False,
+    latex=False,
     nan_inf_exp=False,
     use_prefix=False,
     extra_si_prefixes=dict(),
@@ -393,6 +399,7 @@ def set_global_defaults(
         capitalize: bool = None,
         percent: bool = None,
         superscript_exp: bool = None,
+        latex: bool = None,
         nan_inf_exp=None,
         use_prefix: bool = None,
         extra_si_prefixes: dict[int, str] = None,
@@ -429,6 +436,7 @@ def set_global_defaults(
         capitalize=capitalize,
         percent=percent,
         superscript_exp=superscript_exp,
+        latex=latex,
         nan_inf_exp=nan_inf_exp,
         use_prefix=use_prefix,
         extra_si_prefixes=extra_si_prefixes,
@@ -513,6 +521,7 @@ class GlobalDefaultsContext:
             capitalize: bool = None,
             percent: bool = None,
             superscript_exp: bool = None,
+            latex: bool = None,
             nan_inf_exp: bool = None,
             use_prefix: bool = None,
             extra_si_prefixes: dict[int, str] = None,
@@ -540,6 +549,7 @@ class GlobalDefaultsContext:
             capitalize=capitalize,
             percent=percent,
             superscript_exp=superscript_exp,
+            latex=latex,
             nan_inf_exp=nan_inf_exp,
             use_prefix=use_prefix,
             extra_si_prefixes=extra_si_prefixes,
