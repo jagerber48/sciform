@@ -1,4 +1,4 @@
-__version__ = "0.13.1"
+__version__ = "0.13.2"
 
 from sciform.formatter import Formatter
 from sciform.float_formatting import sfloat, vufloat
