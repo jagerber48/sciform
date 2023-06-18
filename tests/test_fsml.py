@@ -360,7 +360,8 @@ class TestFormatting(unittest.TestCase):
                 '': 'nan',
                 'f': 'nan',
                 'F': 'NAN',
-                'E': 'NAN'
+                'E': 'NAN',
+                '%': '(nan)%'
             },
             float('inf'): {
                 '': 'inf',

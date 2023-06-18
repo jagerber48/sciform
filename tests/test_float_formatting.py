@@ -78,3 +78,13 @@ class TestFormatting(unittest.TestCase):
 
         self.do_test_case_dict(cases_dict)
 
+    def test_nan(self):
+        cases_dict = {
+            float('nan'): {
+                Formatter(percent=True): '(nan)%',
+                Formatter(percent=True,
+                          latex=True): r'\left(nan\right)\%'
+            }
+        }
+        self.do_test_case_dict(cases_dict)
+

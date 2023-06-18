@@ -52,7 +52,7 @@ def format_float(num: float, options: FormatOptions) -> str:
         else:
             full_str = f'{num}'
             if options.percent:
-                full_str = f'{full_str}%'
+                full_str = f'({full_str})%'
 
         if capitalize:
             full_str = full_str.upper()
@@ -62,7 +62,7 @@ def format_float(num: float, options: FormatOptions) -> str:
         if options.latex:
             full_str = full_str.replace('(', r'\left(')
             full_str = full_str.replace(')', r'\right)')
-            full_str = full_str.replace('%', r'\%)')
+            full_str = full_str.replace('%', r'\%')
 
         return full_str
 
