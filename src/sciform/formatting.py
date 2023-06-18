@@ -213,15 +213,13 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         precision=prec,
         exp_mode=free_exp_mode,
         exp=exp,
+        percent=False,
         use_prefix=False,
-        nan_inf_exp=options.nan_inf_exp
     )
 
     unc_format_options = FormatOptions.make(
         defaults=val_format_options,
-        exp_mode=free_exp_mode,
         sign_mode=SignMode.NEGATIVE,
-        nan_inf_exp=options.nan_inf_exp
     )
 
     # Optional parentheses needed to handle (nan)e+00 case
