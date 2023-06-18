@@ -1,7 +1,12 @@
+0.15.2 (2023-06-18)
+-------------------
+
+* Fix a bug involving space filling and separators.
+
 0.15.1 (2023-06-17)
 -------------------
 
-* Changelog formatting typo
+* Changelog formatting typo.
 
 0.15.0 (2023-06-17)
 -------------------

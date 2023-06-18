@@ -4,4 +4,4 @@ Project
 Changelog
 =========
 
-.. include:: ../../Changelog.rst
+.. include:: ../../CHANGELOG.rst
