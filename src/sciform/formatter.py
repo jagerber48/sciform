@@ -100,17 +100,21 @@ class Formatter:
       symbols are selected.
     :param prefix_exp: ``bool`` indicating if exponents should be
       replaced with either SI or IEC prefixes as appropriate.
-    :param parts_per_exp: ``bool`` indicating if "parts-per" prefixes should
-      be used.
+    :param parts_per_exp: ``bool`` indicating if "parts-per" exponent
+      translations should be used.
     :param extra_si_prefixes: ``dict[int, str]`` mapping additional
       exponent values to si prefixes.
     :param extra_iec_prefixes: ``dict[int, str]`` mapping additional
       exponent values to iec prefixes
+    :param extra_parts_per_forms: ``dict[int, str]`` mapping additional
+      exponent values to "parts-per" forms.
     :param add_c_prefix: ``bool`` (default ``False``) if ``True`` adds
       ``{-2: 'c'}`` to ``extra_si_prefixes``.
     :param add_small_si_prefixes: ``bool`` (default ``False``) if
       ``True`` adds ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` to
       ``extra_si_prefixes``.
+    :param add_ppth_form: ``bool`` (default ``False``) if ``True`` adds
+      ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
     :param bracket_unc: ``bool`` indicating if bracket uncertainty mode
       (e.g. ``12.34(82)`` instead of ``12.34 +/- 0.82``) should be used.
     :param val_unc_match_widths: ``bool`` indicating if the value or
