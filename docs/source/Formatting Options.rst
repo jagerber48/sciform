@@ -143,6 +143,17 @@ translations, in addition to those provided by default.
 >>> print(sform(1300))
 1.270 Ki
 
+In addition to SI and IEC prefixes,
+`"parts-per" notation <https://en.wikipedia.org/wiki/Parts-per_notation>`_
+can be accessed using the ``pp_prefix`` option in addition to
+``use_prefix``.
+
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
+...                   use_prefix=True,
+...                   pp_prefix=True)
+>>> print(sform(12.3e-6))
+12.3 ppm
+
 .. _rounding:
 
 Rounding
@@ -371,7 +382,7 @@ The latex format makes the following changes:
 Note that use of ``latex`` renders the use of ``unicode_pm`` and
 ``superscript_exp`` meaningless.
 
-.. _extra_si_prefixes:
+.. _extra_prefixes:
 
 Extra Prefixes
 ==============
@@ -399,6 +410,16 @@ Furthermore, just the ``c`` prefix can be included using the
 ...                   add_small_si_prefixes=True)
 >>> print(sform(25))
 2.5 da
+
+A non-standard parts-per-thousand prefix, ``ppth``, can be accessed with
+the ``add_ppth_prefix`` option.
+
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
+...                   use_prefix=True,
+...                   pp_prefix=True,
+...                   add_ppth_prefix=True)
+>>> print(sform(12.3e-3))
+12.3 ppth
 
 Include Exponent on nan and inf
 ===============================

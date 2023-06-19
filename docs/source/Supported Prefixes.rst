@@ -6,15 +6,17 @@ Supported Prefixes
 .. |micro| unicode:: 0xB5 .. micro symbol
 
 :mod:`sciform` offers a prefix mode which provides a simple translation
-between exponent strings and one or two letter prefixes.
+between exponent strings and alphabetic prefixes.
 For scientific and engineering formats the prefixes are matched to
 integer multiple of 3 exponent according to the
 `SI prefixes <https://www.nist.gov/pml/owm/metric-si-prefixes>`_.
+It also possible to realize prefixes using
+`"parts-per" notation <https://en.wikipedia.org/wiki/Parts-per_notation>`_.
 For binary formats, the prefixes are matched to integer multiples of 10
 according to the `IEC prefixes <https://physics.nist.gov/cuu/Units/binary.html>`_.
 
 .. list-table:: SI Prefixes
-   :widths: 30, 15, 10
+   :widths: 15, 15, 15
    :header-rows: 1
 
    * - Exponent Value
@@ -82,10 +84,10 @@ according to the `IEC prefixes <https://physics.nist.gov/cuu/Units/binary.html>`
      - q
 
 The user can additionally add the following extra si prefixes using the
-:ref:`extra_si_prefixes` options:
+:ref:`extra_prefixes` options:
 
 .. list-table:: Extra SI Prefixes
-   :widths: 30, 15, 10
+   :widths: 15, 15, 15
    :header-rows: 1
 
    * - Exponent Value
@@ -104,9 +106,33 @@ The user can additionally add the following extra si prefixes using the
      - centi
      - c
 
+.. list-table:: Parts Per Prefixes
+   :widths: 15, 15, 15
+   :header-rows: 1
+
+   * - Exponent Value
+     - Prefix Name
+     - Prefix
+   * - 10\ :sup:`-6`
+     - parts-per-million
+     - ppt
+   * - 10\ :sup:`-9`
+     - parts-per-billion
+     - ppb
+   * - 10\ :sup:`-12`
+     - parts-per-trillion
+     - ppt
+   * - 10\ :sup:`-15`
+     - parts-per-quadrillion
+     - ppq
+
+The user can additionally add a parts-per-thousand prefix ``ppth``
+corresponding to 10\ :sup:`-3` using an
+:ref:`extra prefix <extra_prefixes>` option.
+
 
 .. list-table:: IEC Prefixes
-   :widths: 30, 15, 10
+   :widths: 15, 15, 15
    :header-rows: 1
 
    * - Exponent Value
