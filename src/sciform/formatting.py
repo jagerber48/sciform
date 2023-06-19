@@ -186,7 +186,6 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     else:
         free_exp_mode = exp_mode
 
-    # TODO: If both val and unc are finite then take the max
     if isfinite(val) and isfinite(unc):
         if val >= unc:
             exp_driver = val_rounded

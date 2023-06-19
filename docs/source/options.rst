@@ -450,7 +450,8 @@ formatted as follows.
 First, significant figure rounding is applied to the uncertainty
 according to the specified precision.
 Next the value is rounded to the same position as the uncertainty.
-The exponent is then determined using the expponent mode and the value.
+The exponent is then determined using the exponent mode and the larger
+of the value or uncertainty.
 The value and the uncertainty are then formatted into a single string
 according to the options below.
 
