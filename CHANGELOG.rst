@@ -1,4 +1,4 @@
-0.17.0 (2023-06-??)
+0.17.0 (2023-06-19)
 -------------------
 
 * Add parts-per notation feature, documentation, and tests.
