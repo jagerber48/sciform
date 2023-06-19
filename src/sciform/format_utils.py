@@ -148,12 +148,28 @@ def get_sign_str(num: float, sign_mode: SignMode) -> str:
 
 def get_round_digit(num: float,
                     round_mode: RoundMode,
-                    precision: Union[int, type(AutoPrec)]) -> int:
+                    precision: Union[int, type(AutoPrec)],
+                    pdg_sig_figs: bool = False) -> int:
     if round_mode is RoundMode.SIG_FIG:
         top_digit = get_top_digit(num)
         if precision is AutoPrec:
             bottom_digit = get_bottom_digit(num)
-            precision = top_digit - bottom_digit + 1
+            if not pdg_sig_figs:
+                precision = top_digit - bottom_digit + 1
+            else:
+                num_top_three_digs = num * 10**(2-top_digit)
+                num_top_three_digs = round(num_top_three_digs)
+                new_top_digit = get_top_digit(num_top_three_digs)
+                num_top_three_digs = num_top_three_digs * 10**(2-new_top_digit)
+                if 100 <= num_top_three_digs <= 354:
+                    precision = 1
+                elif 355 <= num_top_three_digs <= 994:
+                    precision = 2
+                elif 995 <= num_top_three_digs <= 999:
+                    precision = 1
+                else:
+                    raise ValueError(f'{num_top_three_digs} not right')
+        print(precision)
         round_digit = top_digit - (precision - 1)
     elif round_mode is RoundMode.PREC:
         if precision is AutoPrec:

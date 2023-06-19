@@ -155,19 +155,21 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         round_driver = val
 
     round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
-                                  options.precision)
+                                  options.precision, options.pdg_sig_figs)
     unc_rounded = round(unc, -round_digit)
     val_rounded = round(val, -round_digit)
     round_driver = round(round_driver, -round_digit)
 
-    '''
-    Re-round the rounded values in case the first rounding changed the most
-    significant digit place.
-    '''
-    round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
-                                  options.precision)
-    unc_rounded = round(unc_rounded, -round_digit)
-    val_rounded = round(val_rounded, -round_digit)
+    if not options.pdg_sig_figs:
+        '''
+        Re-round the rounded values in case the first rounding changed the most
+        significant digit place. When using pdg_sig_figs this case is handled
+        directly in the first call to get_round_digit.
+        '''
+        round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
+                                      options.precision, options.pdg_sig_figs)
+        unc_rounded = round(unc_rounded, -round_digit)
+        val_rounded = round(val_rounded, -round_digit)
 
     exp_mode = options.exp_mode
     '''

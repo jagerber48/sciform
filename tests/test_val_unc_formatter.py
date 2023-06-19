@@ -139,6 +139,56 @@ class TestFormatting(unittest.TestCase):
 
         self.do_test_case_dict(cases_dict)
 
+    def test_pdg(self):
+        """
+        Note the behavior at the PDG cutoffs may be surprising due to
+        finite float precision. From the python docs for ``round()``
+
+           Note The behavior of round() for floats can be surprising:
+           for example, round(2.675, 2) gives 2.67 instead of the
+           expected 2.68. This is not a bug: it’s a result of the fact
+           that most decimal fractions can’t be represented exactly as a
+           float. See Floating Point Arithmetic: Issues and Limitations
+           for more information.
+
+        https://docs.python.org/3/library/functions.html?highlight=round#round
+
+        For example, we would expect val=10, unc=0.0355 to be formatted
+        with 2 significant figures and for 0.0355 to be rounded to
+        0.036, but round(0.0355, 3) yields 0.035 instead so the result
+        is '10.000 +/- 0.035'. However, val=10, unc = 0.00355 indeed
+        yields '10.0000 +/- 0.0036' because round(0.00355, 4) = 0.0036.
+
+        For that reason, these edge cases are exlcuded from the tests.
+        Getting more expected behavior for these edge cases would
+        require using decimal objects rather than floats.
+        """
+        cases_dict = {
+            (10, 0.0350):
+                {
+                    Formatter(pdg_sig_figs=True): '10.00 +/- 0.04'
+                },
+            (10, 0.0355):
+                {
+                    Formatter(pdg_sig_figs=True): '10.00 +/- 0.036'
+                },
+            (10, 0.0356):
+                {
+                    Formatter(pdg_sig_figs=True): '10.000 +/- 0.036'
+                },
+            (10, 0.0994):
+                {
+                    Formatter(pdg_sig_figs=True): '10.000 +/- 0.099'
+                },
+            (10, 0.0996):
+                {
+                    Formatter(pdg_sig_figs=True): '10.00 +/- 0.10'
+                }
+
+        }
+
+        self.do_test_case_dict(cases_dict)
+
 
 if __name__ == "__main__":
     unittest.main()
