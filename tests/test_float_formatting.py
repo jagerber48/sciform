@@ -88,3 +88,23 @@ class TestFormatting(unittest.TestCase):
         }
         self.do_test_case_dict(cases_dict)
 
+    def test_pp_prefix(self):
+        cases_dict = {
+            123e-3: {
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          exp=-3,
+                          use_prefix=True,
+                          pp_prefix=True,
+                          add_ppth_prefix=True): '123 ppth',
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          exp=-6,
+                          use_prefix=True,
+                          pp_prefix=True): '123000 ppm',
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          exp=-2,
+                          use_prefix=True,
+                          pp_prefix=True): '12.3e-02'
+            }
+        }
+
+        self.do_test_case_dict(cases_dict)

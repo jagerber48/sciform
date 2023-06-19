@@ -6,7 +6,8 @@ import re
 from copy import copy
 
 from sciform.modes import ExpMode, RoundMode, SignMode, AutoExp, AutoPrec
-from sciform.prefix import si_val_to_prefix_dict, iec_val_to_prefix_dict
+from sciform.prefix import (si_val_to_prefix_dict, iec_val_to_prefix_dict,
+                            pp_val_to_prefix_dict)
 
 
 def get_top_digit(num: float) -> int:
@@ -255,8 +256,10 @@ def convert_exp_str_to_latex(exp_str):
 
 
 def convert_exp_str_to_prefix(exp_str: str,
+                              pp_prefix: bool = False,
                               extra_si_prefixes: dict[int, str] = None,
-                              extra_iec_prefixes: dict[int, str] = None):
+                              extra_iec_prefixes: dict[int, str] = None,
+                              extra_pp_prefixes: dict[int, str] = None) -> str:
     if exp_str == '':
         return exp_str
 
@@ -267,9 +270,14 @@ def convert_exp_str_to_prefix(exp_str: str,
         return ''
 
     if exp_symb in ['e', 'E']:
-        val_to_prefix_dict = copy(si_val_to_prefix_dict)
-        if extra_si_prefixes is not None:
-            val_to_prefix_dict.update(extra_si_prefixes)
+        if pp_prefix:
+            val_to_prefix_dict = copy(pp_val_to_prefix_dict)
+            if extra_pp_prefixes is not None:
+                val_to_prefix_dict.update(extra_pp_prefixes)
+        else:
+            val_to_prefix_dict = copy(si_val_to_prefix_dict)
+            if extra_si_prefixes is not None:
+                val_to_prefix_dict.update(extra_si_prefixes)
     else:
         val_to_prefix_dict = copy(iec_val_to_prefix_dict)
         if extra_iec_prefixes is not None:
@@ -285,13 +293,17 @@ def convert_exp_str(exp_str: str,
                     use_prefix: bool,
                     latex: bool,
                     superscript_exp: bool,
+                    pp_prefix: bool,
                     extra_si_prefixes: dict[int, str] = None,
-                    extra_iec_prefixes: dict[int, str] = None) -> str:
+                    extra_iec_prefixes: dict[int, str] = None,
+                    extra_pp_prefixes: dict[int, str] = None) -> str:
     prefix_applied = False
     if use_prefix:
         prefix_exp_str = convert_exp_str_to_prefix(exp_str,
+                                                   pp_prefix,
                                                    extra_si_prefixes,
-                                                   extra_iec_prefixes)
+                                                   extra_iec_prefixes,
+                                                   extra_pp_prefixes)
         if prefix_exp_str != exp_str:
             prefix_applied = True
             exp_str = prefix_exp_str

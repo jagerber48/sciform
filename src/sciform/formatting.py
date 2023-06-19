@@ -44,8 +44,10 @@ def format_float(num: float, options: FormatOptions) -> str:
                                   options.use_prefix,
                                   options.latex,
                                   options.superscript_exp,
+                                  options.pp_prefix,
                                   options.extra_si_prefixes,
-                                  options.extra_iec_prefixes)
+                                  options.extra_iec_prefixes,
+                                  options.extra_pp_prefixes)
 
         if exp_str != '':
             full_str = f'({num}){exp_str}'
@@ -98,8 +100,10 @@ def format_float(num: float, options: FormatOptions) -> str:
                               options.use_prefix,
                               options.latex,
                               options.superscript_exp,
+                              options.pp_prefix,
                               options.extra_si_prefixes,
-                              options.extra_iec_prefixes)
+                              options.extra_iec_prefixes,
+                              options.extra_pp_prefixes)
 
     if mantissa_rounded == -0.0:
         mantissa_rounded = abs(mantissa_rounded)
@@ -287,8 +291,10 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
                                   options.use_prefix,
                                   options.latex,
                                   options.superscript_exp,
+                                  options.pp_prefix,
                                   options.extra_si_prefixes,
-                                  options.extra_iec_prefixes)
+                                  options.extra_iec_prefixes,
+                                  options.extra_pp_prefixes)
         val_unc_exp_str = f'({val_unc_str}){exp_str}'
     else:
         val_unc_exp_str = val_unc_str
