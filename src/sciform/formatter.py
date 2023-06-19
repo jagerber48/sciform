@@ -75,9 +75,9 @@ class Formatter:
       or zero for digits past the decimal rounding.
     :param exp_mode: :class:`ExpMode` indicating the formatting
       mode to be used.
-    :param exp: ``int`` indicating the value which should be used for the
-      exponent. This parameter is ignored for fixed point and percent
-      exponent modes. For engineering, engineering shifted, and binary
+    :param exp: ``int`` indicating the value which should be used for
+      the exponent. This parameter is ignored for the fixed point
+      exponent mode. For engineering, engineering shifted, and binary
       iec modes, if this parameter is not consistent with the rules of
       that mode (e.g. if it is not a multiple of 3), then the exponent
       is rounded down to the nearest conforming value and a warning is

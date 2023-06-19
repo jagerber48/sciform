@@ -1,3 +1,10 @@
+0.17.1 (2023-06-19)
+-------------------
+
+* Code restructure to make formatting algorithm easier to follow
+  including more verbose clarifying comments.
+* Minor documentation cleanup
+
 0.17.0 (2023-06-19)
 -------------------
 

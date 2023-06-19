@@ -21,14 +21,13 @@ class FillMode(Enum):
     #: Fill with zeros
     ZERO = 'zero'
 
-    @staticmethod
-    def to_char(fill_mode: 'FillMode') -> str:
-        if fill_mode is FillMode.SPACE:
+    def to_char(self) -> str:
+        if self is FillMode.SPACE:
             return ' '
-        elif fill_mode is FillMode.ZERO:
+        elif self is FillMode.ZERO:
             return '0'
         else:
-            raise ValueError(f'Unhandled fill mode \'{fill_mode}\'.')
+            raise ValueError(f'Invalid fill mode: {self}')
 
 
 class SignMode(Enum):
