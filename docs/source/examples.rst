@@ -140,7 +140,7 @@ for displaying the plot axes as described::
 
         return scale, offset
 
-    def use_prefix_ticks(ax, axis: Literal['x', 'y'], shifted: bool = False) -> None:
+    def prefix_exp_ticks(ax, axis: Literal['x', 'y'], shifted: bool = False) -> None:
         """
         Use prefix notation for axis tick labels. Scale the tick labels by the
         multiplier that appears in the offset text and format the labels into
@@ -152,10 +152,10 @@ for displaying the plot axes as described::
         else:
             exp_mode = ExpMode.ENGINEERING_SHIFTED
         tick_formatter = Formatter(exp_mode=exp_mode,
-                                   use_prefix=True)
+                                   prefix_exp=True)
         offset_formatter = Formatter(sign_mode=SignMode.ALWAYS,
                                      exp_mode=exp_mode,
-                                     use_prefix=True)
+                                     prefix_exp=True)
 
         ax.ticklabel_format(axis=axis, style='sci')
         plt.draw()  # Needed to update offset text
@@ -233,8 +233,8 @@ for displaying the plot axes as described::
         fit_results_list.append(fit_results_dict)
 
     ax.grid(True)
-    use_prefix_ticks(ax, 'x')
-    use_prefix_ticks(ax, 'y', shifted=True)
+    prefix_exp_ticks(ax, 'x')
+    prefix_exp_ticks(ax, 'y', shifted=True)
 
     plt.show()
 

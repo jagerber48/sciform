@@ -132,25 +132,25 @@ objects or the global configuration settings to map additional prefix
 translations, in addition to those provided by default.
 
 >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
-...                   use_prefix=True)
+...                   prefix_exp=True)
 >>> print(sform(4242.13))
 4.24213 k
 
 >>> sform = Formatter(exp_mode=ExpMode.BINARY_IEC,
 ...                   round_mode=RoundMode.SIG_FIG,
 ...                   precision=4,
-...                   use_prefix=True)
+...                   prefix_exp=True)
 >>> print(sform(1300))
 1.270 Ki
 
 In addition to SI and IEC prefixes,
 `"parts-per" notation <https://en.wikipedia.org/wiki/Parts-per_notation>`_
-can be accessed using the ``pp_prefix`` option in addition to
-``use_prefix``.
+can be accessed using the ``parts_per_exp`` option in addition to
+``prefix_exp``.
 
 >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
-...                   use_prefix=True,
-...                   pp_prefix=True)
+...                   prefix_exp=True,
+...                   parts_per_exp=True)
 >>> print(sform(12.3e-6))
 12.3 ppm
 
@@ -401,23 +401,23 @@ Furthermore, just the ``c`` prefix can be included using the
 ``add_c_prefix`` options.
 
 >>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
-...                   use_prefix=True,
+...                   prefix_exp=True,
 ...                   add_c_prefix=True)
 >>> print(sform(0.025))
 2.5 c
 >>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
-...                   use_prefix=True,
+...                   prefix_exp=True,
 ...                   add_small_si_prefixes=True)
 >>> print(sform(25))
 2.5 da
 
 A non-standard parts-per-thousand prefix, ``ppth``, can be accessed with
-the ``add_ppth_prefix`` option.
+the ``add_ppth_form`` option.
 
 >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
-...                   use_prefix=True,
-...                   pp_prefix=True,
-...                   add_ppth_prefix=True)
+...                   prefix_exp=True,
+...                   parts_per_exp=True,
+...                   add_ppth_form=True)
 >>> print(sform(12.3e-3))
 12.3 ppth
 

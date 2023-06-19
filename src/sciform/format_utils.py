@@ -256,10 +256,10 @@ def convert_exp_str_to_latex(exp_str):
 
 
 def convert_exp_str_to_prefix(exp_str: str,
-                              pp_prefix: bool = False,
+                              parts_per_exp: bool = False,
                               extra_si_prefixes: dict[int, str] = None,
                               extra_iec_prefixes: dict[int, str] = None,
-                              extra_pp_prefixes: dict[int, str] = None) -> str:
+                              extra_parts_per_forms: dict[int, str] = None) -> str:
     if exp_str == '':
         return exp_str
 
@@ -270,10 +270,10 @@ def convert_exp_str_to_prefix(exp_str: str,
         return ''
 
     if exp_symb in ['e', 'E']:
-        if pp_prefix:
+        if parts_per_exp:
             val_to_prefix_dict = copy(pp_val_to_prefix_dict)
-            if extra_pp_prefixes is not None:
-                val_to_prefix_dict.update(extra_pp_prefixes)
+            if extra_parts_per_forms is not None:
+                val_to_prefix_dict.update(extra_parts_per_forms)
         else:
             val_to_prefix_dict = copy(si_val_to_prefix_dict)
             if extra_si_prefixes is not None:
@@ -290,20 +290,20 @@ def convert_exp_str_to_prefix(exp_str: str,
 
 
 def convert_exp_str(exp_str: str,
-                    use_prefix: bool,
+                    prefix_exp: bool,
                     latex: bool,
                     superscript_exp: bool,
-                    pp_prefix: bool,
+                    parts_per_exp: bool,
                     extra_si_prefixes: dict[int, str] = None,
                     extra_iec_prefixes: dict[int, str] = None,
-                    extra_pp_prefixes: dict[int, str] = None) -> str:
+                    extra_parts_per_forms: dict[int, str] = None) -> str:
     prefix_applied = False
-    if use_prefix:
+    if prefix_exp:
         prefix_exp_str = convert_exp_str_to_prefix(exp_str,
-                                                   pp_prefix,
+                                                   parts_per_exp,
                                                    extra_si_prefixes,
                                                    extra_iec_prefixes,
-                                                   extra_pp_prefixes)
+                                                   extra_parts_per_forms)
         if prefix_exp_str != exp_str:
             prefix_applied = True
             exp_str = prefix_exp_str
