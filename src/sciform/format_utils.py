@@ -10,24 +10,16 @@ from sciform.prefix import (si_val_to_prefix_dict, iec_val_to_prefix_dict,
                             pp_val_to_prefix_dict)
 
 
-def get_top_digit(num: float) -> int:
+def get_top_digit(num: float, binary=False) -> int:
     if not isfinite(num):
         return 0
-    num = abs(num)
-    int_part = int(num)
-    if int_part == 0:
-        magnitude = 1
+    elif num == 0:
+        return 0
     else:
-        magnitude = int(log10(int_part)) + 1
-    max_digits = sys.float_info.dig
-    if magnitude >= max_digits:
-        return magnitude
-
-    try:
-        top_digit = floor(log10(num))
-    except ValueError:
-        top_digit = 0
-    return top_digit
+        if not binary:
+            return floor(log10(abs(num)))
+        else:
+            return floor(log2(abs(num)))
 
 
 def get_bottom_digit(num: float) -> int:
@@ -47,7 +39,7 @@ def get_bottom_digit(num: float) -> int:
 
     frac_part = num - int_part
     multiplier = 10 ** (max_digits - magnitude)
-    frac_digits = multiplier + int(multiplier * frac_part + 0.5)
+    frac_digits = multiplier + floor(multiplier * frac_part + 0.5)
     while frac_digits % 10 == 0:
         frac_digits /= 10
     precision = int(log10(frac_digits))
@@ -65,53 +57,58 @@ def get_mantissa_exp_base(
         num: float,
         exp_mode: ExpMode,
         exp: Union[int, type(AutoExp)] = None) -> (float, int, int):
-    if num == 0:
-        if exp is AutoExp:
-            exp = 0
-        base = 10
-    elif exp_mode is ExpMode.FIXEDPOINT:
-        if exp is not AutoExp:
-            if exp != 0:
-                warn('Attempt to set exponent explicity in fixed point '
-                     'exponent mode. Coercing exponent to 0.')
-        exp = 0
-        base = 10
-    elif exp_mode is ExpMode.SCIENTIFIC:
-        if exp is AutoExp:
-            exp = floor(log10(abs(num)))
-        base = 10
-    elif (exp_mode is ExpMode.ENGINEERING
-          or exp_mode is ExpMode.ENGINEERING_SHIFTED):
-        if exp is not AutoExp:
-            if exp % 3 != 0:
-                warn(f'Attempt to set exponent explicity to a non-integer '
-                     f'multiple of 3 in engineering mode. Coercing to the '
-                     f'next lower multiple of 3.')
-                exp = (exp // 3) * 3
-            if exp_mode is ExpMode.ENGINEERING_SHIFTED:
-                warn(f'Engineering shifted mode is ignored when setting '
-                     f'exponent explicitly.')
-        else:
-            exp = floor(log10(abs(num)))
-            if exp_mode is ExpMode.ENGINEERING:
-                exp = (exp // 3) * 3
-            else:
-                exp = ((exp + 1) // 3) * 3
-        base = 10
-    elif (exp_mode is ExpMode.BINARY
-          or exp_mode is ExpMode.BINARY_IEC):
-        if exp is AutoExp:
-            exp = floor(log2(abs(num)))
-            if exp_mode is ExpMode.BINARY_IEC:
-                exp = (exp // 10) * 10
-        elif exp_mode is ExpMode.BINARY_IEC:
-            warn(f'Binary IEC mode is ignored when setting exponent '
-                 f'explicitly')
+    if (exp_mode is ExpMode.BINARY
+            or exp_mode is ExpMode.BINARY_IEC):
         base = 2
     else:
-        raise ValueError(f'Unhandled exponent mode: {exp_mode}')
+        base = 10
 
-    mantissa = num * base**-exp
+    if not isfinite(num):
+        mantissa = num
+        if exp is AutoExp:
+            exp = 0
+    elif num == 0:
+        mantissa = 0
+        if exp is AutoExp:
+            exp = 0
+    else:
+        if exp_mode is ExpMode.FIXEDPOINT:
+            if exp is not AutoExp:
+                if exp != 0:
+                    warn('Attempt to set non-zero exponent explicity in fixed '
+                         'point exponent mode. Coercing exponent to 0.')
+            exp = 0
+        elif exp_mode is ExpMode.SCIENTIFIC:
+            if exp is AutoExp:
+                exp = get_top_digit(num)
+        elif (exp_mode is ExpMode.ENGINEERING
+              or exp_mode is ExpMode.ENGINEERING_SHIFTED):
+            if exp is AutoExp:
+                exp = get_top_digit(num)
+                if exp_mode is ExpMode.ENGINEERING:
+                    exp = (exp // 3) * 3
+                else:
+                    exp = ((exp + 1) // 3) * 3
+            else:
+                if exp % 3 != 0:
+                    warn(f'Attempt to set exponent explicity to a non-integer '
+                         f'multiple of 3 in engineering mode. Coercing to the '
+                         f'next lower multiple of 3.')
+                    exp = (exp // 3) * 3
+        elif (exp_mode is ExpMode.BINARY
+              or exp_mode is ExpMode.BINARY_IEC):
+            if exp is AutoExp:
+                exp = get_top_digit(num, binary=True)
+                if exp_mode is ExpMode.BINARY_IEC:
+                    exp = (exp // 10) * 10
+            else:
+                if exp_mode is ExpMode.BINARY_IEC and exp % 10 != 0:
+                    warn(f'Attempt to set exponent explicity to a non-integer '
+                         f'multiple of 10 in binary IEC mode. Coercing to the '
+                         f'next lower multiple of 10.')
+                    exp = (exp // 10) * 10
+
+        mantissa = num * base**-exp
 
     return mantissa, exp, base
 
@@ -149,21 +146,22 @@ def get_sign_str(num: float, sign_mode: SignMode) -> str:
     return sign_str
 
 
-def get_round_digit(top_digit: int,
-                    bottom_digit: int,
-                    prec: Union[int, type(AutoPrec)],
-                    prec_mode: RoundMode) -> int:
-    if prec_mode is RoundMode.SIG_FIG:
-        if prec is AutoPrec:
-            prec = top_digit - bottom_digit + 1
-        round_digit = top_digit - (prec - 1)
-    elif prec_mode is RoundMode.PREC:
-        if prec is AutoPrec:
-            round_digit = bottom_digit
+def get_round_digit(num: float,
+                    round_mode: RoundMode,
+                    precision: Union[int, type(AutoPrec)]) -> int:
+    if round_mode is RoundMode.SIG_FIG:
+        top_digit = get_top_digit(num)
+        if precision is AutoPrec:
+            bottom_digit = get_bottom_digit(num)
+            precision = top_digit - bottom_digit + 1
+        round_digit = top_digit - (precision - 1)
+    elif round_mode is RoundMode.PREC:
+        if precision is AutoPrec:
+            round_digit = get_bottom_digit(num)
         else:
-            round_digit = -prec
+            round_digit = -precision
     else:
-        raise TypeError(f'Unhandled precision type: {prec_mode}.')
+        raise TypeError(f'Unhandled round mode: {round_mode}.')
     return round_digit
 
 
@@ -181,14 +179,12 @@ def format_float_by_top_bottom_dig(num: float,
                                    target_bottom_digit: int,
                                    sign_mode: SignMode,
                                    fill_char: str) -> str:
-    num_rounded = round(num, -target_bottom_digit)
-
     print_prec = max(0, -target_bottom_digit)
-    abs_mantissa_str = f'{abs(num_rounded):.{print_prec}f}'
+    abs_mantissa_str = f'{abs(num):.{print_prec}f}'
 
     sign_str = get_sign_str(num, sign_mode)
 
-    num_top_digit = get_top_digit(num_rounded)
+    num_top_digit = get_top_digit(num)
     fill_str = get_fill_str(fill_char, num_top_digit, target_top_digit)
     float_str = f'{sign_str}{fill_str}{abs_mantissa_str}'
 
@@ -291,9 +287,9 @@ def translate_exp_str(exp_str: str,
 
 def convert_exp_str(exp_str: str,
                     prefix_exp: bool,
+                    parts_per_exp: bool,
                     latex: bool,
                     superscript_exp: bool,
-                    parts_per_exp: bool,
                     extra_si_prefixes: dict[int, str] = None,
                     extra_iec_prefixes: dict[int, str] = None,
                     extra_parts_per_forms: dict[int, str] = None) -> str:
@@ -316,3 +312,12 @@ def convert_exp_str(exp_str: str,
         elif superscript_exp:
             exp_str = convert_exp_str_to_superscript(exp_str)
     return exp_str
+
+
+def latex_translate(input_str: str) -> str:
+    result_str = input_str
+    result_str = result_str.replace('(', r'\left(')
+    result_str = result_str.replace(')', r'\right)')
+    result_str = result_str.replace('%', r'\%')
+    result_str = result_str.replace('_', r'\_')
+    return result_str

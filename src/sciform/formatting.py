@@ -6,14 +6,62 @@ from sciform.modes import FillMode, ExpMode, SignMode, AutoExp
 from sciform.format_options import FormatOptions, RoundMode
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_digit,
-                                  get_top_and_bottom_digit,
                                   get_round_digit,
                                   format_float_by_top_bottom_dig,
-                                  convert_exp_str)
+                                  convert_exp_str,
+                                  latex_translate)
 from sciform.grouping import add_separators
 
 
 # TODO: ppm format
+
+
+def format_non_inf(num: float, options: FormatOptions) -> str:
+    if isfinite(num):
+        raise ValueError(f'format_non_inf() cannot format finite float {num}.')
+
+    if options.nan_inf_exp:
+        exp_mode = options.exp_mode
+
+        exp = options.exp
+        if options.exp is AutoExp:
+            exp = 0
+
+        if exp_mode is ExpMode.FIXEDPOINT:
+            exp_str = ''
+        elif (exp_mode is ExpMode.SCIENTIFIC
+              or exp_mode is ExpMode.ENGINEERING
+              or exp_mode is ExpMode.ENGINEERING_SHIFTED):
+            exp_str = f'e+{exp:02d}'
+        else:
+            exp_str = f'b+{exp:02d}'
+    else:
+        exp_str = ''
+    exp_str = convert_exp_str(exp_str,
+                              options.prefix_exp,
+                              options.parts_per_exp,
+                              options.latex,
+                              options.superscript_exp,
+                              options.extra_si_prefixes,
+                              options.extra_iec_prefixes,
+                              options.extra_parts_per_forms)
+
+    if exp_str != '':
+        result = f'({num}){exp_str}'
+    else:
+        result = f'{num}'
+        if options.percent:
+            result = f'({result})%'
+
+    if options.capitalize:
+        result = result.upper()
+    else:
+        result = result.lower()
+
+    if options.latex:
+        result = latex_translate(result)
+
+    return result
 
 
 def format_float(num: float, options: FormatOptions) -> str:
@@ -22,62 +70,16 @@ def format_float(num: float, options: FormatOptions) -> str:
     precision = options.precision
     top_padded_digit = options.top_dig_place
     sign_mode = options.sign_mode
-    capitalize = options.capitalize
-    fill_char = FillMode.to_char(options.fill_mode)
+
     if not isfinite(num):
-        if options.nan_inf_exp:
-            if options.exp is AutoExp:
-                exp = 0
-            else:
-                exp = options.exp
-            if exp_mode is ExpMode.FIXEDPOINT:
-                exp_str = ''
-            elif (exp_mode is ExpMode.SCIENTIFIC
-                  or exp_mode is ExpMode.ENGINEERING
-                  or exp_mode is ExpMode.ENGINEERING_SHIFTED):
-                exp_str = f'e+{exp:02d}'
-            else:
-                exp_str = f'b+{exp:02d}'
-        else:
-            exp_str = ''
-        exp_str = convert_exp_str(exp_str,
-                                  options.prefix_exp,
-                                  options.latex,
-                                  options.superscript_exp,
-                                  options.parts_per_exp,
-                                  options.extra_si_prefixes,
-                                  options.extra_iec_prefixes,
-                                  options.extra_parts_per_forms)
-
-        if exp_str != '':
-            full_str = f'({num}){exp_str}'
-        else:
-            full_str = f'{num}'
-            if options.percent:
-                full_str = f'({full_str})%'
-
-        if capitalize:
-            full_str = full_str.upper()
-        else:
-            full_str = full_str.lower()
-
-        if options.latex:
-            full_str = full_str.replace('(', r'\left(')
-            full_str = full_str.replace(')', r'\right)')
-            full_str = full_str.replace('%', r'\%')
-
-        return full_str
+        return format_non_inf(num, options)
 
     if options.percent:
         num *= 100
 
     exp = options.exp
     mantissa, temp_exp, base = get_mantissa_exp_base(num, exp_mode, exp)
-
-    top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
-    round_digit = get_round_digit(top_digit, bottom_digit,
-                                  precision, round_mode)
-
+    round_digit = get_round_digit(mantissa, round_mode, precision)
     mantissa_rounded = round(mantissa, -round_digit)
 
     '''
@@ -86,31 +88,32 @@ def format_float(num: float, options: FormatOptions) -> str:
     '''
     rounded_num = mantissa_rounded * base**temp_exp
     mantissa, exp, base = get_mantissa_exp_base(rounded_num, exp_mode, exp)
-
-    top_digit, bottom_digit = get_top_and_bottom_digit(mantissa)
-    round_digit = get_round_digit(top_digit, bottom_digit,
-                                  precision, round_mode)
-
+    round_digit = get_round_digit(mantissa, round_mode, precision)
     mantissa_rounded = round(mantissa, -round_digit)
-    if mantissa_rounded == 0:
-        exp = 0
 
-    exp_str = get_exp_str(exp, exp_mode, capitalize)
-    exp_str = convert_exp_str(exp_str,
-                              options.prefix_exp,
-                              options.latex,
-                              options.superscript_exp,
-                              options.parts_per_exp,
-                              options.extra_si_prefixes,
-                              options.extra_iec_prefixes,
-                              options.extra_parts_per_forms)
+    if mantissa_rounded == 0:
+        # This catches an edge case involving negative precision
+        exp = 0
 
     if mantissa_rounded == -0.0:
         mantissa_rounded = abs(mantissa_rounded)
+
+    fill_char = FillMode.to_char(options.fill_mode)
     mantissa_str = format_float_by_top_bottom_dig(mantissa_rounded,
                                                   top_padded_digit,
-                                                  round_digit, sign_mode,
+                                                  round_digit,
+                                                  sign_mode,
                                                   fill_char)
+
+    exp_str = get_exp_str(exp, exp_mode, options.capitalize)
+    exp_str = convert_exp_str(exp_str,
+                              options.prefix_exp,
+                              options.parts_per_exp,
+                              options.latex,
+                              options.superscript_exp,
+                              options.extra_si_prefixes,
+                              options.extra_iec_prefixes,
+                              options.extra_parts_per_forms)
 
     upper_separator = options.upper_separator.to_char()
     decimal_separator = options.decimal_separator.to_char()
@@ -121,27 +124,18 @@ def format_float(num: float, options: FormatOptions) -> str:
                                   lower_separator,
                                   group_size=3)
 
-    full_str = f'{mantissa_str}{exp_str}'
+    result = f'{mantissa_str}{exp_str}'
 
     if options.percent:
-        full_str = full_str + '%'
+        result = result + '%'
 
     if options.latex:
-        full_str = full_str.replace('%', r'\%')
-        full_str = full_str.replace('_', r'\_')
+        result = latex_translate(result)
 
-    return full_str
+    return result
 
 
 def format_val_unc(val: float, unc: float, options: FormatOptions):
-    """
-    Convert two floats, the value and the uncertainty into a
-
-    :param val:
-    :param unc:
-    :param options:
-    :return:
-    """
     if options.round_mode is RoundMode.PREC:
         warn('Precision round mode not available for value/uncertainty '
              'formatting. Rounding is always applied as significant figures'
@@ -159,11 +153,8 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     else:
         round_driver = val
 
-    top_digit_1, bottom_digit_1 = get_top_and_bottom_digit(round_driver)
-    round_digit = get_round_digit(top_digit_1, bottom_digit_1,
-                                  options.precision, RoundMode.SIG_FIG)
-
-    # Perform rounding
+    round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
+                                  options.precision)
     unc_rounded = round(unc, -round_digit)
     val_rounded = round(val, -round_digit)
     round_driver = round(round_driver, -round_digit)
@@ -172,15 +163,12 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     Re-round the rounded values in case the first rounding changed the most
     significant digit place.
     '''
-    top_digit_2, bottom_digit_2 = get_top_and_bottom_digit(round_driver)
-    round_digit = get_round_digit(top_digit_2, bottom_digit_2,
-                                  options.precision, RoundMode.SIG_FIG)
-
+    round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
+                                  options.precision)
     unc_rounded = round(unc_rounded, -round_digit)
     val_rounded = round(val_rounded, -round_digit)
 
     exp_mode = options.exp_mode
-
     '''
     Get a corresponding exponent mode which can have the exponent set
     explicitly.
@@ -194,6 +182,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         free_exp_mode = exp_mode
 
     if isfinite(val) or isfinite(unc):
+        # TODO: If both val and unc are finite then take the max
         if isfinite(val):
             exp_driver = val_rounded
         else:
@@ -203,12 +192,10 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
             exp_driver,
             exp_mode=options.exp_mode,
             exp=options.exp)
-
         val_mantissa, _, _ = get_mantissa_exp_base(
             val_rounded,
             exp_mode=free_exp_mode,
             exp=exp)
-
         unc_mantissa, _, _ = get_mantissa_exp_base(
             unc_rounded,
             exp_mode=free_exp_mode,
@@ -275,9 +262,9 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
             pm_symb = '+/-'
 
         if options.unc_pm_whitespace:
-            val_unc_str = f'{val_str} {pm_symb} {unc_str}'
-        else:
-            val_unc_str = f'{val_str}{pm_symb}{unc_str}'
+            pm_symb = f' {pm_symb} '
+
+        val_unc_str = f'{val_str}{pm_symb}{unc_str}'
     else:
         unc_str = unc_str.lstrip('0.,_ ')
         if options.bracket_unc_remove_seps:
@@ -290,9 +277,9 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     if exp_str is not None:
         exp_str = convert_exp_str(exp_str,
                                   options.prefix_exp,
+                                  options.parts_per_exp,
                                   options.latex,
                                   options.superscript_exp,
-                                  options.parts_per_exp,
                                   options.extra_si_prefixes,
                                   options.extra_iec_prefixes,
                                   options.extra_parts_per_forms)
@@ -301,14 +288,16 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         val_unc_exp_str = val_unc_str
 
     if options.percent:
-        result_str = f'({val_unc_exp_str})%'
-    else:
-        result_str = val_unc_exp_str
+        '''
+        Recall options.percent is only valid for fixed point exponent mode so
+        no exponent is present.
+        '''
+        val_unc_exp_str = f'({val_unc_exp_str})%'
 
     if options.latex:
-        result_str = result_str.replace('(', r'\left(')
-        result_str = result_str.replace(')', r'\right)')
-        result_str = result_str.replace('%', r'\%')
-        result_str = result_str.replace('_', r'\_')
+        val_unc_exp_str = val_unc_exp_str.replace('(', r'\left(')
+        val_unc_exp_str = val_unc_exp_str.replace(')', r'\right)')
+        val_unc_exp_str = val_unc_exp_str.replace('%', r'\%')
+        val_unc_exp_str = val_unc_exp_str.replace('_', r'\_')
 
-    return result_str
+    return val_unc_exp_str
