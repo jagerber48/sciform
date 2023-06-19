@@ -63,6 +63,18 @@ class TestFormatting(unittest.TestCase):
                         exp=-1,
                         bracket_unc_remove_seps=True,
                         bracket_unc=True): '(1234.56(789))e-01',
+                },
+            (0.789, 123.456):
+                {
+                    Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                              exp=-1,
+                              bracket_unc=True): '(7.89(1234.56))e-01',
+                    # Don't remove "embedded" decimal unless val > unc.
+                    Formatter(
+                        exp_mode=ExpMode.SCIENTIFIC,
+                        exp=-1,
+                        bracket_unc_remove_seps=True,
+                        bracket_unc=True): '(7.89(1234.56))e-01',
                 }
         }
 
