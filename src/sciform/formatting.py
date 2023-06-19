@@ -241,6 +241,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         superscript_exp=False,
         latex=False,
         prefix_exp=False,
+        parts_per_exp=False
     )
 
     unc_format_options = FormatOptions.make(
