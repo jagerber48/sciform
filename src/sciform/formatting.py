@@ -13,9 +13,6 @@ from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
 from sciform.grouping import add_separators
 
 
-# TODO: ppm format
-
-
 def format_non_inf(num: float, options: FormatOptions) -> str:
     if isfinite(num):
         raise ValueError(f'format_non_inf() cannot format finite float {num}.')
@@ -35,23 +32,25 @@ def format_non_inf(num: float, options: FormatOptions) -> str:
             exp_str = f'e+{exp:02d}'
         else:
             exp_str = f'b+{exp:02d}'
+
+        exp_str = convert_exp_str(exp_str,
+                                  options.prefix_exp,
+                                  options.parts_per_exp,
+                                  options.latex,
+                                  options.superscript_exp,
+                                  options.extra_si_prefixes,
+                                  options.extra_iec_prefixes,
+                                  options.extra_parts_per_forms)
     else:
         exp_str = ''
-    exp_str = convert_exp_str(exp_str,
-                              options.prefix_exp,
-                              options.parts_per_exp,
-                              options.latex,
-                              options.superscript_exp,
-                              options.extra_si_prefixes,
-                              options.extra_iec_prefixes,
-                              options.extra_parts_per_forms)
 
     if exp_str != '':
         result = f'({num}){exp_str}'
     else:
         result = f'{num}'
-        if options.percent:
-            result = f'({result})%'
+
+    if options.percent:
+        result = f'({result})%'
 
     if options.capitalize:
         result = result.upper()
@@ -92,7 +91,12 @@ def format_float(num: float, options: FormatOptions) -> str:
     mantissa_rounded = round(mantissa, -round_digit)
 
     if mantissa_rounded == 0:
-        # This catches an edge case involving negative precision
+        '''
+        This catches an edge case involving negative precision when the
+        resulting mantissa is zero after the second rounding. This 
+        result is technically correct (e.g. 0e+03 = 0e+00), but sciform 
+        always presents zero values with an exponent of zero.
+        '''
         exp = 0
 
     if mantissa_rounded == -0.0:
@@ -105,6 +109,15 @@ def format_float(num: float, options: FormatOptions) -> str:
                                                   sign_mode,
                                                   fill_char)
 
+    upper_separator = options.upper_separator.to_char()
+    decimal_separator = options.decimal_separator.to_char()
+    lower_separator = options.lower_separator.to_char()
+    mantissa_str = add_separators(mantissa_str,
+                                  upper_separator,
+                                  decimal_separator,
+                                  lower_separator,
+                                  group_size=3)
+
     exp_str = get_exp_str(exp, exp_mode, options.capitalize)
     exp_str = convert_exp_str(exp_str,
                               options.prefix_exp,
@@ -115,19 +128,10 @@ def format_float(num: float, options: FormatOptions) -> str:
                               options.extra_iec_prefixes,
                               options.extra_parts_per_forms)
 
-    upper_separator = options.upper_separator.to_char()
-    decimal_separator = options.decimal_separator.to_char()
-    lower_separator = options.lower_separator.to_char()
-    mantissa_str = add_separators(mantissa_str,
-                                  upper_separator,
-                                  decimal_separator,
-                                  lower_separator,
-                                  group_size=3)
-
     result = f'{mantissa_str}{exp_str}'
 
     if options.percent:
-        result = result + '%'
+        result = f'{result}%'
 
     if options.latex:
         result = latex_translate(result)
@@ -170,8 +174,12 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
     exp_mode = options.exp_mode
     '''
-    Get a corresponding exponent mode which can have the exponent set
-    explicitly.
+    We format the float by determining the required exponent and 
+    precision and format the val and unc mantissas accordingly. 
+    Engineering, engineering shifted, and binary IEC modes are not, in
+    general, compatible with setting the exponent explicitly so we
+    convert these modes to a corresponding free_exp_mode which is
+    compatible with having an explicit exponent set.
     '''
     if (exp_mode is ExpMode.ENGINEERING
             or exp_mode is ExpMode.ENGINEERING_SHIFTED):
@@ -181,35 +189,28 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     else:
         free_exp_mode = exp_mode
 
-    if isfinite(val) or isfinite(unc):
-        # TODO: If both val and unc are finite then take the max
-        if isfinite(val):
-            exp_driver = val_rounded
-        else:
-            exp_driver = unc_rounded
-
-        _, exp, _ = get_mantissa_exp_base(
-            exp_driver,
-            exp_mode=options.exp_mode,
-            exp=options.exp)
-        val_mantissa, _, _ = get_mantissa_exp_base(
-            val_rounded,
-            exp_mode=free_exp_mode,
-            exp=exp)
-        unc_mantissa, _, _ = get_mantissa_exp_base(
-            unc_rounded,
-            exp_mode=free_exp_mode,
-            exp=exp)
-
-        prec = -round_digit + exp
+    # TODO: If both val and unc are finite then take the max
+    if isfinite(val):
+        exp_driver = val_rounded
     else:
-        exp = 0
-        prec = 0
-        val_mantissa = val_rounded
-        unc_mantissa = unc_rounded
+        exp_driver = unc_rounded
+
+    _, exp, _ = get_mantissa_exp_base(
+        exp_driver,
+        exp_mode=options.exp_mode,
+        exp=options.exp)
+    val_mantissa, _, _ = get_mantissa_exp_base(
+        val_rounded,
+        exp_mode=free_exp_mode,
+        exp=exp)
+    unc_mantissa, _, _ = get_mantissa_exp_base(
+        unc_rounded,
+        exp_mode=free_exp_mode,
+        exp=exp)
+
+    prec = -round_digit + exp
 
     user_top_digit = options.top_dig_place
-
     if options.val_unc_match_widths:
         val_top_digit = get_top_digit(val_mantissa)
         unc_top_digit = get_top_digit(unc_mantissa)
@@ -217,6 +218,20 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     else:
         new_top_digit = user_top_digit
 
+    '''
+    We will format the val and unc mantissas 
+       * using precision rounding mode with the precision calculated 
+         above
+       * With the optionally shared top digit calculated above
+       * With the free_exp_mode determined above using the calculated
+         shared exponent
+       * Without percent mode (percent mode for val/unc pairs is 
+         handled independently in this function)
+       * Without superscript, prefix, parts-per, or latex translations.
+         The remaining steps rely on parsing an exponent string like 
+         'e+03' or similar. Such translations are handled within the
+         scope of this function.
+    '''
     val_format_options = FormatOptions.make(
         defaults=options,
         top_dig_place=new_top_digit,
@@ -295,9 +310,6 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         val_unc_exp_str = f'({val_unc_exp_str})%'
 
     if options.latex:
-        val_unc_exp_str = val_unc_exp_str.replace('(', r'\left(')
-        val_unc_exp_str = val_unc_exp_str.replace(')', r'\right)')
-        val_unc_exp_str = val_unc_exp_str.replace('%', r'\%')
-        val_unc_exp_str = val_unc_exp_str.replace('_', r'\_')
+        val_unc_exp_str = latex_translate(val_unc_exp_str)
 
     return val_unc_exp_str

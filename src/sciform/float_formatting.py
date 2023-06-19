@@ -95,7 +95,7 @@ class sfloat(float):
 class vufloat:
     """
     A :class:`vufloat` objects stores a pair of floats, a value and an
-    uncertainty for scientific formatting. This class is used in
+    uncertainty, for scientific formatting. This class is used in
     combination with the :mod:`sciform` format specification mini
     language to apply scientific formatting of input floats.
 
@@ -107,8 +107,8 @@ class vufloat:
     :class:`vufloat` does not currently support any float operations
     such as addition or multiplication. This is because the effect of
     such operations on the uncertainties is non-trivial. For the
-    accurate propagation of error using value/uncertainty pairs, users are
-    recommended to the uncertainties package:
+    accurate propagation of error using value/uncertainty pairs, users
+    are recommended to the uncertainties package:
     https://pypi.org/project/uncertainties/
     """
     def __init__(self, val: float, unc: float, /):
