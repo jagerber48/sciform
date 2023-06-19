@@ -151,7 +151,6 @@ translations, in addition to those provided by default.
 >>> print(sform(1300))
 1.270 Ki
 >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
-...                   prefix_exp=True,
 ...                   parts_per_exp=True)
 >>> print(sform(12.3e-6))
 12.3 ppm
@@ -418,7 +417,6 @@ A non-standard parts-per-thousand form, ``ppth``, can be accessed with
 the ``add_ppth_form`` option.
 
 >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
-...                   prefix_exp=True,
 ...                   parts_per_exp=True,
 ...                   add_ppth_form=True)
 >>> print(sform(12.3e-3))
