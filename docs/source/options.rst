@@ -155,6 +155,45 @@ translations, in addition to those provided by default.
 >>> print(sform(12.3e-6))
 12.3 ppm
 
+.. _extra_translations:
+
+Extra Exponent Replacements
+---------------------------
+
+In addition to the default
+:ref:`exponent replacements <exp_replacements>`, the user can include
+some additional standard replacements.
+Standard additional SI prefixes are::
+
+   {-2: 'c', -1: 'd', +1: 'da', +2: 'h'}
+
+Here the integer keys indicate the exponent and the string values
+indicate the corresponding prefix.
+These additional prefixes can be included using the
+``add_small_si_prefixes`` options.
+Furthermore, just the ``c`` prefix can be included using the
+``add_c_prefix`` options.
+
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
+...                   prefix_exp=True,
+...                   add_c_prefix=True)
+>>> print(sform(0.025))
+2.5 c
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
+...                   prefix_exp=True,
+...                   add_small_si_prefixes=True)
+>>> print(sform(25))
+2.5 da
+
+A non-standard parts-per-thousand form, ``ppth``, can be accessed with
+the ``add_ppth_form`` option.
+
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
+...                   parts_per_exp=True,
+...                   add_ppth_form=True)
+>>> print(sform(12.3e-3))
+12.3 ppth
+
 .. _rounding:
 
 Rounding
@@ -382,45 +421,6 @@ The latex format makes the following changes:
 
 Note that use of ``latex`` renders the use of ``unicode_pm`` and
 ``superscript_exp`` meaningless.
-
-.. _extra_translations:
-
-Extra Exponent Replacements
-===========================
-
-In addition to the default
-:ref:`exponent replacements <exp_replacements>`, the user can include
-some additional standard replacements.
-Standard additional SI prefixes are::
-
-   {-2: 'c', -1: 'd', +1: 'da', +2: 'h'}
-
-Here the integer keys indicate the exponent and the string values
-indicate the corresponding prefix.
-These additional prefixes can be included using the
-``add_small_si_prefixes`` options.
-Furthermore, just the ``c`` prefix can be included using the
-``add_c_prefix`` options.
-
->>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
-...                   prefix_exp=True,
-...                   add_c_prefix=True)
->>> print(sform(0.025))
-2.5 c
->>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
-...                   prefix_exp=True,
-...                   add_small_si_prefixes=True)
->>> print(sform(25))
-2.5 da
-
-A non-standard parts-per-thousand form, ``ppth``, can be accessed with
-the ``add_ppth_form`` option.
-
->>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
-...                   parts_per_exp=True,
-...                   add_ppth_form=True)
->>> print(sform(12.3e-3))
-12.3 ppth
 
 Include Exponent on nan and inf
 ===============================
