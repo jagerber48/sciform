@@ -46,5 +46,5 @@ class TestConfig(unittest.TestCase):
                 self.assertEqual(num_str, expected_num_str)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

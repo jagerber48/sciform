@@ -107,5 +107,5 @@ class TestFormatting(unittest.TestCase):
         self.do_test_case_dict(cases_dict)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
