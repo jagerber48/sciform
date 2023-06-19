@@ -2,7 +2,7 @@ from math import isfinite
 from warnings import warn
 import re
 
-from sciform.modes import FillMode, ExpMode, SignMode, AutoExp
+from sciform.modes import ExpMode, SignMode, AutoExp
 from sciform.format_options import FormatOptions, RoundMode
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_digit,
