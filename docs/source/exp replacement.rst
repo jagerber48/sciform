@@ -1,19 +1,20 @@
-.. _prefixes:
+.. _exp_replacements:
 
-Supported Prefixes
-##################
+Supported Exponent Replacements
+###############################
 
-.. |micro| unicode:: 0xB5 .. micro symbol
-
-:mod:`sciform` offers a prefix mode which provides a simple translation
-between exponent strings and alphabetic prefixes.
-For scientific and engineering formats the prefixes are matched to
-integer multiple of 3 exponent according to the
+:mod:`sciform` offers exponent replacement modes which provide
+translations between exponent strings and conventional string
+representations.
+For decimal exponents in scientific of engineering formats, SI prefix
+translations are available matched to integer multiples of 3 according
+to the
 `SI prefixes <https://www.nist.gov/pml/owm/metric-si-prefixes>`_.
-It also possible to realize prefixes using
-`"parts-per" notation <https://en.wikipedia.org/wiki/Parts-per_notation>`_.
-For binary formats, the prefixes are matched to integer multiples of 10
-according to the `IEC prefixes <https://physics.nist.gov/cuu/Units/binary.html>`_.
+It is also possible to convert decimal exponents into
+`parts-per notation <https://en.wikipedia.org/wiki/Parts-per_notation>`_.
+For binary formats, the IEC prefix translations are available matched to
+integer multiples of 10 according to the
+`IEC prefixes <https://physics.nist.gov/cuu/Units/binary.html>`_.
 
 .. list-table:: SI Prefixes
    :widths: 15, 15, 15
@@ -57,7 +58,7 @@ according to the `IEC prefixes <https://physics.nist.gov/cuu/Units/binary.html>`
      - m
    * - 10\ :sup:`-6`
      - micro
-     - |micro|
+     - µ
    * - 10\ :sup:`-9`
      - nano
      - n
@@ -84,7 +85,7 @@ according to the `IEC prefixes <https://physics.nist.gov/cuu/Units/binary.html>`
      - q
 
 The user can additionally add the following extra si prefixes using the
-:ref:`extra_prefixes` options:
+:ref:`extra_translations` options:
 
 .. list-table:: Extra SI Prefixes
    :widths: 15, 15, 15
@@ -97,7 +98,7 @@ The user can additionally add the following extra si prefixes using the
      - hecto
      - h
    * - 10\ :sup:`+1`
-     - deka
+     - deca
      - da
    * - 10\ :sup:`-1`
      - deci
@@ -106,7 +107,7 @@ The user can additionally add the following extra si prefixes using the
      - centi
      - c
 
-.. list-table:: Parts Per Prefixes
+.. list-table:: Parts Per Forms
    :widths: 15, 15, 15
    :header-rows: 1
 
@@ -115,7 +116,7 @@ The user can additionally add the following extra si prefixes using the
      - Prefix
    * - 10\ :sup:`-6`
      - parts-per-million
-     - ppt
+     - ppm
    * - 10\ :sup:`-9`
      - parts-per-billion
      - ppb
@@ -126,10 +127,8 @@ The user can additionally add the following extra si prefixes using the
      - parts-per-quadrillion
      - ppq
 
-The user can additionally add a parts-per-thousand prefix ``ppth``
-corresponding to 10\ :sup:`-3` using an
-:ref:`extra prefix <extra_prefixes>` option.
-
+The user can additionally add a parts-per-thousand form ``ppth``
+corresponding to 10\ :sup:`-3` using the ``add_ppth_form`` option.
 
 .. list-table:: IEC Prefixes
    :widths: 15, 15, 15
@@ -138,27 +137,27 @@ corresponding to 10\ :sup:`-3` using an
    * - Exponent Value
      - Prefix Name
      - Prefix
-   * - 10\ :sup:`+80`
+   * - 2\ :sup:`+80`
      - yobi
      - Yi
-   * - 10\ :sup:`+70`
+   * - 2\ :sup:`+70`
      - zebi
      - Zi
-   * - 10\ :sup:`+60`
+   * - 2\ :sup:`+60`
      - exi
      - Ei
-   * - 10\ :sup:`+50`
+   * - 2\ :sup:`+50`
      - pebi
      - Pi
-   * - 10\ :sup:`+40`
+   * - 2\ :sup:`+40`
      - tebi
      - Ti
-   * - 10\ :sup:`+30`
+   * - 2\ :sup:`+30`
      - gibi
      - Gi
-   * - 10\ :sup:`+20`
+   * - 2\ :sup:`+20`
      - mebi
      - Mi
-   * - 10\ :sup:`+10`
+   * - 2\ :sup:`+10`
      - kibi
      - Ki

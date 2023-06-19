@@ -52,4 +52,4 @@ Global Configuration
 
 .. autofunction:: global_reset_iec_prefixes()
 
-.. autofunction:: global_reset_parts_per_expes()
+.. autofunction:: global_reset_parts_per_forms()

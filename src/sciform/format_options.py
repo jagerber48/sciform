@@ -83,6 +83,10 @@ class FormatOptions:
             raise ValueError(f'upper_separator and decimal_separator '
                              f'{self.upper_separator} cannot be equal.')
 
+        if self.prefix_exp and self.parts_per_exp:
+            raise ValueError(f'Only one of prefix exponent and parts-per '
+                             f'exponent modes may be selected.')
+
     @classmethod
     def make(
             cls,

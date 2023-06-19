@@ -1,3 +1,11 @@
+0.17.0 (2023-06-??)
+-------------------
+
+* Add parts-per notation feature, documentation, and tests
+* **[BREAKING]** Rename ``use_prefix`` options to ``prefix_exp``
+* Fix typos in binary IEC prefixes table
+* Fix some cross links in documentation
+
 0.16.0 (2023-06-18)
 -------------------
 

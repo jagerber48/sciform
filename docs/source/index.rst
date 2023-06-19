@@ -7,9 +7,9 @@
    :caption: Contents:
 
    usage
-   Formatting Options
-   format specification mini language
-   Supported Prefixes
+   options
+   fsml
+   exp replacement
    api
    examples
    project

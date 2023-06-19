@@ -1,11 +1,11 @@
 Usage
 #####
 
-Formatting
-==========
-
 .. module:: sciform
    :noindex:
+
+Formatting
+==========
 
 :mod:`sciform` provides two primary methods for formatting floats into
 scientific formatting strings.
