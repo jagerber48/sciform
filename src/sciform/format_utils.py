@@ -255,11 +255,11 @@ def convert_exp_str_to_latex(exp_str):
     return latex_exp_str
 
 
-def convert_exp_str_to_prefix(exp_str: str,
-                              parts_per_exp: bool = False,
-                              extra_si_prefixes: dict[int, str] = None,
-                              extra_iec_prefixes: dict[int, str] = None,
-                              extra_parts_per_forms: dict[int, str] = None) -> str:
+def translate_exp_str(exp_str: str,
+                      parts_per_exp: bool = False,
+                      extra_si_prefixes: dict[int, str] = None,
+                      extra_iec_prefixes: dict[int, str] = None,
+                      extra_parts_per_forms: dict[int, str] = None) -> str:
     if exp_str == '':
         return exp_str
 
@@ -297,18 +297,18 @@ def convert_exp_str(exp_str: str,
                     extra_si_prefixes: dict[int, str] = None,
                     extra_iec_prefixes: dict[int, str] = None,
                     extra_parts_per_forms: dict[int, str] = None) -> str:
-    prefix_applied = False
-    if prefix_exp:
-        prefix_exp_str = convert_exp_str_to_prefix(exp_str,
-                                                   parts_per_exp,
-                                                   extra_si_prefixes,
-                                                   extra_iec_prefixes,
-                                                   extra_parts_per_forms)
-        if prefix_exp_str != exp_str:
-            prefix_applied = True
-            exp_str = prefix_exp_str
+    transform_applied = False
+    if prefix_exp or parts_per_exp:
+        transformed_exp_str = translate_exp_str(exp_str,
+                                                parts_per_exp,
+                                                extra_si_prefixes,
+                                                extra_iec_prefixes,
+                                                extra_parts_per_forms)
+        if transformed_exp_str != exp_str:
+            transform_applied = True
+            exp_str = transformed_exp_str
 
-    if prefix_applied:
+    if transform_applied:
         return exp_str
     else:
         if latex:

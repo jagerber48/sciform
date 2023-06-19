@@ -93,16 +93,13 @@ class TestFormatting(unittest.TestCase):
             123e-3: {
                 Formatter(exp_mode=ExpMode.SCIENTIFIC,
                           exp=-3,
-                          prefix_exp=True,
                           parts_per_exp=True,
                           add_ppth_form=True): '123 ppth',
                 Formatter(exp_mode=ExpMode.SCIENTIFIC,
                           exp=-6,
-                          prefix_exp=True,
                           parts_per_exp=True): '123000 ppm',
                 Formatter(exp_mode=ExpMode.SCIENTIFIC,
                           exp=-2,
-                          prefix_exp=True,
                           parts_per_exp=True): '12.3e-02'
             }
         }
