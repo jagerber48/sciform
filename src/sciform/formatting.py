@@ -64,12 +64,6 @@ def format_non_inf(num: float, options: FormatOptions) -> str:
 
 
 def format_float(num: float, options: FormatOptions) -> str:
-    exp_mode = options.exp_mode
-    round_mode = options.round_mode
-    precision = options.precision
-    top_padded_digit = options.top_dig_place
-    sign_mode = options.sign_mode
-
     if not isfinite(num):
         return format_non_inf(num, options)
 
@@ -77,6 +71,9 @@ def format_float(num: float, options: FormatOptions) -> str:
         num *= 100
 
     exp = options.exp
+    round_mode = options.round_mode
+    exp_mode = options.exp_mode
+    precision = options.precision
     mantissa, temp_exp, base = get_mantissa_exp_base(num, exp_mode, exp)
     round_digit = get_round_digit(mantissa, round_mode, precision)
     mantissa_rounded = round(mantissa, -round_digit)
@@ -102,11 +99,11 @@ def format_float(num: float, options: FormatOptions) -> str:
     if mantissa_rounded == -0.0:
         mantissa_rounded = abs(mantissa_rounded)
 
-    fill_char = FillMode.to_char(options.fill_mode)
+    fill_char = options.fill_mode.to_char()
     mantissa_str = format_float_by_top_bottom_dig(mantissa_rounded,
-                                                  top_padded_digit,
+                                                  options.top_dig_place,
                                                   round_digit,
-                                                  sign_mode,
+                                                  options.sign_mode,
                                                   fill_char)
 
     upper_separator = options.upper_separator.to_char()
