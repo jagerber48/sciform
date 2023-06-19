@@ -386,7 +386,7 @@ class TestFormatting(unittest.TestCase):
                 'E': '(NAN)E+00',
                 'b': '(nan)b+00',
                 'B': '(NAN)B+00'
-        },
+            },
             float('inf'): {
                 '': 'inf',
                 'e': '(inf)e+00',
