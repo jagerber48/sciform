@@ -1,11 +1,11 @@
 Usage
 #####
 
-Formatting
-==========
-
 .. module:: sciform
    :noindex:
+
+Formatting
+==========
 
 :mod:`sciform` provides two primary methods for formatting floats into
 scientific formatting strings.
@@ -128,9 +128,11 @@ The global default settings can be viewed using
  'superscript_exp': False,
  'latex': False,
  'nan_inf_exp': False,
- 'use_prefix': False,
+ 'prefix_exp': False,
+ 'parts_per_exp': False,
  'extra_si_prefixes': {},
  'extra_iec_prefixes': {},
+ 'extra_parts_per_forms': {},
  'bracket_unc': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
@@ -167,9 +169,11 @@ applied to setting global default settings.
  'superscript_exp': False,
  'latex': False,
  'nan_inf_exp': False,
- 'use_prefix': False,
+ 'prefix_exp': False,
+ 'parts_per_exp': False,
  'extra_si_prefixes': {},
  'extra_iec_prefixes': {},
+ 'extra_parts_per_forms': {},
  'bracket_unc': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
@@ -182,8 +186,8 @@ using :func:`reset_global_defaults`.
 >>> from sciform import reset_global_defaults
 >>> reset_global_defaults()
 
-There are also helper function for managing supported SI and IEC
-prefixes:
+There are also helper function for managing supported
+:ref:`extra_translations`:
 
 * :func:`global_add_c_prefix()` add ``{-2: 'c'}`` to the
   ``extra_si_prefixes`` dictionary if there is not already a prefix
@@ -191,10 +195,15 @@ prefixes:
 * :func:`global_add_small_si_prefixes()` adds any of ``{-2: 'c',
   -1: 'd', +1: 'da', +2: 'h'}`` to the ``extra_si_prefixes`` that do not
   already have assigned prefixes.
+* :func:`global_add_ppth_form()` add ``{-3: 'ppth'}`` to the
+  ``extra_parts_per_forms`` dictionary if there is not already a prefix
+  assigned to ``-3``.
 * :func:`global_reset_si_prefixes()` resets ``extra_si_prefixes`` to be
   empty.
 * :func:`global_reset_iec_prefixes()` resets ``extra_iec_prefixes`` to
   be empty.
+* :func:`global_reset_parts_per_forms()` resets
+  ``extra_parts_per_forms`` to be empty.
 
 The global default settings can be temporarily modified using the
 :class:`GlobalDefaultsContext` context manager.

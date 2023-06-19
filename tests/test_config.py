@@ -45,6 +45,7 @@ class TestConfig(unittest.TestCase):
                 num_str = f'{num:ex{exp:+}p}'
                 self.assertEqual(num_str, expected_num_str)
 
+
 if __name__ == '__main__':
     unittest.main()
 

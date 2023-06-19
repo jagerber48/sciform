@@ -71,7 +71,7 @@ class TestFormatting(unittest.TestCase):
                           latex=True): r'123\_450\times 10^{-1}',
                 Formatter(exp_mode=ExpMode.SCIENTIFIC,
                           exp=3,
-                          use_prefix=True,
+                          prefix_exp=True,
                           latex=True): r'12.345 k'
             }
         }
@@ -88,3 +88,20 @@ class TestFormatting(unittest.TestCase):
         }
         self.do_test_case_dict(cases_dict)
 
+    def test_parts_per_exp(self):
+        cases_dict = {
+            123e-3: {
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          exp=-3,
+                          parts_per_exp=True,
+                          add_ppth_form=True): '123 ppth',
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          exp=-6,
+                          parts_per_exp=True): '123000 ppm',
+                Formatter(exp_mode=ExpMode.SCIENTIFIC,
+                          exp=-2,
+                          parts_per_exp=True): '12.3e-02'
+            }
+        }
+
+        self.do_test_case_dict(cases_dict)

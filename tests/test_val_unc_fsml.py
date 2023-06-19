@@ -163,7 +163,6 @@ class TestFormatting(unittest.TestCase):
 
         self.do_unc_val_test_case_dict(cases_dict)
 
-
     def test_bracket_unc(self):
         cases_dict = {
             (123.456, 0.789):

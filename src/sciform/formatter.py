@@ -98,17 +98,23 @@ class Formatter:
       such as ``float('nan')`` or ``float('inf')`` should be formatted
       with exponent symbols when exponent modes including exponent
       symbols are selected.
-    :param use_prefix: ``bool`` indicating if exponents should be
+    :param prefix_exp: ``bool`` indicating if exponents should be
       replaced with either SI or IEC prefixes as appropriate.
+    :param parts_per_exp: ``bool`` indicating if "parts-per" exponent
+      translations should be used.
     :param extra_si_prefixes: ``dict[int, str]`` mapping additional
       exponent values to si prefixes.
     :param extra_iec_prefixes: ``dict[int, str]`` mapping additional
       exponent values to iec prefixes
+    :param extra_parts_per_forms: ``dict[int, str]`` mapping additional
+      exponent values to "parts-per" forms.
     :param add_c_prefix: ``bool`` (default ``False``) if ``True`` adds
       ``{-2: 'c'}`` to ``extra_si_prefixes``.
     :param add_small_si_prefixes: ``bool`` (default ``False``) if
       ``True`` adds ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` to
       ``extra_si_prefixes``.
+    :param add_ppth_form: ``bool`` (default ``False``) if ``True`` adds
+      ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
     :param bracket_unc: ``bool`` indicating if bracket uncertainty mode
       (e.g. ``12.34(82)`` instead of ``12.34 +/- 0.82``) should be used.
     :param val_unc_match_widths: ``bool`` indicating if the value or
@@ -142,11 +148,14 @@ class Formatter:
             superscript_exp: bool = None,
             latex: bool = None,
             nan_inf_exp: bool = None,
-            use_prefix: bool = None,
+            prefix_exp: bool = None,
+            parts_per_exp: bool = None,
             extra_si_prefixes: dict[int, str] = None,
             extra_iec_prefixes: dict[int, str] = None,
+            extra_parts_per_forms: dict[int, str] = None,
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False,
+            add_ppth_form: bool = False,
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
@@ -170,11 +179,14 @@ class Formatter:
             superscript_exp=superscript_exp,
             latex=latex,
             nan_inf_exp=nan_inf_exp,
-            use_prefix=use_prefix,
+            prefix_exp=prefix_exp,
+            parts_per_exp=parts_per_exp,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
+            extra_parts_per_forms=extra_parts_per_forms,
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,
+            add_ppth_form=add_ppth_form,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
@@ -208,9 +220,11 @@ class Formatter:
                    superscript_exp=options.superscript_exp,
                    latex=options.latex,
                    nan_inf_exp=options.nan_inf_exp,
-                   use_prefix=options.use_prefix,
+                   prefix_exp=options.prefix_exp,
+                   parts_per_exp=options.parts_per_exp,
                    extra_si_prefixes=options.extra_si_prefixes,
                    extra_iec_prefixes=options.extra_iec_prefixes,
+                   extra_parts_per_forms=options.extra_parts_per_forms,
                    bracket_unc=options.bracket_unc,
                    val_unc_match_widths=options.val_unc_match_widths,
                    bracket_unc_remove_seps=options.bracket_unc_remove_seps,

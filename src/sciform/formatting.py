@@ -41,11 +41,13 @@ def format_float(num: float, options: FormatOptions) -> str:
         else:
             exp_str = ''
         exp_str = convert_exp_str(exp_str,
-                                  options.use_prefix,
+                                  options.prefix_exp,
                                   options.latex,
                                   options.superscript_exp,
+                                  options.parts_per_exp,
                                   options.extra_si_prefixes,
-                                  options.extra_iec_prefixes)
+                                  options.extra_iec_prefixes,
+                                  options.extra_parts_per_forms)
 
         if exp_str != '':
             full_str = f'({num}){exp_str}'
@@ -95,11 +97,13 @@ def format_float(num: float, options: FormatOptions) -> str:
 
     exp_str = get_exp_str(exp, exp_mode, capitalize)
     exp_str = convert_exp_str(exp_str,
-                              options.use_prefix,
+                              options.prefix_exp,
                               options.latex,
                               options.superscript_exp,
+                              options.parts_per_exp,
                               options.extra_si_prefixes,
-                              options.extra_iec_prefixes)
+                              options.extra_iec_prefixes,
+                              options.extra_parts_per_forms)
 
     if mantissa_rounded == -0.0:
         mantissa_rounded = abs(mantissa_rounded)
@@ -236,7 +240,8 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         percent=False,
         superscript_exp=False,
         latex=False,
-        use_prefix=False,
+        prefix_exp=False,
+        parts_per_exp=False
     )
 
     unc_format_options = FormatOptions.make(
@@ -284,11 +289,13 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
     if exp_str is not None:
         exp_str = convert_exp_str(exp_str,
-                                  options.use_prefix,
+                                  options.prefix_exp,
                                   options.latex,
                                   options.superscript_exp,
+                                  options.parts_per_exp,
                                   options.extra_si_prefixes,
-                                  options.extra_iec_prefixes)
+                                  options.extra_iec_prefixes,
+                                  options.extra_parts_per_forms)
         val_unc_exp_str = f'({val_unc_str}){exp_str}'
     else:
         val_unc_exp_str = val_unc_str

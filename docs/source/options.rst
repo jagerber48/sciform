@@ -4,6 +4,9 @@
 Formatting Options
 ##################
 
+.. module:: sciform
+   :noindex:
+
 :mod:`sciform` provides a variety of options for converting floats into
 formatted strings.
 These options including control over the rounding strategy, scientific
@@ -121,27 +124,75 @@ nearest multiple of 3 or 10.
 >>> print(sform(123.456))
 0.123456e+03
 
-Prefix Mode
-===========
+Exponent String Replacement
+===========================
 
-Prefix mode enables the replacement of certain base-10 and binary
-exponents by alphabetic scientific SI or IEC prefixes outlined in
-:ref:`Supported Prefixes <prefixes>`.
+:mod:`sciform` provides a number of formatting options for replacing
+decimal and binary exponent strings such as ``'e-03'`` or ``'b+10'``
+with conventional strings such as ``'m'`` or ``'Ki'`` to succinctly
+communicate the order of magnitude.
+Decimal exponent strings can be replaced with either SI prefixes or
+parts-per identifiers and binary exponent strings can be replaced with
+IEC prefixes.
+See :ref:`exp_replacements` for all default supported
+replacements.
 Furthermore, it is possible to customize :class:`Formatter`
-objects or the global configuration settings to map additional prefix
+objects or the global configuration settings to map additional
 translations, in addition to those provided by default.
 
 >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
-...                   use_prefix=True)
+...                   prefix_exp=True)
 >>> print(sform(4242.13))
 4.24213 k
-
 >>> sform = Formatter(exp_mode=ExpMode.BINARY_IEC,
 ...                   round_mode=RoundMode.SIG_FIG,
 ...                   precision=4,
-...                   use_prefix=True)
+...                   prefix_exp=True)
 >>> print(sform(1300))
 1.270 Ki
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
+...                   parts_per_exp=True)
+>>> print(sform(12.3e-6))
+12.3 ppm
+
+.. _extra_translations:
+
+Extra Exponent Replacements
+---------------------------
+
+In addition to the default
+:ref:`exponent replacements <exp_replacements>`, the user can include
+some additional standard replacements.
+Standard additional SI prefixes are::
+
+   {-2: 'c', -1: 'd', +1: 'da', +2: 'h'}
+
+Here the integer keys indicate the exponent and the string values
+indicate the corresponding prefix.
+These additional prefixes can be included using the
+``add_small_si_prefixes`` options.
+Furthermore, just the ``c`` prefix can be included using the
+``add_c_prefix`` options.
+
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
+...                   prefix_exp=True,
+...                   add_c_prefix=True)
+>>> print(sform(0.025))
+2.5 c
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
+...                   prefix_exp=True,
+...                   add_small_si_prefixes=True)
+>>> print(sform(25))
+2.5 da
+
+A non-standard parts-per-thousand form, ``ppth``, can be accessed with
+the ``add_ppth_form`` option.
+
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
+...                   parts_per_exp=True,
+...                   add_ppth_form=True)
+>>> print(sform(12.3e-3))
+12.3 ppth
 
 .. _rounding:
 
@@ -370,35 +421,6 @@ The latex format makes the following changes:
 
 Note that use of ``latex`` renders the use of ``unicode_pm`` and
 ``superscript_exp`` meaningless.
-
-.. _extra_si_prefixes:
-
-Extra Prefixes
-==============
-
-In addition to the :ref:`default prefixes <prefixes>`, the user can include some
-additional standard prefixes as well as user-supplied prefixes.
-Standard additional SI prefixes are::
-
-   {-2: 'c', -1: 'd', +1: 'da', +2: 'h'}
-
-Here the integer keys indicate the exponent and the string values
-indicate the corresponding prefix.
-These additional prefixes can be included using the
-``add_small_si_prefixes`` options.
-Furthermore, just the ``c`` prefix can be included using the
-``add_c_prefix`` options.
-
->>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
-...                   use_prefix=True,
-...                   add_c_prefix=True)
->>> print(sform(0.025))
-2.5 c
->>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
-...                   use_prefix=True,
-...                   add_small_si_prefixes=True)
->>> print(sform(25))
-2.5 da
 
 Include Exponent on nan and inf
 ===============================
