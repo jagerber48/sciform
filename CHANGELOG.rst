@@ -2,7 +2,7 @@
 -------------------
 
 * Add parts-per notation feature, documentation, and tests
-* **[BREAKING]** Rename ``use_prefix`` options to ``prefix_exp``
+* **[BREAKING]** Rename ``use_prefix`` option to ``prefix_exp``
 * Fix typos in binary IEC prefixes table
 * Fix some cross links in documentation
 
