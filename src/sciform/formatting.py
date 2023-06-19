@@ -187,10 +187,19 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         free_exp_mode = exp_mode
 
     # TODO: If both val and unc are finite then take the max
-    if isfinite(val):
+    if isfinite(val) and isfinite(unc):
+        if val >= unc:
+            exp_driver = val_rounded
+            val_exp_driver = True
+        else:
+            exp_driver = unc_rounded
+            val_exp_driver = False
+    elif isfinite(val):
         exp_driver = val_rounded
+        val_exp_driver = True
     else:
         exp_driver = unc_rounded
+        val_exp_driver = False
 
     _, exp, _ = get_mantissa_exp_base(
         exp_driver,
@@ -260,7 +269,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     unc_match = mantissa_exp_pattern.match(unc_str)
     unc_str = unc_match.group('mantissa_str')
 
-    if isfinite(val):
+    if val_exp_driver:
         exp_str = val_match.group('exp_str')
     else:
         exp_str = unc_match.group('exp_str')
@@ -278,12 +287,21 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
         val_unc_str = f'{val_str}{pm_symb}{unc_str}'
     else:
-        unc_str = unc_str.lstrip('0.,_ ')
-        if options.bracket_unc_remove_seps:
-            unc_str = unc_str.replace('.', '')
-            unc_str = unc_str.replace(',', '')
-            unc_str = unc_str.replace(' ', '')
-            unc_str = unc_str.replace('_', '')
+        if unc < val:
+            unc_str = unc_str.lstrip('0.,_ ')
+            if options.bracket_unc_remove_seps:
+                unc_str = unc_str.replace(
+                    options.upper_separator.to_char(), '')
+                unc_str = unc_str.replace(
+                    options.decimal_separator.to_char(), '')
+                unc_str = unc_str.replace(
+                    options.lower_separator.to_char(), '')
+        elif options.bracket_unc_remove_seps:
+            unc_str = unc_str.replace(
+                options.upper_separator.to_char(), '')
+            unc_str = unc_str.replace(
+                options.lower_separator.to_char(), '')
+
         val_unc_str = f'{val_str}({unc_str})'
 
     if exp_str is not None:
