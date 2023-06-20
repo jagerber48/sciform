@@ -115,6 +115,10 @@ class Formatter:
       ``extra_si_prefixes``.
     :param add_ppth_form: ``bool`` (default ``False``) if ``True`` adds
       ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
+    :param pdg_sig_figs: ``bool`` indicating whether the
+      particle-data-group conventions should be used to automatically
+      determine the number of significant figures to use for
+      uncertainty.
     :param bracket_unc: ``bool`` indicating if bracket uncertainty mode
       (e.g. ``12.34(82)`` instead of ``12.34 +/- 0.82``) should be used.
     :param val_unc_match_widths: ``bool`` indicating if the value or
@@ -156,6 +160,7 @@ class Formatter:
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False,
             add_ppth_form: bool = False,
+            pdg_sig_figs: bool = None,
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
@@ -187,6 +192,7 @@ class Formatter:
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,
             add_ppth_form=add_ppth_form,
+            pdg_sig_figs=pdg_sig_figs,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
@@ -225,6 +231,7 @@ class Formatter:
                    extra_si_prefixes=options.extra_si_prefixes,
                    extra_iec_prefixes=options.extra_iec_prefixes,
                    extra_parts_per_forms=options.extra_parts_per_forms,
+                   pdg_sig_figs=options.pdg_sig_figs,
                    bracket_unc=options.bracket_unc,
                    val_unc_match_widths=options.val_unc_match_widths,
                    bracket_unc_remove_seps=options.bracket_unc_remove_seps,

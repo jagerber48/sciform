@@ -32,6 +32,7 @@ class FormatOptions:
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
     extra_parts_per_forms: dict[int, str]
+    pdg_sig_figs: bool
     bracket_unc: bool
     val_unc_match_widths: bool
     bracket_unc_remove_seps: bool
@@ -115,6 +116,7 @@ class FormatOptions:
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False,
             add_ppth_form: bool = False,
+            pdg_sig_figs: bool = None,
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
@@ -170,6 +172,8 @@ class FormatOptions:
             extra_parts_per_forms = copy(defaults.extra_parts_per_forms)
         else:
             extra_parts_per_forms = copy(extra_parts_per_forms)
+        if pdg_sig_figs is None:
+            pdg_sig_figs = defaults.pdg_sig_figs
         if bracket_unc is None:
             bracket_unc = defaults.bracket_unc
         if val_unc_match_widths is None:
@@ -219,6 +223,7 @@ class FormatOptions:
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
             extra_parts_per_forms=extra_parts_per_forms,
+            pdg_sig_figs=pdg_sig_figs,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
@@ -384,6 +389,7 @@ DEFAULT_PKG_OPTIONS = FormatOptions(
     extra_si_prefixes=dict(),
     extra_iec_prefixes=dict(),
     extra_parts_per_forms=dict(),
+    pdg_sig_figs=False,
     bracket_unc=False,
     val_unc_match_widths=False,
     bracket_unc_remove_seps=False,
@@ -432,6 +438,7 @@ def set_global_defaults(
         add_c_prefix: bool = False,
         add_small_si_prefixes: bool = False,
         add_ppth_form: bool = False,
+        pdg_sig_figs: bool = None,
         bracket_unc=None,
         val_unc_match_widths=None,
         bracket_unc_remove_seps=None,
@@ -472,6 +479,7 @@ def set_global_defaults(
         add_c_prefix=add_c_prefix,
         add_small_si_prefixes=add_small_si_prefixes,
         add_ppth_form=add_ppth_form,
+        pdg_sig_figs=pdg_sig_figs,
         bracket_unc=bracket_unc,
         val_unc_match_widths=val_unc_match_widths,
         bracket_unc_remove_seps=bracket_unc_remove_seps,
@@ -578,6 +586,7 @@ class GlobalDefaultsContext:
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False,
             add_ppth_form: bool = False,
+            pdg_sig_figs: bool = None,
             bracket_unc: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
@@ -609,6 +618,7 @@ class GlobalDefaultsContext:
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,
             add_ppth_form=add_ppth_form,
+            pdg_sig_figs=pdg_sig_figs,
             bracket_unc=bracket_unc,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,

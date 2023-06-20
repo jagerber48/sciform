@@ -2,7 +2,7 @@ from math import isfinite
 from warnings import warn
 import re
 
-from sciform.modes import FillMode, ExpMode, SignMode, AutoExp
+from sciform.modes import ExpMode, SignMode, AutoExp
 from sciform.format_options import FormatOptions, RoundMode
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_digit,
@@ -155,19 +155,21 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         round_driver = val
 
     round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
-                                  options.precision)
+                                  options.precision, options.pdg_sig_figs)
     unc_rounded = round(unc, -round_digit)
     val_rounded = round(val, -round_digit)
     round_driver = round(round_driver, -round_digit)
 
-    '''
-    Re-round the rounded values in case the first rounding changed the most
-    significant digit place.
-    '''
-    round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
-                                  options.precision)
-    unc_rounded = round(unc_rounded, -round_digit)
-    val_rounded = round(val_rounded, -round_digit)
+    if not options.pdg_sig_figs:
+        '''
+        Re-round the rounded values in case the first rounding changed the most
+        significant digit place. When using pdg_sig_figs this case is handled
+        directly in the first call to get_round_digit.
+        '''
+        round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
+                                      options.precision, options.pdg_sig_figs)
+        unc_rounded = round(unc_rounded, -round_digit)
+        val_rounded = round(val_rounded, -round_digit)
 
     exp_mode = options.exp_mode
     '''
@@ -186,11 +188,19 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     else:
         free_exp_mode = exp_mode
 
-    # TODO: If both val and unc are finite then take the max
-    if isfinite(val):
+    if isfinite(val) and isfinite(unc):
+        if val >= unc:
+            exp_driver = val_rounded
+            val_exp_driver = True
+        else:
+            exp_driver = unc_rounded
+            val_exp_driver = False
+    elif isfinite(val):
         exp_driver = val_rounded
+        val_exp_driver = True
     else:
         exp_driver = unc_rounded
+        val_exp_driver = False
 
     _, exp, _ = get_mantissa_exp_base(
         exp_driver,
@@ -260,7 +270,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     unc_match = mantissa_exp_pattern.match(unc_str)
     unc_str = unc_match.group('mantissa_str')
 
-    if isfinite(val):
+    if val_exp_driver:
         exp_str = val_match.group('exp_str')
     else:
         exp_str = unc_match.group('exp_str')
@@ -278,12 +288,18 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
         val_unc_str = f'{val_str}{pm_symb}{unc_str}'
     else:
-        unc_str = unc_str.lstrip('0.,_ ')
+        if unc < val:
+            unc_str = unc_str.lstrip('0.,_ ')
         if options.bracket_unc_remove_seps:
-            unc_str = unc_str.replace('.', '')
-            unc_str = unc_str.replace(',', '')
-            unc_str = unc_str.replace(' ', '')
-            unc_str = unc_str.replace('_', '')
+            unc_str = unc_str.replace(
+                options.upper_separator.to_char(), '')
+            unc_str = unc_str.replace(
+                options.lower_separator.to_char(), '')
+            if unc < val:
+                # Only removed "embedded" decimal symbol for unc < val
+                unc_str = unc_str.replace(
+                    options.decimal_separator.to_char(), '')
+
         val_unc_str = f'{val_str}({unc_str})'
 
     if exp_str is not None:

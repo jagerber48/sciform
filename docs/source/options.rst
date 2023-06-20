@@ -124,6 +124,10 @@ nearest multiple of 3 or 10.
 >>> print(sform(123.456))
 0.123456e+03
 
+To explicitly force :mod:`sciform` to automatically select the exponent
+then use the :class:`AutoExp` option by passing ``exp=AutoExp``.
+This is the default value in the global configuration.
+
 Exponent String Replacement
 ===========================
 
@@ -208,6 +212,14 @@ exponent mode.
 In some cases, the rounding results in a modification to the chosen
 exponent.
 This is taken into account before the final presentation.
+
+In both cases, if no explicit precision value or number of significant
+figures is supplied then the number is displayed as if no rounding
+occurs.
+That is, all digits, down the least significant, are displayed.
+To explicitly force this behavior use the :class:`AutoPrec` class by
+passsing ``precision=AutoPrec``.
+This is the default value in the global configuration.
 
 Significant Figures
 -------------------
@@ -450,13 +462,53 @@ formatted as follows.
 First, significant figure rounding is applied to the uncertainty
 according to the specified precision.
 Next the value is rounded to the same position as the uncertainty.
-The exponent is then determined using the expponent mode and the value.
+The exponent is then determined using the exponent mode and the larger
+of the value or uncertainty.
 The value and the uncertainty are then formatted into a single string
 according to the options below.
 
 >>> sform = Formatter()
 >>> print(sform(123.456, 0.789))
 123.456 +/- 0.789
+
+Particle Data Group Significant Figures
+---------------------------------------
+
+Typically value/uncertainty pairs are formatted with one or two
+significant figures displayed for the uncertainty.
+The Particle Data Group has
+`published an algorithm <https://pdg.lbl.gov/2010/reviews/rpp2010-rev-rpp-intro.pdf>`_
+for deciding when to
+display uncertainty with one versus two significant figures.
+The algorithm is as follows.
+
+* Determine the three most significant digits of the uncertainty. E.g.
+  if the uncertainty is 0.004857 then these digits would be 486
+* If the value is between 100 and 354 (inclusive) then display the
+  uncertainty with two significant digits. E.g. if the uncertainty is
+  3.03 then display the uncertainy as 3.0
+* If the value is between 355 and 949 (inclusive) then display the
+  uncertainty with one signifcant digit. E.g. if the uncertainty is
+  0.76932 then display the uncertainty as 0.8
+* If the value is between 950 and 999 (inclusive) then display the
+  uncertainty with two signficant digit, noting that this will involve
+  rounding the three most significant digits up to 1000. E.g. if the
+  uncertainty is 0.0099 then display the uncertainty as 0.010.
+
+:mod:`sciform` provides the ability to use this algorithm when
+formatting value/uncertainty pairs by using significant figure rounding
+mode with :class:`AutoPrec` precision and the ``pdg_sig_figs`` flag.
+
+>>> from sciform import AutoPrec
+>>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
+...                   precision=AutoPrec,
+...                   pdg_sig_figs=True)
+>>> print(sform(1, 0.0123))
+1.000 +/- 0.012
+>>> print(sform(1, 0.0483))
+1.00 +/- 0.05
+>>> print(sform(1, 0.0997))
+1.00 +/- 0.10
 
 Plus Minus Symbol Formatting
 ----------------------------

@@ -1,17 +1,46 @@
-from typing import get_args, Literal
+from typing import Literal
 from enum import Enum
 
 
 class AutoExp:
+    """
+    Flag for auto-exponent calculation mode. Set ``exp=AutoExp`` or an
+    integer.
+
+      * For scientific exponent mode the base-10 exponent is selected so
+        that the mantissa ``m`` satisfies ``1 <= m < 10``.
+      * For engineering exponent mode the base-10 exponent is chosen so
+        that it is an integer multiple of 3 and the mantissa ``m``
+        satisfies ``1 <= m < 1000``.
+      * For shifted engineering exponent mode the base-10 exponent is
+        chosen so that it is an integer multiple of 3 and the mantissa
+        ``m`` satisfies ``0.1 <= m < 100``.
+      * For binary exponent mode the base-2 exponent is chosen so that
+        the mantissa ``m`` satisfies ``1 <= m < 2``.
+      * For binary IEC exponent mode the base-2 exponent is chosen so
+        that the mantissa ``m`` satisfies ``1 <= m < 1024 = 2**10``.
+    """
     pass
 
 
 class AutoPrec:
+    """
+    Flag for auto precision calculation mode. Set ``precision=AutoPrec``
+    or an integer.
+
+    In both sig fig and precision round modes this auto precision
+    option chooses the precision so that the least significant digit of
+    the input float will be displayed.
+    For example the float 123.456789 would be displayed with either 9
+    significant figures or 6 digits past the decimal point so that in
+    either case all digits are shown.
+
+    When used with sig fig rounding and in combination with the
+    ``pdg_sig_figs`` option, the number of significant figures will be
+    chosen to be one or two in accordance with the Particle Data Group
+    algorithm.
+    """
     pass
-
-
-def option_warn_str(value, options: type(Literal)):
-    return f'Flag \'{value}\' not in {get_args(options)}.'
 
 
 class FillMode(Enum):

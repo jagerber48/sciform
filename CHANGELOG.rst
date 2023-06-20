@@ -1,3 +1,16 @@
+0.18.0 (2023-06-19)
+-------------------
+
+* Add Particle Data Group significant figure auto selection feature,
+  documentation, and tests.
+* **[BREAKING]** Use the larger of value or uncertainty to resolve the
+  exponent when formatting value/uncertainty pairs. The previous
+  behavior was to always use the value to resolve the exponent, but this
+  behavior was not convenient for the important use case of zero value
+  with non-zero uncertainty.
+* Expose ``AutoPrec`` and ``AutoExp`` sentinel classes so that users can
+  explicitly indicate automatic precision and exponent selection.
+
 0.17.1 (2023-06-19)
 -------------------
 

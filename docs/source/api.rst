@@ -31,6 +31,13 @@ Mode Enums
 .. autoclass:: ExpMode()
    :members:
 
+Auto Options
+============
+
+.. autoclass:: AutoExp()
+
+.. autoclass:: AutoPrec()
+
 Global Configuration
 ====================
 
