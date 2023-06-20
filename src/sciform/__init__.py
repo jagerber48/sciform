@@ -9,7 +9,6 @@ from sciform.format_options import (
     global_reset_iec_prefixes, global_reset_parts_per_forms,
     print_global_defaults, GlobalDefaultsContext)
 
-# TODO: Add AutoExp and AutoPrec (and documentation)
 from sciform.modes import (FillMode, SignMode, GroupingSeparator, RoundMode,
                            ExpMode, AutoExp, AutoPrec)
 
