@@ -169,7 +169,6 @@ def get_round_digit(num: float,
                     precision = 1
                 else:
                     raise ValueError(f'{num_top_three_digs} not right')
-        print(precision)
         round_digit = top_digit - (precision - 1)
     elif round_mode is RoundMode.PREC:
         if precision is AutoPrec:
