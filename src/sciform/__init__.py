@@ -1,7 +1,4 @@
-__version__ = "0.17.1"
-
-# TODO: PDG sig figs
-# TODO: get exponent based on larger of val/unc
+__version__ = "0.18.0"
 
 from sciform.formatter import Formatter
 from sciform.float_formatting import sfloat, vufloat
