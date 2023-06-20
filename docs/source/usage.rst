@@ -12,14 +12,15 @@ scientific formatting strings.
 The first is via the :class:`Formatter` object and the second is
 using string formatting and the
 :ref:`Format Specification Mini Language (FSML) <fsml>` with the
-:class:`sfloat` object.
+:class:`sfloat` of :class:`vufloat` objects.
 
 Formatter
 ---------
 
 The :class:`Formatter` object is initialized with user-selected
-formatting options and then used to format floats. Additional details
-about formatting options at :ref:`formatting_options`.
+formatting options and then used to format floats.
+See :ref:`formatting_options` for more details about the available
+options.
 
 >>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
 >>> sform = Formatter(round_mode=RoundMode.PREC,
@@ -37,7 +38,7 @@ about formatting options at :ref:`formatting_options`.
 sfloat
 ------
 
-The :mod:`sciform` :ref:`FSML <fsml>` is accessed via the
+The :mod:`sciform` :ref:`FSML <fsml>` can be accessed via the
 :class:`sfloat` object.
 Regular built-in floats are cast to :class:`sfloat` objects which can be
 formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
@@ -50,9 +51,9 @@ formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
 Value/Uncertainty Formatting
 ----------------------------
 
-One of, if not the, most important use cases for scientific formatting
-is formatting a value together with its specified uncertainty, e.g.
-``84.3 +/- 0.2``.
+One of the most important (if not **the** most important) use cases for
+scientific formatting is formatting a value together with its specified
+uncertainty, e.g. ``84.3 +/- 0.2``.
 :mod:`sciform` provides the ability to format pairs of floats into
 value/uncertainty strings.
 We attempt to follow
@@ -88,9 +89,10 @@ algorithm:
    applied to the uncertainty. If a ``precision`` is supplied then the
    uncertainty is rounded to that many signficant figures. Otherwise it
    is not rounded.
-#. The value is rounded to the same digit place as the uncertainty
+#. The value is rounded to the digit corresponding to the least
+   significant digit of the uncertainty.
 #. The value for the exponent is resolved by applying the
-   ``exp_mode`` to the value.
+   ``exp_mode`` to the larger of the value and uncertainty.
 #. The value and uncertainties mantissas are determined according to the
    value of the exponent determined in the previous step.
 #. The value and uncertainty mantissas are formatted together with the
@@ -104,12 +106,13 @@ It is possible to modify the global default configuration for
 format specification strings.
 When the user creates a :class:`Formatter` object or formats a string
 using the :ref:`FSML <fsml>`, they typically do not specify settings for
-available options.
-In thes cases, the unspecified options extract their settings from the
+all available options.
+In these cases, the unspecified options resolve their values from the
 global default settings.
 
 The global default settings can be viewed using
-:func:`print_global_defaults()`:
+:func:`print_global_defaults()` (the settings shown here are the
+package default settings):
 
 >>> from sciform import print_global_defaults
 >>> print_global_defaults()
@@ -151,9 +154,9 @@ applied to setting global default settings.
 >>> from sciform import (set_global_defaults, FillMode, ExpMode,
 ...                      GroupingSeparator)
 >>> set_global_defaults(fill_mode=FillMode.ZERO,
-...                    exp_mode=ExpMode.ENGINEERING_SHIFTED,
-...                    precision=4,
-...                    decimal_separator=GroupingSeparator.COMMA)
+...                     exp_mode=ExpMode.ENGINEERING_SHIFTED,
+...                     precision=4,
+...                     decimal_separator=GroupingSeparator.COMMA)
 >>> print_global_defaults()
 {'fill_mode': <FillMode.ZERO: 'zero'>,
  'sign_mode': <SignMode.NEGATIVE: 'negative'>,
@@ -212,7 +215,7 @@ The global default settings can be temporarily modified using the
 This context manager accepts the same keyword arguments as
 :class:`Formatter`.
 Within the context of :class:`GlobalDefaultsContext` manager, the
-global defaults take on the specified in put settings, but when the
+global defaults take on the specified input settings, but when the
 context is exited, the global default settings revert to their previous
 values.
 
@@ -234,7 +237,6 @@ of any :class:`Formatter` that was intantiated before the change, but it
 will change :class:`sfloat` formatting.
 Global configuration settings are, thus, most useful for controlling the
 behavior of :class:`sfloat` formatting.
-Global configuration settings (1) allow :class:`sfloat` format
-specification strings to be shortened and simplified and (2) provide the
-only means to modify the prefixes available for :class:`sfloat`
-formatting.
+In particular, not all avaible options can be accessed using the
+:ref:`FSML <fsml>`, so the only way to modify these options while using
+:class:`sfloat` formatting is via the global configuration settings.
