@@ -162,9 +162,9 @@ def get_round_digit(num: float,
                 new_top_digit = get_top_digit(num_top_three_digs)
                 num_top_three_digs = num_top_three_digs * 10**(2-new_top_digit)
                 if 100 <= num_top_three_digs <= 354:
-                    round_digit = top_digit
-                elif 355 <= num_top_three_digs <= 949:
                     round_digit = top_digit - 1
+                elif 355 <= num_top_three_digs <= 949:
+                    round_digit = top_digit
                 elif 950 <= num_top_three_digs <= 999:
                     '''
                     In this case the top three digits will be rounded up to 

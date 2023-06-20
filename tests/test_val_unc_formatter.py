@@ -164,17 +164,17 @@ class TestFormatting(unittest.TestCase):
         require using decimal objects rather than floats.
         """
         cases_dict = {
-            (10, 0.0350):
+            (10, 0.0352):
                 {
-                    Formatter(pdg_sig_figs=True): '10.00 +/- 0.04'
+                    Formatter(pdg_sig_figs=True): '10.000 +/- 0.035'
                 },
             (10, 0.0356):
                 {
-                    Formatter(pdg_sig_figs=True): '10.000 +/- 0.036'
+                    Formatter(pdg_sig_figs=True): '10.00 +/- 0.04'
                 },
             (10, 0.0945):
                 {
-                    Formatter(pdg_sig_figs=True): '10.000 +/- 0.095'
+                    Formatter(pdg_sig_figs=True): '10.00 +/- 0.09'
                 },
             (10, 0.0996):
                 {

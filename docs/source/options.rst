@@ -504,9 +504,9 @@ mode with :class:`AutoPrec` precision and the ``pdg_sig_figs`` flag.
 ...                   precision=AutoPrec,
 ...                   pdg_sig_figs=True)
 >>> print(sform(1, 0.0123))
-1.00 +/- 0.01
+1.000 +/- 0.012
 >>> print(sform(1, 0.0483))
-1.000 +/- 0.048
+1.00 +/- 0.05
 >>> print(sform(1, 0.0997))
 1.00 +/- 0.10
 
