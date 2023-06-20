@@ -155,21 +155,28 @@ def get_round_digit(num: float,
         if precision is AutoPrec:
             bottom_digit = get_bottom_digit(num)
             if not pdg_sig_figs:
-                precision = top_digit - bottom_digit + 1
+                round_digit = bottom_digit
             else:
                 num_top_three_digs = num * 10**(2-top_digit)
                 num_top_three_digs = round(num_top_three_digs)
                 new_top_digit = get_top_digit(num_top_three_digs)
                 num_top_three_digs = num_top_three_digs * 10**(2-new_top_digit)
                 if 100 <= num_top_three_digs <= 354:
-                    precision = 1
-                elif 355 <= num_top_three_digs <= 994:
-                    precision = 2
-                elif 995 <= num_top_three_digs <= 999:
-                    precision = 1
+                    round_digit = top_digit
+                elif 355 <= num_top_three_digs <= 949:
+                    round_digit = top_digit - 1
+                elif 950 <= num_top_three_digs <= 999:
+                    '''
+                    In this case the top three digits will be rounded up to 
+                    1000 so round_digit=top_digit will actually correspond to
+                    two significant figures with respect to the rounded value.
+                    This is in accordance with the PDG specification.
+                    '''
+                    round_digit = top_digit
                 else:
                     raise ValueError(f'{num_top_three_digs} not right')
-        round_digit = top_digit - (precision - 1)
+        else:
+            round_digit = top_digit - (precision - 1)
     elif round_mode is RoundMode.PREC:
         if precision is AutoPrec:
             round_digit = get_bottom_digit(num)

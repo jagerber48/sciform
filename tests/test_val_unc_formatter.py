@@ -172,9 +172,9 @@ class TestFormatting(unittest.TestCase):
                 {
                     Formatter(pdg_sig_figs=True): '10.000 +/- 0.036'
                 },
-            (10, 0.0994):
+            (10, 0.0945):
                 {
-                    Formatter(pdg_sig_figs=True): '10.000 +/- 0.099'
+                    Formatter(pdg_sig_figs=True): '10.000 +/- 0.095'
                 },
             (10, 0.0996):
                 {

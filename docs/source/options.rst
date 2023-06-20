@@ -487,10 +487,10 @@ The algorithm is as follows.
 * If the value is between 100 and 354 (inclusive) then display the
   uncertainty with two significant digits. E.g. if the uncertainty is
   3.03 then display the uncertainy as 3.0
-* If the value is between 355 and 954 (inclusive) then display the
+* If the value is between 355 and 949 (inclusive) then display the
   uncertainty with one signifcant digit. E.g. if the uncertainty is
   0.76932 then display the uncertainty as 0.8
-* If the value is between 955 and 999 (inclusive) then display the
+* If the value is between 950 and 999 (inclusive) then display the
   uncertainty with two signficant digit, noting that this will involve
   rounding the three most significant digits up to 1000. E.g. if the
   uncertainty is 0.0099 then display the uncertainty as 0.010.
