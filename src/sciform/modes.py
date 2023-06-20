@@ -4,8 +4,8 @@ from enum import Enum
 
 class AutoExp:
     """
-    Flag for auto-exponent calculation mode. Set ``exp`` option to this
-    value or an integer.
+    Flag for auto-exponent calculation mode. Set ``exp=AutoExp`` or an
+    integer.
 
       * For scientific exponent mode the base-10 exponent is selected so
         that the mantissa ``m`` satisfies ``1 <= m < 10``.
@@ -25,8 +25,8 @@ class AutoExp:
 
 class AutoPrec:
     """
-    Flag for auto precision calculation mode. Set ``precision`` option
-    to this value or an integer.
+    Flag for auto precision calculation mode. Set ``precision=AutoPrec``
+    or an integer.
 
     In both sig fig and precision round modes this auto precision
     option chooses the precision so that the least significant digit of
@@ -38,7 +38,7 @@ class AutoPrec:
     When used with sig fig rounding and in combination with the
     ``pdg_sig_figs`` option, the number of significant figures will be
     chosen to be one or two in accordance with the Particle Data Group
-    354 algorithm.
+    algorithm.
     """
     pass
 
