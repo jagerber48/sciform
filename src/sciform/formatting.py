@@ -290,18 +290,15 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     else:
         if unc < val:
             unc_str = unc_str.lstrip('0.,_ ')
-            if options.bracket_unc_remove_seps:
-                unc_str = unc_str.replace(
-                    options.upper_separator.to_char(), '')
-                unc_str = unc_str.replace(
-                    options.decimal_separator.to_char(), '')
-                unc_str = unc_str.replace(
-                    options.lower_separator.to_char(), '')
-        elif options.bracket_unc_remove_seps:
+        if options.bracket_unc_remove_seps:
             unc_str = unc_str.replace(
                 options.upper_separator.to_char(), '')
             unc_str = unc_str.replace(
                 options.lower_separator.to_char(), '')
+            if unc < val:
+                # Only removed "embedded" decimal symbol for unc < val
+                unc_str = unc_str.replace(
+                    options.decimal_separator.to_char(), '')
 
         val_unc_str = f'{val_str}({unc_str})'
 
