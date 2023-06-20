@@ -213,6 +213,14 @@ In some cases, the rounding results in a modification to the chosen
 exponent.
 This is taken into account before the final presentation.
 
+In both cases, if no explicit precision value or number of significant
+figures is supplied then the number is displayed as if no rounding
+occurs.
+That is, all digits, down the least significant, are displayed.
+To explicitly force this behavior use the :class:`AutoPrec` class by
+passsing ``precision=AutoPrec``.
+This is the default value in the global configuration.
+
 Significant Figures
 -------------------
 
@@ -222,14 +230,6 @@ e.g. for ``12345.678`` the most-significant digit appears in the
 ten-thousands, or 10\ :sup:`4`, place.
 To express this number to 4-significant digits means we should round it
 to the tens, or 10\ :sup:`1`, place resulting in ``12350``.
-
-In both cases, if no explicit precision value or number of significant
-figures is supplied then the number is displayed as if no rounding
-occurs.
-That is, all digits, down the least significant, are displayed.
-To explicitly force this behavior use the :class:`AutoPrec` class by
-passsing ``precision=AutoPrec``.
-This is the default value in the global configuration.
 
 Note that 1000 rounded to 2 significant figures is, of course, still
 1000.
