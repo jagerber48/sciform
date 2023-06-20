@@ -486,14 +486,14 @@ The algorithm is as follows.
   if the uncertainty is 0.004857 then these digits would be 486
 * If the value is between 100 and 354 (inclusive) then display the
   uncertainty with two significant digits. E.g. if the uncertainty is
-  30.3 then display the uncertainy as 30
+  3.03 then display the uncertainy as 3.0
 * If the value is between 355 and 954 (inclusive) then display the
   uncertainty with one signifcant digit. E.g. if the uncertainty is
   0.76932 then display the uncertainty as 0.8
 * If the value is between 955 and 999 (inclusive) then display the
   uncertainty with two signficant digit, noting that this will involve
   rounding the three most significant digits up to 1000. E.g. if the
-  uncertainty is 0.99 then display the uncertainty as 1.0.
+  uncertainty is 0.0099 then display the uncertainty as 0.010.
 
 :mod:`sciform` provides the ability to use this algorithm when
 formatting value/uncertainty pairs by using significant figure rounding
