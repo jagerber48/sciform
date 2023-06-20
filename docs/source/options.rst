@@ -125,7 +125,7 @@ nearest multiple of 3 or 10.
 0.123456e+03
 
 To explicitly force :mod:`sciform` to automatically select the exponent
-then use the :class:`AutoExp` option and pass ``exp=AutoExp``.
+then use the :class:`AutoExp` option by passing ``exp=AutoExp``.
 This is the default value in the global configuration.
 
 Exponent String Replacement
@@ -227,8 +227,8 @@ In both cases, if no explicit precision value or number of significant
 figures is supplied then the number is displayed as if no rounding
 occurs.
 That is, all digits, down the least significant, are displayed.
-To explicitly force this behavior use the :class:`AutoPrec` class and
-pass ``precision=AutoPrec``.
+To explicitly force this behavior use the :class:`AutoPrec` class by
+passsing ``precision=AutoPrec``.
 This is the default value in the global configuration.
 
 Note that 1000 rounded to 2 significant figures is, of course, still
