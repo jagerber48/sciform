@@ -47,6 +47,12 @@ mantissa ``m`` satisfies ``1 <= m < 10``.
 >>> print(sform(123.456))
 1.23456e+02
 
+Note that for all exponent modes, the exponent integer is always displayed
+with a sign symbol (+ or -) and is left padded with a zero so that it is
+at least two digits wide. There are no options to modify this behavior
+for standard exponent display. The :ref:`superscript_exp` or
+:ref:`latex_format` can be used as alternatives.
+
 Engineering Notation
 --------------------
 
@@ -107,8 +113,6 @@ notation in base-2.
 >>> sform = Formatter(exp_mode=ExpMode.BINARY_IEC)
 >>> print(sform(2048))
 2b+10
-
-Here ``b`` exponent symbol indicates base-2 instead of base-10.
 
 Fixed Exponent
 ==============
@@ -189,8 +193,10 @@ Furthermore, just the ``c`` prefix can be included using the
 >>> print(sform(25))
 2.5 da
 
-A non-standard parts-per-thousand form, ``ppth``, can be accessed with
+A parts-per-thousand form, ``ppth``, can be accessed with
 the ``add_ppth_form`` option.
+Note that ``ppth`` is not a standard notation for "parts-per-thousand",
+but it is one that the author has found useful.
 
 >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
 ...                   parts_per_exp=True,
@@ -210,7 +216,8 @@ In both cases, the rounding applies to the mantissa determined after
 identifying the appropriate exponent for display based on the selected
 exponent mode.
 In some cases, the rounding results in a modification to the chosen
-exponent.
+exponent (e.g. presenting 9.99 with a precision of 1 in scientific
+exponent mode).
 This is taken into account before the final presentation.
 
 In both cases, if no explicit precision value or number of significant
@@ -255,7 +262,7 @@ Precision simply indicates the number of digits to be displayed past the
 decimal point.
 So, e.g., a precision of 2 indicates rounding to the hundredths, or
 10\ :sup:`-2`, place.
-Most of the built-in string formatting mini-language is based on
+Much of the Python built-in string formatting mini-language is based on
 precision presentation.
 
 >>> from sciform import RoundMode
@@ -288,8 +295,8 @@ decimal symbol.
 Additionally, :mod:`sciform` also supports including separation characters
 between groups of three digits both above the decimal symbol and below
 the decimal symbols.
-No separator, ``','``, ``'.'``, ``' '``, ``'_'`` can all be used as
-"upper" separator characters and no separator, ``' '``, and ``'_'`` can
+``''``, ``','``, ``'.'``, ``' '``, ``'_'`` can all be used as
+"upper" separator characters and ``''``, ``' '``, and ``'_'`` can
 all be used as "lower" separator characters.
 Note that the upper separator character must be different than the
 decimal separator.
@@ -359,7 +366,7 @@ Left Filling
 ============
 
 The :ref:`rounding` options described above can be used to control how
-many digits to the left of either the most-significant digit or the
+many digits to the right of either the most-significant digit or the
 decimal point are displayed.
 It is also possible, using "fill" options, to add digits to the left of
 the most-significant digit.
@@ -392,6 +399,8 @@ appended to the end of the formatted string.
 >>> print(sform(0.12345, 0.001))
 (12.345 +/- 0.100)%
 
+.. _superscript_exp:
+
 Superscript Exponent Format
 ===========================
 
@@ -402,6 +411,8 @@ standard superscript notation as opposed to e.g. ``e+02`` notation.
 ...                   superscript_exp=True)
 >>> print(sform(789))
 7.89×10²
+
+.. _latex_format:
 
 Latex Format
 ============
@@ -457,7 +468,7 @@ be formatted as, e.g. ``'(nan)e+00'``.
 Value/Uncertainty Formatting Options
 ====================================
 
-For value/uncertainty formatting the value + uncertainty pair are
+For value/uncertainty formatting, the value + uncertainty pair are
 formatted as follows.
 First, significant figure rounding is applied to the uncertainty
 according to the specified precision.
@@ -490,10 +501,11 @@ The algorithm is as follows.
 * If the value is between 355 and 949 (inclusive) then display the
   uncertainty with one signifcant digit. E.g. if the uncertainty is
   0.76932 then display the uncertainty as 0.8
-* If the value is between 950 and 999 (inclusive) then display the
-  uncertainty with two signficant digit, noting that this will involve
-  rounding the three most significant digits up to 1000. E.g. if the
-  uncertainty is 0.0099 then display the uncertainty as 0.010.
+* If the value is between 950 and 999 (inclusive) then round up to 1000
+  and display the uncertainty with two signficant digits. This is
+  equivalent to rounding and displaying to the first most significant
+  digit of the uncertainty. E.g. if the uncertainty is 0.0099 then
+  display the uncertainty as 0.010.
 
 :mod:`sciform` provides the ability to use this algorithm when
 formatting value/uncertainty pairs by using significant figure rounding
@@ -537,7 +549,7 @@ Instead of displaying ``123.456 +/- 0.789``, there is a notation where
 the uncertainty is shown in brackets after the value as
 ``123.456(789)``.
 Here the ``(789)`` in parentheses is meant to be "matched up" with the
-finaly three digits of the value so that the 9 in the uncertainty is
+final three digits of the value so that the 9 in the uncertainty is
 understood to appear in the thousandths place.
 This format is described in the
 `BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
@@ -571,9 +583,12 @@ In such cases, there is no official guidance on if the decimal symbol
 should be included in the bracket symbols or not.
 That is, one may format ``18.4 +/- 2.1 -> 18.4 (21)``.
 The interpretation here is that the uncertainty is 21 tenths, since the
-digit of the value is in the tenths place.
-Note that the author recommends keeping the decimal symbol because it
-allows for rapid "lining up" of the decimal places by eye.
+least significant digit of the value is in the tenths place.
+The author's preference is to keep the decimal symbol because it allows
+for rapid "lining up" of the decimal places by eye and it is similar to
+`BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
+example 3 in which the entire uncertainty number is shown in
+parentheses.
 
 :mod:`sciform` allows the user to optionally remove the decimal symbol
 
