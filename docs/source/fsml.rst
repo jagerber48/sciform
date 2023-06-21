@@ -10,12 +10,12 @@ Specification
 =============
 
 :mod:`sciform` :ref:`formatting options <formatting_options>` can be
-applied to the formatting of :class:`sfloat` objects by using string
-formatting analogous to the built-in formatting of :class:`float`
-objects.
+applied to the formatting of :class:`sfloat` or :class:`vufloat` objects
+by using string formatting analogous to the built-in formatting of
+:class:`float` objects.
 The :mod:`sciform` format specification mini language is given by::
 
-    format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][exp_mode]["x" exp][prefix_mode]
+    format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][exp_mode]["x" exp][p][S]
 
     fill               ::=  "0" | " "
     sign               ::=  "+" | "-" | " "
@@ -24,10 +24,9 @@ The :mod:`sciform` format specification mini language is given by::
     decimal_separator  ::=  "." | ","
     lower_separator    ::=  "n" | "s" | "_"
     round_mode         ::=  "!" | "."
-    prec               ::=  -?digit+
+    precision          ::=  [+-]?digit+
     exp_mode           ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" | "b" | "B" |
-    exp                ::=  [+-]digit+
-    prefix_mode        ::=  p
+    exp                ::=  [+-]?digit+
 
 Details about the terms in the FSML are described below.
 
@@ -52,11 +51,9 @@ Details about the terms in the FSML are described below.
        | (``'#'``)
      - Alternate mode is enabled (disabled by default) if the ``'#'``
        flag is included in the format specification. In engineering
-       notation (``r`` or ``R``), the alternate mode coerces the
-       mantissa `m` to be ``0.1 <= m < 100`` rather than
-       ``1 <= m < 1000``. In binary mode (``b`` or ``B``), the alternate
-       flag coerces the mantissa to be between ``1 <= m < 1024`` rather
-       than ``1 <= m < 2``.
+       mode (``r`` or ``R``), the alternate mode engages
+       :ref:`engineering_shifted` mode. In binary mode (``b`` or ``B``),
+       the alternate mode engages :ref:`binary_iec` mode.
    * - | fill_top_digit
        | (``\d+``)
      - Any non-negative integer, default (0). Indicates the decimal or
@@ -87,12 +84,11 @@ Details about the terms in the FSML are described below.
    * - | round_mode
        | (``'!'``, ``'.'``)
      - Indicates whether the float will be rounded and displayed
-       according to precision (digits past the decimal point) or
-       significant figure. ``'.'`` indicates precision mode and ``'!'``
-       indicates significant figure mode. E.g.
-       ``f'{sfloat(123.456):.2f}'`` gives ``'123.46'`` while
-       ``f'{sfloat(123.456):!2f}'`` gives ``'120'``.
-   * - | prec
+       according to precision ``'.'`` (digits past the decimal point) or
+       significant figures ``'!'``. E.g. ``f'{sfloat(123.456):.2f}'``
+       gives ``'123.46'`` while ``f'{sfloat(123.456):!2f}'`` gives
+       ``'120'``.
+   * - | precision
        | (``[+-]?\d+``)
      - Integer indicating the precision or number of significant figures
        to which the float shall be rounded and displayed. Can be
@@ -111,24 +107,26 @@ Details about the terms in the FSML are described below.
        capitalization of the exponent symbol matches the capitalization
        of the exponent mode flag.
 
-       * ``'f'`` and ``'F'`` indicate fixed point mode in which no
-         exponent is used to display the number.
-       * ``'%'`` mode is like fixed mode but the number is first
-         multiplied by 100 and presented followed by a ``'%'``
-         character.
-       * ``'e'`` and ``'E'`` indicate scientific notation in which the
-         exponent is chosen so that the mantissa satisfies
+       * ``'f'`` and ``'F'`` indicate :ref:`fixed_point` mode in which
+         no exponent is used to display the number.
+       * ``'%'`` uses :ref:`fixed_point` exponent mode but also engages
+         :ref:`percent_mode` which multiplies the number by 100 prior to
+         formatting and appends a ``'%'`` character.
+       * ``'e'`` and ``'E'`` indicate :ref:`scientific` exponent mode in
+         which the exponent is chosen so that the mantissa satisfies
          ``1 <= m < 10``.
-       * ``'r'`` and ``'R'`` indicate engineering notation in which the
-         exponent is chosen so that the mantissa satisfies
-         ``1 <= m <= 1000``. If the alternate mode is enabled then the
-         mantissa satisfies ``0.1 <= m < 100``. In both cases the
-         exponent is always an integer multiple of 3.
-       * ``'b'`` and ``'B'`` indicate binary mode in which the number is
-         presented as a mantissa and exponent in base 2. The mantissa
-         satisfies ``1 <= m < 2``. If alternate mode is enabled the
-         mantissa satisfies ``1 <= m < 1024 = 2^10``. In this case the
-         exponent is always an integer multiple of 10.
+       * ``'r'`` and ``'R'`` indicate :ref:`engineering` exponent mode
+         in which the exponent is chosen to be a multiple of 3 and so
+         that the mantissa ``m`` satisfies ``1 <= m <= 1000``. If the
+         alternate mode is enabled then :ref:`engineering_shifted`
+         exponent mode is used in which the exponent is a multiple of 3
+         but the mantissa satisfies ``0.1 <= m < 100``.
+       * ``'b'`` and ``'B'`` indicate :ref:`binary` exponent mode in
+         which the number is presented as a mantissa and exponent in
+         base 2. The mantissa satisfies ``1 <= m < 2``. If alternate
+         mode is enabled then :ref:`binary_iec` exponent mode is
+         engaged so that the exponent is a multiple of 10 and the
+         mantissa satisfies ``1 <= m < 1024 = 2^10``.
    * - | exp
        | (``x[+-]\d+``)
      - Positive or negative integer that can be used to force the
@@ -138,11 +136,17 @@ Details about the terms in the FSML are described below.
        with those modes (e.g. an exponent that is not a multiple of 3
        for engineering notation), the exponent will be rounded down to
        the nearest compatible value.
-   * - | prefix_mode
+   * - | prefix mode
        | (``'p'``)
      -  Flag (default off) indicating whether exponent strings should be
         replaced with SI or IEC prefix characters. E.g.
         ``'123e+03' -> '123 k'`` or ``'857.2B+20' -> '857.2 Mi'``.
+   * - | bracket uncertainty
+       | (``'S'``)
+     - Flag (default off) indicating if :ref:`bracket_uncertainty` mode
+       should be used so that uncertainty appears in parentheses rather
+       than after a plus/minus symbol. E.g.
+       ``'1.0 +/- 0.5' -> '1.0(5)'``.
 
 
 
@@ -175,17 +179,13 @@ for scientific formatting.
   * Inclusion of a hanging decimal point, e.g. ``123.``.
     :mod:`sciform` never includes a hanging decimal point.
 
-* Python float formatting uses a pre-selected, hard-coded precion of 6
-  for ``f``, ``F``, ``%``, ``e``, and ``E`` modes. When no precision or
-  significant figure specification is provided, :mod:`sciform`, instead,
-  infers the precision or sig fig specification from the float by
-  determining the least significant decimal digit required to represent
-  it. Note that there may be surprising results for floats that require
-  more decimals to represent than ``sys.float_info.dig`` such as
-  ``0.1 * 3``.
-
-  * ``f'{float(0.3):f}'`` yield ``0.300000`` while ``f'{sfloat(0.3):f}``
-    yields ``0.3``.
+* Python float formatting uses a default precion of 6 for ``f``, ``F``,
+  ``%``, ``e``, and ``E`` modes if no explicit precision is supplied.
+  When no precision or significant figure specification is provided,
+  :mod:`sciform`, instead, infers the precision or sig fig specification
+  from the float by determining the least significant digit required to
+  represent it. E.g. ``f'{float(0.3):f}'`` yield ``0.300000`` while
+  ``f'{sfloat(0.3):f}`` yields ``0.3``.
 
 * The built-in FSML supports left-aligned, right-aligned,
   center-aligned, and sign-aware string padding by any character. In the
@@ -193,16 +193,14 @@ for scientific formatting.
   the resulting string (including all punctuation such as ``+``, ``-``,
   ``.``, ``e``, etc.) should be filled to. ``sciform`` takes the
   perspective that these padding features are mostly tasks for string
-  formatters, not number formatters. :mod:`sciform`, instead, only
-  supports padding by a space ``' '`` or zero. For :mod:`sciform`, the
-  user specifies the digits place to which the number should be padded.
+  formatters, not number formatters. For :mod:`sciform`, the user
+  specifies the digits place to which the number should be padded.
   The fill character may only be ``' '`` or ``'0'`` and must always be
-  followed by the sign aware `=` flag. There is no ``0`` flag that may
-  be placed before the width field to indicate sign-aware zero padding.
-
-  * ``f'{float(12): =4}`` yields ``'  12'`` while ``f{sfloat(12): =4}``
-    yeilds ``'   12'``. I.e. fill characters are padded up to the
-    ``10^4`` digits place.
+  followed by the sign aware `=` flag. There is no ``0`` flag, as in the
+  built-in FSML, that may be placed before the width field to indicate
+  sign-aware zero padding. E.g. ``f'{float(12): =4}`` yields ``'  12'``
+  while ``f{sfloat(12): =4}`` yeilds ``'   12'``. Fill characters are
+  padded up to the ``10^4`` digits place.
 
 * The built-in FSML supports displaying negative zero, but also supports
   an option to coerce negative zero to be positive by including a

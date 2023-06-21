@@ -25,6 +25,8 @@ Where exp is an integer and ``base`` is typically 10 or 2.
 The different exponent modes control how ``mantissa``, ``base`` and
 ``exp`` are chosen for a given input float ``num``.
 
+.. _fixed_point:
+
 Fixed Point
 -----------
 
@@ -35,6 +37,8 @@ directly as a decimal number with no extra exponent.
 >>> sform = Formatter(exp_mode=ExpMode.FIXEDPOINT)
 >>> print(sform(123.456))
 123.456
+
+.. _scientific:
 
 Scientific Notation
 -------------------
@@ -52,6 +56,8 @@ with a sign symbol (+ or -) and is left padded with a zero so that it is
 at least two digits wide. There are no options to modify this behavior
 for standard exponent display. The :ref:`superscript_exp` or
 :ref:`latex_format` can be used as alternatives.
+
+.. _engineering:
 
 Engineering Notation
 --------------------
@@ -74,6 +80,8 @@ notation.
 >>> print(sform(123.456))
 123.456e+00
 
+.. _engineering_shifted:
+
 Shifted Engineering Notation
 ----------------------------
 
@@ -84,6 +92,8 @@ the exponent is chosen so that the mantissa ``m`` satisfies
 >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING_SHIFTED)
 >>> print(sform(123.456))
 0.123456e+03
+
+.. _binary:
 
 Binary
 ------
@@ -97,6 +107,8 @@ notation in base-2.
 
 Here ``b`` exponent symbol indicates base-2 instead of base-10.
 For binary formatting, the mantissa ``m`` satisfies ``1 <= m < 2``.
+
+.. _binary_iec:
 
 Binary IEC
 ----------
@@ -313,6 +325,11 @@ decimal separator.
 >>> print(sform(1234567.7654321))
 1 234 567,765_432_1
 
+NIST discourages the use of ``','`` or ``'.'`` as thousands seperators
+because they can be confused with the decimal separators depending on
+the locality. See
+`NIST Guide to the SI 10.5.3 <https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-10-more-printing-and-using-symbols-and-numbers#1053>`_.
+
 Sign Mode
 =========
 
@@ -382,6 +399,8 @@ to the 10\ :sup:`4` (ten-thousands) place.
 ...                   top_dig_place=4)
 >>> print(sform(42))
 00042
+
+.. _percent_mode:
 
 Percent Mode
 ============
@@ -541,6 +560,8 @@ symbol using the ``unicode_pm`` option.
 >>> sform = Formatter(unicode_pm=True)
 >>> print(sform(123.456, 0.789))
 123.456 ± 0.789
+
+.. _bracket_uncertainty:
 
 Bracket Uncertainty
 -------------------
