@@ -227,16 +227,17 @@ values.
 ...     print(f'{snum:.2ep}')
 1.23 c
 
-:class:`sfloat` objects load global settings when being *formatted*,
-not initialized.
-In contrast, :class:`Formatter` settings are configured and frozen when
+:class:`sfloat` and :class:`vufloat` objects load global settings when
+being *formatted*, not initialized.
+By contrast, :class:`Formatter` settings are configured and frozen when
 the class is initialized.
-Thus changing global default settings with :func:`set_global_defaults`
+Thus, changing global default settings with :func:`set_global_defaults`
 or with the :class:`GlobalDefaultsContext` will not change the behavior
-of any :class:`Formatter` that was intantiated before the change, but it
-will change :class:`sfloat` formatting.
-Global configuration settings are, thus, most useful for controlling the
-behavior of :class:`sfloat` formatting.
+of any :class:`Formatter` that was instantiated before the change, but
+it will change :class:`sfloat` and :class:`vufloat` formatting.
+Global configuration settings are, then, most useful for controlling the
+behavior of :class:`sfloat` and :class:`vufloat` formatting.
 In particular, not all avaible options can be accessed using the
 :ref:`FSML <fsml>`, so the only way to modify these options while using
-:class:`sfloat` formatting is via the global configuration settings.
+:class:`sfloat` or :class:`vufloat` formatting is via the global
+configuration settings.
