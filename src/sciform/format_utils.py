@@ -329,10 +329,11 @@ def convert_exp_str(exp_str: str,
             exp_str = transformed_exp_str
 
     if transform_applied:
+        if latex:
+            exp_str = rf'\text{{{exp_str.lstrip(" ")}}}'
         return exp_str
     else:
         if latex:
-            # TODO: \text{} if prefix_exp and transform_applied
             exp_str = convert_exp_str_to_latex(exp_str)
         elif superscript_exp:
             exp_str = convert_exp_str_to_superscript(exp_str)

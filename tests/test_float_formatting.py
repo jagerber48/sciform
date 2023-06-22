@@ -72,7 +72,7 @@ class TestFormatting(unittest.TestCase):
                 Formatter(exp_mode=ExpMode.SCIENTIFIC,
                           exp=3,
                           prefix_exp=True,
-                          latex=True): r'12.345 k'
+                          latex=True): r'12.345\text{k}'
             }
         }
 
