@@ -91,9 +91,9 @@ def get_mantissa_exp_base(
                     exp = ((exp + 1) // 3) * 3
             else:
                 if exp % 3 != 0:
-                    warn(f'Attempt to set exponent explicity to a non-integer '
-                         f'multiple of 3 in engineering mode. Coercing to the '
-                         f'next lower multiple of 3.')
+                    warn('Attempt to set exponent explicity to a non-integer '
+                         'multiple of 3 in engineering mode. Coercing to the '
+                         'next lower multiple of 3.')
                     exp = (exp // 3) * 3
         elif (exp_mode is ExpMode.BINARY
               or exp_mode is ExpMode.BINARY_IEC):
@@ -103,9 +103,9 @@ def get_mantissa_exp_base(
                     exp = (exp // 10) * 10
             else:
                 if exp_mode is ExpMode.BINARY_IEC and exp % 10 != 0:
-                    warn(f'Attempt to set exponent explicity to a non-integer '
-                         f'multiple of 10 in binary IEC mode. Coercing to the '
-                         f'next lower multiple of 10.')
+                    warn('Attempt to set exponent explicity to a non-integer '
+                         'multiple of 10 in binary IEC mode. Coercing to the '
+                         'next lower multiple of 10.')
                     exp = (exp // 10) * 10
 
         mantissa = num * base**-exp
@@ -167,7 +167,7 @@ def get_round_digit(num: float,
                     round_digit = top_digit
                 elif 950 <= num_top_three_digs <= 999:
                     '''
-                    In this case the top three digits will be rounded up to 
+                    In this case the top three digits will be rounded up to
                     1000 so round_digit=top_digit will actually correspond to
                     two significant figures with respect to the rounded value.
                     This is in accordance with the PDG specification.

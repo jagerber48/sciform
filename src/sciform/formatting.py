@@ -90,8 +90,8 @@ def format_float(num: float, options: FormatOptions) -> str:
     if mantissa_rounded == 0:
         '''
         This catches an edge case involving negative precision when the
-        resulting mantissa is zero after the second rounding. This 
-        result is technically correct (e.g. 0e+03 = 0e+00), but sciform 
+        resulting mantissa is zero after the second rounding. This
+        result is technically correct (e.g. 0e+03 = 0e+00), but sciform
         always presents zero values with an exponent of zero.
         '''
         exp = 0
@@ -173,8 +173,8 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
     exp_mode = options.exp_mode
     '''
-    We format the float by determining the required exponent and 
-    precision and format the val and unc mantissas accordingly. 
+    We format the float by determining the required exponent and
+    precision and format the val and unc mantissas accordingly.
     Engineering, engineering shifted, and binary IEC modes are not, in
     general, compatible with setting the exponent explicitly so we
     convert these modes to a corresponding free_exp_mode which is
@@ -226,16 +226,16 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         new_top_digit = user_top_digit
 
     '''
-    We will format the val and unc mantissas 
-       * using precision rounding mode with the precision calculated 
+    We will format the val and unc mantissas
+       * using precision rounding mode with the precision calculate
          above
        * With the optionally shared top digit calculated above
        * With the free_exp_mode determined above using the calculated
          shared exponent
-       * Without percent mode (percent mode for val/unc pairs is 
+       * Without percent mode (percent mode for val/unc pairs is
          handled independently in this function)
        * Without superscript, prefix, parts-per, or latex translations.
-         The remaining steps rely on parsing an exponent string like 
+         The remaining steps rely on parsing an exponent string like
          'e+03' or similar. Such translations are handled within the
          scope of this function.
     '''
