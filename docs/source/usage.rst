@@ -79,7 +79,7 @@ using the :class:`vufloat` object.
 Value/uncertainty pairs can also be shown in a common format where the
 uncertainty is displayed in parentheses after the value
 
->>> print(f'{val_unc:!2S}')
+>>> print(f'{val_unc:!2()}')
 84.30(20)
 
 value/uncertainty pairs are formatted according to the following

@@ -102,12 +102,18 @@ class Formatter:
       replaced with either SI or IEC prefixes as appropriate.
     :param parts_per_exp: ``bool`` indicating if "parts-per" exponent
       translations should be used.
-    :param extra_si_prefixes: ``dict[int, str]`` mapping additional
-      exponent values to si prefixes.
-    :param extra_iec_prefixes: ``dict[int, str]`` mapping additional
-      exponent values to iec prefixes
-    :param extra_parts_per_forms: ``dict[int, str]`` mapping additional
-      exponent values to "parts-per" forms.
+    :param extra_si_prefixes: ``dict[int, Union[str, None]]`` mapping
+      additional exponent values to si prefixes. Entries overwrite
+      default values. A value of None means that exponent will not be
+      converted.
+    :param extra_iec_prefixes: ``dict[int, Union[str, None]]`` mapping
+      additional exponent values to iec prefixes. Entries overwrite
+      default values. A value of None means that exponent will not be
+      converted.
+    :param extra_parts_per_forms: ``dict[int, Union[str, None]]``
+      mapping additional exponent values to "parts-per" forms. Entries
+      overwrite default values. A value of None means that exponent will
+      not be converted.
     :param add_c_prefix: ``bool`` (default ``False``) if ``True`` adds
       ``{-2: 'c'}`` to ``extra_si_prefixes``.
     :param add_small_si_prefixes: ``bool`` (default ``False``) if
@@ -154,9 +160,9 @@ class Formatter:
             nan_inf_exp: bool = None,
             prefix_exp: bool = None,
             parts_per_exp: bool = None,
-            extra_si_prefixes: dict[int, str] = None,
-            extra_iec_prefixes: dict[int, str] = None,
-            extra_parts_per_forms: dict[int, str] = None,
+            extra_si_prefixes: dict[int, Union[str, None]] = None,
+            extra_iec_prefixes: dict[int, Union[str, None]] = None,
+            extra_parts_per_forms: dict[int, Union[str, None]] = None,
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False,
             add_ppth_form: bool = False,

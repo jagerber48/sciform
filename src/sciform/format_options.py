@@ -231,8 +231,6 @@ class FormatOptions:
             unc_pm_whitespace=unc_pm_whitespace
         )
 
-# TODO: fix prefix_mode lower case but bracket_unc upper case. reconsider
-#   letter for bracket_unc?
     pattern = re.compile(r'''^
                              (?:(?P<fill_mode>[ 0])=)?
                              (?P<sign_mode>[-+ ])?
@@ -245,7 +243,7 @@ class FormatOptions:
                              (?P<exp_mode>[fF%eErRbB])?
                              (?:x(?P<exp>[+-]?\d+))?
                              (?P<prefix_mode>p)?
-                             (?P<bracket_unc>S)?
+                             (?P<bracket_unc>\(\))?
                              $''', re.VERBOSE)
 
     fill_mode_mapping = {' ': FillMode.SPACE,
