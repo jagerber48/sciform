@@ -139,7 +139,7 @@ def format_float(num: float, options: FormatOptions) -> str:
 def format_val_unc(val: float, unc: float, options: FormatOptions):
     if options.round_mode is RoundMode.PREC:
         warn('Precision round mode not available for value/uncertainty '
-             'formatting. Rounding is always applied as significant figures'
+             'formatting. Rounding is always applied as significant figures '
              'for the uncertainty.')
 
     unc = abs(unc)
