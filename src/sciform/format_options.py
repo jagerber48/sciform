@@ -231,6 +231,8 @@ class FormatOptions:
             unc_pm_whitespace=unc_pm_whitespace
         )
 
+# TODO: fix prefix_mode lower case but bracket_unc upper case. reconsider
+#   letter for bracket_unc?
     pattern = re.compile(r'''^
                              (?:(?P<fill_mode>[ 0])=)?
                              (?P<sign_mode>[-+ ])?
