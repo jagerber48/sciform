@@ -10,8 +10,8 @@ Overview
 
 ``sciform`` is used to convert python float objects into strings
 according to a variety of user-selected scientific formatting options
-including fixed-pointa and decimal and binary scientific and engineering
-notations.
+including decimal, binary, fixed-point, scientific and engineering
+formats.
 Where possible, formatting follows documented standards such as those
 published by `BIPM <https://www.bipm.org/en/>`_ or
 `IEC <https://iec.ch/homepage>`_.
@@ -52,6 +52,27 @@ formatting and the custom FSML with the ``sfloat`` object.
 >>> num = sfloat(123456)
 >>> print(f'{num:_!2f}')
 120_000
+
+``sciform`` can also be used to format pairs of value/uncertainty floats
+using the ``Formatter`` or ``vufloat`` objects.
+
+>>> sform = Formatter(round_mode=RoundMode.PREC,
+...                   precision=2,
+...                   upper_separator=GroupingSeparator.SPACE,
+...                   lower_separator=GroupingSeparator.SPACE)
+>>> print(sform(123456.654321, 0.0034))
+123 456.654 3 +/- 0.003 4
+>>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
+...                   precision=4,
+...                   exp_mode=ExpMode.ENGINEERING)
+>>> print(sform(123456.654321, 0.0034))
+(123.456654321 +/- 0.000003400)e+03
+
+>>> from sciform import vufloat
+>>> num = vufloat(123456.654321, 0.0034)
+>>> print(f'{num:_!2f}')
+123_456.6543 +/- 0.0034
+
 
 ================
 Acknowledgements

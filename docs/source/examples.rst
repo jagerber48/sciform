@@ -70,7 +70,7 @@ uncertainties::
     ax.grid(True)
     ax.legend()
     plt.show()
-    print(tabulate(fit_results_list, tablefmt='grid', headers='keys'))
+    print(tabulate(fit_results_list, tablefmt='grid', headers='keys', floatfmt='#.2g'))
 
 This produces the plot:
 
@@ -79,34 +79,37 @@ This produces the plot:
 
 And the table::
 
-    +-------------+-----------------+--------------+-------------+-------------+----------+
-    |   curvature |   curvature_err |           x0 |      x0_err |          y0 |   y0_err |
-    +=============+=================+==============+=============+=============+==========+
-    | 2.06681e+13 |     1.93116e+12 | -4.26771e-05 | 4.77644e-06 | 1.00001e+09 |  4596.5  |
-    +-------------+-----------------+--------------+-------------+-------------+----------+
-    | 1.84346e+13 |     1.0371e+12  | -6.86478e-06 | 1.64389e-06 | 1.00003e+09 |  2851.43 |
-    +-------------+-----------------+--------------+-------------+-------------+----------+
-    | 2.17231e+13 |     1.6867e+12  |  1.51428e-05 | 2.52038e-06 | 1.00002e+09 |  4400.57 |
-    +-------------+-----------------+--------------+-------------+-------------+----------+
+    +-------------+-----------------+----------+----------+---------+----------+
+    |   curvature |   curvature_err |       x0 |   x0_err |      y0 |   y0_err |
+    +=============+=================+==========+==========+=========+==========+
+    |     2.1e+13 |         1.9e+12 | -4.3e-05 |  4.8e-06 | 1.0e+09 |  4.6e+03 |
+    +-------------+-----------------+----------+----------+---------+----------+
+    |     1.8e+13 |         1.0e+12 | -6.9e-06 |  1.6e-06 | 1.0e+09 |  2.9e+03 |
+    +-------------+-----------------+----------+----------+---------+----------+
+    |     2.2e+13 |         1.7e+12 |  1.5e-05 |  2.5e-06 | 1.0e+09 |  4.4e+03 |
+    +-------------+-----------------+----------+----------+---------+----------+
 
 This plot and table suffer from a number of shortcomings which impede
 human readability.
-The main issue is major variability in the orders of magnitude of
-numbers which ought to be directly compared.
+One issue is that the exponents for the values and uncertainties differ,
+making it hard to identify the significant digits of the value.
+Another issue is that the exponents also vary from one dataset to the
+next, but it hard to see these differences at a glance.
 Of course, we could make manual adjustments to improve both the plot and
 the table.
-However, :mod:`sciform` will allow us to make the requried changes in a
+However, :mod:`sciform` will allow us to make the required changes in a
 general and automated way.
 
-We can address these problems using :mod:`sciform` by
+We can address these problems using :mod:`sciform` by:
 
-#. Using prefix scientific notation to label the plot axes and
-#. Using bracket uncertainty mode to collapse the value and errors into
-   the same table column and to make obvious the relative scale between
-   the uncertainty and value.
+#. Using prefix scientific notation to label the plot axes
+#. Using value/uncertainty formatting to collapse the value and errors
+   into the same table column and to make obvious the relative scale
+   between the uncertainty and value. In this case we will use the
+   bracket uncertainty format.
 
-To do this we import :mod:`sciform` and must make some helper functions
-for displaying the plot axes as described::
+To do this we import :mod:`sciform` and make some helper functions for
+displaying the plot axes as described::
 
     from typing import Literal
     import re
@@ -263,5 +266,8 @@ number of characters needed for each tick label, while still efficiently
 communicating the order of magnitude for each tick.
 Furthermore, the large offset to the y-axis is also efficiently
 captured with the ``1 G`` offset label.
-Finally, using bracket uncertainty mode in the table makes it clear how
-the magnitude of the uncertainty compares to the magnitude of the value.
+Finally, in the table, using engineering exponent mode helps keep the
+exponent the same for all rows and the precision matching for
+value/uncertainty formatting along with bracket uncertainty mode all
+make it clear how the magnitude of the uncertainty compares to the
+magnitude of the value.
