@@ -12,7 +12,7 @@ scientific formatting strings.
 The first is via the :class:`Formatter` object and the second is
 using string formatting and the
 :ref:`Format Specification Mini Language (FSML) <fsml>` with the
-:class:`sfloat` of :class:`vufloat` objects.
+:class:`sfloat` or :class:`vufloat` objects.
 
 Formatter
 ---------
