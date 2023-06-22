@@ -300,16 +300,13 @@ def translate_exp_str(exp_str: str,
         val_to_prefix_dict = copy(iec_val_to_prefix_dict)
         if extra_iec_prefixes is not None:
             val_to_prefix_dict.update(extra_iec_prefixes)
-    try:
-        # TODO: If the returned value is None, don't do the replacement.
-        #  This will allow users to set certain exponent translations to
-        #  None to stop particular translations. This may be useful,
-        #  e.g. to stop mapping 10**-9 to ppb for locales where
-        #  one billion = 10**12, not 10**9.
+
+    if exp_val in val_to_prefix_dict:
         prefix = val_to_prefix_dict[exp_val]
-        return f' {prefix}'
-    except KeyError:
-        return exp_str
+        if prefix is not None:
+            exp_str = f' {prefix}'
+
+    return exp_str
 
 
 def convert_exp_str(exp_str: str,
