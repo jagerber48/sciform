@@ -181,18 +181,45 @@ Extra Exponent Replacements
 ---------------------------
 
 In addition to the default
-:ref:`exponent replacements <exp_replacements>`, the user can include
-some additional standard replacements.
-Standard additional SI prefixes are::
+:ref:`exponent replacements <exp_replacements>`, The user can modify the
+available exponent replacements using a number of options.
+The SI prefix, IEC prefix, and parts-per replacements can be modified
+using the ``extra_si_prefixes``, ``extra_iec_prefixes`` and
+``extra_parts_per_forms`` options, respectively, and passing in
+dictionaries with keys corresponding to integer exponents and values
+corresponding to translated strings.
+The entries in these dictionaries overwrite any default translation
+mappings.
 
-   {-2: 'c', -1: 'd', +1: 'da', +2: 'h'}
+>>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
+...                   prefix_exp=True,
+...                   extra_si_prefixes={-2: 'c'})
+>>> print(sform(3e-2))
+3 c
 
-Here the integer keys indicate the exponent and the string values
-indicate the corresponding prefix.
-These additional prefixes can be included using the
+Passing ``None`` for the value for a corresponding exponent value will
+force that exponent to not be translated.
+
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
+...                   parts_per_exp=True)
+>>> print(sform(3e-9))
+3 ppb
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
+...                   parts_per_exp=True,
+...                   extra_parts_per_forms={-9: None})
+>>> print(sform(3e-9))
+3e-09
+
+Two helper options exist to add additional SI prefix translations
+corresponding to::
+
+    {-2: 'c', -1: 'd', +1: 'da', +2: 'h'}
+
+These SI prefixes are excluded by default because they do not correspond
+to the integer-multiple-of-3 prefixes which are compatible with
+engineering notation.
+However, they can be easily be included using the ``add_c_prefix`` and
 ``add_small_si_prefixes`` options.
-Furthermore, just the ``c`` prefix can be included using the
-``add_c_prefix`` options.
 
 >>> sform = Formatter(exp_mode=ExpMode.SCIENTIFIC,
 ...                   prefix_exp=True,

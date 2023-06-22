@@ -106,12 +106,14 @@ class Formatter:
       additional exponent values to si prefixes. Entries overwrite
       default values. A value of None means that exponent will not be
       converted.
-    :param extra_iec_prefixes: ``dict[int, str]`` mapping additional
-      exponent values to iec prefixes. Entries overwrite default values.
-      A value of None means that exponent will not be converted.
-    :param extra_parts_per_forms: ``dict[int, str]`` mapping additional
-      exponent values to "parts-per" forms. Entries overwrite default
-      values. A value of None means that exponent will not be converted.
+    :param extra_iec_prefixes: ``dict[int, Union[str, None]]`` mapping
+      additional exponent values to iec prefixes. Entries overwrite
+      default values. A value of None means that exponent will not be
+      converted.
+    :param extra_parts_per_forms: ``dict[int, Union[str, None]]``
+      mapping additional exponent values to "parts-per" forms. Entries
+      overwrite default values. A value of None means that exponent will
+      not be converted.
     :param add_c_prefix: ``bool`` (default ``False``) if ``True`` adds
       ``{-2: 'c'}`` to ``extra_si_prefixes``.
     :param add_small_si_prefixes: ``bool`` (default ``False``) if
