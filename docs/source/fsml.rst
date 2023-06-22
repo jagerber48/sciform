@@ -15,7 +15,7 @@ by using string formatting analogous to the built-in formatting of
 :class:`float` objects.
 The :mod:`sciform` format specification mini language is given by::
 
-    format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][exp_mode]["x" exp][p][S]
+    format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][exp_mode]["x" exp][p][()]
 
     fill               ::=  "0" | " "
     sign               ::=  "+" | "-" | " "
@@ -142,7 +142,7 @@ Details about the terms in the FSML are described below.
         replaced with SI or IEC prefix characters. E.g.
         ``'123e+03' -> '123 k'`` or ``'857.2B+20' -> '857.2 Mi'``.
    * - | bracket uncertainty
-       | (``'S'``)
+       | (``'()'``)
      - Flag (default off) indicating if :ref:`bracket_uncertainty` mode
        should be used so that uncertainty appears in parentheses rather
        than after a plus/minus symbol. E.g.

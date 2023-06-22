@@ -101,7 +101,7 @@ class vufloat:
 
     >>> from sciform import vufloat
     >>> snum = vufloat(123456.654321, 0.000002)
-    >>> print(f'{snum:,._!1fS}')
+    >>> print(f'{snum:,._!1f()}')
     123,456.654_321(2)
 
     :class:`vufloat` does not currently support any float operations

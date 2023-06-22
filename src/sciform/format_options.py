@@ -245,7 +245,7 @@ class FormatOptions:
                              (?P<exp_mode>[fF%eErRbB])?
                              (?:x(?P<exp>[+-]?\d+))?
                              (?P<prefix_mode>p)?
-                             (?P<bracket_unc>S)?
+                             (?P<bracket_unc>\(\))?
                              $''', re.VERBOSE)
 
     fill_mode_mapping = {' ': FillMode.SPACE,
