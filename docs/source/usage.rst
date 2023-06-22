@@ -51,9 +51,9 @@ formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
 Value/Uncertainty Formatting
 ----------------------------
 
-One of the most important (if not **the** most important) use cases for
-scientific formatting is formatting a value together with its specified
-uncertainty, e.g. ``84.3 +/- 0.2``.
+One of the most important use cases for scientific formatting is
+formatting a value together with its specified uncertainty, e.g.
+``84.3 +/- 0.2``.
 :mod:`sciform` provides the ability to format pairs of floats into
 value/uncertainty strings.
 We attempt to follow
