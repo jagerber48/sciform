@@ -71,7 +71,7 @@ using the ``Formatter`` or ``vufloat`` objects.
 >>> from sciform import vufloat
 >>> num = vufloat(123456.654321, 0.0034)
 >>> print(f'{num:_!2f}')
-123_456.6543 +/- 0.0034
+123_456.6543 +/- 0.0034blah
 
 
 ================
