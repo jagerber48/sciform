@@ -4,17 +4,19 @@ Supported Exponent Replacements
 ###############################
 
 :mod:`sciform` offers exponent replacement modes which provide
-translations between exponent strings and conventional string
-representations.
-For decimal exponents in scientific of engineering formats, SI prefix
-translations are available matched to integer multiples of 3 according
-to the
+translations between exponent strings and conventional alphabetic
+symbol representations.
+For decimal exponents in engineering formats, SI prefix translations are
+available according to the
 `SI prefixes <https://www.nist.gov/pml/owm/metric-si-prefixes>`_.
 It is also possible to convert decimal exponents into
 `parts-per notation <https://en.wikipedia.org/wiki/Parts-per_notation>`_.
 For binary formats, the IEC prefix translations are available matched to
 integer multiples of 10 according to the
 `IEC prefixes <https://physics.nist.gov/cuu/Units/binary.html>`_.
+
+SI Prefixes
+-----------
 
 .. list-table:: SI Prefixes
    :widths: 15, 15, 15
@@ -84,6 +86,9 @@ integer multiples of 10 according to the
      - quecto
      - q
 
+Extra SI Prefixes
+-----------------
+
 The user can additionally add the following extra si prefixes using the
 :ref:`extra_translations` options:
 
@@ -107,6 +112,9 @@ The user can additionally add the following extra si prefixes using the
      - centi
      - c
 
+Parts Per Forms
+---------------
+
 .. list-table:: Parts Per Forms
    :widths: 15, 15, 15
    :header-rows: 1
@@ -129,6 +137,26 @@ The user can additionally add the following extra si prefixes using the
 
 The user can additionally add a parts-per-thousand form ``ppth``
 corresponding to 10\ :sup:`-3` using the ``add_ppth_form`` option.
+Note that the definitions here conform to the
+`short scale <https://en.wikipedia.org/wiki/Long_and_short_scales>`_
+naming convention for large numbers, but that some locales use the
+`long scale <https://en.wikipedia.org/wiki/Long_and_short_scales>`_
+naming convention for large numbers.
+These two scales disagree on the numerical values for terms like
+"billion" and "trillion".
+For this reason, the usage of this notation is sometimes discouraged.
+Note that it is possible, using the ``extra_parts_per_forms`` option to
+override the standard mappings listed above.
+
+>>> from sciform import Formatter, ExpMode
+>>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
+...                   parts_per_exp=True,
+...                   extra_parts_per_forms={-12: 'ppb'})
+>>> print(sform(33e-12))
+33 ppb
+
+IEC Prefixes
+------------
 
 .. list-table:: IEC Prefixes
    :widths: 15, 15, 15
