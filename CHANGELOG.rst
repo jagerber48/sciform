@@ -1,4 +1,5 @@
 0.18.1 (2023-06-21)
+-------------------
 
 * Documentation improvements
 
