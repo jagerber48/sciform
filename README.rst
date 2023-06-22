@@ -56,7 +56,7 @@ formatting and the custom FSML with the ``sfloat`` object.
 ``sciform`` can also be used to format pairs of value/uncertainty floats
 using the ``Formatter`` or ``vufloat`` objects.
 
->>> sform = Formatter(round_mode=RoundMode.PREC,
+>>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
 ...                   precision=2,
 ...                   upper_separator=GroupingSeparator.SPACE,
 ...                   lower_separator=GroupingSeparator.SPACE)

@@ -1,4 +1,4 @@
-0.19.0 (2023-06-21)
+0.20.0 (2023-06-22)
 -------------------
 
 * Support passing ``None`` as a value into ``extra_si_prefixes``,
@@ -12,6 +12,13 @@
   mode, the translated exponent will now be wrapped in a Latex text
   mode: e.g. ``\text{Mi}``.
 * Link to test cases on examples page
+
+0.19.0 (2023-06-22)
+-------------------
+
+* Add python-package.yaml github workflows. Allows automated testing,
+  doc testing, and flake8 scans during github pull requests.
+* Minor flake8 cleanup
 
 0.18.1 (2023-06-21)
 -------------------
