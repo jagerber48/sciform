@@ -187,7 +187,7 @@ def get_round_digit(num: float,
     return round_digit
 
 
-def get_fill_str(fill_char: ' ', top_digit: int, top_padded_digit: int) -> str:
+def get_fill_str(fill_char: str, top_digit: int, top_padded_digit: int) -> str:
     if top_padded_digit > top_digit:
         pad_len = top_padded_digit - max(top_digit, 0)
         pad_str = fill_char*pad_len
