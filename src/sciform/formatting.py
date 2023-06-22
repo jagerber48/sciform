@@ -227,7 +227,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
     '''
     We will format the val and unc mantissas
-       * using precision rounding mode with the precision calculate
+       * using precision rounding mode with the precision calculated
          above
        * With the optionally shared top digit calculated above
        * With the free_exp_mode determined above using the calculated
