@@ -1,6 +1,14 @@
 Examples
 ########
 
+Test Cases
+==========
+
+The :mod:`sciform`
+`test suite <https://github.com/jagerber48/sciform/tree/main/tests>`_
+contains hundreds of example formatting test cases which showcase the
+many available formatting options.
+
 Plotting and Tabulating Fit Data
 ================================
 
