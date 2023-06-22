@@ -91,7 +91,7 @@ And the table::
 
 This plot and table suffer from a number of shortcomings which impede
 human readability.
-One issue is that the exponents for the values and uncertainties differ
+One issue is that the exponents for the values and uncertainties differ,
 making it hard to identify the significant digits of the value.
 Another issue is that the exponents also vary from one dataset to the
 next, but it hard to see these differences at a glance.
