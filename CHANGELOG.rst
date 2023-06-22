@@ -1,3 +1,18 @@
+0.19.0 (2023-06-21)
+-------------------
+
+* Support passing ``None`` as a value into ``extra_si_prefixes``,
+  ``extra_iec_prefixes``, or ``extra_parts_per_forms`` to prevent
+  translation of a certain exponent value. This may be useful for
+  suppressing ``ppb`` or similar local-dependent "parts per"
+  translations.
+* **[BREAKING]** Change the bracket uncertainty flag in the
+  `FSML <fsml>`_ from ``'S'`` to ``'()'``.
+* When an exponent translation mode is used in combination with Latex
+  mode, the translated exponent will now be wrapped in a Latex text
+  mode: e.g. ``\text{Mi}``.
+* Link to test cases on examples page
+
 0.18.1 (2023-06-21)
 -------------------
 
