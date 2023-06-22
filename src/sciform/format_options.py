@@ -65,8 +65,8 @@ class FormatOptions:
                                      f'exponent mode.')
 
         if self.percent and self.exp_mode is not ExpMode.FIXEDPOINT:
-            raise ValueError(f'percent mode can only be sued with fixed point '
-                             f'exponent mode.')
+            raise ValueError('percent mode can only be sued with fixed point '
+                             'exponent mode.')
 
         if self.upper_separator not in get_args(UpperGroupingSeparators):
             raise ValueError(f'upper_separator {self.upper_separator} not in '
@@ -85,8 +85,8 @@ class FormatOptions:
                              f'{self.upper_separator} cannot be equal.')
 
         if self.prefix_exp and self.parts_per_exp:
-            raise ValueError(f'Only one of prefix exponent and parts-per '
-                             f'exponent modes may be selected.')
+            raise ValueError('Only one of prefix exponent and parts-per '
+                             'exponent modes may be selected.')
 
     @classmethod
     def make(
@@ -236,11 +236,11 @@ class FormatOptions:
     pattern = re.compile(r'''^
                              (?:(?P<fill_mode>[ 0])=)?
                              (?P<sign_mode>[-+ ])?
-                             (?P<alternate_mode>\#)?                         
+                             (?P<alternate_mode>\#)?
                              (?P<top_dig_place>\d+)?
-                             (?P<upper_separator>[n,.s_])?                     
-                             (?P<decimal_separator>[.,])?            
-                             (?P<lower_separator>[ns_])?                  
+                             (?P<upper_separator>[n,.s_])?
+                             (?P<decimal_separator>[.,])?
+                             (?P<lower_separator>[ns_])?
                              (?:(?P<round_mode>[.!])(?P<prec>[+-]?\d+))?
                              (?P<exp_mode>[fF%eErRbB])?
                              (?:x(?P<exp>[+-]?\d+))?

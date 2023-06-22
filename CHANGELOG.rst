@@ -1,3 +1,10 @@
+0.19.0 (2023-06-22)
+-------------------
+
+* Add python-package.yaml github workflows. Allows automated testing,
+  doc testing, and flake8 scans during github pull requests.
+* Minor flake8 cleanup
+
 0.18.1 (2023-06-21)
 -------------------
 
