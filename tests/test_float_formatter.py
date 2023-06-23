@@ -1,10 +1,21 @@
 import unittest
 
 from sciform import Formatter, ExpMode, GroupingSeparator, FillMode
-from .utils import run_float_formatter_cases
+
+
+FloatFormatterCases = list[tuple[float, list[tuple[Formatter, str]]]]
 
 
 class TestFormatting(unittest.TestCase):
+    def run_float_formatter_cases(self, cases_list: FloatFormatterCases):
+        for num, num_formats in cases_list:
+            for formatter, expected_num_str in num_formats:
+                snum_str = formatter(num)
+                with self.subTest(num=num,
+                                  expected_num_str=expected_num_str,
+                                  actual_num_str=snum_str):
+                    self.assertEqual(snum_str, expected_num_str)
+
     def test_superscript_exp(self):
         cases_list = [
             (789, [
@@ -13,7 +24,7 @@ class TestFormatting(unittest.TestCase):
             ])
         ]
 
-        run_float_formatter_cases(self, cases_list)
+        self.run_float_formatter_cases(cases_list)
 
     def test_fill_and_separators(self):
         cases_list = [
@@ -43,7 +54,7 @@ class TestFormatting(unittest.TestCase):
             ])
         ]
 
-        run_float_formatter_cases(self, cases_list)
+        self.run_float_formatter_cases(cases_list)
 
     def test_latex(self):
         cases_list = [
@@ -68,7 +79,7 @@ class TestFormatting(unittest.TestCase):
             ])
         ]
 
-        run_float_formatter_cases(self, cases_list)
+        self.run_float_formatter_cases(cases_list)
 
     def test_nan(self):
         cases_list = [
@@ -78,7 +89,8 @@ class TestFormatting(unittest.TestCase):
                            latex=True), r'\left(nan\right)\%')
             ])
         ]
-        run_float_formatter_cases(self, cases_list)
+
+        self.run_float_formatter_cases(cases_list)
 
     def test_parts_per_exp(self):
         cases_list = [
@@ -112,7 +124,7 @@ class TestFormatting(unittest.TestCase):
             ])
         ]
 
-        run_float_formatter_cases(self, cases_list)
+        self.run_float_formatter_cases(cases_list)
 
 
 if __name__ == "__main__":
