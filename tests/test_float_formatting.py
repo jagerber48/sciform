@@ -107,14 +107,16 @@ class TestFormatting(unittest.TestCase):
                         parts_per_exp=True): '123 ppb',
               Formatter(exp_mode=ExpMode.ENGINEERING,
                         parts_per_exp=True,
-                        extra_parts_per_forms={-9: None, -12: 'ppb'}): '123e-09'
+                        extra_parts_per_forms={-9: None, -12: 'ppb'}):
+              '123e-09'
             },
             123e-12: {
                 Formatter(exp_mode=ExpMode.ENGINEERING,
                           parts_per_exp=True): '123 ppt',
                 Formatter(exp_mode=ExpMode.ENGINEERING,
                           parts_per_exp=True,
-                          extra_parts_per_forms={-9: None, -12: 'ppb'}): '123 ppb'
+                          extra_parts_per_forms={-9: None, -12: 'ppb'}):
+                '123 ppb'
             }
         }
 
