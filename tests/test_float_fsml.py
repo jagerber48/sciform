@@ -8,8 +8,8 @@ FloatFormatterCases = list[tuple[float, list[tuple[str, str]]]]
 
 class TestFormatting(unittest.TestCase):
     def run_float_fsml_cases(self, cases_list: FloatFormatterCases):
-        for num, num_formats in cases_list:
-            for format_spec, expected_num_str in num_formats:
+        for num, formats_list in cases_list:
+            for format_spec, expected_num_str in formats_list:
                 snum = sfloat(num)
                 snum_str = f'{snum:{format_spec}}'
                 with self.subTest(num=num, format_spec=format_spec,

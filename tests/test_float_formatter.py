@@ -8,8 +8,8 @@ FloatFormatterCases = list[tuple[float, list[tuple[Formatter, str]]]]
 
 class TestFormatting(unittest.TestCase):
     def run_float_formatter_cases(self, cases_list: FloatFormatterCases):
-        for num, num_formats in cases_list:
-            for formatter, expected_num_str in num_formats:
+        for num, formats_list in cases_list:
+            for formatter, expected_num_str in formats_list:
                 snum_str = formatter(num)
                 with self.subTest(num=num,
                                   expected_num_str=expected_num_str,
