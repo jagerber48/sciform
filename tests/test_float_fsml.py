@@ -3,11 +3,11 @@ import unittest
 from sciform import sfloat, GlobalDefaultsContext
 
 
-FloatFormatterCases = list[tuple[float, list[tuple[str, str]]]]
+FloatFSMLCases = list[tuple[float, list[tuple[str, str]]]]
 
 
 class TestFormatting(unittest.TestCase):
-    def run_float_fsml_cases(self, cases_list: FloatFormatterCases):
+    def run_float_fsml_cases(self, cases_list: FloatFSMLCases):
         for num, formats_list in cases_list:
             for format_spec, expected_num_str in formats_list:
                 snum = sfloat(num)
