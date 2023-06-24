@@ -1,3 +1,14 @@
+0.20.1 (2023-06-24)
+-------------------
+
+* Refactor unit tests to use lists and tuples instead of dicts. Literal
+  dicts allow the possibility for defining the same key (test case) with
+  different values, only the latest of which will actually be tested.
+  The refactoring ensures all elements of the test lists will be tested.
+* Refactor ``sfloat`` and ``vufloat`` ``__format__()`` functions to call
+  ``format_float()`` and ``format_val_unc()`` directly instead of
+  creating a ``Formatter`` object first.
+
 0.20.0 (2023-06-22)
 -------------------
 

@@ -1,4 +1,5 @@
-from sciform.formatter import Formatter
+from sciform.formatting import format_float, format_val_unc
+from sciform.format_options import FormatOptions
 
 
 # noinspection PyPep8Naming
@@ -24,8 +25,8 @@ class sfloat(float):
     """
 
     def __format__(self, fmt: str):
-        formatter = Formatter.from_format_spec_str(fmt)
-        return formatter.format(float(self))
+        return format_float(float(self),
+                            FormatOptions.from_format_spec_str(fmt))
 
     @classmethod
     def _to_sfloat(cls, num: float) -> 'sfloat':
@@ -116,5 +117,6 @@ class vufloat:
         self.uncertainty = unc
 
     def __format__(self, format_spec: str):
-        formatter = Formatter.from_format_spec_str(format_spec)
-        return formatter(self.value, self.uncertainty)
+        return format_val_unc(self.value,
+                              self.uncertainty,
+                              FormatOptions.from_format_spec_str(format_spec))

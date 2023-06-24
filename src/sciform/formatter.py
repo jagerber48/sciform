@@ -243,8 +243,3 @@ class Formatter:
                    bracket_unc_remove_seps=options.bracket_unc_remove_seps,
                    unicode_pm=options.unicode_pm,
                    unc_pm_whitespace=options.unc_pm_whitespace)
-
-    @classmethod
-    def from_format_spec_str(cls, fmt: str):
-        options = FormatOptions.from_format_spec_str(fmt)
-        return cls._from_options(options=options)
