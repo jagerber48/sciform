@@ -1,4 +1,6 @@
-from sciform.formatting import format_float, format_val_unc
+from decimal import Decimal
+
+from sciform.formatting import format_num, format_val_unc
 from sciform.format_options import FormatOptions
 
 
@@ -25,8 +27,8 @@ class sfloat(float):
     """
 
     def __format__(self, fmt: str):
-        return format_float(float(self),
-                            FormatOptions.from_format_spec_str(fmt))
+        return format_num(Decimal(str(self)),
+                          FormatOptions.from_format_spec_str(fmt))
 
     @classmethod
     def _to_sfloat(cls, num: float) -> 'sfloat':
@@ -113,8 +115,8 @@ class vufloat:
     https://pypi.org/project/uncertainties/
     """
     def __init__(self, val: float, unc: float, /):
-        self.value = val
-        self.uncertainty = unc
+        self.value = Decimal(str(val))
+        self.uncertainty = Decimal(str(unc))
 
     def __format__(self, format_spec: str):
         return format_val_unc(self.value,
