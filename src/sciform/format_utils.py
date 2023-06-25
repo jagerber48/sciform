@@ -21,15 +21,6 @@ def get_top_digit(num: Decimal, binary=False) -> int:
         return len(digits) + exp - 1
     else:
         return floor(log2(abs(num)))
-    # if not isfinite(num):
-    #     return 0
-    # elif num == 0:
-    #     return 0
-    # else:
-    #     if not binary:
-    #         return floor(log10(abs(num)))
-    #     else:
-    #         return floor(log2(abs(num)))
 
 
 def get_bottom_digit(num: Decimal) -> int:
@@ -66,16 +57,14 @@ def get_bottom_digit(num: Decimal) -> int:
     return bottom_digit
 
 
-def get_top_and_bottom_digit(num: float) -> tuple[int, int]:
+def get_top_and_bottom_digit(num: Decimal) -> tuple[int, int]:
     return get_top_digit(num), get_bottom_digit(num)
 
 
 def get_mantissa_exp_base(
         num: Decimal,
         exp_mode: ExpMode,
-        exp: Union[int, type(AutoExp)] = None) -> (float, int, int):
-    num = Decimal(num)
-
+        exp: Union[int, type(AutoExp)] = None) -> (Decimal, int, int):
     if (exp_mode is ExpMode.BINARY
             or exp_mode is ExpMode.BINARY_IEC):
         base = 2
@@ -126,10 +115,8 @@ def get_mantissa_exp_base(
                          'multiple of 10 in binary IEC mode. Coercing to the '
                          'next lower multiple of 10.')
                     exp = (exp // 10) * 10
-        base = Decimal(base)
-        # exp = Decimal(exp)
-        mantissa = num * base**-exp
-        mantissa = Decimal(mantissa).normalize()
+        mantissa = num * Decimal(str(base**-exp)).normalize()
+        mantissa = mantissa.normalize()
     return mantissa, exp, base
 
 

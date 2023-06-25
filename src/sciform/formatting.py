@@ -15,6 +15,7 @@ from sciform.grouping import add_separators
 
 
 def format_non_inf(num: Decimal, options: FormatOptions) -> str:
+    # Convert to float to get 'inf', 'nan' instead of 'Infinity' and 'NaN'
     num = float(num)
     if isfinite(num):
         raise ValueError(f'format_non_inf() cannot format finite float {num}.')
@@ -72,6 +73,7 @@ def format_num(num: Decimal, options: FormatOptions) -> str:
 
     if options.percent:
         num *= 100
+        num = num.normalize()
 
     exp = options.exp
     round_mode = options.round_mode
@@ -79,13 +81,13 @@ def format_num(num: Decimal, options: FormatOptions) -> str:
     precision = options.precision
     mantissa, temp_exp, base = get_mantissa_exp_base(num, exp_mode, exp)
     round_digit = get_round_digit(mantissa, round_mode, precision)
-    mantissa_rounded = Decimal(round(mantissa, -int(round_digit)))
+    mantissa_rounded = round(mantissa, -int(round_digit))
 
     '''
     Repeat mantissa + exponent discovery after rounding in case rounding
     altered the required exponent.
     '''
-    rounded_num = mantissa_rounded * base**temp_exp
+    rounded_num = mantissa_rounded * Decimal(str(base**temp_exp)).normalize()
     mantissa, exp, base = get_mantissa_exp_base(rounded_num, exp_mode, exp)
     round_digit = get_round_digit(mantissa, round_mode, precision)
     mantissa_rounded = Decimal(round(mantissa, -int(round_digit)))
