@@ -67,7 +67,6 @@ def format_non_inf(num: Decimal, options: FormatOptions) -> str:
 
 
 def format_num(num: Decimal, options: FormatOptions) -> str:
-    num = Decimal(num)
     if not isfinite(num):
         return format_non_inf(num, options)
 
@@ -87,7 +86,7 @@ def format_num(num: Decimal, options: FormatOptions) -> str:
     Repeat mantissa + exponent discovery after rounding in case rounding
     altered the required exponent.
     '''
-    rounded_num = mantissa_rounded * Decimal(str(base**temp_exp)).normalize()
+    rounded_num = mantissa_rounded * Decimal(base)**Decimal(temp_exp)
     mantissa, exp, base = get_mantissa_exp_base(rounded_num, exp_mode, exp)
     round_digit = get_round_digit(mantissa, round_mode, precision)
     mantissa_rounded = Decimal(round(mantissa, -int(round_digit)))
@@ -100,9 +99,6 @@ def format_num(num: Decimal, options: FormatOptions) -> str:
         always presents zero values with an exponent of zero.
         '''
         exp = 0
-
-    if mantissa_rounded == -0.0:
-        mantissa_rounded = abs(mantissa_rounded)
 
     fill_char = options.fill_mode.to_char()
     mantissa_str = format_float_by_top_bottom_dig(mantissa_rounded.normalize(),

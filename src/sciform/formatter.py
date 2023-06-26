@@ -214,7 +214,9 @@ class Formatter:
         if unc is None:
             return format_num(Decimal(str(val)), self.options)
         else:
-            return format_val_unc(Decimal(str(val)), Decimal(str(unc)), self.options)
+            return format_val_unc(Decimal(str(val)),
+                                  Decimal(str(unc)),
+                                  self.options)
 
     @classmethod
     def _from_options(cls, options: FormatOptions):

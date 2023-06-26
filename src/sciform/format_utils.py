@@ -1,6 +1,5 @@
-import sys
 from typing import Union
-from math import floor, log10, log2, isfinite
+from math import floor, log2, isfinite
 from warnings import warn
 import re
 from copy import copy
@@ -16,8 +15,6 @@ def get_top_digit(num: Decimal, binary=False) -> int:
         return 0
     if not binary:
         _, digits, exp = num.as_tuple()
-        if exp == 'n':
-            return 0
         return len(digits) + exp - 1
     else:
         return floor(log2(abs(num)))
@@ -26,35 +23,9 @@ def get_top_digit(num: Decimal, binary=False) -> int:
 def get_bottom_digit(num: Decimal) -> int:
     if not isfinite(num):
         return 0
-    if isinstance(num, Decimal):
-        round(num, 14)
+    else:
         _, digits, exp = num.as_tuple()
         return exp
-
-    if not isfinite(num):
-        return 0
-
-    num = abs(num)
-    max_digits = sys.float_info.dig
-    int_part = int(num)
-    if int_part == 0:
-        magnitude = 1
-    else:
-        magnitude = int(log10(int_part)) + 1
-
-    if magnitude >= max_digits:
-        return 0
-
-    frac_part = num - int_part
-    multiplier = 10 ** (max_digits - magnitude)
-    frac_digits = multiplier + floor(multiplier * frac_part + 0.5)
-    while frac_digits % 10 == 0:
-        frac_digits /= 10
-    precision = int(log10(frac_digits))
-
-    bottom_digit = -precision
-
-    return bottom_digit
 
 
 def get_top_and_bottom_digit(num: Decimal) -> tuple[int, int]:
@@ -115,7 +86,7 @@ def get_mantissa_exp_base(
                          'multiple of 10 in binary IEC mode. Coercing to the '
                          'next lower multiple of 10.')
                     exp = (exp // 10) * 10
-        mantissa = num * Decimal(str(base**-exp)).normalize()
+        mantissa = num * Decimal(base)**Decimal(-exp)
         mantissa = mantissa.normalize()
     return mantissa, exp, base
 
@@ -165,9 +136,10 @@ def get_round_digit(num: Decimal,
             if not pdg_sig_figs:
                 round_digit = bottom_digit
             else:
+                # Bring num to be between 100 and 1000.
                 num_top_three_digs = num * 10**(2-top_digit)
-                num_top_three_digs = round(num_top_three_digs)
-                new_top_digit = get_top_digit(Decimal(num_top_three_digs))
+                num_top_three_digs = round(num_top_three_digs, 0)
+                new_top_digit = get_top_digit(num_top_three_digs)
                 num_top_three_digs = num_top_three_digs * 10**(2-new_top_digit)
                 if 100 <= num_top_three_digs <= 354:
                     round_digit = top_digit - 1
