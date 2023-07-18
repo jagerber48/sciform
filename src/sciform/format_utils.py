@@ -93,7 +93,6 @@ def get_mantissa_exp_base(
 
 def get_exp_str(exp: int, exp_mode: ExpMode,
                 capitalize: bool) -> str:
-    exp = int(exp)
     if exp_mode is exp_mode.FIXEDPOINT:
         exp_str = ''
     elif (exp_mode is ExpMode.SCIENTIFIC
