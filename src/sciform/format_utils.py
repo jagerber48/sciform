@@ -24,7 +24,7 @@ def get_bottom_digit(num: Decimal) -> int:
     if not isfinite(num):
         return 0
     else:
-        _, digits, exp = num.as_tuple()
+        _, _, exp = num.as_tuple()
         return exp
 
 
