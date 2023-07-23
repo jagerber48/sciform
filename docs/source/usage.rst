@@ -8,7 +8,7 @@ Formatting
 ==========
 
 :mod:`sciform` provides two primary methods for formatting numbers into
-scientific formatting strings.
+scientific formatted strings.
 The first is via the :class:`Formatter` object and the second is
 using string formatting and the
 :ref:`Format Specification Mini Language (FSML) <fsml>` with the
@@ -57,12 +57,12 @@ formatting a value together with its specified uncertainty, e.g.
 ``84.3 +/- 0.2``.
 :mod:`sciform` provides the ability to format pairs of numbers into
 value/uncertainty strings.
-We attempt to follow
+:mod:`sciform` attempts to follow
 `BIPM <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6>`_
 or `NIST <https://www.nist.gov/pml/nist-technical-note-1297>`_
 recomendations for conventions when possible.
 
-value/uncertainty pairs can be formatted either by passing two values
+Value/uncertainty pairs can be formatted either by passing two values
 into a :class:`Formatter`, and configuring the :class:`Formatter` using
 :ref:`formatting_options` and :ref:`val_unc_formatting_options`, or by
 using the :class:`SciNumUnc` object.
@@ -77,24 +77,25 @@ using the :class:`SciNumUnc` object.
 >>> print(f'{val_unc:!2}')
 84.30 +/- 0.20
 
-Value/uncertainty pairs can also be shown in a common format where the
-uncertainty is displayed in parentheses after the value
+Value/uncertainty pairs can also be formatted in a common parentheses
+notation in which the uncertainty is displayed in parentheses following
+the value.
 
 >>> print(f'{val_unc:!2()}')
 84.30(20)
 
-value/uncertainty pairs are formatted according to the following
+Value/uncertainty pairs are formatted according to the following
 algorithm:
 
 #. Rounding is always performed using significant figure rounding
    applied to the uncertainty. If a ``precision`` is supplied then the
-   uncertainty is rounded to that many signficant figures. Otherwise it
-   is not rounded.
+   uncertainty is rounded to significant figures consistent with the
+   supplied ``precision``. Otherwise the uncertainty is left unrounded.
 #. The value is rounded to the digit corresponding to the least
-   significant digit of the uncertainty.
+   significant digit of the rounded uncertainty.
 #. The value for the exponent is resolved by applying the
    ``exp_mode`` to the larger of the value and uncertainty.
-#. The value and uncertainties mantissas are determined according to the
+#. The value and uncertainty mantissas are determined according to the
    value of the exponent determined in the previous step.
 #. The value and uncertainty mantissas are formatted together with the
    exponent according to the user-selected display options.
