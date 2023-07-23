@@ -23,6 +23,9 @@ class SciNum:
         return format_num(self.value,
                           FormatOptions.from_format_spec_str(fmt))
 
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.value})'
+
 
 class SciNumUnc:
     """
@@ -45,3 +48,6 @@ class SciNumUnc:
         return format_val_unc(self.value,
                               self.uncertainty,
                               FormatOptions.from_format_spec_str(format_spec))
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.value}, {self.uncertainty})'
