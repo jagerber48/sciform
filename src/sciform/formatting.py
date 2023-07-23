@@ -1,6 +1,7 @@
 from math import isfinite
 from warnings import warn
 import re
+from decimal import Decimal
 
 from sciform.modes import ExpMode, SignMode, AutoExp
 from sciform.format_options import FormatOptions, RoundMode
@@ -13,7 +14,9 @@ from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
 from sciform.grouping import add_separators
 
 
-def format_non_inf(num: float, options: FormatOptions) -> str:
+def format_non_inf(num: Decimal, options: FormatOptions) -> str:
+    # Convert to float to get 'inf', 'nan' instead of 'Infinity' and 'NaN'
+    num = float(num)
     if isfinite(num):
         raise ValueError(f'format_non_inf() cannot format finite float {num}.')
 
@@ -63,12 +66,13 @@ def format_non_inf(num: float, options: FormatOptions) -> str:
     return result
 
 
-def format_float(num: float, options: FormatOptions) -> str:
+def format_num(num: Decimal, options: FormatOptions) -> str:
     if not isfinite(num):
         return format_non_inf(num, options)
 
     if options.percent:
         num *= 100
+        num = num.normalize()
 
     exp = options.exp
     round_mode = options.round_mode
@@ -82,10 +86,10 @@ def format_float(num: float, options: FormatOptions) -> str:
     Repeat mantissa + exponent discovery after rounding in case rounding
     altered the required exponent.
     '''
-    rounded_num = mantissa_rounded * base**temp_exp
+    rounded_num = mantissa_rounded * Decimal(base)**Decimal(temp_exp)
     mantissa, exp, base = get_mantissa_exp_base(rounded_num, exp_mode, exp)
     round_digit = get_round_digit(mantissa, round_mode, precision)
-    mantissa_rounded = round(mantissa, -round_digit)
+    mantissa_rounded = Decimal(round(mantissa, -int(round_digit)))
 
     if mantissa_rounded == 0:
         '''
@@ -96,11 +100,8 @@ def format_float(num: float, options: FormatOptions) -> str:
         '''
         exp = 0
 
-    if mantissa_rounded == -0.0:
-        mantissa_rounded = abs(mantissa_rounded)
-
     fill_char = options.fill_mode.to_char()
-    mantissa_str = format_float_by_top_bottom_dig(mantissa_rounded,
+    mantissa_str = format_float_by_top_bottom_dig(mantissa_rounded.normalize(),
                                                   options.top_dig_place,
                                                   round_digit,
                                                   options.sign_mode,
@@ -136,7 +137,7 @@ def format_float(num: float, options: FormatOptions) -> str:
     return result
 
 
-def format_val_unc(val: float, unc: float, options: FormatOptions):
+def format_val_unc(val: Decimal, unc: Decimal, options: FormatOptions):
     if options.round_mode is RoundMode.PREC:
         warn('Precision round mode not available for value/uncertainty '
              'formatting. Rounding is always applied as significant figures '
@@ -147,6 +148,8 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     if options.percent:
         val *= 100
         unc *= 100
+        val = val.normalize()
+        unc = unc.normalize()
 
     # Find the digit place to round to
     if isfinite(unc) and unc != 0:
@@ -156,9 +159,16 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
     round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
                                   options.precision, options.pdg_sig_figs)
-    unc_rounded = round(unc, -round_digit)
-    val_rounded = round(val, -round_digit)
-    round_driver = round(round_driver, -round_digit)
+    if isfinite(unc):
+        unc_rounded = round(unc, -round_digit)
+    else:
+        unc_rounded = unc
+    if isfinite(val):
+        val_rounded = round(val, -round_digit)
+    else:
+        val_rounded = val
+    if isfinite(round_driver):
+        round_driver = round(round_driver, -round_digit)
 
     if not options.pdg_sig_figs:
         '''
@@ -168,8 +178,10 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
         '''
         round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
                                       options.precision, options.pdg_sig_figs)
-        unc_rounded = round(unc_rounded, -round_digit)
-        val_rounded = round(val_rounded, -round_digit)
+        if isfinite(unc_rounded):
+            unc_rounded = round(unc_rounded, -round_digit)
+        if isfinite(val_rounded):
+            val_rounded = round(val_rounded, -round_digit)
 
     exp_mode = options.exp_mode
     '''
@@ -262,11 +274,11 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
     mantissa_exp_pattern = re.compile(
         r'^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$')
 
-    val_str = format_float(val_rounded, val_format_options)
+    val_str = format_num(val_rounded, val_format_options)
     val_match = mantissa_exp_pattern.match(val_str)
     val_str = val_match.group('mantissa_str')
 
-    unc_str = format_float(unc_rounded, unc_format_options)
+    unc_str = format_num(unc_rounded, unc_format_options)
     unc_match = mantissa_exp_pattern.match(unc_str)
     unc_str = unc_match.group('mantissa_str')
 
@@ -288,7 +300,7 @@ def format_val_unc(val: float, unc: float, options: FormatOptions):
 
         val_unc_str = f'{val_str}{pm_symb}{unc_str}'
     else:
-        if unc < val:
+        if float(unc) < float(val):
             unc_str = unc_str.lstrip('0.,_ ')
         if options.bracket_unc_remove_seps:
             unc_str = unc_str.replace(

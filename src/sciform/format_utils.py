@@ -1,62 +1,41 @@
-import sys
 from typing import Union
-from math import floor, log10, log2, isfinite
+from math import floor, log2, isfinite
 from warnings import warn
 import re
 from copy import copy
+from decimal import Decimal
 
 from sciform.modes import ExpMode, RoundMode, SignMode, AutoExp, AutoPrec
 from sciform.prefix import (si_val_to_prefix_dict, iec_val_to_prefix_dict,
                             pp_val_to_prefix_dict)
 
 
-def get_top_digit(num: float, binary=False) -> int:
+def get_top_digit(num: Decimal, binary=False) -> int:
     if not isfinite(num):
         return 0
-    elif num == 0:
-        return 0
+    if not binary:
+        _, digits, exp = num.as_tuple()
+        return len(digits) + exp - 1
     else:
-        if not binary:
-            return floor(log10(abs(num)))
-        else:
-            return floor(log2(abs(num)))
+        return floor(log2(abs(num)))
 
 
-def get_bottom_digit(num: float) -> int:
+def get_bottom_digit(num: Decimal) -> int:
     if not isfinite(num):
         return 0
-
-    num = abs(num)
-    max_digits = sys.float_info.dig
-    int_part = int(num)
-    if int_part == 0:
-        magnitude = 1
     else:
-        magnitude = int(log10(int_part)) + 1
-
-    if magnitude >= max_digits:
-        return 0
-
-    frac_part = num - int_part
-    multiplier = 10 ** (max_digits - magnitude)
-    frac_digits = multiplier + floor(multiplier * frac_part + 0.5)
-    while frac_digits % 10 == 0:
-        frac_digits /= 10
-    precision = int(log10(frac_digits))
-
-    bottom_digit = -precision
-
-    return bottom_digit
+        _, _, exp = num.as_tuple()
+        return exp
 
 
-def get_top_and_bottom_digit(num: float) -> tuple[int, int]:
+def get_top_and_bottom_digit(num: Decimal) -> tuple[int, int]:
     return get_top_digit(num), get_bottom_digit(num)
 
 
 def get_mantissa_exp_base(
-        num: float,
+        num: Decimal,
         exp_mode: ExpMode,
-        exp: Union[int, type(AutoExp)] = None) -> (float, int, int):
+        exp: Union[int, type(AutoExp)] = None) -> (Decimal, int, int):
     if (exp_mode is ExpMode.BINARY
             or exp_mode is ExpMode.BINARY_IEC):
         base = 2
@@ -68,7 +47,7 @@ def get_mantissa_exp_base(
         if exp is AutoExp:
             exp = 0
     elif num == 0:
-        mantissa = 0
+        mantissa = Decimal(0)
         if exp is AutoExp:
             exp = 0
     else:
@@ -107,9 +86,8 @@ def get_mantissa_exp_base(
                          'multiple of 10 in binary IEC mode. Coercing to the '
                          'next lower multiple of 10.')
                     exp = (exp // 10) * 10
-
-        mantissa = num * base**-exp
-
+        mantissa = num * Decimal(base)**Decimal(-exp)
+        mantissa = mantissa.normalize()
     return mantissa, exp, base
 
 
@@ -131,7 +109,7 @@ def get_exp_str(exp: int, exp_mode: ExpMode,
     return exp_str
 
 
-def get_sign_str(num: float, sign_mode: SignMode) -> str:
+def get_sign_str(num: Decimal, sign_mode: SignMode) -> str:
     if num < 0:
         sign_str = '-'
     else:
@@ -146,7 +124,7 @@ def get_sign_str(num: float, sign_mode: SignMode) -> str:
     return sign_str
 
 
-def get_round_digit(num: float,
+def get_round_digit(num: Decimal,
                     round_mode: RoundMode,
                     precision: Union[int, type(AutoPrec)],
                     pdg_sig_figs: bool = False) -> int:
@@ -157,8 +135,9 @@ def get_round_digit(num: float,
             if not pdg_sig_figs:
                 round_digit = bottom_digit
             else:
+                # Bring num to be between 100 and 1000.
                 num_top_three_digs = num * 10**(2-top_digit)
-                num_top_three_digs = round(num_top_three_digs)
+                num_top_three_digs = round(num_top_three_digs, 0)
                 new_top_digit = get_top_digit(num_top_three_digs)
                 num_top_three_digs = num_top_three_digs * 10**(2-new_top_digit)
                 if 100 <= num_top_three_digs <= 354:
@@ -196,7 +175,7 @@ def get_fill_str(fill_char: str, top_digit: int, top_padded_digit: int) -> str:
     return pad_str
 
 
-def format_float_by_top_bottom_dig(num: float,
+def format_float_by_top_bottom_dig(num: Decimal,
                                    target_top_digit: int,
                                    target_bottom_digit: int,
                                    sign_mode: SignMode,

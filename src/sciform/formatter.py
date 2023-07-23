@@ -1,10 +1,11 @@
 from typing import Union
+from decimal import Decimal
 
 from sciform.modes import (SignMode, FillMode, UpperGroupingSeparators,
                            DecimalGroupingSeparators, LowerGroupingSeparators,
                            ExpMode, RoundMode, AutoExp, AutoPrec)
 from sciform.format_options import FormatOptions
-from sciform.formatting import format_float, format_val_unc
+from sciform.formatting import format_num, format_val_unc
 
 
 class Formatter:
@@ -211,9 +212,11 @@ class Formatter:
 
     def format(self, val: float, unc: float = None, /):
         if unc is None:
-            return format_float(val, self.options)
+            return format_num(Decimal(str(val)), self.options)
         else:
-            return format_val_unc(val, unc, self.options)
+            return format_val_unc(Decimal(str(val)),
+                                  Decimal(str(unc)),
+                                  self.options)
 
     @classmethod
     def _from_options(cls, options: FormatOptions):

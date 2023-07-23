@@ -1,4 +1,7 @@
-from sciform.formatting import format_float, format_val_unc
+from decimal import Decimal
+from typing import Union
+
+from sciform.formatting import format_num, format_val_unc
 from sciform.format_options import FormatOptions
 
 
@@ -21,12 +24,11 @@ class sfloat(float):
     >>> snum_2 = sfloat(323.2)
     >>> print(f'{snum_1 * snum_2:!3Rp}')
     7.56 k
-
     """
 
     def __format__(self, fmt: str):
-        return format_float(float(self),
-                            FormatOptions.from_format_spec_str(fmt))
+        return format_num(Decimal(str(self)),
+                          FormatOptions.from_format_spec_str(fmt))
 
     @classmethod
     def _to_sfloat(cls, num: float) -> 'sfloat':
@@ -57,7 +59,7 @@ class sfloat(float):
     def __pos__(self) -> 'sfloat':
         return self._to_sfloat(super().__pos__())
 
-    def __pow__(self, x: float, mod: None = ...) -> 'sfloat':
+    def __pow__(self, x: float, mod: int = None) -> 'sfloat':
         return self._to_sfloat(super().__pow__(x, mod))
 
     def __radd__(self, x: float) -> 'sfloat':
@@ -76,7 +78,13 @@ class sfloat(float):
     def __rmul__(self, x: float) -> 'sfloat':
         return self._to_sfloat(super().__rmul__(x))
 
-    def __rpow__(self, x: float, mod: None = ...) -> 'sfloat':
+    def __round__(self, ndigits: int = None) -> Union[int, 'sfloat']:
+        if ndigits is None:
+            return super().__round__()
+        else:
+            return self._to_sfloat(super().__round__(ndigits))
+
+    def __rpow__(self, x: float, mod: int = None) -> 'sfloat':
         return self._to_sfloat(super().__rpow__(x, mod))
 
     def __rsub__(self, x: float) -> 'sfloat':
@@ -113,8 +121,8 @@ class vufloat:
     https://pypi.org/project/uncertainties/
     """
     def __init__(self, val: float, unc: float, /):
-        self.value = val
-        self.uncertainty = unc
+        self.value = Decimal(str(val))
+        self.uncertainty = Decimal(str(unc))
 
     def __format__(self, format_spec: str):
         return format_val_unc(self.value,

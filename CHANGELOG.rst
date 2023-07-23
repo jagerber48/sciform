@@ -1,3 +1,13 @@
+0.21.0 (2023-07-22)
+-------------------
+
+* Use ``Decimal`` under the hood for numerical formatting instead of
+  ``float``. ``Decimal`` support higher precision than ``float`` and
+  more reliable rounding behavior.
+* Update particle data group uncertainty rounding unit tests since edge
+  cases are not handled property as a result of adopting ``Decimal``.
+* Minor cleanup of ``sfloat`` arithemetic functions.
+
 0.20.1 (2023-06-24)
 -------------------
 
