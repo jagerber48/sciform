@@ -24,7 +24,6 @@ class sfloat(float):
     >>> snum_2 = sfloat(323.2)
     >>> print(f'{snum_1 * snum_2:!3Rp}')
     7.56 k
-    
     """
 
     def __format__(self, fmt: str):
