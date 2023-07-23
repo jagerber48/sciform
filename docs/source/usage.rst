@@ -12,7 +12,7 @@ scientific formatting strings.
 The first is via the :class:`Formatter` object and the second is
 using string formatting and the
 :ref:`Format Specification Mini Language (FSML) <fsml>` with the
-:class:`sfloat` or :class:`vufloat` objects.
+:class:`SciNum` or :class:`SciNumUnc` objects.
 
 Formatter
 ---------
@@ -35,16 +35,16 @@ options.
 >>> print(sform(123456.78))
 123.5e+03
 
-sfloat
+SciNum
 ------
 
 The :mod:`sciform` :ref:`FSML <fsml>` can be accessed via the
-:class:`sfloat` object.
-Regular built-in floats are cast to :class:`sfloat` objects which can be
+:class:`SciNum` object.
+Regular built-in floats are cast to :class:`SciNum` objects which can be
 formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
 
->>> from sciform import sfloat
->>> num = sfloat(123456)
+>>> from sciform import SciNum
+>>> num = SciNum(123456)
 >>> print(f'{num:_!2f}')
 120_000
 
@@ -64,15 +64,15 @@ recomendations for conventions when possible.
 value/uncertainty pairs can be formatted either by passing two values
 into a :class:`Formatter`, and configuring the :class:`Formatter` using
 :ref:`formatting_options` and :ref:`val_unc_formatting_options`, or by
-using the :class:`vufloat` object.
+using the :class:`SciNumUnc` object.
 
 >>> val = 84.3
 >>> unc = 0.2
 >>> sform = Formatter(precision=2)
 >>> print(sform(val, unc))
 84.30 +/- 0.20
->>> from sciform import vufloat
->>> val_unc = vufloat(val, unc)
+>>> from sciform import SciNumUnc
+>>> val_unc = SciNumUnc(val, unc)
 >>> print(f'{val_unc:!2}')
 84.30 +/- 0.20
 
@@ -219,25 +219,25 @@ global defaults take on the specified input settings, but when the
 context is exited, the global default settings revert to their previous
 values.
 
->>> from sciform import GlobalDefaultsContext, sfloat
->>> snum = sfloat(0.0123)
+>>> from sciform import GlobalDefaultsContext, SciNum
+>>> snum = SciNum(0.0123)
 >>> print(f'{snum:.2ep}')
 1.23e-02
 >>> with GlobalDefaultsContext(add_c_prefix=True):
 ...     print(f'{snum:.2ep}')
 1.23 c
 
-:class:`sfloat` and :class:`vufloat` objects load global settings when
+:class:`SciNum` and :class:`SciNumUnc` objects load global settings when
 being *formatted*, not initialized.
 By contrast, :class:`Formatter` settings are configured and frozen when
 the class is initialized.
 Thus, changing global default settings with :func:`set_global_defaults`
 or with the :class:`GlobalDefaultsContext` will not change the behavior
 of any :class:`Formatter` that was instantiated before the change, but
-it will change :class:`sfloat` and :class:`vufloat` formatting.
+it will change :class:`SciNum` and :class:`SciNumUnc` formatting.
 Global configuration settings are, then, most useful for controlling the
-behavior of :class:`sfloat` and :class:`vufloat` formatting.
+behavior of :class:`SciNum` and :class:`SciNumUnc` formatting.
 In particular, not all avaible options can be accessed using the
 :ref:`FSML <fsml>`, so the only way to modify these options while using
-:class:`sfloat` or :class:`vufloat` formatting is via the global
+:class:`SciNum` or :class:`SciNumUnc` formatting is via the global
 configuration settings.

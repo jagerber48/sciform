@@ -14,8 +14,7 @@ def get_top_digit(num: Decimal, binary=False) -> int:
     if not isfinite(num):
         return 0
     if not binary:
-        _, digits, exp = num.as_tuple()
-        return len(digits) + exp - 1
+        return num.adjusted()
     else:
         return floor(log2(abs(num)))
 

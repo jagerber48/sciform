@@ -10,9 +10,9 @@ Specification
 =============
 
 :mod:`sciform` :ref:`formatting options <formatting_options>` can be
-applied to the formatting of :class:`sfloat` or :class:`vufloat` objects
-by using string formatting analogous to the built-in formatting of
-:class:`float` objects.
+applied to the formatting of :class:`SciNum` or :class:`SciNumUnc`
+objects by using string formatting analogous to the built-in formatting
+of :class:`float` objects.
 The :mod:`sciform` format specification mini language is given by::
 
     format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][exp_mode]["x" exp][p][()]
@@ -58,7 +58,7 @@ Details about the terms in the FSML are described below.
        | (``\d+``)
      - Any non-negative integer, default (0). Indicates the decimal or
        binary place to which the formatted string should be padded. e.g.
-       ``f'{sfloat(123):0=4}'`` will give ``'00123'``, i.e. padding to
+       ``f'{SciNum(123):0=4}'`` will give ``'00123'``, i.e. padding to
        the ``10^4`` place.
    * - | upper_separator
        | (``'n'``, ``','``, ``'.'``, ``'s'``, ``'_'``)
@@ -85,8 +85,8 @@ Details about the terms in the FSML are described below.
        | (``'!'``, ``'.'``)
      - Indicates whether the float will be rounded and displayed
        according to precision ``'.'`` (digits past the decimal point) or
-       significant figures ``'!'``. E.g. ``f'{sfloat(123.456):.2f}'``
-       gives ``'123.46'`` while ``f'{sfloat(123.456):!2f}'`` gives
+       significant figures ``'!'``. E.g. ``f'{SciNum(123.456):.2f}'``
+       gives ``'123.46'`` while ``f'{SciNum(123.456):!2f}'`` gives
        ``'120'``.
    * - | precision
        | (``[+-]?\d+``)
@@ -159,7 +159,7 @@ However, :mod:`sciform` FSML is not entirely backwards compatible with
 the built-in FSML.
 Certain allowed built-in format specifications are illegal in the
 :mod:`sciform` FSML and certain allowed built-in format specifications
-give different results when used with :class:`sfloat` rather than
+give different results when used with :class:`SciNum` rather than
 :class:`float`.
 These incompatibilities were intentionally introduced to simplify the
 :class:`sciform` FSML by cutting out features less likely to be required
@@ -185,7 +185,7 @@ for scientific formatting.
   :mod:`sciform`, instead, infers the precision or sig fig specification
   from the float by determining the least significant digit required to
   represent it. E.g. ``f'{float(0.3):f}'`` yield ``0.300000`` while
-  ``f'{sfloat(0.3):f}`` yields ``0.3``.
+  ``f'{SciNum(0.3):f}`` yields ``0.3``.
 
 * The built-in FSML supports left-aligned, right-aligned,
   center-aligned, and sign-aware string padding by any character. In the
@@ -199,7 +199,7 @@ for scientific formatting.
   followed by the sign aware `=` flag. There is no ``0`` flag, as in the
   built-in FSML, that may be placed before the width field to indicate
   sign-aware zero padding. E.g. ``f'{float(12): =4}`` yields ``'  12'``
-  while ``f{sfloat(12): =4}`` yeilds ``'   12'``. Fill characters are
+  while ``f{SciNum(12): =4}`` yeilds ``'   12'``. Fill characters are
   padded up to the ``10^4`` digits place.
 
 * The built-in FSML supports displaying negative zero, but also supports

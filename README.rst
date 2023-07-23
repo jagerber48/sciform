@@ -33,7 +33,7 @@ Usage
 ``sciform`` provides two primary methods for formatting floats into
 scientific formatting strings.
 The first is via the ``Formatter`` object and the second is using string
-formatting and the custom FSML with the ``sfloat`` object.
+formatting and the custom FSML with the ``SciNum`` object.
 
 >>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
 >>> sform = Formatter(round_mode=RoundMode.PREC,
@@ -48,13 +48,13 @@ formatting and the custom FSML with the ``sfloat`` object.
 >>> print(sform(123456.78))
 123.5e+03
 
->>> from sciform import sfloat
->>> num = sfloat(123456)
+>>> from sciform import SciNum
+>>> num = SciNum(123456)
 >>> print(f'{num:_!2f}')
 120_000
 
 ``sciform`` can also be used to format pairs of value/uncertainty floats
-using the ``Formatter`` or ``vufloat`` objects.
+using the ``Formatter`` or ``SciNumUnc`` objects.
 
 >>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
 ...                   precision=2,
@@ -68,8 +68,8 @@ using the ``Formatter`` or ``vufloat`` objects.
 >>> print(sform(123456.654321, 0.0034))
 (123.456654321 +/- 0.000003400)e+03
 
->>> from sciform import vufloat
->>> num = vufloat(123456.654321, 0.0034)
+>>> from sciform import SciNumUnc
+>>> num = SciNumUnc(123456.654321, 0.0034)
 >>> print(f'{num:_!2f}')
 123_456.6543 +/- 0.0034
 

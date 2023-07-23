@@ -1,12 +1,12 @@
 import unittest
 
-from sciform import (sfloat, GlobalDefaultsContext, ExpMode,
+from sciform import (SciNum, GlobalDefaultsContext, ExpMode,
                      GroupingSeparator, RoundMode, SignMode)
 
 
 class TestConfig(unittest.TestCase):
     def test_global_defaults_context(self):
-        num = sfloat(123.456)
+        num = SciNum(123.456)
         before_str = f'{num}'
         with GlobalDefaultsContext(sign_mode=SignMode.ALWAYS,
                                    exp_mode=ExpMode.SCIENTIFIC,
@@ -24,7 +24,7 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(after_str, expected_before_str)
 
     def test_c_prefix(self):
-        num = sfloat(123.456)
+        num = SciNum(123.456)
         with GlobalDefaultsContext(add_c_prefix=True):
             num_str = f'{num:ex-2p}'
 
@@ -33,7 +33,7 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(num_str, expected_num_str)
 
     def test_small_si_prefixes(self):
-        num = sfloat(123.456)
+        num = SciNum(123.456)
 
         cases_dict = {-2: '12345.6 c',
                       -1: '1234.56 d',
