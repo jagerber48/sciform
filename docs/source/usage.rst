@@ -7,7 +7,7 @@ Usage
 Formatting
 ==========
 
-:mod:`sciform` provides two primary methods for formatting floats into
+:mod:`sciform` provides two primary methods for formatting numbers into
 scientific formatting strings.
 The first is via the :class:`Formatter` object and the second is
 using string formatting and the
@@ -18,7 +18,7 @@ Formatter
 ---------
 
 The :class:`Formatter` object is initialized with user-selected
-formatting options and then used to format floats.
+formatting options and then used to format numbers.
 See :ref:`formatting_options` for more details about the available
 options.
 
@@ -40,8 +40,9 @@ SciNum
 
 The :mod:`sciform` :ref:`FSML <fsml>` can be accessed via the
 :class:`SciNum` object.
-Regular built-in floats are cast to :class:`SciNum` objects which can be
-formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
+Python numbers specified as ``string``, ``float``, or ``Decimal``
+objects are cast to :class:`SciNum` objects which can be formatted using
+the :mod:`sciform` :ref:`FSML <fsml>`.
 
 >>> from sciform import SciNum
 >>> num = SciNum(123456)
@@ -54,7 +55,7 @@ Value/Uncertainty Formatting
 One of the most important use cases for scientific formatting is
 formatting a value together with its specified uncertainty, e.g.
 ``84.3 +/- 0.2``.
-:mod:`sciform` provides the ability to format pairs of floats into
+:mod:`sciform` provides the ability to format pairs of numbers into
 value/uncertainty strings.
 We attempt to follow
 `BIPM <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6>`_

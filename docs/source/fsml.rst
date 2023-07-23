@@ -12,7 +12,7 @@ Specification
 :mod:`sciform` :ref:`formatting options <formatting_options>` can be
 applied to the formatting of :class:`SciNum` or :class:`SciNumUnc`
 objects by using string formatting analogous to the built-in formatting
-of :class:`float` objects.
+for :class:`float` and :class:`Decimal` objects.
 The :mod:`sciform` format specification mini language is given by::
 
     format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][exp_mode]["x" exp][p][()]
@@ -83,7 +83,7 @@ Details about the terms in the FSML are described below.
        underscore separators.
    * - | round_mode
        | (``'!'``, ``'.'``)
-     - Indicates whether the float will be rounded and displayed
+     - Indicates whether the number will be rounded and displayed
        according to precision ``'.'`` (digits past the decimal point) or
        significant figures ``'!'``. E.g. ``f'{SciNum(123.456):.2f}'``
        gives ``'123.46'`` while ``f'{SciNum(123.456):!2f}'`` gives
@@ -91,15 +91,11 @@ Details about the terms in the FSML are described below.
    * - | precision
        | (``[+-]?\d+``)
      - Integer indicating the precision or number of significant figures
-       to which the float shall be rounded and displayed. Can be
+       to which the number shall be rounded and displayed. Can be
        negative for precision rounding mode. Must be greater than zero
-       for significant figure mode. If no precision is supplied then an
-       algorithm will be used to attempt to infer the least significant
-       digit for the float and the precision will be chosen to match
-       this least significant digit. This algorithm may have surprising
-       behavior for floats with a large number (e.g. 15) of significant
-       digits or due to the underlying binary nature of floats, e.g.
-       ``0.1+0.2 = 0.30000000000000004``.
+       for significant figure mode. If no precision is supplied then
+       number will be displayed with enough digits so that its decimal
+       representation is unchanged.
    * - | exp_mode
        | (``'f'``, ``'F'``, ``'%'``, ``'e'``, ``'E'``, ``'r'``, ``'R'``,
          ``'b'``, ``'B'``)
@@ -160,7 +156,7 @@ the built-in FSML.
 Certain allowed built-in format specifications are illegal in the
 :mod:`sciform` FSML and certain allowed built-in format specifications
 give different results when used with :class:`SciNum` rather than
-:class:`float`.
+:class:`float` or :class:`Decimal` objects.
 These incompatibilities were intentionally introduced to simplify the
 :class:`sciform` FSML by cutting out features less likely to be required
 for scientific formatting.
@@ -179,12 +175,14 @@ for scientific formatting.
   * Inclusion of a hanging decimal point, e.g. ``123.``.
     :mod:`sciform` never includes a hanging decimal point.
 
-* Python float formatting uses a default precion of 6 for ``f``, ``F``,
-  ``%``, ``e``, and ``E`` modes if no explicit precision is supplied.
-  When no precision or significant figure specification is provided,
-  :mod:`sciform`, instead, infers the precision or sig fig specification
-  from the float by determining the least significant digit required to
-  represent it. E.g. ``f'{float(0.3):f}'`` yield ``0.300000`` while
+* For floats, Python formatting uses a default precion of 6 for ``f``,
+  ``F``, ``%``, ``e``, and ``E`` modes if no explicit precision is
+  supplied. :mod:`sciform`, instead, always converts inputs to
+  :class:`Decimal` objects and displays exactly as many digits as
+  necessary to represent the :class:`Decimal`. Specifically, for
+  :class:`float` input, the float is first cast to a string, which
+  returns the shortest round-trippable decimal representation of the
+  float. E.g. ``f'{float(0.3):f}'`` yields ``0.300000`` while
   ``f'{SciNum(0.3):f}`` yields ``0.3``.
 
 * The built-in FSML supports left-aligned, right-aligned,

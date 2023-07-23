@@ -7,7 +7,7 @@ Formatting Options
 .. module:: sciform
    :noindex:
 
-:mod:`sciform` provides a variety of options for converting floats into
+:mod:`sciform` provides a variety of options for converting numbers into
 formatted strings.
 These options including control over the rounding strategy, scientific
 notation formatting, separation characters and more.
@@ -23,15 +23,15 @@ formatting presents numbers in the form::
 
 Where exp is an integer and ``base`` is typically 10 or 2.
 The different exponent modes control how ``mantissa``, ``base`` and
-``exp`` are chosen for a given input float ``num``.
+``exp`` are chosen for a given input number ``num``.
 
 .. _fixed_point:
 
 Fixed Point
 -----------
 
-Fixed point notation is standard notation in which a float is displayed
-directly as a decimal number with no extra exponent.
+Fixed point notation is standard notation in which a number is displayed
+directly with no extra exponent.
 
 >>> from sciform import Formatter, ExpMode, RoundMode
 >>> sform = Formatter(exp_mode=ExpMode.FIXEDPOINT)
@@ -326,8 +326,7 @@ Separators
 :mod:`sciform` provides support for some customization for separator
 characters within formatting strings.
 Different locales use different conventions for the symbol separating
-the integral and fractional part of a float number, called the decimal
-symbol.
+the integral and fractional part of a number, called the decimal symbol.
 :mod:`sciform` supports using a period ``'.'`` or comma ``','`` as the
 decimal symbol.
 
@@ -361,7 +360,7 @@ Sign Mode
 =========
 
 :mod:`sciform` provides control over the symbol used to indicate whether a
-float is positive or negative.
+number is positive or negative.
 In all cases a ``'-'`` sign is used for negative numbers.
 By default, positive numbers are formatted with no sign symbol.
 However, :mod:`sciform` includes a mode where positive numbers are always
@@ -399,7 +398,7 @@ The capitalization of the exponent character can be controlled
 1B+10
 
 The ``capitalize`` flag also controls the capitalization of ``nan`` and
-``inf`` formatted floats:
+``inf`` formatted number:
 
 >>> print(sform(float('nan')))
 NAN
@@ -434,7 +433,7 @@ Percent Mode
 
 The user can activate percent mode using the ``percent`` flag.
 This flag is only valid for fixed point exponent mode.
-In this case, the float is multipled by 100 and a % symbols is
+In this case, the number is multipled by 100 and a % symbols is
 appended to the end of the formatted string.
 
 >>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
