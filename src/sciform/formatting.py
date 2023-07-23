@@ -1,7 +1,7 @@
 from math import isfinite
 from warnings import warn
 import re
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 
 from sciform.modes import ExpMode, SignMode, AutoExp
 from sciform.format_options import FormatOptions, RoundMode
@@ -159,18 +159,16 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FormatOptions):
 
     round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
                                   options.precision, options.pdg_sig_figs)
-    try:
+    if isfinite(unc):
         unc_rounded = round(unc, -round_digit)
-    except InvalidOperation:
+    else:
         unc_rounded = unc
-    try:
+    if isfinite(val):
         val_rounded = round(val, -round_digit)
-    except InvalidOperation:
+    else:
         val_rounded = val
-    try:
+    if isfinite(round_driver):
         round_driver = round(round_driver, -round_digit)
-    except InvalidOperation:
-        pass
 
     if not options.pdg_sig_figs:
         '''
@@ -180,14 +178,10 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FormatOptions):
         '''
         round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
                                       options.precision, options.pdg_sig_figs)
-        try:
+        if isfinite(unc_rounded):
             unc_rounded = round(unc_rounded, -round_digit)
-        except InvalidOperation:
-            pass
-        try:
+        if isfinite(val_rounded):
             val_rounded = round(val_rounded, -round_digit)
-        except InvalidOperation:
-            pass
 
     exp_mode = options.exp_mode
     '''
