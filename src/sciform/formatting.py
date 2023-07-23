@@ -80,7 +80,7 @@ def format_num(num: Decimal, options: FormatOptions) -> str:
     precision = options.precision
     mantissa, temp_exp, base = get_mantissa_exp_base(num, exp_mode, exp)
     round_digit = get_round_digit(mantissa, round_mode, precision)
-    mantissa_rounded = round(mantissa, -int(round_digit))
+    mantissa_rounded = round(mantissa, -round_digit)
 
     '''
     Repeat mantissa + exponent discovery after rounding in case rounding
