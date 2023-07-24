@@ -1,3 +1,14 @@
+0.22.0 (2023-07-24)
+-------------------
+
+* **[BREAKING]** Rename ``sfloat`` to ``SciNum`` and ``vufloat`` to
+  ``SciNumUnc``
+* Favor ``Decimal`` methods over ``float`` methods in internal
+  formatting algorithm code.
+* Remove ``float``-centered language fom documentation.
+* Include a discussion in the documentation about ``Decimal`` versus
+  ``float`` considerations that my be important for users.
+
 0.21.0 (2023-07-22)
 -------------------
 
