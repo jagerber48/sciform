@@ -1,5 +1,5 @@
 from typing import Union
-from math import floor, log2
+from math import floor, log10, log2
 from warnings import warn
 import re
 from copy import copy
@@ -16,8 +16,10 @@ Number = Union[Decimal, float, int, str]
 def get_top_digit(num: Decimal, binary=False) -> int:
     if not num.is_finite():
         return 0
+    if num == 0:
+        return 0
     if not binary:
-        return num.adjusted()
+        return floor(log10(abs(num)))
     else:
         return floor(log2(abs(num)))
 
