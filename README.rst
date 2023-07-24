@@ -8,10 +8,9 @@ sciform
 Overview
 --------
 
-``sciform`` is used to convert python float objects into strings
-according to a variety of user-selected scientific formatting options
-including decimal, binary, fixed-point, scientific and engineering
-formats.
+``sciform`` is used to convert python numbers into strings according to
+a variety of user-selected scientific formatting options including
+decimal, binary, fixed-point, scientific and engineering formats.
 Where possible, formatting follows documented standards such as those
 published by `BIPM <https://www.bipm.org/en/>`_ or
 `IEC <https://iec.ch/homepage>`_.
@@ -30,8 +29,8 @@ Install with pip::
 Usage
 =====
 
-``sciform`` provides two primary methods for formatting floats into
-scientific formatting strings.
+``sciform`` provides two primary methods for formatting numbers into
+scientific formatted strings.
 The first is via the ``Formatter`` object and the second is using string
 formatting and the custom FSML with the ``SciNum`` object.
 
@@ -53,8 +52,8 @@ formatting and the custom FSML with the ``SciNum`` object.
 >>> print(f'{num:_!2f}')
 120_000
 
-``sciform`` can also be used to format pairs of value/uncertainty floats
-using the ``Formatter`` or ``SciNumUnc`` objects.
+``sciform`` can also be used to format pairs of value/uncertainty
+numbers using the ``Formatter`` or ``SciNumUnc`` objects.
 
 >>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
 ...                   precision=2,
