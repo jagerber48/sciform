@@ -6,11 +6,12 @@ from sciform.modes import (SignMode, FillMode, UpperGroupingSeparators,
                            ExpMode, RoundMode, AutoExp, AutoPrec)
 from sciform.format_options import FormatOptions
 from sciform.formatting import format_num, format_val_unc
+from sciform.format_utils import Number
 
 
 class Formatter:
     """
-    Formatter object used to convert floats and pairs of floats into
+    Formatter object used to convert numbers and pairs of numbers into
     formatted strings. See :ref:`formatting_options` for more details on
     the available options. Any options which are not provided by the
     user will be filled with the corresponding values from the global
@@ -85,9 +86,9 @@ class Formatter:
       printed.
     :param capitalize: ``bool`` indicating whether the exponentiation
       symbol should be upper- or lower-case.
-    :param percent: ``bool`` indicating whether the float should be
+    :param percent: ``bool`` indicating whether the number should be
       formatted as a percentage or not. Only valid for fixed point
-      exponent mode. When ``True``, the float is multipled by 100 and
+      exponent mode. When ``True``, the number is multipled by 100 and
       a % symbol is appended to the end of the string after formatting.
     :param superscript_exp: ``bool`` indicating if the exponent string
       should be converted into superscript notation. E.g. ``'1.23e+02'``
@@ -95,7 +96,7 @@ class Formatter:
     :param latex: ``bool`` indicating if the resulting string should be
       converted into a latex parseable code, e.g.
       ``'\\left(1.23 \\pm 0.01\\right)\\times 10^{2}'``.
-    :param nan_inf_exp: ``bool`` indicating whether non-finite floats
+    :param nan_inf_exp: ``bool`` indicating whether non-finite numbers
       such as ``float('nan')`` or ``float('inf')`` should be formatted
       with exponent symbols when exponent modes including exponent
       symbols are selected.
@@ -207,15 +208,15 @@ class Formatter:
             unc_pm_whitespace=unc_pm_whitespace
         )
 
-    def __call__(self, val: float, unc: float = None, /):
-        return self.format(val, unc)
+    def __call__(self, value: Number, uncertainty: Number = None, /):
+        return self.format(value, uncertainty)
 
-    def format(self, val: float, unc: float = None, /):
-        if unc is None:
-            return format_num(Decimal(str(val)), self.options)
+    def format(self, value: Number, uncertainty: Number = None, /):
+        if uncertainty is None:
+            return format_num(Decimal(str(value)), self.options)
         else:
-            return format_val_unc(Decimal(str(val)),
-                                  Decimal(str(unc)),
+            return format_val_unc(Decimal(str(value)),
+                                  Decimal(str(uncertainty)),
                                   self.options)
 
     @classmethod

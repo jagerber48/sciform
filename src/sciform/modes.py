@@ -30,8 +30,8 @@ class AutoPrec:
 
     In both sig fig and precision round modes this auto precision
     option chooses the precision so that the least significant digit of
-    the input float will be displayed.
-    For example the float 123.456789 would be displayed with either 9
+    the input number will be displayed.
+    For example the number 123.456789 would be displayed with either 9
     significant figures or 6 digits past the decimal point so that in
     either case all digits are shown.
 

@@ -1,5 +1,5 @@
 from typing import Union
-from math import floor, log2, isfinite
+from math import floor, log2
 from warnings import warn
 import re
 from copy import copy
@@ -10,8 +10,11 @@ from sciform.prefix import (si_val_to_prefix_dict, iec_val_to_prefix_dict,
                             pp_val_to_prefix_dict)
 
 
+Number = Union[Decimal, float, int, str]
+
+
 def get_top_digit(num: Decimal, binary=False) -> int:
-    if not isfinite(num):
+    if not num.is_finite():
         return 0
     if not binary:
         return num.adjusted()
@@ -20,7 +23,7 @@ def get_top_digit(num: Decimal, binary=False) -> int:
 
 
 def get_bottom_digit(num: Decimal) -> int:
-    if not isfinite(num):
+    if not num.is_finite():
         return 0
     else:
         _, _, exp = num.as_tuple()
@@ -41,7 +44,7 @@ def get_mantissa_exp_base(
     else:
         base = 10
 
-    if not isfinite(num):
+    if not num.is_finite():
         mantissa = num
         if exp is AutoExp:
             exp = 0
@@ -174,11 +177,11 @@ def get_fill_str(fill_char: str, top_digit: int, top_padded_digit: int) -> str:
     return pad_str
 
 
-def format_float_by_top_bottom_dig(num: Decimal,
-                                   target_top_digit: int,
-                                   target_bottom_digit: int,
-                                   sign_mode: SignMode,
-                                   fill_char: str) -> str:
+def format_num_by_top_bottom_dig(num: Decimal,
+                                 target_top_digit: int,
+                                 target_bottom_digit: int,
+                                 sign_mode: SignMode,
+                                 fill_char: str) -> str:
     print_prec = max(0, -target_bottom_digit)
     abs_mantissa_str = f'{abs(num):.{print_prec}f}'
 
@@ -186,9 +189,9 @@ def format_float_by_top_bottom_dig(num: Decimal,
 
     num_top_digit = get_top_digit(num)
     fill_str = get_fill_str(fill_char, num_top_digit, target_top_digit)
-    float_str = f'{sign_str}{fill_str}{abs_mantissa_str}'
+    num_str = f'{sign_str}{fill_str}{abs_mantissa_str}'
 
-    return float_str
+    return num_str
 
 
 def get_exp_symb_sign_digits(exp_str: str):

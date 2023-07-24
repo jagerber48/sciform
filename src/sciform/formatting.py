@@ -1,4 +1,3 @@
-from math import isfinite
 from warnings import warn
 import re
 from decimal import Decimal
@@ -8,17 +7,21 @@ from sciform.format_options import FormatOptions, RoundMode
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_digit,
                                   get_round_digit,
-                                  format_float_by_top_bottom_dig,
+                                  format_num_by_top_bottom_dig,
                                   convert_exp_str,
                                   latex_translate)
 from sciform.grouping import add_separators
 
 
 def format_non_inf(num: Decimal, options: FormatOptions) -> str:
-    # Convert to float to get 'inf', 'nan' instead of 'Infinity' and 'NaN'
-    num = float(num)
-    if isfinite(num):
-        raise ValueError(f'format_non_inf() cannot format finite float {num}.')
+    if num.is_nan():
+        num_str = 'nan'
+    elif num == Decimal('inf'):
+        num_str = 'inf'
+    elif num == Decimal('-inf'):
+        num_str = '-inf'
+    else:
+        raise ValueError(f'format_non_inf() cannot format {num}.')
 
     if options.nan_inf_exp:
         exp_mode = options.exp_mode
@@ -48,9 +51,9 @@ def format_non_inf(num: Decimal, options: FormatOptions) -> str:
         exp_str = ''
 
     if exp_str != '':
-        result = f'({num}){exp_str}'
+        result = f'({num_str}){exp_str}'
     else:
-        result = f'{num}'
+        result = f'{num_str}'
 
     if options.percent:
         result = f'({result})%'
@@ -67,7 +70,7 @@ def format_non_inf(num: Decimal, options: FormatOptions) -> str:
 
 
 def format_num(num: Decimal, options: FormatOptions) -> str:
-    if not isfinite(num):
+    if not num.is_finite():
         return format_non_inf(num, options)
 
     if options.percent:
@@ -101,11 +104,11 @@ def format_num(num: Decimal, options: FormatOptions) -> str:
         exp = 0
 
     fill_char = options.fill_mode.to_char()
-    mantissa_str = format_float_by_top_bottom_dig(mantissa_rounded.normalize(),
-                                                  options.top_dig_place,
-                                                  round_digit,
-                                                  options.sign_mode,
-                                                  fill_char)
+    mantissa_str = format_num_by_top_bottom_dig(mantissa_rounded.normalize(),
+                                                options.top_dig_place,
+                                                round_digit,
+                                                options.sign_mode,
+                                                fill_char)
 
     upper_separator = options.upper_separator.to_char()
     decimal_separator = options.decimal_separator.to_char()
@@ -152,22 +155,22 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FormatOptions):
         unc = unc.normalize()
 
     # Find the digit place to round to
-    if isfinite(unc) and unc != 0:
+    if unc.is_finite() and unc != 0:
         round_driver = unc
     else:
         round_driver = val
 
     round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
                                   options.precision, options.pdg_sig_figs)
-    if isfinite(unc):
+    if unc.is_finite():
         unc_rounded = round(unc, -round_digit)
     else:
         unc_rounded = unc
-    if isfinite(val):
+    if val.is_finite():
         val_rounded = round(val, -round_digit)
     else:
         val_rounded = val
-    if isfinite(round_driver):
+    if round_driver.is_finite():
         round_driver = round(round_driver, -round_digit)
 
     if not options.pdg_sig_figs:
@@ -178,14 +181,14 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FormatOptions):
         '''
         round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
                                       options.precision, options.pdg_sig_figs)
-        if isfinite(unc_rounded):
+        if unc_rounded.is_finite():
             unc_rounded = round(unc_rounded, -round_digit)
-        if isfinite(val_rounded):
+        if val_rounded.is_finite():
             val_rounded = round(val_rounded, -round_digit)
 
     exp_mode = options.exp_mode
     '''
-    We format the float by determining the required exponent and
+    We format the number by determining the required exponent and
     precision and format the val and unc mantissas accordingly.
     Engineering, engineering shifted, and binary IEC modes are not, in
     general, compatible with setting the exponent explicitly so we
@@ -200,14 +203,14 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FormatOptions):
     else:
         free_exp_mode = exp_mode
 
-    if isfinite(val) and isfinite(unc):
+    if val.is_finite() and unc.is_finite():
         if val >= unc:
             exp_driver = val_rounded
             val_exp_driver = True
         else:
             exp_driver = unc_rounded
             val_exp_driver = False
-    elif isfinite(val):
+    elif val.is_finite():
         exp_driver = val_rounded
         val_exp_driver = True
     else:
@@ -300,8 +303,9 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FormatOptions):
 
         val_unc_str = f'{val_str}{pm_symb}{unc_str}'
     else:
-        if float(unc) < float(val):
-            unc_str = unc_str.lstrip('0.,_ ')
+        if unc.is_finite() and val.is_finite():
+            if unc < val:
+                unc_str = unc_str.lstrip('0.,_ ')
         if options.bracket_unc_remove_seps:
             unc_str = unc_str.replace(
                 options.upper_separator.to_char(), '')

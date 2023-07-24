@@ -42,12 +42,12 @@ def add_group_chars_between_numbers(string, group_char='_',
     return result_str
 
 
-def add_separators(float_string,
+def add_separators(num_str,
                    upper_separator='',
                    decimal_separator='.',
                    lower_separator='',
                    group_size=3):
-    dec_split = float_string.split('.')
+    dec_split = num_str.split('.')
     upper_string = dec_split[0]
     if len(dec_split) == 1:
         lower_string = ''
