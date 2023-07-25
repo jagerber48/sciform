@@ -414,7 +414,7 @@ def print_global_defaults():
 
 def set_global_defaults(
         *,
-        defaults: 'FormatOptions' = None,
+        defaults: 'FormatOptions' = None,  # TODO: This should not be user input
         fill_mode: FillMode = None,
         sign_mode: SignMode = None,
         top_dig_place: int = None,

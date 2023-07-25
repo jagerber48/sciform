@@ -219,6 +219,7 @@ class Formatter:
                                   Decimal(str(uncertainty)),
                                   self.options)
 
+    # TODO: What is this for? Remove this.
     @classmethod
     def _from_options(cls, options: FormatOptions):
         return cls(fill_mode=options.fill_mode,
