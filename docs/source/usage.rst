@@ -251,9 +251,9 @@ Numerical data can be stored in Python
 `float <https://docs.python.org/3/library/functions.html#float>`_
 or
 `Decimal <https://docs.python.org/3/library/decimal.html>`_ objects.
-:class:`floats` represent numbers using binary which means
-:class:`floats` are often only approximations of the decimal numbers
-users have in mind when they use :class:`floats`.
+:class:`float` instances represent numbers using binary which means
+they are often only approximations of the decimal numbers users have in
+mind when they use :class:`float`.
 By contrast, :class:`Decimal` objects store a string of integers
 representing the decimal digits of the represented number so
 :class:`Decimal` objects are, therefore, exact representations of
@@ -272,62 +272,73 @@ concerned with the exact decimal representation of their numerical data.
 
 * Python uses
   `double-precision floating-point format <https://en.wikipedia.org/wiki/Double-precision_floating-point_format>`_
-  for its :class:`float`. In this format a :class:`float` occupies 64
-  bit of memory: 52 bits for the mantissa, 11 bits for the exponent and
-  one bit for the sign.
+  for its :class:`float`.
+  In this format a :class:`float` occupies 64 bits of memory: 52 bits
+  for the mantissa, 11 bits for the exponent and 1 bit for the sign.
 * Any decimal with 15 digits between about ``+/- 1.8e+308`` can be
-  uniquely represented by a :class:`float`. However, two decimals with
-  more than 15 digits may map to the same :class:`float`. For example,
+  uniquely represented by a :class:`float`.
+  However, two decimals with more than 15 digits may map to the same
+  :class:`float`.
+  For example,
   ``float(8.000000000000001) == float(8.000000000000002)`` returns
   ``True``.
 * If any :class:`float` is converted to a decimal with at least 17
-  digits then it will be converted back to the same float. See
-  `decimal precision of binary floating point number <https://www.exploringbinary.com/decimal-precision-of-binary-floating-point-numbers/>`_.
-  However, many :class:`floats` can be "round-tripped" many fewer
-  digits. The `__repr__` for the python :class:`float` class converts
-  the float to a decimal representation with the minimum number of
-  digits such that it round trips to the same :class:`float`. For
-  example we can see the exact decimal representation of the
+  digits then it will be converted back to the same :class:`float`.
+  See `decimal precision of binary floating point number <https://www.exploringbinary.com/decimal-precision-of-binary-floating-point-numbers/>`_.
+  However, many :class:`float` instances can be "round-tripped" with
+  far fewer digits.
+  The `__repr__` for the python :class:`float` class converts the
+  :class:`float` to a decimal representation with the minimum number of
+  digits such that it round trips to the same :class:`float`.
+  For example we can see the exact decimal representation of the
   :class:`float` which ``0.1`` is mapped to:
   ``print(Decimal(float(0.1)))`` gives
   ``0.1000000000000000055511151231257827021181583404541015625``.
-  However ``print(float(0.1))`` just gives ``0.1``. That is,
+  However ``print(float(0.1))`` just gives ``0.1``.
+  That is,
   ``0.1000000000000000055511151231257827021181583404541015625`` and
   ``0.1`` map to the same :class:`float` but the :class:`float`
   ``__repr__`` algorithim presents us with the shorter (more readable)
   decimal representation.
 
-The above considerations on :class:`floats` can lead to two surprising
+The above considerations on :class:`float` can lead to two surprising
 issues that I will highlight.
 
-#. Rounding. Consider the decimal numbers ``0.0355`` and ``0.00355``.
+#. **Rounding**.
+   Consider the decimal numbers ``0.0355`` and ``0.00355``.
    If we round these to two significant figures using a "round-to-even"
    strategy we expect these to round to ``0.036`` and ``0.0036``
-   respectively. However, if we try to perform this rounding for
-   :class:`floats` we get an unexpected result. We see that
-   ``round(0.00355, 4)`` gives ``0.0036`` as expected but
-   ``round(0.0355, 3)`` gives ``0.035``. We can see the issue by looking
-   at the decimal representations of the corresponding :class:`floats`.
+   respectively.
+   However, if we try to perform this rounding for :class:`float` we get
+   an unexpected result. We see that ``round(0.00355, 4)`` gives
+   ``0.0036`` as expected but ``round(0.0355, 3)`` gives ``0.035``.
+   We can see the issue by looking at the decimal representations of the
+   corresponding :class:`float` instances.
    ``print(Decimal(0.0355))`` gives
    ``0.035499999999999996835864379818303859792649745941162109375``
    which indeed should round down to ``0.035`` while
    ``print(Decimal(0.00355))`` gives
    ``0.003550000000000000204003480774872514302842319011688232421875``
-   which should round to ``0.0036``. So we see that the rounding
-   behavior for :class:`floats`
-   depends on digits of the decimal representation of the :class:`float`
-   which are beyond the minimum number of digits necessary for the
-   :class:`float` to round trip.
-#. Representation of highly precise numbers. Conservatively,
-   :class:`floats` provide 15 digits of precision. That is, any two
-   decimal numbers (within the :class:`float` range) with 15 digits of
-   precision correspond to unique floats. It is rare in applications
-   that we require more than 15 digits of precision, but in some cases
-   we do. One example is precision frequency metrology, such as that
-   involved in atomic clocks. The relative uncertainty of primary
-   frequency standards is approaching one part in 10 :sup:`-16`. This
-   means that measured quantities may require up to 16 digits to
-   display. Indeed, consider
+   which should round to ``0.0036``.
+   So we see that the rounding behavior for :class:`float` depends on
+   digits of the decimal representation of the :class:`float` which are
+   beyond the minimum number of digits necessary for the :class:`float`
+   to round trip and, thus,beyond the number of digits that will be
+   displayed by default.
+#. **Representation of numbers with high precision**.
+   Conservatively, :class:`float` provides 15 digits of precision.
+   That is, any two decimal numbers (within the :class:`float` range)
+   with 15 digits of precision correspond to unique :class:`float`
+   instances.
+   It is rare in applications that we require more than 15 digits of
+   precision, but in some cases we do.
+   One example is precision frequency metrology, such as that
+   involved in atomic clocks.
+   The relative uncertainty of primary frequency standards is
+   approaching one part in 10 :sup:`-16`.
+   This means that measured quantities may require up to 16 digits to
+   display.
+   Indeed, consider
    `Metrologia 55 (2018) 188–200 <https://iopscience.iop.org/article/10.1088/1681-7575/aaa302>`_.
    In Table 2 the :sup:`87` Rb ground-state hyperfine splitting is cited
    as ``6 834 682 610.904 312 6 Hz`` with 17 digits. Suppose the last

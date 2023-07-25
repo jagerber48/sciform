@@ -175,14 +175,16 @@ for scientific formatting.
   * Inclusion of a hanging decimal point, e.g. ``123.``.
     :mod:`sciform` never includes a hanging decimal point.
 
-* For :class:`floats`, Python formatting uses a default precion of 6 for
-  ``f``, ``F``, ``%``, ``e``, and ``E`` modes if no explicit precision
-  is supplied. :mod:`sciform`, instead, always converts inputs to
-  :class:`Decimal` objects and displays exactly as many digits as
-  necessary to represent the :class:`Decimal`. Specifically, for
-  :class:`float` input, the :class:`float` is first cast to a string, which
-  returns the shortest round-trippable decimal representation of the
-  :class:`float`. E.g. ``f'{float(0.3):f}'`` yields ``0.300000`` while
+* For :class:`float` instances, Python formatting uses a default precion
+  of 6 for ``f``, ``F``, ``%``, ``e``, and ``E`` modes if no explicit
+  precision is supplied.
+  :mod:`sciform`, instead, always converts inputs to :class:`Decimal`
+  objects and displays exactly as many digits as necessary to represent
+  the :class:`Decimal`.
+  Specifically, for :class:`float` input, the :class:`float` is first
+  cast to a string, which returns the shortest round-trippable decimal
+  representation of the :class:`float`.
+  E.g. ``f'{float(0.3):f}'`` yields ``0.300000`` while
   ``f'{SciNum(0.3):f}`` yields ``0.3``.
 
 * The built-in FSML supports left-aligned, right-aligned,
