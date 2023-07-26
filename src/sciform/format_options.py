@@ -522,7 +522,7 @@ def global_add_ppth_form():
     """
     Include 'ppth' as a "parts-per" form for the exponent value -3.
     Has no effect if exponent value -3 is already mapped to a
-    "parts-per" form string. To modify this mapping, first use
+    "parts-per" format string. To modify this mapping, first use
     :func:`global_reset_parts_per_forms` or use
     :func:`set_global_defaults`.
     """
