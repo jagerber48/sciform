@@ -55,8 +55,9 @@ class Formatter:
     :param sign_mode: :class:`SignMode` indicating sign
       symbol behavior.
     :param top_dig_place: Positive ``int`` indicating the digits place
-      to which the string will be left padded before the sign symbol.
-      e.g. top_dig_place=4 will convert ``12`` into ``00012``.
+      to which the string will be left padded before the sign symbol. 0
+      corresponds to the ones place, 1 corresponds to the tens place
+      etc. e.g. top_dig_place=4 will convert ``12`` into ``00012``.
     :param upper_separator: :class:`GroupingSeparator` indicating the
       character to be used to group digits above the decimal symbol.
     :param decimal_separator: :class:`GroupingSeparator` indicating
