@@ -29,15 +29,20 @@ Install with pip::
 
    pip install sciform
 
-============
-Unstable API
-============
+==================
+Under Construction
+==================
 
-The API for ``sciform`` is not stable class function names and usages
-have undergone changes and may continue to change until version 1.0.0 is
-released.
+The ``sciform`` package is still in early stages of development.
+The API is not stable.
+Class and function names and usages have undergone changes and may
+continue to change until version 1.0.0 is released.
 API changes will be announced after new releases in the
 `changelog <https://sciform.readthedocs.io/en/stable/project.html#changelog>`_.
+If you have an idea or opinion about how ``sciform`` should be designed
+now is a great to
+`post a discussion topic <https://github.com/jagerber48/sciform/discussions>`_
+about it!
 
 =====
 Usage
