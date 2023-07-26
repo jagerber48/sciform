@@ -72,19 +72,19 @@ class Formatter:
     :param round_mode: :class:`RoundMode` indicating whether to round
       the number based on significant figures or digits past the
       decimal point
-    :param precision: ``int`` indicating how many significant figures or
-      digits past the decimal point to include for rounding. Must be
-      >= 1 for significant figure rounding. May be positive, negative,
-      or zero for digits past the decimal rounding.
+    :param precision: ``int`` or :class:`AutoPrec` sentinel indicating
+      how many significant figures or digits past the decimal point to
+      include for rounding. Must be >= 1 for significant figure
+      rounding. May be any integer for digits past the decimal rounding.
     :param exp_mode: :class:`ExpMode` indicating the formatting
       mode to be used.
-    :param exp: ``int`` indicating the value which should be used for
-      the exponent. This parameter is ignored for the fixed point
-      exponent mode. For engineering, engineering shifted, and binary
-      iec modes, if this parameter is not consistent with the rules of
-      that mode (e.g. if it is not a multiple of 3), then the exponent
-      is rounded down to the nearest conforming value and a warning is
-      printed.
+    :param exp: ``int`` or :class:`AutoExp` indicating the value which
+      should be used for the exponent. This parameter is ignored for the
+      fixed point exponent mode. For engineering, engineering shifted,
+      and binary iec modes, if this parameter is not consistent with the
+      rules of that mode (e.g. if it is not a multiple of 3), then the
+      exponent is rounded down to the nearest conforming value and a
+      warning is printed.
     :param capitalize: ``bool`` indicating whether the exponentiation
       symbol should be upper- or lower-case.
     :param percent: ``bool`` indicating whether the number should be
