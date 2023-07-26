@@ -65,7 +65,7 @@ class FormatOptions:
                                      f'exponent mode.')
 
         if self.percent and self.exp_mode is not ExpMode.FIXEDPOINT:
-            raise ValueError('percent mode can only be sued with fixed point '
+            raise ValueError('percent mode can only be used with fixed point '
                              'exponent mode.')
 
         if self.upper_separator not in get_args(UpperGroupingSeparators):
