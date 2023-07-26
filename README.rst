@@ -1,3 +1,4 @@
+#######
 sciform
 #######
 
@@ -5,8 +6,9 @@ sciform
 |  **Documentation:** `<https://sciform.readthedocs.io/en/stable/>`_
 |  **PyPi:** `<https://pypi.org/project/sciform/>`_
 
+========
 Overview
---------
+========
 
 ``sciform`` is used to convert python numbers into strings according to
 a variety of user-selected scientific formatting options including
@@ -19,13 +21,25 @@ well-controlled significant figure rounding, and separator customization
 which are not provided by the python built-in
 `format specification mini-language (FSML) <https://docs.python.org/3/library/string.html#format-specification-mini-language>`_.
 
+============
 Installation
-------------
+============
 
 Install with pip::
 
    pip install sciform
 
+============
+Unstable API
+============
+
+The API for ``sciform`` is not stable class function names and usages
+have undergone changes and may continue to change until version 1.0.0 is
+released.
+API changes will be announced after new releases in the
+`changelog <https://sciform.readthedocs.io/en/stable/project.html#changelog>`_.
+
+=====
 Usage
 =====
 
