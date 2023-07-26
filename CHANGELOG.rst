@@ -3,6 +3,17 @@
 
 * **[BREAKING]** Rename ``sfloat`` to ``SciNum`` and ``vufloat`` to
   ``SciNumUnc``
+* **[BREAKING]** ``SciNum`` instances do not support arithmetic
+  operations the same way ``sfloat`` instances did.
+  This functionality was removed for two reasons.
+  First, ``SciNum`` uses ``Decimal`` to store its value instead of
+  ``float`` and configuring ``SciNum`` to behave as a subclass of
+  ``Decimal`` would require added complexity.
+  Second, A decision has been made to keep the ``sciform`` module
+  focussed simply on formatting individual numbers or pairs of numbers
+  for early releases.
+  Convenience functionality outside of this narrow scope will be
+  considered at a later time.
 * Favor ``Decimal`` methods over ``float`` methods in internal
   formatting algorithm code.
 * Remove ``float``-centered language fom documentation.
