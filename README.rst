@@ -74,14 +74,12 @@ formatting and the custom FSML with the ``SciNum`` object.
 ``sciform`` can also be used to format pairs of value/uncertainty
 numbers using the ``Formatter`` or ``SciNumUnc`` objects.
 
->>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
-...                   precision=2,
+>>> sform = Formatter(precision=2,
 ...                   upper_separator=GroupingSeparator.SPACE,
 ...                   lower_separator=GroupingSeparator.SPACE)
 >>> print(sform(123456.654321, 0.0034))
 123 456.654 3 +/- 0.003 4
->>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
-...                   precision=4,
+>>> sform = Formatter(precision=4,
 ...                   exp_mode=ExpMode.ENGINEERING)
 >>> print(sform(123456.654321, 0.0034))
 (123.456654321 +/- 0.000003400)e+03
