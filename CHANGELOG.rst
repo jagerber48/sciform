@@ -19,7 +19,7 @@
 * Remove ``float``-centered language fom documentation.
 * Include a discussion in the documentation about ``Decimal`` versus
   ``float`` considerations that may be important for users.
-* Add unstable API message to README.
+* Add "under construction" message to README.
 
 0.21.0 (2023-07-22)
 -------------------
