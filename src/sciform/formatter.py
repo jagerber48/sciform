@@ -75,7 +75,7 @@ class Formatter:
     :param precision: ``int`` or :class:`AutoPrec` sentinel indicating
       how many significant figures or digits past the decimal point to
       include for rounding. Must be >= 1 for significant figure
-      rounding. May be any integer for digits past the decimal rounding.
+      rounding. May be any integer for digits-past-the-decimal rounding.
     :param exp_mode: :class:`ExpMode` indicating the formatting
       mode to be used.
     :param exp: ``int`` or :class:`AutoExp` indicating the value which
