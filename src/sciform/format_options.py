@@ -509,7 +509,7 @@ def global_add_c_prefix():
 
 def global_add_small_si_prefixes():
     """
-    Include ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` to prefix
+    Include ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` as prefix
     substitutions. Note, if any of these exponent values are mapped,
     then that mapping will NOT be overwritten. To modify existing
     mappings either first use :func:`global_reset_si_prefixes` or use
