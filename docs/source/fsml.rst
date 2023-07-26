@@ -11,11 +11,11 @@ Specification
 
 :mod:`sciform` :ref:`formatting options <formatting_options>` can be
 applied to the formatting of :class:`SciNum` or :class:`SciNumUnc`
-objects by using string formatting analogous to the built-in formatting
-for :class:`float` and :class:`Decimal` objects.
+instances by using string formatting analogous to the built-in
+formatting for :class:`float` and :class:`Decimal` objects.
 The :mod:`sciform` format specification mini language is given by::
 
-    format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][exp_mode]["x" exp][p][()]
+    format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode precision][exp_mode]["x" exp]["p"]["()"]
 
     fill               ::=  "0" | " "
     sign               ::=  "+" | "-" | " "
@@ -91,11 +91,10 @@ Details about the terms in the FSML are described below.
    * - | precision
        | (``[+-]?\d+``)
      - Integer indicating the precision or number of significant figures
-       to which the number shall be rounded and displayed. Can be
-       negative for precision rounding mode. Must be greater than zero
-       for significant figure mode. If no precision is supplied then
-       number will be displayed with enough digits so that its decimal
-       representation is unchanged.
+       to which the number shall be rounded and displayed. Can be any
+       integer for digits-past-the-decimal rounding mode. Must be
+       greater than zero for significant figure mode. If no precision is
+       supplied then the number will be displayed without any rounding.
    * - | exp_mode
        | (``'f'``, ``'F'``, ``'%'``, ``'e'``, ``'E'``, ``'r'``, ``'R'``,
          ``'b'``, ``'B'``)
@@ -199,7 +198,7 @@ for scientific formatting.
   followed by the sign aware `=` flag. There is no ``0`` flag, as in the
   built-in FSML, that may be placed before the width field to indicate
   sign-aware zero padding. E.g. ``f'{float(12): =4}`` yields ``'  12'``
-  while ``f{SciNum(12): =4}`` yeilds ``'   12'``. Fill characters are
+  while ``f{SciNum(12): =4}`` yeilds ``'   12'``, fill characters are
   padded up to the ``10^4`` digits place.
 
 * The built-in FSML supports displaying negative zero, but also supports
