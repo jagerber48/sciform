@@ -1,4 +1,9 @@
-0.22.0 (2023-07-24)
+0.22.1 (2023-07-27)
+-------------------
+
+* Fix a date typo in the changelog for the entry for version ``0.22.0``.
+
+0.22.0 (2023-07-27)
 -------------------
 
 * **[BREAKING]** Rename ``sfloat`` to ``SciNum`` and ``vufloat`` to

@@ -1,4 +1,4 @@
-__version__ = "0.22.0"
+__version__ = "0.22.1"
 
 from sciform.formatter import Formatter
 from sciform.scinum import SciNum, SciNumUnc
