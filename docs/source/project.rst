@@ -15,4 +15,4 @@ Roadmap
   classes rather than passing ``kwargs`` directly.
 * Consider support for scientific units
 * Consider support for helper utility features such as formatting of
-  Sequences or arrays and arithmetic of ``SciNum`` objects.
+  sequences or arrays and arithmetic of ``SciNum`` objects.
