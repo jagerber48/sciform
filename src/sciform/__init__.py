@@ -1,7 +1,7 @@
-__version__ = "0.21.0"
+__version__ = "0.22.0"
 
 from sciform.formatter import Formatter
-from sciform.float_formatting import sfloat, vufloat
+from sciform.scinum import SciNum, SciNumUnc
 from sciform.format_options import (
     set_global_defaults, reset_global_defaults,
     global_add_c_prefix, global_add_small_si_prefixes,
@@ -12,7 +12,7 @@ from sciform.format_options import (
 from sciform.modes import (FillMode, SignMode, GroupingSeparator, RoundMode,
                            ExpMode, AutoExp, AutoPrec)
 
-__all__ = ['__version__', 'Formatter', 'sfloat', 'vufloat',
+__all__ = ['__version__', 'Formatter', 'SciNum', 'SciNumUnc',
            'set_global_defaults', 'reset_global_defaults',
            'global_add_c_prefix', 'global_add_small_si_prefixes',
            'global_reset_si_prefixes', 'global_add_ppth_form',

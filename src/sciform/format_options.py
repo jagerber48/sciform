@@ -65,7 +65,7 @@ class FormatOptions:
                                      f'exponent mode.')
 
         if self.percent and self.exp_mode is not ExpMode.FIXEDPOINT:
-            raise ValueError('percent mode can only be sued with fixed point '
+            raise ValueError('percent mode can only be used with fixed point '
                              'exponent mode.')
 
         if self.upper_separator not in get_args(UpperGroupingSeparators):
@@ -414,7 +414,7 @@ def print_global_defaults():
 
 def set_global_defaults(
         *,
-        defaults: 'FormatOptions' = None,
+        defaults: 'FormatOptions' = None,  # TODO: This should not be user input
         fill_mode: FillMode = None,
         sign_mode: SignMode = None,
         top_dig_place: int = None,
@@ -499,8 +499,8 @@ def reset_global_defaults():
 
 def global_add_c_prefix():
     """
-    Include 'c' as a prefix for the exponent value -2. Has no effect if
-    exponent value -2 is already mapped to a prefix string. To modify
+    Include ``c`` as a prefix for the exponent value -2. Has no effect
+    if exponent value -2 is already mapped to a prefix string. To modify
     this mapping, first use :func:`global_reset_si_prefixes` or
     use :func:`set_global_defaults`.
     """
@@ -509,9 +509,9 @@ def global_add_c_prefix():
 
 def global_add_small_si_prefixes():
     """
-    Include {-2: 'c', -1: 'd', +1: 'da', +2: 'h'} exponnet value to
-    prefix subsitutions. Note, if any of these exponent values are
-    mapped then that mapping will NOT be overwritten. To modify existing
+    Include ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` as prefix
+    substitutions. Note, if any of these exponent values are mapped,
+    then that mapping will NOT be overwritten. To modify existing
     mappings either first use :func:`global_reset_si_prefixes` or use
     :func:`set_global_defaults`.
     """
@@ -520,9 +520,9 @@ def global_add_small_si_prefixes():
 
 def global_add_ppth_form():
     """
-    Include 'ppth' as a "parts-per" form for the exponent value -3.
+    Include ``ppth`` as a "parts-per" form for the exponent value -3.
     Has no effect if exponent value -3 is already mapped to a
-    "parts-per" form string. To modify this mapping, first use
+    "parts-per" format string. To modify this mapping, first use
     :func:`global_reset_parts_per_forms` or use
     :func:`set_global_defaults`.
     """

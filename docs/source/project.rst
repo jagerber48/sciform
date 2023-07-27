@@ -10,8 +10,9 @@ Changelog
 Roadmap
 =======
 
-* Support for
-  `decimal <https://docs.python.org/3/library/decimal.html#module-decimal>`_
-  objects in addition to floats. This is imporant for supporting
-  formatting numbers with a large (e.g. >15) number of significant
-  digits or a high precision.
+* Support for parsing strings into ``SciNum`` of ``SciNumUnc`` objects.
+* Refactor API so that users construct and pass ``FormatOptions``-like
+  classes rather than passing ``kwargs`` directly.
+* Consider support for scientific units.
+* Consider support for helper utility features such as formatting of
+  sequences or arrays and arithmetic of ``SciNum`` objects.

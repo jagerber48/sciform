@@ -7,7 +7,7 @@ Formatting Options
 .. module:: sciform
    :noindex:
 
-:mod:`sciform` provides a variety of options for converting floats into
+:mod:`sciform` provides a variety of options for converting numbers into
 formatted strings.
 These options including control over the rounding strategy, scientific
 notation formatting, separation characters and more.
@@ -23,15 +23,15 @@ formatting presents numbers in the form::
 
 Where exp is an integer and ``base`` is typically 10 or 2.
 The different exponent modes control how ``mantissa``, ``base`` and
-``exp`` are chosen for a given input float ``num``.
+``exp`` are chosen for a given input number ``num``.
 
 .. _fixed_point:
 
 Fixed Point
 -----------
 
-Fixed point notation is standard notation in which a float is displayed
-directly as a decimal number with no extra exponent.
+Fixed point notation is standard notation in which a number is displayed
+directly with no extra exponent.
 
 >>> from sciform import Formatter, ExpMode, RoundMode
 >>> sform = Formatter(exp_mode=ExpMode.FIXEDPOINT)
@@ -260,27 +260,33 @@ exponent mode).
 This is taken into account before the final presentation.
 
 In both cases, if no explicit precision value or number of significant
-figures is supplied then the number is displayed as if no rounding
-occurs.
-That is, all digits, down the least significant, are displayed.
+figures is supplied then all digits of the number are displayed.
 To explicitly force this behavior use the :class:`AutoPrec` class by
-passsing ``precision=AutoPrec``.
+passing ``precision=AutoPrec``.
 This is the default value in the global configuration.
+
+If the number to be formatted is passed in as a :class:`float` (either
+to the :class:`Formatter`, :class:`SciNum`, or :class:`SciNumUnc`),
+then, if no precision or number of significant figures is supplied, the
+decimal digits of the :class:`float` are truncated to the minimum number
+of digits necessary for round-tripping.
 
 Significant Figures
 -------------------
 
 For significant figure rounding, first the digits place for the
-most-significant digit is identified.
-e.g. for ``12345.678`` the most-significant digit appears in the
+most-significant digit is identified, then the number is rounded to
+the specified number of significant figures below that digits place.
+E.g. for ``12345.678`` the most-significant digit appears in the
 ten-thousands, or 10\ :sup:`4`, place.
 To express this number to 4-significant digits means we should round it
 to the tens, or 10\ :sup:`1`, place resulting in ``12350``.
 
-Note that 1000 rounded to 2 significant figures is, of course, still
+Note that 1001 rounded to 1, 2, or 3 significant figures results in
 1000.
 This demonstrates that we can't determine how many significant figures
-a number was rounded to just by looking at the resulting string.
+a number was rounded to (or "how many significant figures a number has")
+just by looking at the resulting string.
 
 >>> from sciform import RoundMode
 >>> sform = Formatter(exp_mode=ExpMode.ENGINEERING,
@@ -326,8 +332,7 @@ Separators
 :mod:`sciform` provides support for some customization for separator
 characters within formatting strings.
 Different locales use different conventions for the symbol separating
-the integral and fractional part of a float number, called the decimal
-symbol.
+the integral and fractional part of a number, called the decimal symbol.
 :mod:`sciform` supports using a period ``'.'`` or comma ``','`` as the
 decimal symbol.
 
@@ -361,7 +366,7 @@ Sign Mode
 =========
 
 :mod:`sciform` provides control over the symbol used to indicate whether a
-float is positive or negative.
+number is positive or negative.
 In all cases a ``'-'`` sign is used for negative numbers.
 By default, positive numbers are formatted with no sign symbol.
 However, :mod:`sciform` includes a mode where positive numbers are always
@@ -399,7 +404,7 @@ The capitalization of the exponent character can be controlled
 1B+10
 
 The ``capitalize`` flag also controls the capitalization of ``nan`` and
-``inf`` formatted floats:
+``inf`` formatting:
 
 >>> print(sform(float('nan')))
 NAN
@@ -434,7 +439,7 @@ Percent Mode
 
 The user can activate percent mode using the ``percent`` flag.
 This flag is only valid for fixed point exponent mode.
-In this case, the float is multipled by 100 and a % symbols is
+In this case, the number is multipled by 100 and a % symbols is
 appended to the end of the formatted string.
 
 >>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
@@ -541,17 +546,23 @@ The algorithm is as follows.
 
 * Determine the three most significant digits of the uncertainty. E.g.
   if the uncertainty is 0.004857 then these digits would be 486
-* If the value is between 100 and 354 (inclusive) then display the
-  uncertainty with two significant digits. E.g. if the uncertainty is
-  3.03 then display the uncertainy as 3.0
-* If the value is between 355 and 949 (inclusive) then display the
-  uncertainty with one signifcant digit. E.g. if the uncertainty is
-  0.76932 then display the uncertainty as 0.8
-* If the value is between 950 and 999 (inclusive) then round up to 1000
-  and display the uncertainty with two signficant digits. This is
-  equivalent to rounding and displaying to the first most significant
-  digit of the uncertainty. E.g. if the uncertainty is 0.0099 then
-  display the uncertainty as 0.010.
+* If the scaled uncertainty is between 100 and 354 (inclusive) then the
+  uncertainty is rounded and displayed to one digit below its most
+  significant digit.
+  This means it will have two significant digit.
+  E.g. if the uncertainty is 3.03 then it will appear as as 3.0
+* If the scaled uncertainty is between 355 and 949 (inclusive) then the
+  uncertainty is rounded and displayed to the same digit as the most
+  significant digit.
+  This means it will have one significant digit.
+  E.g. if the uncertainty is 0.76932 then it will appear as 0.8
+* If the scaled uncertainty is between 950 and 999 (inclusive) then the
+  uncertainty is rounded and displayed to the same digit as the most
+  significant digit.
+  But 950 and above will always be rounded to 1000 if we round to the
+  hundreds place.
+  This means there will be two significant digits.
+  E.g. if the uncertainty is 0.0099 then it will be displayed as 0.010.
 
 :mod:`sciform` provides the ability to use this algorithm when
 formatting value/uncertainty pairs by using significant figure rounding
@@ -671,7 +682,7 @@ This latest example demonstrates that the bracket uncertainty mode can
 become difficult to read in some cases.
 Bracket uncertainty is most useful when the value is at least a few
 orders of magnitude larger than the uncertainty and when the uncertainty
-is displayed with a small number (e.g. 1 or 2) significant digits.
+is displayed with a small number (e.g. 1 or 2) of significant digits.
 
 Match Value/Uncertainty Width
 -----------------------------

@@ -9,9 +9,9 @@ Formatting
 
 .. autoclass:: Formatter()
 
-.. autoclass:: sfloat()
+.. autoclass:: SciNum()
 
-.. autoclass:: vufloat()
+.. autoclass:: SciNumUnc()
 
 Mode Enums
 ==========

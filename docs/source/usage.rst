@@ -7,18 +7,18 @@ Usage
 Formatting
 ==========
 
-:mod:`sciform` provides two primary methods for formatting floats into
-scientific formatting strings.
+:mod:`sciform` provides two primary methods for formatting numbers into
+scientific formatted strings.
 The first is via the :class:`Formatter` object and the second is
 using string formatting and the
 :ref:`Format Specification Mini Language (FSML) <fsml>` with the
-:class:`sfloat` or :class:`vufloat` objects.
+:class:`SciNum` or :class:`SciNumUnc` objects.
 
 Formatter
 ---------
 
 The :class:`Formatter` object is initialized with user-selected
-formatting options and then used to format floats.
+formatting options and then used to format numbers.
 See :ref:`formatting_options` for more details about the available
 options.
 
@@ -35,16 +35,17 @@ options.
 >>> print(sform(123456.78))
 123.5e+03
 
-sfloat
+SciNum
 ------
 
 The :mod:`sciform` :ref:`FSML <fsml>` can be accessed via the
-:class:`sfloat` object.
-Regular built-in floats are cast to :class:`sfloat` objects which can be
-formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
+:class:`SciNum` object.
+Python numbers specified as :class:`string`, :class:`float`, or
+:class:`Decimal` objects are cast to :class:`SciNum` objects which can
+be formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
 
->>> from sciform import sfloat
->>> num = sfloat(123456)
+>>> from sciform import SciNum
+>>> num = SciNum(123456)
 >>> print(f'{num:_!2f}')
 120_000
 
@@ -54,46 +55,48 @@ Value/Uncertainty Formatting
 One of the most important use cases for scientific formatting is
 formatting a value together with its specified uncertainty, e.g.
 ``84.3 +/- 0.2``.
-:mod:`sciform` provides the ability to format pairs of floats into
+:mod:`sciform` provides the ability to format pairs of numbers into
 value/uncertainty strings.
-We attempt to follow
+:mod:`sciform` attempts to follow
 `BIPM <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6>`_
 or `NIST <https://www.nist.gov/pml/nist-technical-note-1297>`_
 recomendations for conventions when possible.
 
-value/uncertainty pairs can be formatted either by passing two values
+Value/uncertainty pairs can be formatted either by passing two values
 into a :class:`Formatter`, and configuring the :class:`Formatter` using
 :ref:`formatting_options` and :ref:`val_unc_formatting_options`, or by
-using the :class:`vufloat` object.
+using the :class:`SciNumUnc` object.
 
 >>> val = 84.3
 >>> unc = 0.2
 >>> sform = Formatter(precision=2)
 >>> print(sform(val, unc))
 84.30 +/- 0.20
->>> from sciform import vufloat
->>> val_unc = vufloat(val, unc)
+
+>>> from sciform import SciNumUnc
+>>> val_unc = SciNumUnc(val, unc)
 >>> print(f'{val_unc:!2}')
 84.30 +/- 0.20
 
-Value/uncertainty pairs can also be shown in a common format where the
-uncertainty is displayed in parentheses after the value
+Value/uncertainty pairs can also be formatted in a common parentheses
+notation in which the uncertainty is displayed in parentheses following
+the value.
 
 >>> print(f'{val_unc:!2()}')
 84.30(20)
 
-value/uncertainty pairs are formatted according to the following
+Value/uncertainty pairs are formatted according to the following
 algorithm:
 
 #. Rounding is always performed using significant figure rounding
    applied to the uncertainty. If a ``precision`` is supplied then the
-   uncertainty is rounded to that many signficant figures. Otherwise it
-   is not rounded.
+   uncertainty is rounded to significant figures consistent with the
+   supplied ``precision``. Otherwise the uncertainty is left unrounded.
 #. The value is rounded to the digit corresponding to the least
-   significant digit of the uncertainty.
+   significant digit of the rounded uncertainty.
 #. The value for the exponent is resolved by applying the
    ``exp_mode`` to the larger of the value and uncertainty.
-#. The value and uncertainties mantissas are determined according to the
+#. The value and uncertainty mantissas are determined according to the
    value of the exponent determined in the previous step.
 #. The value and uncertainty mantissas are formatted together with the
    exponent according to the user-selected display options.
@@ -219,25 +222,160 @@ global defaults take on the specified input settings, but when the
 context is exited, the global default settings revert to their previous
 values.
 
->>> from sciform import GlobalDefaultsContext, sfloat
->>> snum = sfloat(0.0123)
+>>> from sciform import GlobalDefaultsContext, SciNum
+>>> snum = SciNum(0.0123)
 >>> print(f'{snum:.2ep}')
 1.23e-02
 >>> with GlobalDefaultsContext(add_c_prefix=True):
 ...     print(f'{snum:.2ep}')
 1.23 c
 
-:class:`sfloat` and :class:`vufloat` objects load global settings when
+:class:`SciNum` and :class:`SciNumUnc` objects load global settings when
 being *formatted*, not initialized.
 By contrast, :class:`Formatter` settings are configured and frozen when
 the class is initialized.
 Thus, changing global default settings with :func:`set_global_defaults`
 or with the :class:`GlobalDefaultsContext` will not change the behavior
 of any :class:`Formatter` that was instantiated before the change, but
-it will change :class:`sfloat` and :class:`vufloat` formatting.
+it will change :class:`SciNum` and :class:`SciNumUnc` formatting.
 Global configuration settings are, then, most useful for controlling the
-behavior of :class:`sfloat` and :class:`vufloat` formatting.
+behavior of :class:`SciNum` and :class:`SciNumUnc` formatting.
 In particular, not all avaible options can be accessed using the
 :ref:`FSML <fsml>`, so the only way to modify these options while using
-:class:`sfloat` or :class:`vufloat` formatting is via the global
+:class:`SciNum` or :class:`SciNumUnc` formatting is via the global
 configuration settings.
+
+Note on Decimals and Floats
+===========================
+
+Numerical data can be stored in Python
+`float <https://docs.python.org/3/library/functions.html#float>`_
+or
+`Decimal <https://docs.python.org/3/library/decimal.html>`_ objects.
+:class:`float` instances represent numbers using binary which means
+they are often only approximations of the decimal numbers users have in
+mind when they use :class:`float`.
+By contrast, :class:`Decimal` objects store a string of integers
+representing the decimal digits of the represented number so
+:class:`Decimal` objects are, therefore, exact representations of
+decimal numbers.
+
+Both of these representations have finite precision which can cause
+unexpected issues when manipulating numerical data.
+However, the :class:`Decimal` class is much better suited to address
+these issues.
+Internally, the :mod:`sciform` module uses :class:`Decimal`
+representations of the numbers it is formatting.
+
+Here I would like to highlight some important facts and possible issues
+with :class:`float` objects that users should be aware of if they are
+concerned with the exact decimal representation of their numerical data.
+
+* Python uses
+  `double-precision floating-point format <https://en.wikipedia.org/wiki/Double-precision_floating-point_format>`_
+  for its :class:`float`.
+  In this format a :class:`float` occupies 64 bits of memory: 52 bits
+  for the mantissa, 11 bits for the exponent and 1 bit for the sign.
+* Any decimal with 15 digits between about ``+/- 1.8e+308`` can be
+  uniquely represented by a :class:`float`.
+  However, two decimals with more than 15 digits may map to the same
+  :class:`float`.
+  For example,
+  ``float(8.000000000000001) == float(8.000000000000002)`` returns
+  ``True``.
+  See `"Decimal Precision of Binary Floating Point Numbers" <https://www.exploringbinary.com/decimal-precision-of-binary-floating-point-numbers/>`_
+  for more details.
+
+* If any :class:`float` is converted to a decimal with at least 17
+  digits then it will be converted back to the same :class:`float`.
+  See `"The Shortest Decimal String that Round-Trips: Examples" <https://www.exploringbinary.com/the-shortest-decimal-string-that-round-trips-examples/>`_
+  for more details.
+  However, many :class:`float` instances can be "round-tripped" with
+  far fewer digits.
+  The :func:`__repr__` for the python :class:`float` class converts the
+  :class:`float` to a string decimal representation with the minimum
+  number of digits such that it round trips to the same :class:`float`.
+  For example we can see the exact decimal representation of the
+  :class:`float` which ``0.1`` is mapped to:
+  ``print(Decimal(float(0.1)))`` gives
+  ``"0.1000000000000000055511151231257827021181583404541015625"``.
+  However ``print(float(0.1))`` just gives ``"0.1"``.
+  That is,
+  ``0.1000000000000000055511151231257827021181583404541015625`` and
+  ``0.1`` map to the same :class:`float` but the :class:`float`
+  :func:`__repr__()` algorithm presents us with the shorter (more
+  readable) decimal representation.
+
+The `python documentation <https://docs.python.org/3/tutorial/floatingpoint.html#tut-fp-issues>`_
+goes into some detail about possible issues one might encounter when
+working with :class:`float` instances.
+Here I would like to highlight two specific issues.
+
+#. **Rounding**.
+   `Python's round() function <https://docs.python.org/3/library/functions.html#round>`_
+   uses a `"round-to-even" or "banker's rounding" <https://en.wikipedia.org/wiki/Rounding#Rounding_half_to_even>`_
+   strategy in which ties are rounded so the least significant digit
+   after rounding is always even.
+   This ensures data sets with uniformly distributed digits are not
+   biased by rounding.
+   Rounding of :class:`float` instances may have surprising results.
+   Consider the decimal numbers ``0.0355`` and ``0.00355``.
+   If we round these to two significant figures using a "round-to-even"
+   strategy, we expect the results ``0.036`` and ``0.0036``
+   respectively.
+   However, if we try to perform this rounding for :class:`float` we get
+   an unexpected result. We see that ``round(0.00355, 4)`` gives
+   ``0.0036`` as expected but ``round(0.0355, 3)`` gives ``0.035``.
+   We can see the issue by looking at the decimal representations of the
+   corresponding :class:`float` instances.
+   ``print(Decimal(0.0355))`` gives
+   ``"0.035499999999999996835864379818303859792649745941162109375"``
+   which indeed should round down to ``0.035`` while
+   ``print(Decimal(0.00355))`` gives
+   ``"0.003550000000000000204003480774872514302842319011688232421875"``
+   which should round to ``0.0036``.
+   So we see that the rounding behavior for :class:`float` depends on
+   digits of the decimal representation of the :class:`float` which are
+   beyond the minimum number of digits necessary for the :class:`float`
+   to round trip and, thus,beyond the number of digits that will be
+   displayed by default.
+#. **Representation of numbers with high precision**.
+   Conservatively, :class:`float` provides 15 digits of precision.
+   That is, any two decimal numbers (within the :class:`float` range)
+   with 15 digits of precision correspond to unique :class:`float`
+   instances.
+   It is rare in applications that we require more than 15 digits of
+   precision, but in some cases we do.
+   One example is precision frequency metrology, such as that
+   involved in atomic clocks.
+   The relative uncertainty of primary frequency standards is
+   approaching one part in 10\ :sup:`-16`.
+   This means that measured quantities may require up to 16 digits to
+   display.
+   Indeed, consider
+   `Metrologia 55 (2018) 188–200 <https://iopscience.iop.org/article/10.1088/1681-7575/aaa302>`_.
+   In Table 2 the :sup:`87` Rb ground-state hyperfine splitting is cited
+   as ``6 834 682 610.904 312 6 Hz`` with 17 digits. Suppose the last
+   digit was a ``5`` instead of a ``6``. Python :class:`float` cannot
+   tell the diffence:
+   ``float(6834682610.9043126) == float(6834682610.9043125)`` returns
+   ``True``.
+
+How :mod:`sciform` Handles Decimals and Floats
+----------------------------------------------
+
+To support predictable rounding and the representation of high precision
+numbers, :mod:`sciform` casts the numbers it is presenting to
+:class:`Decimal` objects during its formatting algorithm.
+Numbers are input into :mod:`sciform` either as the input to a
+:class:`Formatter` or when instantiating a :class:`SciNum` or
+:class:`SciNumUnc` object.
+In all cases the input will typically be a :class:`Decimal`,
+:class:`float`, :class:`str`, or :class:`int`.
+:class:`Decimal`, :class:`str` and :class:`int` are unambiguously
+converted to :class:`Decimal` objects.
+For :class:`float` input, we first cast the float to a :class:`str` to
+get its shortest round-trippable decimal representation, then convert to
+:class:`Decimal`.
+For high precision applications it is recommended that users provide
+input to :mod:`sciform` either as :class:`str` or :class:`Decimal`.

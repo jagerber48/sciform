@@ -1,11 +1,39 @@
+0.22.0 (2023-07-24)
+-------------------
+
+* **[BREAKING]** Rename ``sfloat`` to ``SciNum`` and ``vufloat`` to
+  ``SciNumUnc``
+* **[BREAKING]** ``SciNum`` instances do not support arithmetic
+  operations the same way ``sfloat`` instances did.
+  This functionality was removed for two reasons.
+  First, ``SciNum`` uses ``Decimal`` to store its value instead of
+  ``float`` and configuring ``SciNum`` to behave as a subclass of
+  ``Decimal`` would require added complexity.
+  Second, A decision has been made to keep the ``sciform`` module
+  focussed solely on formatting individual numbers or pairs of numbers
+  for early releases.
+  Convenience functionality outside of this narrow scope will be
+  considered at a later time.
+* Favor ``Decimal`` methods over ``float`` methods in internal
+  formatting algorithm code.
+* Documentation
+
+   * Remove ``float``-based language fom documentation.
+   * Include a discussion in the documentation about ``Decimal`` versus
+     ``float`` considerations that may be important for users.
+   * Various minor revisions and edits. Notably a typo in the version
+     ``0.21.0`` changelog entry that reversed the meaning of a sentence
+     was corrected.
+   * Add "under construction" message to README.
+
 0.21.0 (2023-07-22)
 -------------------
 
 * Use ``Decimal`` under the hood for numerical formatting instead of
-  ``float``. ``Decimal`` support higher precision than ``float`` and
-  more reliable rounding behavior.
+  ``float``. ``Decimal`` instances support higher precision than
+  ``float`` and more reliable rounding behavior.
 * Update particle data group uncertainty rounding unit tests since edge
-  cases are not handled property as a result of adopting ``Decimal``.
+  cases are now handled property as a result of adopting ``Decimal``.
 * Minor cleanup of ``sfloat`` arithemetic functions.
 
 0.20.1 (2023-06-24)
@@ -32,7 +60,7 @@
 * When an exponent translation mode is used in combination with Latex
   mode, the translated exponent will now be wrapped in a Latex text
   mode: e.g. ``\text{Mi}``.
-* Link to test cases on examples page
+* Link to test cases on examples page.
 
 0.19.0 (2023-06-22)
 -------------------
