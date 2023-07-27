@@ -499,8 +499,8 @@ def reset_global_defaults():
 
 def global_add_c_prefix():
     """
-    Include 'c' as a prefix for the exponent value -2. Has no effect if
-    exponent value -2 is already mapped to a prefix string. To modify
+    Include ``c`` as a prefix for the exponent value -2. Has no effect
+    if exponent value -2 is already mapped to a prefix string. To modify
     this mapping, first use :func:`global_reset_si_prefixes` or
     use :func:`set_global_defaults`.
     """
@@ -520,7 +520,7 @@ def global_add_small_si_prefixes():
 
 def global_add_ppth_form():
     """
-    Include 'ppth' as a "parts-per" form for the exponent value -3.
+    Include ``ppth`` as a "parts-per" form for the exponent value -3.
     Has no effect if exponent value -3 is already mapped to a
     "parts-per" format string. To modify this mapping, first use
     :func:`global_reset_parts_per_forms` or use
