@@ -40,9 +40,9 @@ SciNum
 
 The :mod:`sciform` :ref:`FSML <fsml>` can be accessed via the
 :class:`SciNum` object.
-Python numbers specified as ``string``, ``float``, or ``Decimal``
-objects are cast to :class:`SciNum` objects which can be formatted using
-the :mod:`sciform` :ref:`FSML <fsml>`.
+Python numbers specified as :class:`string`, :class:`float`, or
+:class:`Decimal` objects are cast to :class:`SciNum` objects which can
+be formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
 
 >>> from sciform import SciNum
 >>> num = SciNum(123456)
@@ -72,6 +72,7 @@ using the :class:`SciNumUnc` object.
 >>> sform = Formatter(precision=2)
 >>> print(sform(val, unc))
 84.30 +/- 0.20
+
 >>> from sciform import SciNumUnc
 >>> val_unc = SciNumUnc(val, unc)
 >>> print(f'{val_unc:!2}')
@@ -282,32 +283,45 @@ concerned with the exact decimal representation of their numerical data.
   For example,
   ``float(8.000000000000001) == float(8.000000000000002)`` returns
   ``True``.
+  See `"Decimal Precision of Binary Floating Point Numbers" <https://www.exploringbinary.com/decimal-precision-of-binary-floating-point-numbers/>`_
+  for more details.
+
 * If any :class:`float` is converted to a decimal with at least 17
   digits then it will be converted back to the same :class:`float`.
-  See `decimal precision of binary floating point number <https://www.exploringbinary.com/decimal-precision-of-binary-floating-point-numbers/>`_.
+  See `"The Shortest Decimal String that Round-Trips: Examples" <https://www.exploringbinary.com/the-shortest-decimal-string-that-round-trips-examples/>`_
+  for more details.
   However, many :class:`float` instances can be "round-tripped" with
   far fewer digits.
-  The `__repr__` for the python :class:`float` class converts the
-  :class:`float` to a decimal representation with the minimum number of
-  digits such that it round trips to the same :class:`float`.
+  The :func:`__repr__` for the python :class:`float` class converts the
+  :class:`float` to a string decimal representation with the minimum
+  number of digits such that it round trips to the same :class:`float`.
   For example we can see the exact decimal representation of the
   :class:`float` which ``0.1`` is mapped to:
   ``print(Decimal(float(0.1)))`` gives
-  ``0.1000000000000000055511151231257827021181583404541015625``.
-  However ``print(float(0.1))`` just gives ``0.1``.
+  ``"0.1000000000000000055511151231257827021181583404541015625"``.
+  However ``print(float(0.1))`` just gives ``"0.1"``.
   That is,
   ``0.1000000000000000055511151231257827021181583404541015625`` and
   ``0.1`` map to the same :class:`float` but the :class:`float`
-  ``__repr__`` algorithim presents us with the shorter (more readable)
-  decimal representation.
+  :func:`__repr__()` algorithm presents us with the shorter (more
+  readable) decimal representation.
 
-The above considerations on :class:`float` can lead to two surprising
-issues that I will highlight.
+The `python documentation <https://docs.python.org/3/tutorial/floatingpoint.html#tut-fp-issues>`_
+goes into some detail about possible issues one might encounter when
+working with :class:`float` instances.
+Here I would like to highlight two specific issues.
 
 #. **Rounding**.
+   `Python's round() function <https://docs.python.org/3/library/functions.html#round>`_
+   uses a `"round-to-even" or "banker's rounding" <https://en.wikipedia.org/wiki/Rounding#Rounding_half_to_even>`_
+   strategy in which ties are rounded so the least significant digit
+   after rounding is always even.
+   This ensures data sets with uniformly distributed digits are not
+   biased by rounding.
+   Rounding of :class:`float` instances may have surprising results.
    Consider the decimal numbers ``0.0355`` and ``0.00355``.
    If we round these to two significant figures using a "round-to-even"
-   strategy we expect these to round to ``0.036`` and ``0.0036``
+   strategy, we expect the results ``0.036`` and ``0.0036``
    respectively.
    However, if we try to perform this rounding for :class:`float` we get
    an unexpected result. We see that ``round(0.00355, 4)`` gives
@@ -315,10 +329,10 @@ issues that I will highlight.
    We can see the issue by looking at the decimal representations of the
    corresponding :class:`float` instances.
    ``print(Decimal(0.0355))`` gives
-   ``0.035499999999999996835864379818303859792649745941162109375``
+   ``"0.035499999999999996835864379818303859792649745941162109375"``
    which indeed should round down to ``0.035`` while
    ``print(Decimal(0.00355))`` gives
-   ``0.003550000000000000204003480774872514302842319011688232421875``
+   ``"0.003550000000000000204003480774872514302842319011688232421875"``
    which should round to ``0.0036``.
    So we see that the rounding behavior for :class:`float` depends on
    digits of the decimal representation of the :class:`float` which are
@@ -335,7 +349,7 @@ issues that I will highlight.
    One example is precision frequency metrology, such as that
    involved in atomic clocks.
    The relative uncertainty of primary frequency standards is
-   approaching one part in 10 :sup:`-16`.
+   approaching one part in 10\ :sup:`-16`.
    This means that measured quantities may require up to 16 digits to
    display.
    Indeed, consider
