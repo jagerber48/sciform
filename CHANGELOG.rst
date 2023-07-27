@@ -1,3 +1,9 @@
+0.22.2 (2023-07-27)
+-------------------
+
+* Add ``.readthedocs.yaml`` and update documentation
+  ``requirements.txt`` for reproducible documentation builds.
+
 0.22.1 (2023-07-27)
 -------------------
 
