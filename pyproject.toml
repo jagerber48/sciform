@@ -7,7 +7,7 @@ name = "sciform"
 authors = [
     {name = "Justin Gerber", email="justin.gerber48@gmail.com"}
 ]
-description = "A package for formatting floats into scientific formatted strings."
+description = "A package for formatting numbers into scientific formatted strings."
 classifiers = [
     "License :: OSI Approved :: MIT License"
 ]
