@@ -7,6 +7,8 @@ API
 Formatting
 ==========
 
+.. autoclass:: FormatOptions()
+
 .. autoclass:: Formatter()
 
 .. autoclass:: SciNum()

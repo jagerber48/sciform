@@ -101,6 +101,8 @@ algorithm:
 #. The value and uncertainty mantissas are formatted together with the
    exponent according to the user-selected display options.
 
+.. _global_config:
+
 Global Configuration
 ====================
 
