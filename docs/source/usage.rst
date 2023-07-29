@@ -38,10 +38,12 @@ about how to view and modify the global default options.
 Formatter
 ---------
 
-The :class:`Formatter` object is initialized with user-selected
-formatting options and then used to format numbers.
-See :ref:`formatting_options` for more details about the available
-options.
+The :class:`Formatter` object is initialized and configured using a
+:class:`FormatOptions` object which contains the formatting settings.
+The :class:`FormatOptions` object is then called with number and returns
+a corresponding formatted string.
+Note that global default options are used to populate unfilled options
+at formatting time.
 
 >>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
 >>> sform = Formatter(round_mode=RoundMode.PREC,
