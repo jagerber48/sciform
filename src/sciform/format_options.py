@@ -42,6 +42,7 @@ ExpReplaceDict = dict[int, Union[str, None]]
 
 
 class FormatOptions:
+    # TODO: __repr__
     """
     :class:`FormatOptions` stores all the configuration options used to
     format numbers and number/uncertainty pairs. See
