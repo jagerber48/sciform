@@ -1,10 +1,5 @@
-from typing import Union
 from decimal import Decimal
 
-from sciform.modes import (SignMode, FillMode, UpperGroupingSeparators,
-                           DecimalGroupingSeparators, LowerGroupingSeparators,
-                           ExpMode, RoundMode, AutoExp, AutoPrec)
-from sciform.format_options import FormatOptions
 from sciform.formatting import format_num, format_val_unc
 from sciform.format_utils import Number
 
@@ -146,109 +141,17 @@ class Formatter:
       whitespace surrounding the ``'+/-'`` symbols when formatting. E.g.
       ``123.4+/-2.3`` compared to ``123.4 +/- 2.3``.
     """
-    def __init__(
-            self,
-            *,
-            fill_mode: FillMode = None,
-            sign_mode: SignMode = None,
-            top_dig_place: int = None,
-            upper_separator: UpperGroupingSeparators = None,
-            decimal_separator: DecimalGroupingSeparators = None,
-            lower_separator: LowerGroupingSeparators = None,
-            round_mode: RoundMode = None,
-            precision: Union[int, type(AutoPrec)] = None,
-            exp_mode: ExpMode = None,
-            exp: Union[int, type(AutoExp)] = None,
-            capitalize: bool = None,
-            percent: bool = None,
-            superscript_exp: bool = None,
-            latex: bool = None,
-            nan_inf_exp: bool = None,
-            prefix_exp: bool = None,
-            parts_per_exp: bool = None,
-            extra_si_prefixes: dict[int, Union[str, None]] = None,
-            extra_iec_prefixes: dict[int, Union[str, None]] = None,
-            extra_parts_per_forms: dict[int, Union[str, None]] = None,
-            add_c_prefix: bool = False,
-            add_small_si_prefixes: bool = False,
-            add_ppth_form: bool = False,
-            pdg_sig_figs: bool = None,
-            bracket_unc: bool = None,
-            val_unc_match_widths: bool = None,
-            bracket_unc_remove_seps: bool = None,
-            unicode_pm: bool = None,
-            unc_pm_whitespace: bool = None
-    ):
-        self.options = FormatOptions.make(
-            defaults=None,
-            fill_mode=fill_mode,
-            sign_mode=sign_mode,
-            top_dig_place=top_dig_place,
-            upper_separator=upper_separator,
-            decimal_separator=decimal_separator,
-            lower_separator=lower_separator,
-            round_mode=round_mode,
-            precision=precision,
-            exp_mode=exp_mode,
-            exp=exp,
-            capitalize=capitalize,
-            percent=percent,
-            superscript_exp=superscript_exp,
-            latex=latex,
-            nan_inf_exp=nan_inf_exp,
-            prefix_exp=prefix_exp,
-            parts_per_exp=parts_per_exp,
-            extra_si_prefixes=extra_si_prefixes,
-            extra_iec_prefixes=extra_iec_prefixes,
-            extra_parts_per_forms=extra_parts_per_forms,
-            add_c_prefix=add_c_prefix,
-            add_small_si_prefixes=add_small_si_prefixes,
-            add_ppth_form=add_ppth_form,
-            pdg_sig_figs=pdg_sig_figs,
-            bracket_unc=bracket_unc,
-            val_unc_match_widths=val_unc_match_widths,
-            bracket_unc_remove_seps=bracket_unc_remove_seps,
-            unicode_pm=unicode_pm,
-            unc_pm_whitespace=unc_pm_whitespace
-        )
+    def __init__(self, format_options):
+        self.format_options = format_options
 
     def __call__(self, value: Number, uncertainty: Number = None, /):
         return self.format(value, uncertainty)
 
     def format(self, value: Number, uncertainty: Number = None, /):
+        rendered_format_options = self.format_options.render()
         if uncertainty is None:
-            return format_num(Decimal(str(value)), self.options)
+            return format_num(Decimal(str(value)), rendered_format_options)
         else:
             return format_val_unc(Decimal(str(value)),
                                   Decimal(str(uncertainty)),
-                                  self.options)
-
-    # TODO: What is this for? Remove this.
-    @classmethod
-    def _from_options(cls, options: FormatOptions):
-        return cls(fill_mode=options.fill_mode,
-                   sign_mode=options.sign_mode,
-                   top_dig_place=options.top_dig_place,
-                   upper_separator=options.upper_separator,
-                   decimal_separator=options.decimal_separator,
-                   lower_separator=options.lower_separator,
-                   round_mode=options.round_mode,
-                   precision=options.precision,
-                   exp_mode=options.exp_mode,
-                   exp=options.exp,
-                   capitalize=options.capitalize,
-                   percent=options.percent,
-                   superscript_exp=options.superscript_exp,
-                   latex=options.latex,
-                   nan_inf_exp=options.nan_inf_exp,
-                   prefix_exp=options.prefix_exp,
-                   parts_per_exp=options.parts_per_exp,
-                   extra_si_prefixes=options.extra_si_prefixes,
-                   extra_iec_prefixes=options.extra_iec_prefixes,
-                   extra_parts_per_forms=options.extra_parts_per_forms,
-                   pdg_sig_figs=options.pdg_sig_figs,
-                   bracket_unc=options.bracket_unc,
-                   val_unc_match_widths=options.val_unc_match_widths,
-                   bracket_unc_remove_seps=options.bracket_unc_remove_seps,
-                   unicode_pm=options.unicode_pm,
-                   unc_pm_whitespace=options.unc_pm_whitespace)
+                                  rendered_format_options)

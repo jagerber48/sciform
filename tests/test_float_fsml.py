@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import SciNum, GlobalDefaultsContext
+from sciform import SciNum, GlobalDefaultsContext, FormatOptions
 
 
 FloatFSMLCases = list[tuple[float, list[tuple[str, str]]]]
@@ -408,7 +408,7 @@ class TestFormatting(unittest.TestCase):
             ])
         ]
 
-        with GlobalDefaultsContext(nan_inf_exp=True):
+        with GlobalDefaultsContext(FormatOptions(nan_inf_exp=True)):
             self.run_float_fsml_cases(cases_list)
 
     def test_separators(self):

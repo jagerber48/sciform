@@ -2,8 +2,8 @@ from warnings import warn
 import re
 from decimal import Decimal
 
-from sciform.modes import ExpMode, SignMode, AutoExp
-from sciform.format_options import FormatOptions, RoundMode
+from sciform.modes import ExpMode, SignMode, AutoExp, RoundMode
+from sciform.format_options import FormatOptions, RenderedFormatOptions
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_digit,
                                   get_round_digit,
@@ -13,7 +13,7 @@ from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
 from sciform.grouping import add_separators
 
 
-def format_non_inf(num: Decimal, options: FormatOptions) -> str:
+def format_non_inf(num: Decimal, options: RenderedFormatOptions) -> str:
     if num.is_nan():
         num_str = 'nan'
     elif num == Decimal('inf'):
@@ -69,7 +69,7 @@ def format_non_inf(num: Decimal, options: FormatOptions) -> str:
     return result
 
 
-def format_num(num: Decimal, options: FormatOptions) -> str:
+def format_num(num: Decimal, options: RenderedFormatOptions) -> str:
     if not num.is_finite():
         return format_non_inf(num, options)
 
@@ -140,7 +140,7 @@ def format_num(num: Decimal, options: FormatOptions) -> str:
     return result
 
 
-def format_val_unc(val: Decimal, unc: Decimal, options: FormatOptions):
+def format_val_unc(val: Decimal, unc: Decimal, options: RenderedFormatOptions):
     if options.round_mode is RoundMode.PREC:
         warn('Precision round mode not available for value/uncertainty '
              'formatting. Rounding is always applied as significant figures '
@@ -254,8 +254,8 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FormatOptions):
          'e+03' or similar. Such translations are handled within the
          scope of this function.
     '''
-    val_format_options = FormatOptions.make(
-        defaults=options,
+    val_format_options = FormatOptions(
+        template=options,
         top_dig_place=new_top_digit,
         round_mode=RoundMode.PREC,
         precision=prec,
@@ -266,12 +266,12 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FormatOptions):
         latex=False,
         prefix_exp=False,
         parts_per_exp=False
-    )
+    ).render()
 
-    unc_format_options = FormatOptions.make(
-        defaults=val_format_options,
+    unc_format_options = FormatOptions(
+        template=val_format_options,
         sign_mode=SignMode.NEGATIVE,
-    )
+    ).render()
 
     # Optional parentheses needed to handle (nan)e+00 case
     mantissa_exp_pattern = re.compile(
