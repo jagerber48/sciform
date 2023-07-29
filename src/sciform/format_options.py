@@ -51,10 +51,10 @@ class FormatOptions:
     instances and to modify the global default configuration.
 
     It is not necessary to provide input for all options. There are two
-    mechanisms for filling of any unsupplied options. First, the user
-    can pass in another :class:`FormatOptions` instance as a
-    ``template``. In this case any populated options for the
-    ``template`` will be used to populate corresponding unpopulated
+    mechanisms for filling of any un-supplied options. First, during
+    initialization, the user can pass in another :class:`FormatOptions`
+    instance as a ``template``. In this case any populated options for
+    the ``template`` will be used to populate corresponding unpopulated
     options for the new :class:`FormatOptions`. Second, at format time
     any remaining unfilled options will be populated with the global
     default options. See :ref:`global_config` for details about how to

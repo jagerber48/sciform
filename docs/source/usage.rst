@@ -14,6 +14,27 @@ using string formatting and the
 :ref:`Format Specification Mini Language (FSML) <fsml>` with the
 :class:`SciNum` or :class:`SciNumUnc` objects.
 
+FormatOptions
+-------------
+
+``sciform`` formatting options can be configured using a
+:class:`FormatOptions` object.
+See :class:`FormatOptions` for a complete list of
+keyword arguments used to construct :class:`FormatOptions` and see
+:ref:`formatting_options` for more details on the different options.
+
+When constructing a :class:`FormatOptions` object, it is not necessary
+to provide input for all options.
+There are two mechanisms for filling of any un-supplied options.
+First, during initialization, the user can pass in another
+:class:`FormatOptions` instance as a ``template``.
+In this case any populated options for the ``template`` will be used to
+populate corresponding unpopulated options for the new
+:class:`FormatOptions`.
+Second, at format time any remaining unfilled options will be populated
+with the global default options. See :ref:`global_config` for details
+about how to view and modify the global default options.
+
 Formatter
 ---------
 
