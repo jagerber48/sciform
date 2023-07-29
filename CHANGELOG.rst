@@ -1,3 +1,14 @@
+0.23.0 (2023-??-??)
+-------------------
+
+* **[BREAKING]** Users now construct ``FormatOptions`` objects which
+  they pass into ``Formatter`` objects and global configuration
+  functions.
+  ``Formatter`` and global configuration functions no longer accept bare
+  keyword arguments to indicate formatting options.
+* Change ``pyproject.toml`` description
+
+
 0.22.2 (2023-07-27)
 -------------------
 
