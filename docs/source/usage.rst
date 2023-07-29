@@ -45,16 +45,17 @@ a corresponding formatted string.
 Note that global default options are used to populate unfilled options
 at formatting time.
 
+>>> from sciform import FormatOptions as Fo
 >>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
->>> sform = Formatter(round_mode=RoundMode.PREC,
-...                   precision=6,
-...                   upper_separator=GroupingSeparator.SPACE,
-...                   lower_separator=GroupingSeparator.SPACE)
+>>> sform = Formatter(Fo(round_mode=RoundMode.PREC,
+...                      precision=6,
+...                      upper_separator=GroupingSeparator.SPACE,
+...                      lower_separator=GroupingSeparator.SPACE))
 >>> print(sform(51413.14159265359))
 51 413.141 593
->>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
-...                   precision=4,
-...                   exp_mode=ExpMode.ENGINEERING)
+>>> sform = Formatter(Fo(round_mode=RoundMode.SIG_FIG,
+...                      precision=4,
+...                      exp_mode=ExpMode.ENGINEERING))
 >>> print(sform(123456.78))
 123.5e+03
 
@@ -83,16 +84,16 @@ value/uncertainty strings.
 :mod:`sciform` attempts to follow
 `BIPM <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6>`_
 or `NIST <https://www.nist.gov/pml/nist-technical-note-1297>`_
-recomendations for conventions when possible.
+recommendations for conventions when possible.
 
-Value/uncertainty pairs can be formatted either by passing two values
+Value/uncertainty pairs can be formatted either by passing two numbers
 into a :class:`Formatter`, and configuring the :class:`Formatter` using
 :ref:`formatting_options` and :ref:`val_unc_formatting_options`, or by
 using the :class:`SciNumUnc` object.
 
 >>> val = 84.3
 >>> unc = 0.2
->>> sform = Formatter(precision=2)
+>>> sform = Formatter(Fo(precision=2))
 >>> print(sform(val, unc))
 84.30 +/- 0.20
 
@@ -114,7 +115,7 @@ algorithm:
 #. Rounding is always performed using significant figure rounding
    applied to the uncertainty. If a ``precision`` is supplied then the
    uncertainty is rounded to significant figures consistent with the
-   supplied ``precision``. Otherwise the uncertainty is left unrounded.
+   supplied ``precision``. Otherwise the uncertainty is left un-rounded.
 #. The value is rounded to the digit corresponding to the least
    significant digit of the rounded uncertainty.
 #. The value for the exponent is resolved by applying the
@@ -144,28 +145,28 @@ package default settings):
 
 >>> from sciform import print_global_defaults
 >>> print_global_defaults()
-{'fill_mode': <FillMode.SPACE: 'space'>,
- 'sign_mode': <SignMode.NEGATIVE: 'negative'>,
- 'top_dig_place': 0,
+{'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,
+ 'exp': <class 'sciform.modes.AutoExp'>,
+ 'percent': False,
+ 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
+ 'precision': <class 'sciform.modes.AutoPrec'>,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
  'decimal_separator': <GroupingSeparator.POINT: 'point'>,
  'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,
- 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
- 'precision': <class 'sciform.modes.AutoPrec'>,
- 'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,
- 'exp': <class 'sciform.modes.AutoExp'>,
- 'capitalize': False,
- 'percent': False,
- 'superscript_exp': False,
- 'latex': False,
- 'nan_inf_exp': False,
+ 'sign_mode': <SignMode.NEGATIVE: 'negative'>,
+ 'fill_mode': <FillMode.SPACE: 'space'>,
+ 'top_dig_place': 0,
  'prefix_exp': False,
  'parts_per_exp': False,
  'extra_si_prefixes': {},
  'extra_iec_prefixes': {},
  'extra_parts_per_forms': {},
- 'pdg_sig_figs': False,
+ 'capitalize': False,
+ 'superscript_exp': False,
+ 'latex': False,
+ 'nan_inf_exp': False,
  'bracket_unc': False,
+ 'pdg_sig_figs': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
  'unicode_pm': False,
@@ -181,33 +182,33 @@ applied to setting global default settings.
 
 >>> from sciform import (set_global_defaults, FillMode, ExpMode,
 ...                      GroupingSeparator)
->>> set_global_defaults(fill_mode=FillMode.ZERO,
-...                     exp_mode=ExpMode.ENGINEERING_SHIFTED,
-...                     precision=4,
-...                     decimal_separator=GroupingSeparator.COMMA)
+>>> set_global_defaults(Fo(fill_mode=FillMode.ZERO,
+...                        exp_mode=ExpMode.ENGINEERING_SHIFTED,
+...                        precision=4,
+...                        decimal_separator=GroupingSeparator.COMMA))
 >>> print_global_defaults()
-{'fill_mode': <FillMode.ZERO: 'zero'>,
- 'sign_mode': <SignMode.NEGATIVE: 'negative'>,
- 'top_dig_place': 0,
+{'exp_mode': <ExpMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
+ 'exp': <class 'sciform.modes.AutoExp'>,
+ 'percent': False,
+ 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
+ 'precision': 4,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
  'decimal_separator': <GroupingSeparator.COMMA: 'comma'>,
  'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,
- 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
- 'precision': 4,
- 'exp_mode': <ExpMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
- 'exp': <class 'sciform.modes.AutoExp'>,
- 'capitalize': False,
- 'percent': False,
- 'superscript_exp': False,
- 'latex': False,
- 'nan_inf_exp': False,
+ 'sign_mode': <SignMode.NEGATIVE: 'negative'>,
+ 'fill_mode': <FillMode.ZERO: 'zero'>,
+ 'top_dig_place': 0,
  'prefix_exp': False,
  'parts_per_exp': False,
  'extra_si_prefixes': {},
  'extra_iec_prefixes': {},
  'extra_parts_per_forms': {},
- 'pdg_sig_figs': False,
+ 'capitalize': False,
+ 'superscript_exp': False,
+ 'latex': False,
+ 'nan_inf_exp': False,
  'bracket_unc': False,
+ 'pdg_sig_figs': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
  'unicode_pm': False,
@@ -251,7 +252,7 @@ values.
 >>> snum = SciNum(0.0123)
 >>> print(f'{snum:.2ep}')
 1.23e-02
->>> with GlobalDefaultsContext(add_c_prefix=True):
+>>> with GlobalDefaultsContext(Fo(add_c_prefix=True)):
 ...     print(f'{snum:.2ep}')
 1.23 c
 
