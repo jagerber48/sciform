@@ -8,7 +8,8 @@ ValUncFormatOptionsCases = list[tuple[tuple[float, float],
 
 
 class TestFormatting(unittest.TestCase):
-    def run_val_unc_formatter_cases(self, cases_list: ValUncFormatOptionsCases):
+    def run_val_unc_formatter_cases(self,
+                                    cases_list: ValUncFormatOptionsCases):
         for (val, unc), formats_list in cases_list:
             for format_options, expected_val_unc_str in formats_list:
                 formatter = Formatter(format_options)
@@ -103,8 +104,9 @@ class TestFormatting(unittest.TestCase):
     def test_superscript_exp(self):
         cases_list = [
             ((789, 0.01), [
-                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               superscript_exp=True), '(7.8900 +/- 0.0001)×10²')
+                (FormatOptions(
+                    exp_mode=ExpMode.SCIENTIFIC,
+                    superscript_exp=True), '(7.8900 +/- 0.0001)×10²')
             ])
         ]
 
