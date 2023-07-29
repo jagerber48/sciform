@@ -72,11 +72,11 @@ strings according to the selected options.
 123.5e+03
 
 For brevity, the user may consider abbreviating ``FormatOptions`` as
-``FO``.
+``Fo``.
 
->>> from sciform import FormatOptions as FO
+>>> from sciform import FormatOptions as Fo
 >>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
->>> sform = Formatter(FO(round_mode=RoundMode.PREC,
+>>> sform = Formatter(Fo(round_mode=RoundMode.PREC,
 ...                      precision=6,
 ...                      upper_separator=GroupingSeparator.SPACE,
 ...                      lower_separator=GroupingSeparator.SPACE))
@@ -97,12 +97,12 @@ to format pairs of numbers as value/uncertainty pairs.
 This can be done by passing two numbers into a ``Formatter`` call or by
 using the ``SciNumUnc`` object.
 
->>> sform = Formatter(FO(precision=2,
+>>> sform = Formatter(Fo(precision=2,
 ...                      upper_separator=GroupingSeparator.SPACE,
 ...                      lower_separator=GroupingSeparator.SPACE))
 >>> print(sform(123456.654321, 0.0034))
 123 456.654 3 +/- 0.003 4
->>> sform = Formatter(FO(precision=4,
+>>> sform = Formatter(Fo(precision=4,
 ...                      exp_mode=ExpMode.ENGINEERING))
 >>> print(sform(123456.654321, 0.0034))
 (123.456654321 +/- 0.000003400)e+03
