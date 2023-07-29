@@ -62,7 +62,7 @@ class FormatOptions:
     def __init__(
             self,
             *,
-            template: Union['FormatOptions', RenderedFormatOptions] = None,
+            template: Union['FormatOptions'] = None,
             exp_mode: Union[ExpMode, Free] = Free(),
             exp: Union[int, type(AutoExp), Free] = Free(),
             percent: Union[bool, Free] = Free(),

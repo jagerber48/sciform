@@ -148,10 +148,9 @@ class Formatter:
         return self.format(value, uncertainty)
 
     def format(self, value: Number, uncertainty: Number = None, /):
-        rendered_format_options = self.format_options.render()
         if uncertainty is None:
-            return format_num(Decimal(str(value)), rendered_format_options)
+            return format_num(Decimal(str(value)), self.format_options)
         else:
             return format_val_unc(Decimal(str(value)),
                                   Decimal(str(uncertainty)),
-                                  rendered_format_options)
+                                  self.format_options)

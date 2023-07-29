@@ -69,7 +69,9 @@ def format_non_inf(num: Decimal, options: RenderedFormatOptions) -> str:
     return result
 
 
-def format_num(num: Decimal, options: RenderedFormatOptions) -> str:
+def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
+    options = unrendered_options.render()
+
     if not num.is_finite():
         return format_non_inf(num, options)
 
@@ -140,7 +142,10 @@ def format_num(num: Decimal, options: RenderedFormatOptions) -> str:
     return result
 
 
-def format_val_unc(val: Decimal, unc: Decimal, options: RenderedFormatOptions):
+def format_val_unc(val: Decimal, unc: Decimal,
+                   unrendered_options: FormatOptions):
+    options = unrendered_options.render()
+
     if options.round_mode is RoundMode.PREC:
         warn('Precision round mode not available for value/uncertainty '
              'formatting. Rounding is always applied as significant figures '
@@ -255,7 +260,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedFormatOptions):
          scope of this function.
     '''
     val_format_options = FormatOptions(
-        template=options,
+        template=unrendered_options,
         top_dig_place=new_top_digit,
         round_mode=RoundMode.PREC,
         precision=prec,
@@ -266,12 +271,12 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedFormatOptions):
         latex=False,
         prefix_exp=False,
         parts_per_exp=False
-    ).render()
+    )
 
     unc_format_options = FormatOptions(
         template=val_format_options,
         sign_mode=SignMode.NEGATIVE,
-    ).render()
+    )
 
     # Optional parentheses needed to handle (nan)e+00 case
     mantissa_exp_pattern = re.compile(
