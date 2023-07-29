@@ -99,7 +99,7 @@ class FormatOptions:
                     raise ValueError(f'Precision must be >= 1 for sig fig '
                                      f'rounding, not {precision}.')
 
-        if not isinstance(exp, (AutoExp, Free)):
+        if exp is not AutoExp and not isinstance(exp, Free):
             if exp_mode is ExpMode.FIXEDPOINT:
                 if exp != 0:
                     raise ValueError(f'Exponent must must be 0, not '
