@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from sciform.format_options import FormatOptions
 from sciform.formatting import format_num, format_val_unc
 from sciform.format_utils import Number
 
@@ -11,6 +12,8 @@ class Formatter:
     :class:`FormatOptions`. Any unpopulated format options will be
     populated from the global default options at format time. See
     :ref:`formatting_options` for more details on the available options.
+    If no options are provided then the global default options are used
+    for all options.
 
     >>> from sciform import FormatOptions, Formatter, ExpMode, RoundMode
     >>> sform = Formatter(FormatOptions(
@@ -33,7 +36,10 @@ class Formatter:
     :param format_options: :class:`FormatOptions` indicating which
       format options should be used for formatting.
     """
-    def __init__(self, format_options):
+    def __init__(self, format_options=None):
+        if format_options is None:
+            # TODO: Test this
+            format_options = FormatOptions()
         self.format_options = format_options
 
     def __call__(self, value: Number, uncertainty: Number = None, /):
