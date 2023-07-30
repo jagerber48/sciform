@@ -133,11 +133,11 @@ Global Configuration
 It is possible to modify the global default configuration for
 :mod:`sciform` to avoid repetition of verbose configuration options or
 format specification strings.
-When the user creates a :class:`Formatter` object or formats a string
-using the :ref:`FSML <fsml>`, they typically do not specify settings for
-all available options.
+When the user creates a :class:`FormatOptions` object or formats a
+string using the :ref:`FSML <fsml>`, they typically do not specify
+settings for all available options.
 In these cases, the unspecified options resolve their values from the
-global default settings.
+global default settings at format time.
 
 The global default settings can be viewed using
 :func:`print_global_defaults()` (the settings shown here are the
@@ -172,13 +172,11 @@ package default settings):
  'unicode_pm': False,
  'unc_pm_whitespace': True}
 
-The global default settings can be modified using
-:func:`set_global_defaults()` with the same keyword arguments passed
-into :class:`Formatter`.
-Any explicit options passed in will be updated while any unspecified
-options will retain their existing values.
-The same checks applied when constructing a :class:`Formatter` are
-applied to setting global default settings.
+The global default settings can be modified by passing
+:class:`FormatOptions` into :func:`set_global_defaults()`.
+Any options passed in the :class:`FormatOptions` will overwrite the
+current global default settings and any unfilled options will remain
+unchanged.
 
 >>> from sciform import (set_global_defaults, FillMode, ExpMode,
 ...                      GroupingSeparator)
@@ -220,7 +218,7 @@ using :func:`reset_global_defaults`.
 >>> from sciform import reset_global_defaults
 >>> reset_global_defaults()
 
-There are also helper function for managing supported
+There are also helper functions for managing supported
 :ref:`extra_translations`:
 
 * :func:`global_add_c_prefix()` add ``{-2: 'c'}`` to the
@@ -241,8 +239,7 @@ There are also helper function for managing supported
 
 The global default settings can be temporarily modified using the
 :class:`GlobalDefaultsContext` context manager.
-This context manager accepts the same keyword arguments as
-:class:`Formatter`.
+The context manager is also configured using :class:`FormatOptions`.
 Within the context of :class:`GlobalDefaultsContext` manager, the
 global defaults take on the specified input settings, but when the
 context is exited, the global default settings revert to their previous
@@ -256,20 +253,13 @@ values.
 ...     print(f'{snum:.2ep}')
 1.23 c
 
-:class:`SciNum` and :class:`SciNumUnc` objects load global settings when
-being *formatted*, not initialized.
-By contrast, :class:`Formatter` settings are configured and frozen when
-the class is initialized.
-Thus, changing global default settings with :func:`set_global_defaults`
-or with the :class:`GlobalDefaultsContext` will not change the behavior
-of any :class:`Formatter` that was instantiated before the change, but
-it will change :class:`SciNum` and :class:`SciNumUnc` formatting.
-Global configuration settings are, then, most useful for controlling the
-behavior of :class:`SciNum` and :class:`SciNumUnc` formatting.
-In particular, not all avaible options can be accessed using the
-:ref:`FSML <fsml>`, so the only way to modify these options while using
-:class:`SciNum` or :class:`SciNumUnc` formatting is via the global
-configuration settings.
+Note that the :ref:`FSML <fsml>` does not provide complete control over
+all possible format options.
+For example, there is no code in the :ref:`FSML <fsml>` for configuring
+the ``unicode_pm`` option.
+If the user wishes to configure these options but also use the
+:ref:`FSML <fsml>` then they must do so by modifying the global default
+settings.
 
 Note on Decimals and Floats
 ===========================
