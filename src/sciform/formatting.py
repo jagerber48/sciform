@@ -191,23 +191,13 @@ def format_val_unc(val: Decimal, unc: Decimal,
             val_rounded = round(val_rounded, -round_digit)
 
     exp_mode = options.exp_mode
-    '''
-    We format the number by determining the required exponent and
-    precision and format the val and unc mantissas accordingly.
-    Engineering, engineering shifted, and binary IEC modes are not, in
-    general, compatible with setting the exponent explicitly so we
-    convert these modes to a corresponding free_exp_mode which is
-    compatible with having an explicit exponent set.
-    '''
+
     if exp_mode is ExpMode.PERCENT:
-        free_exp_mode = ExpMode.FIXEDPOINT
-    elif (exp_mode is ExpMode.ENGINEERING
-          or exp_mode is ExpMode.ENGINEERING_SHIFTED):
-        free_exp_mode = ExpMode.SCIENTIFIC
-    elif exp_mode is ExpMode.BINARY_IEC:
-        free_exp_mode = ExpMode.BINARY
-    else:
-        free_exp_mode = exp_mode
+        '''
+        In percent mode, value and uncertainty, having been multiplied
+        by 100 above, will be individually formatted in fixed point mode
+        '''
+        exp_mode = ExpMode.FIXEDPOINT
 
     if val.is_finite() and unc.is_finite():
         if val >= unc:
@@ -229,11 +219,11 @@ def format_val_unc(val: Decimal, unc: Decimal,
         exp=options.exp)
     val_mantissa, _, _ = get_mantissa_exp_base(
         val_rounded,
-        exp_mode=free_exp_mode,
+        exp_mode=exp_mode,
         exp=exp)
     unc_mantissa, _, _ = get_mantissa_exp_base(
         unc_rounded,
-        exp_mode=free_exp_mode,
+        exp_mode=exp_mode,
         exp=exp)
 
     prec = -round_digit + exp
@@ -251,8 +241,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
        * using precision rounding mode with the precision calculated
          above
        * With the optionally shared top digit calculated above
-       * With the free_exp_mode determined above using the calculated
-         shared exponent
+       * With the calculated shared exponent
        * Without percent mode (percent mode for val/unc pairs is
          handled independently in this function)
        * Without superscript, prefix, parts-per, or latex translations.
@@ -265,7 +254,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
         top_dig_place=new_top_digit,
         round_mode=RoundMode.PREC,
         precision=prec,
-        exp_mode=free_exp_mode,
+        exp_mode=exp_mode,
         exp=exp,
         superscript_exp=False,
         latex=False,
@@ -337,10 +326,6 @@ def format_val_unc(val: Decimal, unc: Decimal,
         val_unc_exp_str = val_unc_str
 
     if options.exp_mode is ExpMode.PERCENT:
-        '''
-        Recall options.percent is only valid for fixed point exponent mode so
-        no exponent is present.
-        '''
         val_unc_exp_str = f'({val_unc_exp_str})%'
 
     if options.latex:

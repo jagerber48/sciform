@@ -65,8 +65,7 @@ class FormatOptions:
     * ``precision`` >= 1 for significant figure rounding mode
     * ``exp`` must be consistent with the exponent mode:
 
-      * ``exp`` must be 0 for fixed point mode
-      * ``exp`` must be -2 for percent mode
+      * ``exp`` must be 0 for fixed point and percent modes
       * ``exp`` must be a multiple of 3 for engineering and shifted
         engineering modes
       * ``exp`` must be a multiple of 10 for binary iec mode
@@ -211,15 +210,11 @@ class FormatOptions:
                                      f'rounding, not {precision}.')
 
         if exp is not AutoExp and exp is not None:
-            if exp_mode is ExpMode.FIXEDPOINT:
+            if exp_mode is ExpMode.FIXEDPOINT or exp_mode is ExpMode.PERCENT:
                 if exp != 0:
                     raise ValueError(f'Exponent must must be 0, not '
-                                     f'exp={exp}, for fixed point exponent '
-                                     f'mode.')
-            elif exp_mode is ExpMode.PERCENT:
-                if exp != 0:
-                    raise ValueError(f'Exponent must must be 2, not '
-                                     f'exp={exp}, for percent exponent mode.')
+                                     f'exp={exp}, for fixed point and percent '
+                                     f'exponent modes.')
             elif (exp_mode is ExpMode.ENGINEERING
                   or exp_mode is ExpMode.ENGINEERING_SHIFTED):
                 if exp % 3 != 0:

@@ -47,7 +47,7 @@ Percent
 -------
 
 Percent mode is similar to fixed point mode
-For percent mode, the number is multipled by 100 and a % symbols is
+For percent mode, the number is multipled by 100 and a ``%`` symbol is
 appended to the end of the formatted string.
 
 >>> sform = Formatter(Fo(exp_mode=ExpMode.PERCENT))

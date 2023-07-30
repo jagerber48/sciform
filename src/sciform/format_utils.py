@@ -59,7 +59,8 @@ def get_mantissa_exp_base(
             if exp is not AutoExp:
                 if exp != 0:
                     warn('Attempt to set non-zero exponent explicity in fixed '
-                         'point exponent mode. Coercing exponent to 0.')
+                         'point or percent exponent mode. Coercing exponent '
+                         'to 0.')
             exp = 0
         elif exp_mode is ExpMode.SCIENTIFIC:
             if exp is AutoExp:
