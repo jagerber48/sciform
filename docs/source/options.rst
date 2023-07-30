@@ -46,7 +46,7 @@ directly with no extra exponent.
 Percent
 -------
 
-Percent mode is similar to fixed point mode
+Percent mode is similar to fixed point mode.
 For percent mode, the number is multipled by 100 and a ``%`` symbol is
 appended to the end of the formatted string.
 
