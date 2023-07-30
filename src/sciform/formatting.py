@@ -55,7 +55,7 @@ def format_non_inf(num: Decimal, options: RenderedFormatOptions) -> str:
     else:
         result = f'{num_str}'
 
-    if options.percent:
+    if options.exp_mode is ExpMode.PERCENT:
         result = f'({result})%'
 
     if options.capitalize:
@@ -75,7 +75,7 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
     if not num.is_finite():
         return format_non_inf(num, options)
 
-    if options.percent:
+    if options.exp_mode is ExpMode.PERCENT:
         num *= 100
         num = num.normalize()
 
@@ -133,7 +133,7 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
 
     result = f'{mantissa_str}{exp_str}'
 
-    if options.percent:
+    if options.exp_mode is ExpMode.PERCENT:
         result = f'{result}%'
 
     if options.latex:
@@ -152,8 +152,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
              'for the uncertainty.')
 
     unc = abs(unc)
-
-    if options.percent:
+    if options.exp_mode is ExpMode.PERCENT:
         val *= 100
         unc *= 100
         val = val.normalize()
@@ -200,8 +199,10 @@ def format_val_unc(val: Decimal, unc: Decimal,
     convert these modes to a corresponding free_exp_mode which is
     compatible with having an explicit exponent set.
     '''
-    if (exp_mode is ExpMode.ENGINEERING
-            or exp_mode is ExpMode.ENGINEERING_SHIFTED):
+    if exp_mode is ExpMode.PERCENT:
+        free_exp_mode = ExpMode.FIXEDPOINT
+    elif (exp_mode is ExpMode.ENGINEERING
+          or exp_mode is ExpMode.ENGINEERING_SHIFTED):
         free_exp_mode = ExpMode.SCIENTIFIC
     elif exp_mode is ExpMode.BINARY_IEC:
         free_exp_mode = ExpMode.BINARY
@@ -266,7 +267,6 @@ def format_val_unc(val: Decimal, unc: Decimal,
         precision=prec,
         exp_mode=free_exp_mode,
         exp=exp,
-        percent=False,
         superscript_exp=False,
         latex=False,
         prefix_exp=False,
@@ -336,7 +336,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
     else:
         val_unc_exp_str = val_unc_str
 
-    if options.percent:
+    if options.exp_mode is ExpMode.PERCENT:
         '''
         Recall options.percent is only valid for fixed point exponent mode so
         no exponent is present.
