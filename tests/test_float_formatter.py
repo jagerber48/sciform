@@ -86,8 +86,8 @@ class TestFormatting(unittest.TestCase):
     def test_nan(self):
         cases_list = [
             (float('nan'), [
-                (FormatOptions(exp_mode=ExpMode.PERCENT), '(nan)%'),
-                (FormatOptions(exp_mode=ExpMode.PERCENT,
+                (FormatOptions(percent=True), '(nan)%'),
+                (FormatOptions(percent=True,
                                latex=True), r'\left(nan\right)\%')
             ])
         ]

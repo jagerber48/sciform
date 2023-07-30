@@ -55,7 +55,7 @@ def get_mantissa_exp_base(
         if exp is AutoExp:
             exp = 0
     else:
-        if exp_mode is ExpMode.FIXEDPOINT or exp_mode is ExpMode.PERCENT:
+        if exp_mode is ExpMode.FIXEDPOINT:
             if exp is not AutoExp:
                 if exp != 0:
                     warn('Attempt to set non-zero exponent explicity in fixed '
@@ -97,7 +97,7 @@ def get_mantissa_exp_base(
 
 def get_exp_str(exp: int, exp_mode: ExpMode,
                 capitalize: bool) -> str:
-    if exp_mode is exp_mode.FIXEDPOINT or exp_mode is ExpMode.PERCENT:
+    if exp_mode is exp_mode.FIXEDPOINT:
         exp_str = ''
     elif (exp_mode is ExpMode.SCIENTIFIC
           or exp_mode is ExpMode.ENGINEERING

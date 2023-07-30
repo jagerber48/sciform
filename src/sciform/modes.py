@@ -128,9 +128,6 @@ class ExpMode(Enum):
     #: Fixed point
     FIXEDPOINT = 'fixed_point'
 
-    #: Percent
-    PERCENT = 'percent'
-
     #: Scientific
     SCIENTIFIC = 'scientific'
 

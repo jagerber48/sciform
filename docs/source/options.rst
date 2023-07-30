@@ -38,23 +38,6 @@ directly with no extra exponent.
 >>> sform = Formatter(Fo(exp_mode=ExpMode.FIXEDPOINT))
 >>> print(sform(123.456))
 123.456
->>> print(sform(123.456, 0.001))
-123.456 +/- 0.001
-
-.. _percent_mode:
-
-Percent
--------
-
-Percent mode is similar to fixed point mode
-For percent mode, the number is multipled by 100 and a % symbols is
-appended to the end of the formatted string.
-
->>> sform = Formatter(Fo(exp_mode=ExpMode.PERCENT))
->>> print(sform(0.12345))
-12.345%
->>> print(sform(0.12345, 0.001))
-(12.3 +/- 0.1)%
 
 .. _scientific:
 
@@ -68,8 +51,6 @@ mantissa ``m`` satisfies ``1 <= m < 10``.
 >>> sform = Formatter(Fo(exp_mode=ExpMode.SCIENTIFIC))
 >>> print(sform(123.456))
 1.23456e+02
->>> print(sform(123.456, 0.001))
-(1.23456 +/- 0.00001)e+02
 
 Note that for all exponent modes, the exponent integer is always displayed
 with a sign symbol (+ or -) and is left padded with a zero so that it is
@@ -99,8 +80,6 @@ notation.
 >>> sform = Formatter(Fo(exp_mode=ExpMode.ENGINEERING))
 >>> print(sform(123.456))
 123.456e+00
->>> print(sform(123.456, 0.001))
-(123.456 +/- 0.001)e+00
 
 .. _engineering_shifted:
 
@@ -114,8 +93,6 @@ the exponent is chosen so that the mantissa ``m`` satisfies
 >>> sform = Formatter(Fo(exp_mode=ExpMode.ENGINEERING_SHIFTED))
 >>> print(sform(123.456))
 0.123456e+03
->>> print(sform(123.456, 0.001))
-(0.123456 +/- 0.000001)e+03
 
 .. _binary:
 
@@ -456,6 +433,24 @@ to the 10\ :sup:`4` (ten-thousands) place.
 >>> print(sform(42))
 00042
 
+.. _percent_mode:
+
+Percent Mode
+============
+
+The user can activate percent mode using the ``percent`` flag.
+This flag is only valid for fixed point exponent mode.
+In this case, the number is multipled by 100 and a % symbols is
+appended to the end of the formatted string.
+
+>>> sform = Formatter(Fo(round_mode=RoundMode.SIG_FIG,
+...                      precision=3,
+...                      percent=True))
+>>> print(sform(0.12345))
+12.3%
+>>> print(sform(0.12345, 0.001))
+(12.345 +/- 0.100)%
+
 .. _superscript_exp:
 
 Superscript Exponent Format
@@ -483,8 +478,8 @@ parseable codes.
 ...                      latex=True))
 >>> print(sform(12345))
 123\_450\times 10^{-1}
->>> sform = Formatter(Fo(exp_mode=ExpMode.PERCENT,
-...                      lower_separator=GroupingSeparator.UNDERSCORE,
+>>> sform = Formatter(Fo(lower_separator=GroupingSeparator.UNDERSCORE,
+...                      percent=True,
 ...                      latex=True))
 >>> print(sform(0.12345678, 0.00000255))
 \left(12.345\_678 \pm 0.000\_255\right)\%
