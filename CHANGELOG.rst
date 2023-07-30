@@ -1,4 +1,4 @@
-0.23.0 (2023-??-??)
+0.23.0 (2023-07-29)
 -------------------
 
 * **[BREAKING]** Users now construct ``FormatOptions`` objects which
