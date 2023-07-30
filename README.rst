@@ -50,7 +50,6 @@ Usage
 
 ``sciform`` provides a wide variety of formatting options.
 These options are configured using the ``FormatOptions`` object.
-
 Users can construct ``FormatOptions`` objects and pass them into
 ``Formatter`` objects which can then be used to format numbers into
 strings according to the selected options.

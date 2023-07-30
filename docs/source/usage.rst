@@ -40,8 +40,8 @@ Formatter
 
 The :class:`Formatter` object is initialized and configured using a
 :class:`FormatOptions` object which contains the formatting settings.
-The :class:`FormatOptions` object is then called with number and returns
-a corresponding formatted string.
+The :class:`FormatOptions` object is then called with a number and
+returns a corresponding formatted string.
 Note that global default options are used to populate unfilled options
 at formatting time.
 

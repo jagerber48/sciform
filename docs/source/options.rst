@@ -157,7 +157,7 @@ parts-per identifiers and binary exponent strings can be replaced with
 IEC prefixes.
 See :ref:`exp_replacements` for all default supported
 replacements.
-Furthermore, it is possible to customize :class:`Formatter`
+Furthermore, it is possible to customize :class:`FormatOptions`
 objects or the global configuration settings to map additional
 translations, in addition to those provided by default.
 
@@ -267,7 +267,7 @@ passing ``precision=AutoPrec``.
 This is the default value in the global configuration.
 
 If the number to be formatted is passed in as a :class:`float` (either
-to the :class:`Formatter`, :class:`SciNum`, or :class:`SciNumUnc`),
+to a :class:`Formatter`, :class:`SciNum`, or :class:`SciNumUnc`),
 then, if no precision or number of significant figures is supplied, the
 decimal digits of the :class:`float` are truncated to the minimum number
 of digits necessary for round-tripping.
