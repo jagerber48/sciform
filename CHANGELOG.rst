@@ -1,3 +1,10 @@
+0.24.0 (2023-07-30)
+-------------------
+
+* **[BREAKING]** percent mode is now accessed via an exponent mode,
+  ``ExpMode.PERCENT``.
+  There is no longer a ``percent`` keyword argument.
+
 0.23.0 (2023-07-29)
 -------------------
 
