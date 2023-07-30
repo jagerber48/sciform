@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from sciform.formatting import format_num, format_val_unc
 from sciform.format_utils import Number
-from sciform.format_options import FormatOptions
+from sciform.fsml import format_options_from_fmt_spec
 
 
 class SciNum:
@@ -20,8 +20,9 @@ class SciNum:
         self.value = Decimal(str(value))
 
     def __format__(self, fmt: str):
+        format_options = format_options_from_fmt_spec(fmt)
         return format_num(self.value,
-                          FormatOptions.from_format_spec_str(fmt))
+                          format_options)
 
     def __repr__(self):
         return f'{self.__class__.__name__}({self.value})'
@@ -45,10 +46,11 @@ class SciNumUnc:
         self.value = Decimal(str(value))
         self.uncertainty = Decimal(str(uncertainty))
 
-    def __format__(self, format_spec: str):
+    def __format__(self, fmt: str):
+        format_options = format_options_from_fmt_spec(fmt)
         return format_val_unc(self.value,
                               self.uncertainty,
-                              FormatOptions.from_format_spec_str(format_spec))
+                              format_options)
 
     def __repr__(self):
         return f'{self.__class__.__name__}({self.value}, {self.uncertainty})'

@@ -1,7 +1,5 @@
-from typing import Union, Optional, get_args
+from typing import Union, get_args
 from dataclasses import dataclass, asdict
-import re
-from copy import copy
 from pprint import pprint
 
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
@@ -11,184 +9,266 @@ from sciform.modes import (FillMode, SignMode, GroupingSeparator,
 
 
 @dataclass(frozen=True)
-class FormatOptions:
-    fill_mode: FillMode
-    sign_mode: SignMode
-    top_dig_place: int
+class RenderedFormatOptions:
+    exp_mode: ExpMode
+    exp: Union[int, type(AutoExp)]
+    percent: bool
+    round_mode: RoundMode
+    precision: Union[int, type(AutoPrec)]
     upper_separator: UpperGroupingSeparators
     decimal_separator: DecimalGroupingSeparators
     lower_separator: LowerGroupingSeparators
-    round_mode: RoundMode
-    precision: Union[int, type(AutoPrec)]
-    exp_mode: ExpMode
-    exp: Union[int, type(AutoExp)]
-    capitalize: bool
-    percent: bool
-    superscript_exp: bool
-    latex: bool
-    nan_inf_exp: bool
+    sign_mode: SignMode
+    fill_mode: FillMode
+    top_dig_place: int
     prefix_exp: bool
     parts_per_exp: bool
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
     extra_parts_per_forms: dict[int, str]
-    pdg_sig_figs: bool
+    capitalize: bool
+    superscript_exp: bool
+    latex: bool
+    nan_inf_exp: bool
     bracket_unc: bool
+    pdg_sig_figs: bool
     val_unc_match_widths: bool
     bracket_unc_remove_seps: bool
     unicode_pm: bool
     unc_pm_whitespace: bool
 
-    def __post_init__(self):
-        if self.round_mode is RoundMode.SIG_FIG:
-            if isinstance(self.precision, int):
-                if self.precision < 1:
-                    raise ValueError(f'Precision must be >= 1 for sig fig '
-                                     f'rounding, not {self.precision}.')
 
-        if self.exp is not AutoExp:
-            if self.exp_mode is ExpMode.FIXEDPOINT:
-                if self.exp != 0:
-                    raise ValueError(f'Exponent must must be 0, not '
-                                     f'exp={self.exp}, for fixed point'
-                                     f'exponent mode.')
-            elif (self.exp_mode is ExpMode.ENGINEERING
-                  or self.exp_mode is ExpMode.ENGINEERING_SHIFTED):
-                if self.exp % 3 != 0:
-                    raise ValueError(f'Exponent must be a multiple of 3, not '
-                                     f'exp={self.exp}, for engineering '
-                                     f'exponent modes.')
-            elif self.exp_mode is ExpMode.BINARY_IEC:
-                if self.exp % 10 != 0:
-                    raise ValueError(f'Exponent must be a multiple of 10, not '
-                                     f'exp={self.exp}, for binary IEC '
-                                     f'exponent mode.')
+ExpReplaceDict = dict[int, Union[str, None]]
 
-        if self.percent and self.exp_mode is not ExpMode.FIXEDPOINT:
-            raise ValueError('percent mode can only be used with fixed point '
-                             'exponent mode.')
 
-        if self.upper_separator not in get_args(UpperGroupingSeparators):
-            raise ValueError(f'upper_separator {self.upper_separator} not in '
-                             f'{get_args(UpperGroupingSeparators)}.')
+class FormatOptions:
+    # TODO: __repr__
+    """
+    :class:`FormatOptions` stores all the configuration options used to
+    format numbers and number/uncertainty pairs. See
+    :ref:`formatting_options` for more details on the available options.
+    :class:`FormatOptions` are used to create :class:`Formatter`
+    instances and to modify the global default configuration.
 
-        if self.decimal_separator not in get_args(DecimalGroupingSeparators):
-            raise ValueError(f'decimal_separator {self.upper_separator} not '
-                             f'in {get_args(DecimalGroupingSeparators)}.')
+    It is not necessary to provide input for all options. There are two
+    mechanisms for filling of any un-supplied options. First, during
+    initialization, the user can pass in another :class:`FormatOptions`
+    instance as a ``template``. In this case any populated options for
+    the ``template`` will be used to populate corresponding unpopulated
+    options for the new :class:`FormatOptions`. Second, at format time
+    any remaining unfilled options will be populated with the global
+    default options. See :ref:`global_config` for details about how to
+    view and modify the global default options.
 
-        if self.lower_separator not in get_args(LowerGroupingSeparators):
-            raise ValueError(f'lower_separator {self.lower_separator} not in '
-                             f'{get_args(LowerGroupingSeparators)}.')
+    The following checks are performed when creating a new
+    :class:`FormatOptions` object:
 
-        if self.upper_separator is self.decimal_separator:
-            raise ValueError(f'upper_separator and decimal_separator '
-                             f'{self.upper_separator} cannot be equal.')
+    * ``precision`` >= 1 for significant figure rounding mode
+    * ``exp`` must be consistent with the exponent mode:
 
-        if self.prefix_exp and self.parts_per_exp:
-            raise ValueError('Only one of prefix exponent and parts-per '
-                             'exponent modes may be selected.')
+      * ``exp`` must be 0 for fixed point and percent modes
+      * ``exp`` must be a multiple of 3 for engineering and shifted
+        engineering modes
+      * ``exp`` must be a multiple of 10 for binary iec mode
 
-    @classmethod
-    def make(
-            cls,
+    * ``upper_separator`` may be any :class:`GroupingSeparator` but must
+      be different from ``decimal_separator``
+    * ``decimal_separator`` may only be :class:`GroupingSeparator.POINT`
+      or :class:`GroupingSeparator.COMMA`
+    * ``lower_separator`` may only be :class:`GroupingSeparator.NONE`,
+      :class:`GroupingSeparator.SPACE`, or
+      :class:`GroupingSeparator.UNDERSCORE`
+    * Only one of ``prefix_exp`` and ``parts_per_exp`` may be selected.
+
+    :param template: :class:`FormatOptions` instance to use to populate
+      unfilled options.
+    :param exp_mode: :class:`ExpMode` indicating the formatting
+      mode to be used.
+    :param exp: :class:`int` or :class:`AutoExp` indicating the value which
+      should be used for the exponent. This parameter is ignored for the
+      fixed point exponent mode. For engineering, engineering shifted,
+      and binary iec modes, if this parameter is not consistent with the
+      rules of that mode (e.g. if it is not a multiple of 3), then the
+      exponent is rounded down to the nearest conforming value and a
+      warning is printed.
+    :param percent: :class:`bool` indicating whether the number should be
+      formatted as a percentage or not. Only valid for fixed point
+      exponent mode. When ``True``, the number is multipled by 100 and
+      a ``%`` symbol is appended to the end of the string after
+      formatting.
+    :param round_mode: :class:`RoundMode` indicating whether to round
+      the number based on significant figures or digits past the
+      decimal point
+    :param precision: :class:`int` or :class:`AutoPrec` sentinel indicating
+      how many significant figures or digits past the decimal point to
+      include for rounding. Must be >= 1 for significant figure
+      rounding. May be any integer for digits-past-the-decimal rounding.
+    :param upper_separator: :class:`GroupingSeparator` indicating the
+      character to be used to group digits above the decimal symbol.
+    :param decimal_separator: :class:`GroupingSeparator` indicating
+      the character to be used as the decimal symbol.
+      :class:`GroupingSeparator.POINT` or
+      :class:`GroupingSeparator.COMMA`. Note that ``decimal_separator``
+      cannot be the same as ``upper_separator``
+    :param lower_separator: :class:`GroupingSeparator` indicating the
+      character to be used to group digits below the decimal symbol.
+      :class:`GroupingSeparator.NONE`, :class:`GroupingSeparator.SPACE`,
+      or :class:`GroupingSeparator.UNDERSCORE`.
+    :param sign_mode: :class:`SignMode` indicating sign
+      symbol behavior.
+    :param fill_mode: :class:`FillMode` indicating whether
+      to fill with zeros or spaces.
+    :param top_dig_place: Positive ``int`` indicating the digits place
+      to which the string will be left padded before the sign symbol. 0
+      corresponds to the ones place, 1 corresponds to the tens place
+      etc. E.g. ``top_dig_place=4`` will convert ``12`` into ``00012``.
+    :param prefix_exp: :class:`bool` indicating if exponents should be
+      replaced with either SI or IEC prefixes as appropriate.
+    :param parts_per_exp: :class:`bool` indicating if "parts-per" exponent
+      translations should be used.
+    :param extra_si_prefixes: ``dict[int, Union[str, None]]`` mapping
+      additional exponent values to si prefixes. Entries overwrite
+      default values. A value of ``None`` means that exponent will not
+      be converted.
+    :param extra_iec_prefixes: ``dict[int, Union[str, None]]`` mapping
+      additional exponent values to iec prefixes. Entries overwrite
+      default values. A value of ``None`` means that exponent will not
+      be converted.
+    :param extra_parts_per_forms: ``dict[int, Union[str, None]]``
+      mapping additional exponent values to "parts-per" forms. Entries
+      overwrite default values. A value of ``None`` means that exponent
+      will not be converted.
+    :param capitalize: :class:`bool` indicating whether the exponentiation
+      symbol should be upper- or lower-case.
+    :param superscript_exp: :class:`bool` indicating if the exponent string
+      should be converted into superscript notation. E.g. ``'1.23e+02'``
+      is converted to ``'1.23×10²'``
+    :param latex: :class:`bool` indicating if the resulting string should be
+      converted into a latex parseable code, e.g.
+      ``'\\left(1.23 \\pm 0.01\\right)\\times 10^{2}'``.
+    :param nan_inf_exp: :class:`bool` indicating whether non-finite numbers
+      such as ``float('nan')`` or ``float('inf')`` should be formatted
+      with exponent symbols when exponent modes including exponent
+      symbols are selected.
+    :param bracket_unc: :class:`bool` indicating if bracket uncertainty mode
+      (e.g. ``12.34(82)`` instead of ``12.34 +/- 0.82``) should be used.
+    :param pdg_sig_figs: :class:`bool` indicating whether the
+      particle-data-group conventions should be used to automatically
+      determine the number of significant figures to use for
+      uncertainty.
+    :param val_unc_match_widths: :class:`bool` indicating if the value or
+      uncertainty should be left padded to ensure they are both left
+      padded to the same digits place.
+    :param bracket_unc_remove_seps: :class:`bool` indicating if separator
+      symbols should be removed from the uncertainty when using bracket
+      uncertainty mode. E.g. expressing ``123.4 +/- 2.3`` as
+      ``123.4(23)`` instead of ``123.4(2.3)``.
+    :param unicode_pm: :class:`bool` indicating if the '+/-' separator should
+      be replaced with the unicode plus minus symbol '±'.
+    :param unc_pm_whitespace: :class:`bool` indicating if there should be
+      whitespace surrounding the ``'+/-'`` symbols when formatting. E.g.
+      ``123.4+/-2.3`` compared to ``123.4 +/- 2.3``.
+    :param add_c_prefix: :class:`bool` (default ``False``) if ``True`` adds
+      ``{-2: 'c'}`` to ``extra_si_prefixes``.
+    :param add_small_si_prefixes: ``bool`` (default ``False``) if
+      ``True`` adds ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` to
+      ``extra_si_prefixes``.
+    :param add_ppth_form: :class:`bool` (default ``False``) if ``True`` adds
+      ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
+    """
+    def __init__(
+            self,
             *,
-            defaults: 'FormatOptions' = None,
-            fill_mode: FillMode = None,
-            sign_mode: SignMode = None,
-            top_dig_place: int = None,
+            template: Union['FormatOptions'] = None,
+            exp_mode: ExpMode = None,
+            exp: Union[int, type(AutoExp)] = None,
+            percent: bool = None,
+            round_mode: RoundMode = None,
+            precision: Union[int, type(AutoPrec)] = None,
             upper_separator: UpperGroupingSeparators = None,
             decimal_separator: DecimalGroupingSeparators = None,
             lower_separator: LowerGroupingSeparators = None,
-            round_mode: RoundMode = None,
-            precision: Union[int, type(AutoPrec)] = None,
-            exp_mode: ExpMode = None,
-            exp: Union[int, type(AutoExp)] = None,
+            sign_mode: SignMode = None,
+            fill_mode: FillMode = None,
+            top_dig_place: int = None,
+            prefix_exp: bool = None,
+            parts_per_exp: bool = None,
+            extra_si_prefixes: ExpReplaceDict = None,
+            extra_iec_prefixes: ExpReplaceDict = None,
+            extra_parts_per_forms: ExpReplaceDict = None,
             capitalize: bool = None,
-            percent: bool = None,
             superscript_exp: bool = None,
             latex: bool = None,
             nan_inf_exp: bool = None,
-            prefix_exp: bool = None,
-            parts_per_exp: bool = None,
-            extra_si_prefixes: dict[int, str] = None,
-            extra_iec_prefixes: dict[int, str] = None,
-            extra_parts_per_forms: dict[int, str] = None,
-            add_c_prefix: bool = False,
-            add_small_si_prefixes: bool = False,
-            add_ppth_form: bool = False,
-            pdg_sig_figs: bool = None,
             bracket_unc: bool = None,
+            pdg_sig_figs: bool = None,
             val_unc_match_widths: bool = None,
             bracket_unc_remove_seps: bool = None,
             unicode_pm: bool = None,
-            unc_pm_whitespace: bool = None
+            unc_pm_whitespace: bool = None,
+            add_c_prefix: bool = False,
+            add_small_si_prefixes: bool = False,
+            add_ppth_form: bool = False
     ):
-        if defaults is None:
-            defaults = DEFAULT_GLOBAL_OPTIONS
+        if round_mode is RoundMode.SIG_FIG:
+            if isinstance(precision, int):
+                if precision < 1:
+                    raise ValueError(f'Precision must be >= 1 for sig fig '
+                                     f'rounding, not {precision}.')
 
-        if fill_mode is None:
-            fill_mode = defaults.fill_mode
-        if sign_mode is None:
-            sign_mode = defaults.sign_mode
-        if top_dig_place is None:
-            top_dig_place = defaults.top_dig_place
-        if upper_separator is None:
-            upper_separator = defaults.upper_separator
-        if decimal_separator is None:
-            decimal_separator = defaults.decimal_separator
-        if lower_separator is None:
-            lower_separator = defaults.lower_separator
-        if round_mode is None:
-            round_mode = defaults.round_mode
-        if precision is None:
-            precision = defaults.precision
-        if exp_mode is None:
-            exp_mode = defaults.exp_mode
-        if exp is None:
-            exp = defaults.exp
-        if capitalize is None:
-            capitalize = defaults.capitalize
-        if percent is None:
-            percent = defaults.percent
-        if superscript_exp is None:
-            superscript_exp = defaults.superscript_exp
-        if latex is None:
-            latex = defaults.latex
-        if nan_inf_exp is None:
-            nan_inf_exp = defaults.nan_inf_exp
-        if prefix_exp is None:
-            prefix_exp = defaults.prefix_exp
-        if parts_per_exp is None:
-            parts_per_exp = defaults.parts_per_exp
-        if extra_si_prefixes is None:
-            extra_si_prefixes = copy(defaults.extra_si_prefixes)
-        else:
-            extra_si_prefixes = copy(extra_si_prefixes)
-        if extra_iec_prefixes is None:
-            extra_iec_prefixes = copy(defaults.extra_iec_prefixes)
-        else:
-            extra_iec_prefixes = copy(extra_iec_prefixes)
-        if extra_parts_per_forms is None:
-            extra_parts_per_forms = copy(defaults.extra_parts_per_forms)
-        else:
-            extra_parts_per_forms = copy(extra_parts_per_forms)
-        if pdg_sig_figs is None:
-            pdg_sig_figs = defaults.pdg_sig_figs
-        if bracket_unc is None:
-            bracket_unc = defaults.bracket_unc
-        if val_unc_match_widths is None:
-            val_unc_match_widths = defaults.val_unc_match_widths
-        if bracket_unc_remove_seps is None:
-            bracket_unc_remove_seps = defaults.bracket_unc_remove_seps
-        if unicode_pm is None:
-            unicode_pm = defaults.unicode_pm
-        if unc_pm_whitespace is None:
-            unc_pm_whitespace = defaults.unc_pm_whitespace
+        if exp is not AutoExp and exp is not None:
+            if exp_mode is ExpMode.FIXEDPOINT:
+                if exp != 0:
+                    raise ValueError(f'Exponent must must be 0, not '
+                                     f'exp={exp}, for fixed point exponent '
+                                     f'mode.')
+            elif (exp_mode is ExpMode.ENGINEERING
+                  or exp_mode is ExpMode.ENGINEERING_SHIFTED):
+                if exp % 3 != 0:
+                    raise ValueError(f'Exponent must be a multiple of 3, not '
+                                     f'exp={exp}, for engineering exponent '
+                                     f'modes.')
+            elif exp_mode is ExpMode.BINARY_IEC:
+                if exp % 10 != 0:
+                    raise ValueError(f'Exponent must be a multiple of 10, not '
+                                     f'exp={exp}, for binary IEC '
+                                     f'exponent mode.')
 
-        if add_c_prefix and -2 not in extra_si_prefixes:
-            extra_si_prefixes[-2] = 'c'
+        if upper_separator is not None:
+            if upper_separator not in get_args(UpperGroupingSeparators):
+                raise ValueError(f'upper_separator must be in '
+                                 f'{get_args(UpperGroupingSeparators)}, not '
+                                 f'{upper_separator}.')
+            if upper_separator is decimal_separator:
+                raise ValueError(f'upper_separator and decimal_separator '
+                                 f'({upper_separator}) cannot be equal.')
+
+        if decimal_separator is not None:
+            if decimal_separator not in get_args(DecimalGroupingSeparators):
+                raise ValueError(f'upper_separator must be in '
+                                 f'{get_args(DecimalGroupingSeparators)}, not '
+                                 f'{upper_separator}.')
+
+        if lower_separator is not None:
+            if lower_separator not in get_args(LowerGroupingSeparators):
+                raise ValueError(f'upper_separator must be in '
+                                 f'{get_args(LowerGroupingSeparators)}, not '
+                                 f'{upper_separator}.')
+
+        if prefix_exp is not None and parts_per_exp is not None:
+            if prefix_exp and parts_per_exp:
+                raise ValueError('Only one of prefix exponent and parts-per '
+                                 'exponent modes may be selected.')
+
+        if add_c_prefix:
+            if extra_si_prefixes is None:
+                extra_si_prefixes = dict()
+            if -2 not in extra_si_prefixes:
+                extra_si_prefixes[-2] = 'c'
 
         if add_small_si_prefixes:
+            if extra_si_prefixes is None:
+                extra_si_prefixes = dict()
             if -2 not in extra_si_prefixes:
                 extra_si_prefixes[-2] = 'c'
             if -1 not in extra_si_prefixes:
@@ -199,210 +279,134 @@ class FormatOptions:
                 extra_si_prefixes[+2] = 'h'
 
         if add_ppth_form:
+            if extra_parts_per_forms is None:
+                extra_parts_per_forms = dict()
             if -3 not in extra_parts_per_forms:
                 extra_parts_per_forms[-3] = 'ppth'
 
-        return cls(
-            fill_mode=fill_mode,
-            sign_mode=sign_mode,
-            top_dig_place=top_dig_place,
-            upper_separator=upper_separator,
-            decimal_separator=decimal_separator,
-            lower_separator=lower_separator,
-            round_mode=round_mode,
-            precision=precision,
-            exp_mode=exp_mode,
-            exp=exp,
-            capitalize=capitalize,
-            percent=percent,
-            superscript_exp=superscript_exp,
-            latex=latex,
-            nan_inf_exp=nan_inf_exp,
-            prefix_exp=prefix_exp,
-            parts_per_exp=parts_per_exp,
-            extra_si_prefixes=extra_si_prefixes,
-            extra_iec_prefixes=extra_iec_prefixes,
-            extra_parts_per_forms=extra_parts_per_forms,
-            pdg_sig_figs=pdg_sig_figs,
-            bracket_unc=bracket_unc,
-            val_unc_match_widths=val_unc_match_widths,
-            bracket_unc_remove_seps=bracket_unc_remove_seps,
-            unicode_pm=unicode_pm,
-            unc_pm_whitespace=unc_pm_whitespace
-        )
-
-    pattern = re.compile(r'''^
-                             (?:(?P<fill_mode>[ 0])=)?
-                             (?P<sign_mode>[-+ ])?
-                             (?P<alternate_mode>\#)?
-                             (?P<top_dig_place>\d+)?
-                             (?P<upper_separator>[n,.s_])?
-                             (?P<decimal_separator>[.,])?
-                             (?P<lower_separator>[ns_])?
-                             (?:(?P<round_mode>[.!])(?P<prec>[+-]?\d+))?
-                             (?P<exp_mode>[fF%eErRbB])?
-                             (?:x(?P<exp>[+-]?\d+))?
-                             (?P<prefix_mode>p)?
-                             (?P<bracket_unc>\(\))?
-                             $''', re.VERBOSE)
-
-    fill_mode_mapping = {' ': FillMode.SPACE,
-                         '0': FillMode.ZERO,
-                         None: None}
-
-    sign_mode_mapping = {'-': SignMode.NEGATIVE,
-                         '+': SignMode.ALWAYS,
-                         ' ': SignMode.SPACE,
-                         None: None}
-
-    separator_mapping = {'n': GroupingSeparator.NONE,
-                         ',': GroupingSeparator.COMMA,
-                         '.': GroupingSeparator.POINT,
-                         's': GroupingSeparator.SPACE,
-                         '_': GroupingSeparator.UNDERSCORE,
-                         None: None}
-
-    round_mode_mapping = {'!': RoundMode.SIG_FIG,
-                          '.': RoundMode.PREC,
-                          None: None}
-
-    @classmethod
-    def from_format_spec_str(
-            cls,
-            fmt: str,
-            defaults: Optional['FormatOptions'] = None) -> 'FormatOptions':
-
-        match = cls.pattern.match(fmt)
-        if match is None:
-            raise ValueError(f'Invalid format specifier: \'{fmt}\'')
-
-        fill_mode_flag = match.group('fill_mode')
-        fill_mode = cls.fill_mode_mapping[fill_mode_flag]
-
-        sign_mode_flag = match.group('sign_mode')
-        sign_mode = cls.sign_mode_mapping[sign_mode_flag]
-
-        alternate_mode = match.group('alternate_mode')
-        if alternate_mode is not None:
-            alternate_mode = True
-
-        top_dig_place = match.group('top_dig_place')
-        if top_dig_place is not None:
-            top_dig_place = int(top_dig_place)
-            val_unc_match_widths = True
+        if template is None:
+            self.exp_mode = exp_mode
+            self.exp = exp
+            self.percent = percent
+            self.round_mode = round_mode
+            self.precision = precision
+            self.upper_separator = upper_separator
+            self.decimal_separator = decimal_separator
+            self.lower_separator = lower_separator
+            self.sign_mode = sign_mode
+            self.fill_mode = fill_mode
+            self.top_dig_place = top_dig_place
+            self.prefix_exp = prefix_exp
+            self.parts_per_exp = parts_per_exp
+            self.extra_si_prefixes = extra_si_prefixes
+            self.extra_iec_prefixes = extra_iec_prefixes
+            self.extra_parts_per_forms = extra_parts_per_forms
+            self.capitalize = capitalize
+            self.superscript_exp = superscript_exp
+            self.latex = latex
+            self.nan_inf_exp = nan_inf_exp
+            self.bracket_unc = bracket_unc
+            self.pdg_sig_figs = pdg_sig_figs
+            self.val_unc_match_widths = val_unc_match_widths
+            self.bracket_unc_remove_seps = bracket_unc_remove_seps
+            self.unicode_pm = unicode_pm
+            self.unc_pm_whitespace = unc_pm_whitespace
         else:
-            val_unc_match_widths = None
+            self.exp_mode = (template.exp_mode if exp_mode is None else exp_mode)
+            self.exp = template.exp if exp is None else exp
+            self.percent = template.percent if percent is None else percent
+            self.round_mode = template.round_mode if round_mode is None else round_mode
+            self.precision = template.precision if precision is None else precision
+            self.upper_separator = template.upper_separator if upper_separator is None else upper_separator
+            self.decimal_separator = template.decimal_separator if decimal_separator is None else decimal_separator
+            self.lower_separator = template.lower_separator if lower_separator is None else lower_separator
+            self.sign_mode = template.sign_mode if sign_mode is None else sign_mode
+            self.fill_mode = template.fill_mode if fill_mode is None else fill_mode
+            self.top_dig_place = template.top_dig_place if top_dig_place is None else top_dig_place
+            self.prefix_exp = template.prefix_exp if prefix_exp is None else prefix_exp
+            self.parts_per_exp = template.parts_per_exp if parts_per_exp is None else parts_per_exp
+            self.extra_si_prefixes = template.extra_si_prefixes if extra_si_prefixes is None else extra_si_prefixes
+            self.extra_iec_prefixes = template.extra_iec_prefixes if extra_iec_prefixes is None else extra_iec_prefixes
+            self.extra_parts_per_forms = template.extra_parts_per_forms if extra_parts_per_forms is None else extra_parts_per_forms
+            self.capitalize = template.capitalize if capitalize is None else capitalize
+            self.superscript_exp = template.superscript_exp if superscript_exp is None else superscript_exp
+            self.latex = template.latex if latex is None else latex
+            self.nan_inf_exp = template.nan_inf_exp if nan_inf_exp is None else nan_inf_exp
+            self.bracket_unc = template.bracket_unc if bracket_unc is None else bracket_unc
+            self.pdg_sig_figs = template.pdg_sig_figs if pdg_sig_figs is None else pdg_sig_figs
+            self.val_unc_match_widths = template.val_unc_match_widths if val_unc_match_widths is None else val_unc_match_widths
+            self.bracket_unc_remove_seps = template.bracket_unc_remove_seps if bracket_unc_remove_seps is None else bracket_unc_remove_seps
+            self.unicode_pm = template.unicode_pm if unicode_pm is None else unicode_pm
+            self.unc_pm_whitespace = template.unc_pm_whitespace if unc_pm_whitespace is None else unc_pm_whitespace
 
-        upper_separator_flag = match.group('upper_separator')
-        upper_separator = cls.separator_mapping[upper_separator_flag]
-
-        decimal_separator_flag = match.group('decimal_separator')
-        decimal_separator = cls.separator_mapping[decimal_separator_flag]
-
-        lower_separator_flag = match.group('lower_separator')
-        lower_separator = cls.separator_mapping[lower_separator_flag]
-
-        round_mode_flag = match.group('round_mode')
-        round_mode = cls.round_mode_mapping[round_mode_flag]
-
-        precision = match.group('prec')
-        if precision is not None:
-            precision = int(precision)
-
-        exp_mode = match.group('exp_mode')
-        percent = False
-        if exp_mode is not None:
-            capitalize = exp_mode.isupper()
-            if exp_mode in ['f', 'F']:
-                exp_mode = ExpMode.FIXEDPOINT
-            elif exp_mode == '%':
-                exp_mode = ExpMode.FIXEDPOINT
-                percent = True
-            elif exp_mode in ['e', 'E']:
-                exp_mode = ExpMode.SCIENTIFIC
-            elif exp_mode in ['r', 'R']:
-                if alternate_mode:
-                    exp_mode = ExpMode.ENGINEERING_SHIFTED
-                else:
-                    exp_mode = ExpMode.ENGINEERING
-            elif exp_mode in ['b', 'B']:
-                if alternate_mode:
-                    exp_mode = ExpMode.BINARY_IEC
-                else:
-                    exp_mode = ExpMode.BINARY
-        else:
-            capitalize = None
-
-        exp = match.group('exp')
-        if exp is not None:
-            exp = int(exp)
-
-        prefix_exp = match.group('prefix_mode')
-        if prefix_exp is not None:
-            prefix_exp = True
-
-        bracket_unc = match.group('bracket_unc')
-        if bracket_unc is not None:
-            bracket_unc = True
-
-        if defaults is None:
-            defaults = DEFAULT_GLOBAL_OPTIONS
-
-        return cls.make(
-            defaults=defaults,
-            fill_mode=fill_mode,
-            sign_mode=sign_mode,
-            top_dig_place=top_dig_place,
-            upper_separator=upper_separator,
-            decimal_separator=decimal_separator,
-            lower_separator=lower_separator,
-            round_mode=round_mode,
-            precision=precision,
-            exp_mode=exp_mode,
-            exp=exp,
-            capitalize=capitalize,
-            percent=percent,
-            prefix_exp=prefix_exp,
-            bracket_unc=bracket_unc,
-            val_unc_match_widths=val_unc_match_widths
+    def render(self) -> RenderedFormatOptions:
+        gdf = get_global_defaults()
+        rendered_format_options = RenderedFormatOptions(
+          exp_mode=gdf.exp_mode if self.exp_mode is None else self.exp_mode,
+          exp=gdf.exp if self.exp is None else self.exp,
+          percent=gdf.percent if self.percent is None else self.percent,
+          round_mode=gdf.round_mode if self.round_mode is None else self.round_mode,
+          precision=gdf.precision if self.precision is None else self.precision,
+          upper_separator=gdf.upper_separator if self.upper_separator is None else self.upper_separator,
+          decimal_separator=gdf.decimal_separator if self.decimal_separator is None else self.decimal_separator,
+          lower_separator=gdf.lower_separator if self.lower_separator is None else self.lower_separator,
+          sign_mode=gdf.sign_mode if self.sign_mode is None else self.sign_mode,
+          fill_mode=gdf.fill_mode if self.fill_mode is None else self.fill_mode,
+          top_dig_place=gdf.top_dig_place if self.top_dig_place is None else self.top_dig_place,
+          prefix_exp=gdf.prefix_exp if self.prefix_exp is None else self.prefix_exp,
+          parts_per_exp=gdf.parts_per_exp if self.parts_per_exp is None else self.parts_per_exp,
+          extra_si_prefixes=gdf.extra_si_prefixes if self.extra_si_prefixes is None else self.extra_si_prefixes,
+          extra_iec_prefixes=gdf.extra_iec_prefixes if self.extra_iec_prefixes is None else self.extra_iec_prefixes,
+          extra_parts_per_forms=gdf.extra_parts_per_forms if self.extra_parts_per_forms is None else self.extra_parts_per_forms,
+          capitalize=gdf.capitalize if self.capitalize is None else self.capitalize,
+          superscript_exp=gdf.superscript_exp if self.superscript_exp is None else self.superscript_exp,
+          latex=gdf.latex if self.latex is None else self.latex,
+          nan_inf_exp=gdf.nan_inf_exp if self.nan_inf_exp is None else self.nan_inf_exp,
+          bracket_unc=gdf.bracket_unc if self.bracket_unc is None else self.bracket_unc,
+          pdg_sig_figs=gdf.pdg_sig_figs if self.pdg_sig_figs is None else self.pdg_sig_figs,
+          val_unc_match_widths=gdf.val_unc_match_widths if self.val_unc_match_widths is None else self.val_unc_match_widths,
+          bracket_unc_remove_seps=gdf.bracket_unc_remove_seps if self.bracket_unc_remove_seps is None else self.bracket_unc_remove_seps,
+          unicode_pm=gdf.unicode_pm if self.unicode_pm is None else self.unicode_pm,
+          unc_pm_whitespace=gdf.unc_pm_whitespace if self.unc_pm_whitespace is None else self.unc_pm_whitespace
         )
+        return rendered_format_options
 
 
-DEFAULT_PKG_OPTIONS = FormatOptions(
-    fill_mode=FillMode.SPACE,
-    sign_mode=SignMode.NEGATIVE,
-    top_dig_place=0,
+DEFAULT_PKG_OPTIONS = RenderedFormatOptions(
+    exp_mode=ExpMode.FIXEDPOINT,
+    exp=AutoExp,
+    percent=False,
+    round_mode=RoundMode.SIG_FIG,
+    precision=AutoPrec,
     upper_separator=GroupingSeparator.NONE,
     decimal_separator=GroupingSeparator.POINT,
     lower_separator=GroupingSeparator.NONE,
-    round_mode=RoundMode.SIG_FIG,
-    precision=AutoPrec,
-    exp_mode=ExpMode.FIXEDPOINT,
-    exp=AutoExp,
-    capitalize=False,
-    percent=False,
-    superscript_exp=False,
-    latex=False,
-    nan_inf_exp=False,
+    sign_mode=SignMode.NEGATIVE,
+    fill_mode=FillMode.SPACE,
+    top_dig_place=0,
     prefix_exp=False,
     parts_per_exp=False,
     extra_si_prefixes=dict(),
     extra_iec_prefixes=dict(),
     extra_parts_per_forms=dict(),
-    pdg_sig_figs=False,
+    capitalize=False,
+    superscript_exp=False,
+    latex=False,
+    nan_inf_exp=False,
     bracket_unc=False,
+    pdg_sig_figs=False,
     val_unc_match_widths=False,
     bracket_unc_remove_seps=False,
     unicode_pm=False,
     unc_pm_whitespace=True
 )
 
-DEFAULT_GLOBAL_OPTIONS = FormatOptions.make(
-    defaults=DEFAULT_PKG_OPTIONS)
+
+GLOBAL_DEFAULT_OPTIONS = DEFAULT_PKG_OPTIONS
 
 
-def get_global_defaults() -> FormatOptions:
-    return DEFAULT_GLOBAL_OPTIONS
+def get_global_defaults() -> RenderedFormatOptions:
+    return GLOBAL_DEFAULT_OPTIONS
 
 
 def print_global_defaults():
@@ -412,89 +416,17 @@ def print_global_defaults():
     pprint(asdict(get_global_defaults()), sort_dicts=False)
 
 
-def set_global_defaults(
-        *,
-        defaults: 'FormatOptions' = None,  # TODO: This should not be user input
-        fill_mode: FillMode = None,
-        sign_mode: SignMode = None,
-        top_dig_place: int = None,
-        upper_separator: UpperGroupingSeparators = None,
-        decimal_separator: DecimalGroupingSeparators = None,
-        lower_separator: LowerGroupingSeparators = None,
-        round_mode: RoundMode = None,
-        precision: Union[int, type(AutoPrec)] = None,
-        exp_mode: ExpMode = None,
-        exp: Union[int, type(AutoExp)] = None,
-        capitalize: bool = None,
-        percent: bool = None,
-        superscript_exp: bool = None,
-        latex: bool = None,
-        nan_inf_exp=None,
-        prefix_exp: bool = None,
-        parts_per_exp: bool = None,
-        extra_si_prefixes: dict[int, str] = None,
-        extra_iec_prefixes: dict[int, str] = None,
-        extra_parts_per_forms: dict[int, str] = None,
-        add_c_prefix: bool = False,
-        add_small_si_prefixes: bool = False,
-        add_ppth_form: bool = False,
-        pdg_sig_figs: bool = None,
-        bracket_unc=None,
-        val_unc_match_widths=None,
-        bracket_unc_remove_seps=None,
-        unicode_pm=None,
-        unc_pm_whitespace=None
-):
-    """
-    Update global default options. Accepts the same input keyword
-    arguments as :class:`Formatter` and undergoes the same input
-    validation. Any unspecified parameters retain their existing
-    global settings.
-    """
-    global DEFAULT_GLOBAL_OPTIONS
-    if defaults is None:
-        defaults = DEFAULT_GLOBAL_OPTIONS
-    new_default_options = FormatOptions.make(
-        defaults=defaults,
-        fill_mode=fill_mode,
-        sign_mode=sign_mode,
-        top_dig_place=top_dig_place,
-        upper_separator=upper_separator,
-        decimal_separator=decimal_separator,
-        lower_separator=lower_separator,
-        round_mode=round_mode,
-        precision=precision,
-        exp_mode=exp_mode,
-        exp=exp,
-        capitalize=capitalize,
-        percent=percent,
-        superscript_exp=superscript_exp,
-        latex=latex,
-        nan_inf_exp=nan_inf_exp,
-        prefix_exp=prefix_exp,
-        parts_per_exp=parts_per_exp,
-        extra_si_prefixes=extra_si_prefixes,
-        extra_iec_prefixes=extra_iec_prefixes,
-        extra_parts_per_forms=extra_parts_per_forms,
-        add_c_prefix=add_c_prefix,
-        add_small_si_prefixes=add_small_si_prefixes,
-        add_ppth_form=add_ppth_form,
-        pdg_sig_figs=pdg_sig_figs,
-        bracket_unc=bracket_unc,
-        val_unc_match_widths=val_unc_match_widths,
-        bracket_unc_remove_seps=bracket_unc_remove_seps,
-        unicode_pm=unicode_pm,
-        unc_pm_whitespace=unc_pm_whitespace
-    )
-    DEFAULT_GLOBAL_OPTIONS = new_default_options
+def set_global_defaults(format_options: FormatOptions):
+    global GLOBAL_DEFAULT_OPTIONS
+    GLOBAL_DEFAULT_OPTIONS = format_options.render()
 
 
 def reset_global_defaults():
     """
     Reset global default options to package defaults.
     """
-    global DEFAULT_GLOBAL_OPTIONS
-    DEFAULT_GLOBAL_OPTIONS = DEFAULT_PKG_OPTIONS
+    global GLOBAL_DEFAULT_OPTIONS
+    GLOBAL_DEFAULT_OPTIONS = DEFAULT_PKG_OPTIONS
 
 
 def global_add_c_prefix():
@@ -504,7 +436,7 @@ def global_add_c_prefix():
     this mapping, first use :func:`global_reset_si_prefixes` or
     use :func:`set_global_defaults`.
     """
-    set_global_defaults(add_c_prefix=True)
+    set_global_defaults(FormatOptions(add_c_prefix=True))
 
 
 def global_add_small_si_prefixes():
@@ -515,7 +447,7 @@ def global_add_small_si_prefixes():
     mappings either first use :func:`global_reset_si_prefixes` or use
     :func:`set_global_defaults`.
     """
-    set_global_defaults(add_small_si_prefixes=True)
+    set_global_defaults(FormatOptions(add_small_si_prefixes=True))
 
 
 def global_add_ppth_form():
@@ -526,110 +458,45 @@ def global_add_ppth_form():
     :func:`global_reset_parts_per_forms` or use
     :func:`set_global_defaults`.
     """
-    set_global_defaults(add_ppth_form=True)
+    set_global_defaults(FormatOptions(add_ppth_form=True))
 
 
 def global_reset_si_prefixes():
     """
     Clear all extra SI prefix mappings.
     """
-    set_global_defaults(extra_si_prefixes=dict())
+    set_global_defaults(FormatOptions(extra_si_prefixes=dict()))
 
 
 def global_reset_iec_prefixes():
     """
     Clear all extra IEC prefix mappings.
     """
-    set_global_defaults(extra_iec_prefixes=dict())
+    set_global_defaults(FormatOptions(extra_iec_prefixes=dict()))
 
 
 def global_reset_parts_per_forms():
     """
     Clear all extra "parts-per" forms.
     """
-    set_global_defaults(extra_parts_per_forms=dict())
+    set_global_defaults(FormatOptions(extra_parts_per_forms=dict()))
 
 
 class GlobalDefaultsContext:
     """
-    Temporarily update global default options. Accepts the same input
-    keyword arguments as :class:`Formatter` and undergoes the same input
-    validation. Any unspecified parameters retain their existing
-    global settings. New settings are applied when the context is
-    entered and original global settings are re-applied when the context
-    is exited.
+    Temporarily update global default options. New settings are applied
+    when the context is entered and original global settings are
+    re-applied when the context is exited.
     """
-    def __init__(
-            self,
-            *,
-            defaults: 'FormatOptions' = None,
-            fill_mode: FillMode = None,
-            sign_mode: SignMode = None,
-            top_dig_place: int = None,
-            upper_separator: UpperGroupingSeparators = None,
-            decimal_separator: DecimalGroupingSeparators = None,
-            lower_separator: LowerGroupingSeparators = None,
-            round_mode: RoundMode = None,
-            precision: Union[int, type(AutoPrec)] = None,
-            exp_mode: ExpMode = None,
-            exp: Union[int, type(AutoExp)] = None,
-            capitalize: bool = None,
-            percent: bool = None,
-            superscript_exp: bool = None,
-            latex: bool = None,
-            nan_inf_exp: bool = None,
-            prefix_exp: bool = None,
-            parts_per_exp: bool = None,
-            extra_si_prefixes: dict[int, str] = None,
-            extra_iec_prefixes: dict[int, str] = None,
-            extra_parts_per_forms: dict[int, str] = None,
-            add_c_prefix: bool = False,
-            add_small_si_prefixes: bool = False,
-            add_ppth_form: bool = False,
-            pdg_sig_figs: bool = None,
-            bracket_unc: bool = None,
-            val_unc_match_widths: bool = None,
-            bracket_unc_remove_seps: bool = None,
-            unicode_pm: bool = None,
-            unc_pm_whitespace: bool = None
-    ):
-        self.options = FormatOptions.make(
-            defaults=defaults,
-            fill_mode=fill_mode,
-            sign_mode=sign_mode,
-            top_dig_place=top_dig_place,
-            upper_separator=upper_separator,
-            decimal_separator=decimal_separator,
-            lower_separator=lower_separator,
-            round_mode=round_mode,
-            precision=precision,
-            exp_mode=exp_mode,
-            exp=exp,
-            capitalize=capitalize,
-            percent=percent,
-            superscript_exp=superscript_exp,
-            latex=latex,
-            nan_inf_exp=nan_inf_exp,
-            prefix_exp=prefix_exp,
-            parts_per_exp=parts_per_exp,
-            extra_si_prefixes=extra_si_prefixes,
-            extra_iec_prefixes=extra_iec_prefixes,
-            extra_parts_per_forms=extra_parts_per_forms,
-            add_c_prefix=add_c_prefix,
-            add_small_si_prefixes=add_small_si_prefixes,
-            add_ppth_form=add_ppth_form,
-            pdg_sig_figs=pdg_sig_figs,
-            bracket_unc=bracket_unc,
-            val_unc_match_widths=val_unc_match_widths,
-            bracket_unc_remove_seps=bracket_unc_remove_seps,
-            unicode_pm=unicode_pm,
-            unc_pm_whitespace=unc_pm_whitespace
-        )
+    def __init__(self, format_options: FormatOptions):
+        self.format_options = format_options
         self.initial_global_defaults = None
 
     def __enter__(self):
-        self.initial_global_defaults = get_global_defaults()
-        set_global_defaults(defaults=self.options)
+        global GLOBAL_DEFAULT_OPTIONS
+        self.initial_global_defaults = GLOBAL_DEFAULT_OPTIONS
+        GLOBAL_DEFAULT_OPTIONS = self.format_options.render()
 
     def __exit__(self, exc_type, exc_value, exc_tb):
-        set_global_defaults(defaults=self.initial_global_defaults)
+        global GLOBAL_DEFAULT_OPTIONS
+        GLOBAL_DEFAULT_OPTIONS = self.initial_global_defaults

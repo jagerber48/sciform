@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import (SciNum, GlobalDefaultsContext, ExpMode,
+from sciform import (FormatOptions, SciNum, GlobalDefaultsContext, ExpMode,
                      GroupingSeparator, RoundMode, SignMode)
 
 
@@ -8,11 +8,12 @@ class TestConfig(unittest.TestCase):
     def test_global_defaults_context(self):
         num = SciNum(123.456)
         before_str = f'{num}'
-        with GlobalDefaultsContext(sign_mode=SignMode.ALWAYS,
-                                   exp_mode=ExpMode.SCIENTIFIC,
-                                   round_mode=RoundMode.SIG_FIG,
-                                   precision=2,
-                                   decimal_separator=GroupingSeparator.COMMA):
+        with GlobalDefaultsContext(FormatOptions(
+                sign_mode=SignMode.ALWAYS,
+                exp_mode=ExpMode.SCIENTIFIC,
+                round_mode=RoundMode.SIG_FIG,
+                precision=2,
+                decimal_separator=GroupingSeparator.COMMA)):
             during_str = f'{num}'
         after_str = f'{num}'
 
@@ -25,7 +26,7 @@ class TestConfig(unittest.TestCase):
 
     def test_c_prefix(self):
         num = SciNum(123.456)
-        with GlobalDefaultsContext(add_c_prefix=True):
+        with GlobalDefaultsContext(FormatOptions(add_c_prefix=True)):
             num_str = f'{num:ex-2p}'
 
         expected_num_str = '12345.6 c'
@@ -40,7 +41,7 @@ class TestConfig(unittest.TestCase):
                       +1: '12.3456 da',
                       +2: '1.23456 h'}
 
-        with GlobalDefaultsContext(add_small_si_prefixes=True):
+        with GlobalDefaultsContext(FormatOptions(add_small_si_prefixes=True)):
             for exp, expected_num_str in cases_dict.items():
                 num_str = f'{num:ex{exp:+}p}'
                 self.assertEqual(num_str, expected_num_str)

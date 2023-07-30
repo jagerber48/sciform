@@ -48,39 +48,61 @@ about it!
 Usage
 =====
 
-``sciform`` provides two primary methods for formatting numbers into
-scientific formatted strings.
-The first is via the ``Formatter`` object and the second is using string
-formatting and the custom FSML with the ``SciNum`` object.
+``sciform`` provides a wide variety of formatting options.
+These options are configured using the ``FormatOptions`` object.
+Users can construct ``FormatOptions`` objects and pass them into
+``Formatter`` objects which can then be used to format numbers into
+strings according to the selected options.
 
->>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
->>> sform = Formatter(round_mode=RoundMode.PREC,
-...                   precision=6,
-...                   upper_separator=GroupingSeparator.SPACE,
-...                   lower_separator=GroupingSeparator.SPACE)
+>>> from sciform import (FormatOptions, Formatter, RoundMode,
+...                      GroupingSeparator, ExpMode)
+>>> sform = Formatter(FormatOptions(
+...             round_mode=RoundMode.PREC,
+...             precision=6,
+...             upper_separator=GroupingSeparator.SPACE,
+...             lower_separator=GroupingSeparator.SPACE))
 >>> print(sform(51413.14159265359))
 51 413.141 593
->>> sform = Formatter(round_mode=RoundMode.SIG_FIG,
-...                   precision=4,
-...                   exp_mode=ExpMode.ENGINEERING)
+>>> sform = Formatter(FormatOptions(
+...             round_mode=RoundMode.SIG_FIG,
+...             precision=4,
+...             exp_mode=ExpMode.ENGINEERING))
 >>> print(sform(123456.78))
 123.5e+03
+
+For brevity, the user may consider abbreviating ``FormatOptions`` as
+``Fo``.
+
+>>> from sciform import FormatOptions as Fo
+>>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
+>>> sform = Formatter(Fo(round_mode=RoundMode.PREC,
+...                      precision=6,
+...                      upper_separator=GroupingSeparator.SPACE,
+...                      lower_separator=GroupingSeparator.SPACE))
+>>> print(sform(51413.14159265359))
+51 413.141 593
+
+Users can also format numbers by constructing ``SciNum`` objects and
+using string formatting to format the ``SciNum`` instances according
+to a custom FSML.
 
 >>> from sciform import SciNum
 >>> num = SciNum(123456)
 >>> print(f'{num:_!2f}')
 120_000
 
-``sciform`` can also be used to format pairs of value/uncertainty
-numbers using the ``Formatter`` or ``SciNumUnc`` objects.
+In addition to formatting individual numbers, ``sciform`` can be used
+to format pairs of numbers as value/uncertainty pairs.
+This can be done by passing two numbers into a ``Formatter`` call or by
+using the ``SciNumUnc`` object.
 
->>> sform = Formatter(precision=2,
-...                   upper_separator=GroupingSeparator.SPACE,
-...                   lower_separator=GroupingSeparator.SPACE)
+>>> sform = Formatter(Fo(precision=2,
+...                      upper_separator=GroupingSeparator.SPACE,
+...                      lower_separator=GroupingSeparator.SPACE))
 >>> print(sform(123456.654321, 0.0034))
 123 456.654 3 +/- 0.003 4
->>> sform = Formatter(precision=4,
-...                   exp_mode=ExpMode.ENGINEERING)
+>>> sform = Formatter(Fo(precision=4,
+...                      exp_mode=ExpMode.ENGINEERING))
 >>> print(sform(123456.654321, 0.0034))
 (123.456654321 +/- 0.000003400)e+03
 
@@ -88,6 +110,8 @@ numbers using the ``Formatter`` or ``SciNumUnc`` objects.
 >>> num = SciNumUnc(123456.654321, 0.0034)
 >>> print(f'{num:_!2f}')
 123_456.6543 +/- 0.0034
+>>> print(f'{num:_!2f()}')
+123_456.6543(34)
 
 
 ================
