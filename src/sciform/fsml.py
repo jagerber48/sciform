@@ -87,13 +87,14 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
     else:
         precision = None
 
+    percent = None
     exp_mode = match.group('exp_mode')
     if exp_mode is not None:
         capitalize = exp_mode.isupper()
-        if exp_mode in ['f', 'F']:
+        if exp_mode in ['f', 'F', '%']:
+            if exp_mode == '%':
+                percent = True
             exp_mode = ExpMode.FIXEDPOINT
-        elif exp_mode == '%':
-            exp_mode = ExpMode.PERCENT
         elif exp_mode in ['e', 'E']:
             exp_mode = ExpMode.SCIENTIFIC
         elif exp_mode in ['r', 'R']:
@@ -139,6 +140,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
         precision=precision,
         exp_mode=exp_mode,
         exp=exp,
+        percent=percent,
         capitalize=capitalize,
         prefix_exp=prefix_exp,
         bracket_unc=bracket_unc,

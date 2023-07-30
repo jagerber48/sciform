@@ -43,10 +43,10 @@ class TestFormatting(unittest.TestCase):
     def test_percent(self):
         cases_list = [
             ((0.123_456_78, 0.000_002_55), [
-                (FormatOptions(exp_mode=ExpMode.PERCENT,
+                (FormatOptions(percent=True,
                                lower_separator=GroupingSeparator.UNDERSCORE),
                  '(12.345_678 +/- 0.000_255)%'),
-                (FormatOptions(exp_mode=ExpMode.PERCENT,
+                (FormatOptions(percent=True,
                                bracket_unc=True,
                                lower_separator=GroupingSeparator.UNDERSCORE),
                  '(12.345_678(255))%')
@@ -131,11 +131,11 @@ class TestFormatting(unittest.TestCase):
             ]),
             ((0.123_456_78, 0.000_002_55), [
                 (FormatOptions(lower_separator=GroupingSeparator.UNDERSCORE,
-                               exp_mode=ExpMode.PERCENT,
+                               percent=True,
                                latex=True),
                  r'\left(12.345\_678 \pm 0.000\_255\right)\%'),
                 (FormatOptions(lower_separator=GroupingSeparator.UNDERSCORE,
-                               exp_mode=ExpMode.PERCENT,
+                               percent=True,
                                bracket_unc=True,
                                latex=True),
                  r'\left(12.345\_678\left(255\right)\right)\%')
