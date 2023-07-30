@@ -1,7 +1,7 @@
 import unittest
 
-from sciform import (FormatOptions, Formatter,
-                     ExpMode, GroupingSeparator, FillMode)
+from sciform import (FormatOptions, Formatter, ExpMode, GroupingSeparator,
+                     FillMode)
 
 
 FloatFormatOptionsCases = list[tuple[float, list[tuple[FormatOptions, str]]]]

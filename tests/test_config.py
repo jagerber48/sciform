@@ -1,7 +1,7 @@
 import unittest
 
-from sciform import (SciNum, GlobalDefaultsContext, ExpMode,
-                     GroupingSeparator, RoundMode, SignMode, FormatOptions)
+from sciform import (FormatOptions, SciNum, GlobalDefaultsContext, ExpMode,
+                     GroupingSeparator, RoundMode, SignMode)
 
 
 class TestConfig(unittest.TestCase):

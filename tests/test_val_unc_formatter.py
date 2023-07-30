@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import Formatter, ExpMode, GroupingSeparator, FormatOptions
+from sciform import FormatOptions, Formatter, ExpMode, GroupingSeparator
 
 
 ValUncFormatOptionsCases = list[tuple[tuple[float, float],
