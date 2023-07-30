@@ -12,7 +12,6 @@ from sciform.modes import (FillMode, SignMode, GroupingSeparator,
 class RenderedFormatOptions:
     exp_mode: ExpMode
     exp: Union[int, type(AutoExp)]
-    percent: bool
     round_mode: RoundMode
     precision: Union[int, type(AutoPrec)]
     upper_separator: UpperGroupingSeparators
@@ -91,11 +90,6 @@ class FormatOptions:
       rules of that mode (e.g. if it is not a multiple of 3), then the
       exponent is rounded down to the nearest conforming value and a
       warning is printed.
-    :param percent: :class:`bool` indicating whether the number should be
-      formatted as a percentage or not. Only valid for fixed point
-      exponent mode. When ``True``, the number is multipled by 100 and
-      a ``%`` symbol is appended to the end of the string after
-      formatting.
     :param round_mode: :class:`RoundMode` indicating whether to round
       the number based on significant figures or digits past the
       decimal point
@@ -182,7 +176,6 @@ class FormatOptions:
             template: Union['FormatOptions'] = None,
             exp_mode: ExpMode = None,
             exp: Union[int, type(AutoExp)] = None,
-            percent: bool = None,
             round_mode: RoundMode = None,
             precision: Union[int, type(AutoPrec)] = None,
             upper_separator: UpperGroupingSeparators = None,
@@ -217,11 +210,11 @@ class FormatOptions:
                                      f'rounding, not {precision}.')
 
         if exp is not AutoExp and exp is not None:
-            if exp_mode is ExpMode.FIXEDPOINT:
+            if exp_mode is ExpMode.FIXEDPOINT or exp_mode is ExpMode.PERCENT:
                 if exp != 0:
                     raise ValueError(f'Exponent must must be 0, not '
-                                     f'exp={exp}, for fixed point exponent '
-                                     f'mode.')
+                                     f'exp={exp}, for fixed point and percent '
+                                     f'exponent modes.')
             elif (exp_mode is ExpMode.ENGINEERING
                   or exp_mode is ExpMode.ENGINEERING_SHIFTED):
                 if exp % 3 != 0:
@@ -287,7 +280,6 @@ class FormatOptions:
         if template is None:
             self.exp_mode = exp_mode
             self.exp = exp
-            self.percent = percent
             self.round_mode = round_mode
             self.precision = precision
             self.upper_separator = upper_separator
@@ -314,7 +306,6 @@ class FormatOptions:
         else:
             self.exp_mode = (template.exp_mode if exp_mode is None else exp_mode)
             self.exp = template.exp if exp is None else exp
-            self.percent = template.percent if percent is None else percent
             self.round_mode = template.round_mode if round_mode is None else round_mode
             self.precision = template.precision if precision is None else precision
             self.upper_separator = template.upper_separator if upper_separator is None else upper_separator
@@ -344,7 +335,6 @@ class FormatOptions:
         rendered_format_options = RenderedFormatOptions(
           exp_mode=gdf.exp_mode if self.exp_mode is None else self.exp_mode,
           exp=gdf.exp if self.exp is None else self.exp,
-          percent=gdf.percent if self.percent is None else self.percent,
           round_mode=gdf.round_mode if self.round_mode is None else self.round_mode,
           precision=gdf.precision if self.precision is None else self.precision,
           upper_separator=gdf.upper_separator if self.upper_separator is None else self.upper_separator,
@@ -375,7 +365,6 @@ class FormatOptions:
 DEFAULT_PKG_OPTIONS = RenderedFormatOptions(
     exp_mode=ExpMode.FIXEDPOINT,
     exp=AutoExp,
-    percent=False,
     round_mode=RoundMode.SIG_FIG,
     precision=AutoPrec,
     upper_separator=GroupingSeparator.NONE,

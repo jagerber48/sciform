@@ -147,7 +147,6 @@ package default settings):
 >>> print_global_defaults()
 {'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,
  'exp': <class 'sciform.modes.AutoExp'>,
- 'percent': False,
  'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
  'precision': <class 'sciform.modes.AutoPrec'>,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
@@ -187,7 +186,6 @@ unchanged.
 >>> print_global_defaults()
 {'exp_mode': <ExpMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
  'exp': <class 'sciform.modes.AutoExp'>,
- 'percent': False,
  'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
  'precision': 4,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
