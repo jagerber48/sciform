@@ -286,18 +286,23 @@ class FormatOptions:
                 changes[key] = value
         return replace(self, **changes)
 
-    def render(self) -> RenderedFormatOptions:
-        gdf_dict = asdict(get_global_defaults())
+    def render(
+            self,
+            default_options: RenderedFormatOptions = None
+    ) -> RenderedFormatOptions:
+        if default_options is None:
+            default_options = get_global_defaults()
+        default_dict = asdict(default_options)
         kwargs = dict()
         for key, value in asdict(self).items():
             if value is not None:
                 kwargs[key] = value
             else:
-                kwargs[key] = gdf_dict[key]
+                kwargs[key] = default_dict[key]
         return RenderedFormatOptions(**kwargs)
 
 
-DEFAULT_PKG_OPTIONS = RenderedFormatOptions(
+PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
     exp_mode=ExpMode.FIXEDPOINT,
     exp=AutoExp,
     round_mode=RoundMode.SIG_FIG,
@@ -326,7 +331,7 @@ DEFAULT_PKG_OPTIONS = RenderedFormatOptions(
 )
 
 
-GLOBAL_DEFAULT_OPTIONS = DEFAULT_PKG_OPTIONS
+GLOBAL_DEFAULT_OPTIONS = PKG_DEFAULT_OPTIONS
 
 
 def get_global_defaults() -> RenderedFormatOptions:
@@ -350,7 +355,7 @@ def reset_global_defaults():
     Reset global default options to package defaults.
     """
     global GLOBAL_DEFAULT_OPTIONS
-    GLOBAL_DEFAULT_OPTIONS = DEFAULT_PKG_OPTIONS
+    GLOBAL_DEFAULT_OPTIONS = PKG_DEFAULT_OPTIONS
 
 
 def global_add_c_prefix():
