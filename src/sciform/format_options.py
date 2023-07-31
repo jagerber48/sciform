@@ -50,15 +50,11 @@ class FormatOptions:
     :class:`FormatOptions` are used to create :class:`Formatter`
     instances and to modify the global default configuration.
 
-    It is not necessary to provide input for all options. There are two
-    mechanisms for filling of any un-supplied options. First, during
-    initialization, the user can pass in another :class:`FormatOptions`
-    instance as a ``template``. In this case any populated options for
-    the ``template`` will be used to populate corresponding unpopulated
-    options for the new :class:`FormatOptions`. Second, at format time
-    any remaining unfilled options will be populated with the global
-    default options. See :ref:`global_config` for details about how to
-    view and modify the global default options.
+    It is not necessary to provide input for all options. At format
+    time, any un-populated options will be populated with the
+    corresponding options from the global default options. See
+    :ref:`global_config` for details about how to view and modify the
+    global default options.
 
     The following checks are performed when creating a new
     :class:`FormatOptions` object:
@@ -80,8 +76,6 @@ class FormatOptions:
       :class:`GroupingSeparator.UNDERSCORE`
     * Only one of ``prefix_exp`` and ``parts_per_exp`` may be selected.
 
-    :param template: :class:`FormatOptions` instance to use to populate
-      unfilled options.
     :param exp_mode: :class:`ExpMode` indicating the formatting
       mode to be used.
     :param exp: :class:`int` or :class:`AutoExp` indicating the value which
