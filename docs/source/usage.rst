@@ -22,11 +22,10 @@ FormatOptions
 See :class:`FormatOptions` for a complete list of
 keyword arguments used to construct :class:`FormatOptions` and see
 :ref:`formatting_options` for more details on the different options.
-The :meth:`FormatOptions.replace` method can be used to construct new
-:class:`FormatOptions` instances by using one existing
-:class:`FormatOptions` instance as a base set of options and to use a
-second :class:`FormatOptions` instance to specify which options should
-be overwritten and with what values for the new instance.
+The :meth:`FormatOptions.merge` method can be used to combine two
+:class:`FormatOptions` instances into a new one by overwriting any
+option from the first instance with the corresponding option from the
+second instance if it is populated.
 
 It is not necessary to provide input for all options. At format time,
 any un-populated options will be populated with the
@@ -257,6 +256,8 @@ the ``unicode_pm`` option.
 If the user wishes to configure these options but also use the
 :ref:`FSML <fsml>` then they must do so by modifying the global default
 settings.
+
+.. _dec_and_float:
 
 Note on Decimals and Floats
 ===========================
