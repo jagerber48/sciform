@@ -8,7 +8,7 @@ Formatting
 ==========
 
 .. autoclass:: FormatOptions()
-   :members: replace
+   :members: merge
 
 .. autoclass:: Formatter()
 

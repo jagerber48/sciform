@@ -52,14 +52,15 @@ class FormatOptions:
     :class:`FormatOptions` stores all the configuration options used to
     format numbers and number/uncertainty pairs. See
     :ref:`formatting_options` for more details on the available options.
-    :class:`FormatOptions` are used to create :class:`Formatter`
-    instances and to modify the global default configuration.
+    :class:`FormatOptions` instances are used to create
+    :class:`Formatter` instances and to modify the global default
+    configuration.
 
     It is not necessary to provide input for all options. At format
-    time, any un-populated options will be populated with the
-    corresponding options from the global default options. See
-    :ref:`global_config` for details about how to view and modify the
-    global default options.
+    time, any un-populated options (indicated by a ``None`` value) will
+    be populated with the corresponding options from the global default
+    options. See :ref:`global_config` for details about how to view and
+    modify the global default options.
 
     The following checks are performed when creating a new
     :class:`FormatOptions` object:
@@ -283,17 +284,13 @@ class FormatOptions:
         Generate a new :class:`FormatOptions` instance from the current
         instance and another :class:`FormatOptions` instance,
         ``other``. The options for the new :class:`FormatOptions` are
-        constructed by first taking the
+        constructed by replacing the options from the current instance
+        by any filled options from ``other``. Note that, even after
+        merging, the resulting :class:`FormatOptions` may still have
+        unfilled options.
 
-        The options for the new
-        :class:`FormatOptions` instance are the same options as those
-        for the current instance, except that any options present in the
-        ``changed_options`` instance will overwrite those of the
-        current instance.
-
-        :param other: :class:`FormatOptions` instance
-          containing options that will overwrite those of the current
-          instance.
+        :param other: :class:`FormatOptions` instance containing options
+          that will overwrite those of the current instance.
         :return: New :class:`FormatOptions` instance
         """
         return FormatOptions(**_merge_dicts(asdict(self), asdict(other)))
