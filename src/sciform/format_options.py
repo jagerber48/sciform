@@ -278,7 +278,7 @@ class FormatOptions:
             if -3 not in self.extra_parts_per_forms:
                 self.extra_parts_per_forms[-3] = 'ppth'
 
-    def replace(self, other: 'FormatOptions') -> 'FormatOptions':
+    def merge(self, other: 'FormatOptions') -> 'FormatOptions':
         """
         Generate a new :class:`FormatOptions` instance from the current
         instance and another :class:`FormatOptions` instance,

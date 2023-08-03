@@ -249,7 +249,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
          'e+03' or similar. Such translations are handled within the
          scope of this function.
     '''
-    val_format_options = unrendered_options.replace(
+    val_format_options = unrendered_options.merge(
         FormatOptions(top_dig_place=new_top_digit,
                       round_mode=RoundMode.PREC,
                       precision=prec,
@@ -260,7 +260,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
                       prefix_exp=False,
                       parts_per_exp=False))
 
-    unc_format_options = val_format_options.replace(
+    unc_format_options = val_format_options.merge(
         FormatOptions(sign_mode=SignMode.NEGATIVE))
 
     # Optional parentheses needed to handle (nan)e+00 case
