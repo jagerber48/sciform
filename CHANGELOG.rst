@@ -1,11 +1,11 @@
-0.25.0(2023-07-31)
+0.25.0(2023-08-02)
 ------------------
 
 * **[BREAKING]** ``template`` option remove from ``FormatOptions``
   constructor.
-  New ``FormatOptions`` instances can be constructed using the
-  configuration of an existing ``FormatOptions`` instance by calling
-  the `replace()` method on the existing ``FormatOptions``.
+  New ``FormatOptions`` instances can be constructed from two existing
+  ``FormatOptions`` instances using the ``merge()`` method.
+* Minor documentation improvements
 
 0.24.0 (2023-07-30)
 -------------------
