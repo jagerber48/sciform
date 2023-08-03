@@ -249,23 +249,19 @@ def format_val_unc(val: Decimal, unc: Decimal,
          'e+03' or similar. Such translations are handled within the
          scope of this function.
     '''
-    val_format_options = FormatOptions(
-        template=unrendered_options,
-        top_dig_place=new_top_digit,
-        round_mode=RoundMode.PREC,
-        precision=prec,
-        exp_mode=exp_mode,
-        exp=exp,
-        superscript_exp=False,
-        latex=False,
-        prefix_exp=False,
-        parts_per_exp=False
-    )
+    val_format_options = unrendered_options.merge(
+        FormatOptions(top_dig_place=new_top_digit,
+                      round_mode=RoundMode.PREC,
+                      precision=prec,
+                      exp_mode=exp_mode,
+                      exp=exp,
+                      superscript_exp=False,
+                      latex=False,
+                      prefix_exp=False,
+                      parts_per_exp=False))
 
-    unc_format_options = FormatOptions(
-        template=val_format_options,
-        sign_mode=SignMode.NEGATIVE,
-    )
+    unc_format_options = val_format_options.merge(
+        FormatOptions(sign_mode=SignMode.NEGATIVE))
 
     # Optional parentheses needed to handle (nan)e+00 case
     mantissa_exp_pattern = re.compile(

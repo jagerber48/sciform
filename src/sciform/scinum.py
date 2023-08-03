@@ -9,7 +9,9 @@ class SciNum:
     """
     :class:`SciNum` objects are used in combination with the
     :mod:`sciform` format specification mini language for scientific
-    formatting of numbers.
+    formatting of numbers. Any options not configured by the format
+    specification will be populated with global default settings at
+    format time.
 
     >>> from sciform import SciNum
     >>> snum = SciNum(123456.654321)
@@ -34,7 +36,8 @@ class SciNumUnc:
     an uncertainty, for scientific formatting. This class is used in
     combination with the :mod:`sciform` format specification mini
     language to apply scientific formatting to the value/uncertainty
-    pair.
+    pair. Any options not configured by the format specification will be
+    populated with global default settings at format time.
 
     >>> from sciform import SciNumUnc
     >>> snumunc = SciNumUnc(123456.654321, 0.000002)
