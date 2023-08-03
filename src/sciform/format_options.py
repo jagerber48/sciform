@@ -38,8 +38,8 @@ class RenderedFormatOptions:
 
 
 def _merge_dicts(left: dict, right: dict) -> dict:
-    return {**left, **{key: val for key, val in right.items()
-                       if val is not None}}
+    right_pruned = {key: val for key, val in right.items() if val is not None}
+    return {**left, **right_pruned}
 
 
 ExpReplaceDict = dict[int, Union[str, None]]
@@ -301,8 +301,11 @@ class FormatOptions:
     def render(
             self, defaults: RenderedFormatOptions = None
                ) -> RenderedFormatOptions:
-        return RenderedFormatOptions(**_merge_dicts(
-            asdict(defaults or get_global_defaults()), asdict(self)))
+        if defaults is None:
+            defaults = get_global_defaults()
+        return RenderedFormatOptions(
+            **_merge_dicts(asdict(defaults), asdict(self))
+        )
 
 
 PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
