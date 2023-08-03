@@ -1,5 +1,5 @@
 from typing import Union, get_args
-from dataclasses import dataclass, asdict, InitVar, replace
+from dataclasses import dataclass, asdict, InitVar
 from pprint import pprint
 
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
@@ -35,6 +35,11 @@ class RenderedFormatOptions:
     bracket_unc_remove_seps: bool
     unicode_pm: bool
     unc_pm_whitespace: bool
+
+
+def _merge_dicts(left: dict, right: dict) -> dict:
+    return {**left, **{key: val for key, val in right.items()
+                       if val is not None}}
 
 
 ExpReplaceDict = dict[int, Union[str, None]]
@@ -273,27 +278,31 @@ class FormatOptions:
             if -3 not in self.extra_parts_per_forms:
                 self.extra_parts_per_forms[-3] = 'ppth'
 
-    def replace(self, changed_options):
-        changes = dict()
-        for key, value in asdict(changed_options).items():
-            if value is not None:
-                changes[key] = value
-        return replace(self, **changes)
+    def replace(self, other: 'FormatOptions') -> 'FormatOptions':
+        """
+        Generate a new :class:`FormatOptions` instance from the current
+        instance and another :class:`FormatOptions` instance,
+        ``other``. The options for the new :class:`FormatOptions` are
+        constructed by first taking the
+
+        The options for the new
+        :class:`FormatOptions` instance are the same options as those
+        for the current instance, except that any options present in the
+        ``changed_options`` instance will overwrite those of the
+        current instance.
+
+        :param other: :class:`FormatOptions` instance
+          containing options that will overwrite those of the current
+          instance.
+        :return: New :class:`FormatOptions` instance
+        """
+        return FormatOptions(**_merge_dicts(asdict(self), asdict(other)))
 
     def render(
-            self,
-            default_options: RenderedFormatOptions = None
-    ) -> RenderedFormatOptions:
-        if default_options is None:
-            default_options = get_global_defaults()
-        default_dict = asdict(default_options)
-        kwargs = dict()
-        for key, value in asdict(self).items():
-            if value is not None:
-                kwargs[key] = value
-            else:
-                kwargs[key] = default_dict[key]
-        return RenderedFormatOptions(**kwargs)
+            self, defaults: RenderedFormatOptions = None
+               ) -> RenderedFormatOptions:
+        return RenderedFormatOptions(**_merge_dicts(
+            asdict(defaults or get_global_defaults()), asdict(self)))
 
 
 PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
