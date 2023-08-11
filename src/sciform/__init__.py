@@ -1,4 +1,4 @@
-__version__ = "0.25.1"
+__version__ = "0.25.2"
 
 from sciform.format_options import FormatOptions
 from sciform.formatter import Formatter
