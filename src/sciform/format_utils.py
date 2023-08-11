@@ -171,7 +171,7 @@ def get_round_digit(num: Decimal,
     if round_mode is RoundMode.SIG_FIG:
         if precision is AutoPrec:
             if pdg_sig_figs:
-                round_digit = get_pdg_sig_figs(num)
+                round_digit = get_pdg_round_digit(num)
             else:
                 round_digit = get_bottom_digit(num)
         else:
