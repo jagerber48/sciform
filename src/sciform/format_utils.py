@@ -129,38 +129,53 @@ def get_sign_str(num: Decimal, sign_mode: SignMode) -> str:
     return sign_str
 
 
+def get_pdg_round_digit(num: Decimal):
+    """
+    Determine what digit a number should be rounded to according to the
+    particle data group 3-5-4 rounding rules.
+
+    See
+    https://pdg.lbl.gov/2010/reviews/rpp2010-rev-rpp-intro.pdf
+    Section 5.2
+    """
+    top_digit = get_top_digit(num)
+
+    # Bring num to be between 100 and 1000.
+    num_top_three_digs = num * 10 ** (2 - top_digit)
+    num_top_three_digs = round(num_top_three_digs, 0)
+    new_top_digit = get_top_digit(num_top_three_digs)
+    num_top_three_digs = num_top_three_digs * 10 ** (2 - new_top_digit)
+    if 100 <= num_top_three_digs <= 354:
+        round_digit = top_digit - 1
+    elif 355 <= num_top_three_digs <= 949:
+        round_digit = top_digit
+    elif 950 <= num_top_three_digs <= 999:
+        '''
+        Here we set the round digit equal to the top digit. But since 
+        the top three digits are >= 950 this means they will be rounded
+        up to 1000. So with round digit set to the top digit this will
+        correspond to displaying two digits of uncertainty: "10".
+        e.g. 123.45632 +/- 0.987 would be rounded as 123.5 +/- 1.0.
+        '''
+        round_digit = top_digit
+    else:
+        raise ValueError
+
+    return round_digit
+
+
 def get_round_digit(num: Decimal,
                     round_mode: RoundMode,
                     precision: Union[int, type(AutoPrec)],
                     pdg_sig_figs: bool = False) -> int:
     if round_mode is RoundMode.SIG_FIG:
-        top_digit = get_top_digit(num)
         if precision is AutoPrec:
-            bottom_digit = get_bottom_digit(num)
-            if not pdg_sig_figs:
-                round_digit = bottom_digit
+            if pdg_sig_figs:
+                round_digit = get_pdg_sig_figs(num)
             else:
-                # Bring num to be between 100 and 1000.
-                num_top_three_digs = num * 10**(2-top_digit)
-                num_top_three_digs = round(num_top_three_digs, 0)
-                new_top_digit = get_top_digit(num_top_three_digs)
-                num_top_three_digs = num_top_three_digs * 10**(2-new_top_digit)
-                if 100 <= num_top_three_digs <= 354:
-                    round_digit = top_digit - 1
-                elif 355 <= num_top_three_digs <= 949:
-                    round_digit = top_digit
-                elif 950 <= num_top_three_digs <= 999:
-                    '''
-                    In this case the top three digits will be rounded up to
-                    1000 so round_digit=top_digit will actually correspond to
-                    two significant figures with respect to the rounded value.
-                    This is in accordance with the PDG specification.
-                    '''
-                    round_digit = top_digit
-                else:
-                    raise ValueError(f'{num_top_three_digs} not right')
+                round_digit = get_bottom_digit(num)
         else:
-            round_digit = top_digit - (precision - 1)
+            round_digit = get_top_digit(num) - (precision - 1)
     elif round_mode is RoundMode.PREC:
         if precision is AutoPrec:
             round_digit = get_bottom_digit(num)
