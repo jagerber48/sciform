@@ -176,7 +176,7 @@ def get_round_digit(num: Decimal,
                 round_digit = get_bottom_digit(num)
         else:
             round_digit = get_top_digit(num) - (precision - 1)
-    elif round_mode is RoundMode.PREC:
+    elif round_mode is RoundMode.DIG_PLACE:
         if precision is AutoPrec:
             round_digit = get_bottom_digit(num)
         else:

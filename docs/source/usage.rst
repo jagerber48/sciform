@@ -45,7 +45,7 @@ at formatting time.
 
 >>> from sciform import FormatOptions as Fo
 >>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
->>> sform = Formatter(Fo(round_mode=RoundMode.PREC,
+>>> sform = Formatter(Fo(round_mode=RoundMode.DIG_PLACE,
 ...                      precision=6,
 ...                      upper_separator=GroupingSeparator.SPACE,
 ...                      lower_separator=GroupingSeparator.SPACE))

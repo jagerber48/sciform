@@ -9,7 +9,7 @@
 * Refactor ``get_pdg_round_digit()`` into a dedicated function.
 
 0.25.0 (2023-08-02)
-------------------
+-------------------
 
 * **[BREAKING]** ``template`` option removed from ``FormatOptions``
   constructor.

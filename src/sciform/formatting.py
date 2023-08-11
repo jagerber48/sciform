@@ -146,7 +146,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
                    unrendered_options: FormatOptions):
     options = unrendered_options.render()
 
-    if options.round_mode is RoundMode.PREC:
+    if options.round_mode is RoundMode.DIG_PLACE:
         warn('Precision round mode not available for value/uncertainty '
              'formatting. Rounding is always applied as significant figures '
              'for the uncertainty.')
@@ -251,7 +251,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
     '''
     val_format_options = unrendered_options.merge(
         FormatOptions(top_dig_place=new_top_digit,
-                      round_mode=RoundMode.PREC,
+                      round_mode=RoundMode.DIG_PLACE,
                       precision=prec,
                       exp_mode=exp_mode,
                       exp=exp,
