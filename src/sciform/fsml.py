@@ -15,7 +15,7 @@ pattern = re.compile(r'''^
                          (?P<lower_separator>[ns_])?
                          (?:(?P<round_mode>[.!])(?P<prec>[+-]?\d+))?
                          (?P<exp_mode>[fF%eErRbB])?
-                         (?:x(?P<exp>[+-]?\d+))?
+                         (?:x(?P<exp_val>[+-]?\d+))?
                          (?P<prefix_mode>p)?
                          (?P<bracket_unc>\(\))?
                          $''', re.VERBOSE)
@@ -110,7 +110,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
         capitalize = None
         exp_mode = None
 
-    exp = match.group('exp')
+    exp = match.group('exp_val')
     if exp is not None:
         exp = int(exp)
     else:
@@ -138,7 +138,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
         round_mode=round_mode,
         ndigits=precision,
         exp_mode=exp_mode,
-        exp=exp,
+        exp_val=exp,
         capitalize=capitalize,
         prefix_exp=prefix_exp,
         bracket_unc=bracket_unc,

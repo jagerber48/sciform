@@ -2,9 +2,9 @@ from typing import Literal
 from enum import Enum
 
 
-class AutoExp:
+class AutoExpVal:
     """
-    Flag for auto-exponent calculation mode. Set ``exp=AutoExp`` or an
+    Flag for auto-exponent calculation mode. Set ``exp_val=AutoExpVal`` or an
     integer.
 
       * For scientific exponent mode the base-10 exponent is selected so

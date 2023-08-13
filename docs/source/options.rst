@@ -160,12 +160,12 @@ or binary IEC mode, then the requested exponent is rounded down to the
 nearest multiple of 3 or 10.
 
 >>> sform = Formatter(Fo(exp_mode=ExpMode.SCIENTIFIC,
-...                      exp=3))
+...                      exp_val=3))
 >>> print(sform(123.456))
 0.123456e+03
 
 To explicitly force :mod:`sciform` to automatically select the exponent
-then use the :class:`AutoExp` option by passing ``exp=AutoExp``.
+then use the :class:`AutoExpVal` option by passing ``exp_val=AutoExpVal``.
 This is the default value in the global configuration.
 
 Exponent String Replacement
@@ -478,7 +478,7 @@ The ``latex`` option can be chosen to convert strings into latex
 parseable codes.
 
 >>> sform = Formatter(Fo(exp_mode=ExpMode.SCIENTIFIC,
-...                      exp=-1,
+...                      exp_val=-1,
 ...                      upper_separator=GroupingSeparator.UNDERSCORE,
 ...                      latex=True))
 >>> print(sform(12345))

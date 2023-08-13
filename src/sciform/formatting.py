@@ -2,7 +2,7 @@ from warnings import warn
 import re
 from decimal import Decimal
 
-from sciform.modes import ExpMode, SignMode, AutoExp, RoundMode
+from sciform.modes import ExpMode, SignMode, AutoExpVal, RoundMode
 from sciform.format_options import FormatOptions, RenderedFormatOptions
 from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
                                   get_top_digit,
@@ -26,8 +26,8 @@ def format_non_inf(num: Decimal, options: RenderedFormatOptions) -> str:
     if options.nan_inf_exp:
         exp_mode = options.exp_mode
 
-        exp = options.exp
-        if options.exp is AutoExp:
+        exp = options.exp_val
+        if options.exp_val is AutoExpVal:
             exp = 0
 
         if exp_mode is ExpMode.FIXEDPOINT:
@@ -79,7 +79,7 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
         num *= 100
         num = num.normalize()
 
-    exp = options.exp
+    exp = options.exp_val
     round_mode = options.round_mode
     exp_mode = options.exp_mode
     precision = options.ndigits
@@ -216,15 +216,15 @@ def format_val_unc(val: Decimal, unc: Decimal,
     _, exp, _ = get_mantissa_exp_base(
         exp_driver,
         exp_mode=options.exp_mode,
-        exp=options.exp)
+        exp_val=options.exp_val)
     val_mantissa, _, _ = get_mantissa_exp_base(
         val_rounded,
         exp_mode=exp_mode,
-        exp=exp)
+        exp_val=exp)
     unc_mantissa, _, _ = get_mantissa_exp_base(
         unc_rounded,
         exp_mode=exp_mode,
-        exp=exp)
+        exp_val=exp)
 
     prec = -round_digit + exp
 
@@ -254,7 +254,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
                       round_mode=RoundMode.DIG_PLACE,
                       ndigits=prec,
                       exp_mode=exp_mode,
-                      exp=exp,
+                      exp_val=exp,
                       superscript_exp=False,
                       latex=False,
                       prefix_exp=False,

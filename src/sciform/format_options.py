@@ -5,13 +5,13 @@ from pprint import pprint
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
                            DecimalGroupingSeparators, RoundMode, ExpMode,
-                           AutoExp, AutoRound)
+                           AutoExpVal, AutoRound)
 
 
 @dataclass(frozen=True)
 class RenderedFormatOptions:
     exp_mode: ExpMode
-    exp: Union[int, type(AutoExp)]
+    exp_val: Union[int, type(AutoExpVal)]
     round_mode: RoundMode
     ndigits: Union[int, type(AutoRound)]
     upper_separator: UpperGroupingSeparators
@@ -66,12 +66,12 @@ class FormatOptions:
     :class:`FormatOptions` object:
 
     * ``ndigits`` >= 1 for significant figure rounding mode
-    * ``exp`` must be consistent with the exponent mode:
+    * ``exp_val`` must be consistent with the exponent mode:
 
-      * ``exp`` must be 0 for fixed point and percent modes
-      * ``exp`` must be a multiple of 3 for engineering and shifted
+      * ``exp_val`` must be 0 for fixed point and percent modes
+      * ``exp_val`` must be a multiple of 3 for engineering and shifted
         engineering modes
-      * ``exp`` must be a multiple of 10 for binary iec mode
+      * ``exp_val`` must be a multiple of 10 for binary iec mode
 
     * ``upper_separator`` may be any :class:`GroupingSeparator` but must
       be different from ``decimal_separator``
@@ -84,7 +84,7 @@ class FormatOptions:
 
     :param exp_mode: :class:`ExpMode` indicating the formatting
       mode to be used.
-    :param exp: :class:`int` or :class:`AutoExp` indicating the value which
+    :param exp_val: :class:`int` or :class:`AutoExpVal` indicating the value which
       should be used for the exponent. This parameter is ignored for the
       fixed point exponent mode. For engineering, engineering shifted,
       and binary iec modes, if this parameter is not consistent with the
@@ -172,7 +172,7 @@ class FormatOptions:
       ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
     """
     exp_mode: ExpMode = None
-    exp: Union[int, type(AutoExp)] = None
+    exp_val: Union[int, type(AutoExpVal)] = None
     round_mode: RoundMode = None
     ndigits: Union[int, type(AutoRound)] = None
     upper_separator: UpperGroupingSeparators = None
@@ -209,23 +209,23 @@ class FormatOptions:
                     raise ValueError(f'Precision must be >= 1 for sig fig '
                                      f'rounding, not {self.ndigits}.')
 
-        if self.exp is not AutoExp and self.exp is not None:
+        if self.exp_val is not AutoExpVal and self.exp_val is not None:
             if (self.exp_mode is ExpMode.FIXEDPOINT
                     or self.exp_mode is ExpMode.PERCENT):
-                if self.exp != 0:
+                if self.exp_val != 0:
                     raise ValueError(f'Exponent must must be 0, not '
-                                     f'exp={self.exp}, for fixed point and '
+                                     f'exp_val={self.exp_val}, for fixed point and '
                                      f'percent exponent modes.')
             elif (self.exp_mode is ExpMode.ENGINEERING
                   or self.exp_mode is ExpMode.ENGINEERING_SHIFTED):
-                if self.exp % 3 != 0:
+                if self.exp_val % 3 != 0:
                     raise ValueError(f'Exponent must be a multiple of 3, not '
-                                     f'exp={self.exp}, for engineering '
+                                     f'exp_val={self.exp_val}, for engineering '
                                      f'exponent modes.')
             elif self.exp_mode is ExpMode.BINARY_IEC:
-                if self.exp % 10 != 0:
+                if self.exp_val % 10 != 0:
                     raise ValueError(f'Exponent must be a multiple of 10, not '
-                                     f'exp={self.exp}, for binary IEC '
+                                     f'exp_val={self.exp_val}, for binary IEC '
                                      f'exponent mode.')
 
         if self.upper_separator is not None:
@@ -307,7 +307,7 @@ class FormatOptions:
 
 PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
     exp_mode=ExpMode.FIXEDPOINT,
-    exp=AutoExp,
+    exp_val=AutoExpVal,
     round_mode=RoundMode.SIG_FIG,
     ndigits=AutoRound,
     upper_separator=GroupingSeparator.NONE,

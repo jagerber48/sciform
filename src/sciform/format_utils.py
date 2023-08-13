@@ -5,7 +5,7 @@ import re
 from copy import copy
 from decimal import Decimal
 
-from sciform.modes import ExpMode, RoundMode, SignMode, AutoExp, AutoRound
+from sciform.modes import ExpMode, RoundMode, SignMode, AutoExpVal, AutoRound
 from sciform.prefix import (si_val_to_prefix_dict, iec_val_to_prefix_dict,
                             pp_val_to_prefix_dict)
 
@@ -39,7 +39,8 @@ def get_top_and_bottom_digit(num: Decimal) -> tuple[int, int]:
 def get_mantissa_exp_base(
         num: Decimal,
         exp_mode: ExpMode,
-        exp: Union[int, type(AutoExp)] = None) -> (Decimal, int, int):
+        exp_val: Union[int, type(AutoExpVal)] = None
+) -> (Decimal, int, int):
     if (exp_mode is ExpMode.BINARY
             or exp_mode is ExpMode.BINARY_IEC):
         base = 2
@@ -48,52 +49,52 @@ def get_mantissa_exp_base(
 
     if not num.is_finite():
         mantissa = num
-        if exp is AutoExp:
-            exp = 0
+        if exp_val is AutoExpVal:
+            exp_val = 0
     elif num == 0:
         mantissa = Decimal(0)
-        if exp is AutoExp:
-            exp = 0
+        if exp_val is AutoExpVal:
+            exp_val = 0
     else:
         if exp_mode is ExpMode.FIXEDPOINT or exp_mode is ExpMode.PERCENT:
-            if exp is not AutoExp:
-                if exp != 0:
+            if exp_val is not AutoExpVal:
+                if exp_val != 0:
                     warn('Attempt to set non-zero exponent explicity in fixed '
                          'point or percent exponent mode. Coercing exponent '
                          'to 0.')
-            exp = 0
+            exp_val = 0
         elif exp_mode is ExpMode.SCIENTIFIC:
-            if exp is AutoExp:
-                exp = get_top_digit(num)
+            if exp_val is AutoExpVal:
+                exp_val = get_top_digit(num)
         elif (exp_mode is ExpMode.ENGINEERING
               or exp_mode is ExpMode.ENGINEERING_SHIFTED):
-            if exp is AutoExp:
-                exp = get_top_digit(num)
+            if exp_val is AutoExpVal:
+                exp_val = get_top_digit(num)
                 if exp_mode is ExpMode.ENGINEERING:
-                    exp = (exp // 3) * 3
+                    exp_val = (exp_val // 3) * 3
                 else:
-                    exp = ((exp + 1) // 3) * 3
+                    exp_val = ((exp_val + 1) // 3) * 3
             else:
-                if exp % 3 != 0:
+                if exp_val % 3 != 0:
                     warn('Attempt to set exponent explicity to a non-integer '
                          'multiple of 3 in engineering mode. Coercing to the '
                          'next lower multiple of 3.')
-                    exp = (exp // 3) * 3
+                    exp_val = (exp_val // 3) * 3
         elif (exp_mode is ExpMode.BINARY
               or exp_mode is ExpMode.BINARY_IEC):
-            if exp is AutoExp:
-                exp = get_top_digit(num, binary=True)
+            if exp_val is AutoExpVal:
+                exp_val = get_top_digit(num, binary=True)
                 if exp_mode is ExpMode.BINARY_IEC:
-                    exp = (exp // 10) * 10
+                    exp_val = (exp_val // 10) * 10
             else:
-                if exp_mode is ExpMode.BINARY_IEC and exp % 10 != 0:
+                if exp_mode is ExpMode.BINARY_IEC and exp_val % 10 != 0:
                     warn('Attempt to set exponent explicity to a non-integer '
                          'multiple of 10 in binary IEC mode. Coercing to the '
                          'next lower multiple of 10.')
-                    exp = (exp // 10) * 10
-        mantissa = num * Decimal(base)**Decimal(-exp)
+                    exp_val = (exp_val // 10) * 10
+        mantissa = num * Decimal(base)**Decimal(-exp_val)
         mantissa = mantissa.normalize()
-    return mantissa, exp, base
+    return mantissa, exp_val, base
 
 
 def get_exp_str(exp: int, exp_mode: ExpMode,

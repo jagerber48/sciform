@@ -144,7 +144,7 @@ package default settings):
 >>> from sciform import print_global_defaults
 >>> print_global_defaults()
 {'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,
- 'exp': <class 'sciform.modes.AutoExp'>,
+ 'exp_val': <class 'sciform.modes.AutoExpVal'>,
  'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
  'ndigits': <class 'sciform.modes.AutoRound'>,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
@@ -183,7 +183,7 @@ unchanged.
 ...                        decimal_separator=GroupingSeparator.COMMA))
 >>> print_global_defaults()
 {'exp_mode': <ExpMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
- 'exp': <class 'sciform.modes.AutoExp'>,
+ 'exp_val': <class 'sciform.modes.AutoExpVal'>,
  'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
  'ndigits': 4,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
