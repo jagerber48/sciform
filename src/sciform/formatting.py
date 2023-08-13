@@ -82,7 +82,7 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
     exp = options.exp
     round_mode = options.round_mode
     exp_mode = options.exp_mode
-    precision = options.precision
+    precision = options.ndigits
     mantissa, temp_exp, base = get_mantissa_exp_base(num, exp_mode, exp)
     round_digit = get_round_digit(mantissa, round_mode, precision)
     mantissa_rounded = round(mantissa, -round_digit)
@@ -98,7 +98,7 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
 
     if mantissa_rounded == 0:
         '''
-        This catches an edge case involving negative precision when the
+        This catches an edge case involving negative ndigits when the
         resulting mantissa is zero after the second rounding. This
         result is technically correct (e.g. 0e+03 = 0e+00), but sciform
         always presents zero values with an exponent of zero.
@@ -165,7 +165,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
         round_driver = val
 
     round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
-                                  options.precision, options.pdg_sig_figs)
+                                  options.ndigits, options.pdg_sig_figs)
     if unc.is_finite():
         unc_rounded = round(unc, -round_digit)
     else:
@@ -184,7 +184,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
         directly in the first call to get_round_digit.
         '''
         round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
-                                      options.precision, options.pdg_sig_figs)
+                                      options.ndigits, options.pdg_sig_figs)
         if unc_rounded.is_finite():
             unc_rounded = round(unc_rounded, -round_digit)
         if val_rounded.is_finite():
@@ -238,7 +238,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
 
     '''
     We will format the val and unc mantissas
-       * using precision rounding mode with the precision calculated
+       * using ndigits rounding mode with the ndigits calculated
          above
        * With the optionally shared top digit calculated above
        * With the calculated shared exponent
@@ -252,7 +252,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
     val_format_options = unrendered_options.merge(
         FormatOptions(top_dig_place=new_top_digit,
                       round_mode=RoundMode.DIG_PLACE,
-                      precision=prec,
+                      ndigits=prec,
                       exp_mode=exp_mode,
                       exp=exp,
                       superscript_exp=False,

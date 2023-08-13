@@ -12,7 +12,7 @@ class TestConfig(unittest.TestCase):
                 sign_mode=SignMode.ALWAYS,
                 exp_mode=ExpMode.SCIENTIFIC,
                 round_mode=RoundMode.SIG_FIG,
-                precision=2,
+                ndigits=2,
                 decimal_separator=GroupingSeparator.COMMA)):
             during_str = f'{num}'
         after_str = f'{num}'

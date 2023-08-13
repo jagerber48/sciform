@@ -13,7 +13,7 @@ class RenderedFormatOptions:
     exp_mode: ExpMode
     exp: Union[int, type(AutoExp)]
     round_mode: RoundMode
-    precision: Union[int, type(AutoPrec)]
+    ndigits: Union[int, type(AutoPrec)]
     upper_separator: UpperGroupingSeparators
     decimal_separator: DecimalGroupingSeparators
     lower_separator: LowerGroupingSeparators
@@ -65,7 +65,7 @@ class FormatOptions:
     The following checks are performed when creating a new
     :class:`FormatOptions` object:
 
-    * ``precision`` >= 1 for significant figure rounding mode
+    * ``ndigits`` >= 1 for significant figure rounding mode
     * ``exp`` must be consistent with the exponent mode:
 
       * ``exp`` must be 0 for fixed point and percent modes
@@ -94,7 +94,7 @@ class FormatOptions:
     :param round_mode: :class:`RoundMode` indicating whether to round
       the number based on significant figures or digits past the
       decimal point
-    :param precision: :class:`int` or :class:`AutoPrec` sentinel indicating
+    :param ndigits: :class:`int` or :class:`AutoPrec` sentinel indicating
       how many significant figures or digits past the decimal point to
       include for rounding. Must be >= 1 for significant figure
       rounding. May be any integer for digits-past-the-decimal rounding.
@@ -174,7 +174,7 @@ class FormatOptions:
     exp_mode: ExpMode = None
     exp: Union[int, type(AutoExp)] = None
     round_mode: RoundMode = None
-    precision: Union[int, type(AutoPrec)] = None
+    ndigits: Union[int, type(AutoPrec)] = None
     upper_separator: UpperGroupingSeparators = None
     decimal_separator: DecimalGroupingSeparators = None
     lower_separator: LowerGroupingSeparators = None
@@ -204,10 +204,10 @@ class FormatOptions:
     def __post_init__(self, add_c_prefix, add_small_si_prefixes,
                       add_ppth_form):
         if self.round_mode is RoundMode.SIG_FIG:
-            if isinstance(self.precision, int):
-                if self.precision < 1:
+            if isinstance(self.ndigits, int):
+                if self.ndigits < 1:
                     raise ValueError(f'Precision must be >= 1 for sig fig '
-                                     f'rounding, not {self.precision}.')
+                                     f'rounding, not {self.ndigits}.')
 
         if self.exp is not AutoExp and self.exp is not None:
             if (self.exp_mode is ExpMode.FIXEDPOINT
@@ -309,7 +309,7 @@ PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
     exp_mode=ExpMode.FIXEDPOINT,
     exp=AutoExp,
     round_mode=RoundMode.SIG_FIG,
-    precision=AutoPrec,
+    ndigits=AutoPrec,
     upper_separator=GroupingSeparator.NONE,
     decimal_separator=GroupingSeparator.POINT,
     lower_separator=GroupingSeparator.NONE,

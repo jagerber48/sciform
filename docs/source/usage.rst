@@ -46,13 +46,13 @@ at formatting time.
 >>> from sciform import FormatOptions as Fo
 >>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
 >>> sform = Formatter(Fo(round_mode=RoundMode.DIG_PLACE,
-...                      precision=6,
+...                      ndigits=6,
 ...                      upper_separator=GroupingSeparator.SPACE,
 ...                      lower_separator=GroupingSeparator.SPACE))
 >>> print(sform(51413.14159265359))
 51 413.141 593
 >>> sform = Formatter(Fo(round_mode=RoundMode.SIG_FIG,
-...                      precision=4,
+...                      ndigits=4,
 ...                      exp_mode=ExpMode.ENGINEERING))
 >>> print(sform(123456.78))
 123.5e+03
@@ -91,7 +91,7 @@ using the :class:`SciNumUnc` object.
 
 >>> val = 84.3
 >>> unc = 0.2
->>> sform = Formatter(Fo(precision=2))
+>>> sform = Formatter(Fo(ndigits=2))
 >>> print(sform(val, unc))
 84.30 +/- 0.20
 
@@ -146,7 +146,7 @@ package default settings):
 {'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,
  'exp': <class 'sciform.modes.AutoExp'>,
  'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
- 'precision': <class 'sciform.modes.AutoPrec'>,
+ 'ndigits': <class 'sciform.modes.AutoPrec'>,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
  'decimal_separator': <GroupingSeparator.POINT: 'point'>,
  'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,
@@ -179,13 +179,13 @@ unchanged.
 ...                      GroupingSeparator)
 >>> set_global_defaults(Fo(fill_mode=FillMode.ZERO,
 ...                        exp_mode=ExpMode.ENGINEERING_SHIFTED,
-...                        precision=4,
+...                        ndigits=4,
 ...                        decimal_separator=GroupingSeparator.COMMA))
 >>> print_global_defaults()
 {'exp_mode': <ExpMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
  'exp': <class 'sciform.modes.AutoExp'>,
  'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
- 'precision': 4,
+ 'ndigits': 4,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
  'decimal_separator': <GroupingSeparator.COMMA: 'comma'>,
  'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,

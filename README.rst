@@ -58,14 +58,14 @@ strings according to the selected options.
 ...                      GroupingSeparator, ExpMode)
 >>> sform = Formatter(FormatOptions(
 ...             round_mode=RoundMode.DIG_PLACE,
-...             precision=6,
+...             ndigits=6,
 ...             upper_separator=GroupingSeparator.SPACE,
 ...             lower_separator=GroupingSeparator.SPACE))
 >>> print(sform(51413.14159265359))
 51 413.141 593
 >>> sform = Formatter(FormatOptions(
 ...             round_mode=RoundMode.SIG_FIG,
-...             precision=4,
+...             ndigits=4,
 ...             exp_mode=ExpMode.ENGINEERING))
 >>> print(sform(123456.78))
 123.5e+03
@@ -76,7 +76,7 @@ For brevity, the user may consider abbreviating ``FormatOptions`` as
 >>> from sciform import FormatOptions as Fo
 >>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
 >>> sform = Formatter(Fo(round_mode=RoundMode.DIG_PLACE,
-...                      precision=6,
+...                      ndigits=6,
 ...                      upper_separator=GroupingSeparator.SPACE,
 ...                      lower_separator=GroupingSeparator.SPACE))
 >>> print(sform(51413.14159265359))
@@ -96,12 +96,12 @@ to format pairs of numbers as value/uncertainty pairs.
 This can be done by passing two numbers into a ``Formatter`` call or by
 using the ``SciNumUnc`` object.
 
->>> sform = Formatter(Fo(precision=2,
+>>> sform = Formatter(Fo(ndigits=2,
 ...                      upper_separator=GroupingSeparator.SPACE,
 ...                      lower_separator=GroupingSeparator.SPACE))
 >>> print(sform(123456.654321, 0.0034))
 123 456.654 3 +/- 0.003 4
->>> sform = Formatter(Fo(precision=4,
+>>> sform = Formatter(Fo(ndigits=4,
 ...                      exp_mode=ExpMode.ENGINEERING))
 >>> print(sform(123456.654321, 0.0034))
 (123.456654321 +/- 0.000003400)e+03

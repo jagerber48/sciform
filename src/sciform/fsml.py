@@ -136,7 +136,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
         decimal_separator=decimal_separator,
         lower_separator=lower_separator,
         round_mode=round_mode,
-        precision=precision,
+        ndigits=precision,
         exp_mode=exp_mode,
         exp=exp,
         capitalize=capitalize,

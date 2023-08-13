@@ -190,7 +190,7 @@ translations, in addition to those provided by default.
 4.24213 k
 >>> sform = Formatter(Fo(exp_mode=ExpMode.BINARY_IEC,
 ...                      round_mode=RoundMode.SIG_FIG,
-...                      precision=4,
+...                      ndigits=4,
 ...                      prefix_exp=True))
 >>> print(sform(1300))
 1.270 Ki
@@ -286,7 +286,7 @@ This is taken into account before the final presentation.
 In both cases, if no explicit precision value or number of significant
 figures is supplied then all digits of the number are displayed.
 To explicitly force this behavior use the :class:`AutoPrec` class by
-passing ``precision=AutoPrec``.
+passing ``ndigits=AutoPrec``.
 This is the default value in the global configuration.
 
 If the number to be formatted is passed in as a :class:`float` (either
@@ -315,7 +315,7 @@ just by looking at the resulting string.
 >>> from sciform import RoundMode
 >>> sform = Formatter(Fo(exp_mode=ExpMode.ENGINEERING,
 ...                      round_mode=RoundMode.SIG_FIG,
-...                      precision=4))
+...                      ndigits=4))
 >>> print(sform(12345.678))
 12.35e+03
 
@@ -337,7 +337,7 @@ precision presentation.
 >>> from sciform import RoundMode
 >>> sform = Formatter(Fo(exp_mode=ExpMode.ENGINEERING,
 ...                      round_mode=RoundMode.DIG_PLACE,
-...                      precision=4))
+...                      ndigits=4))
 >>> print(sform(12345.678))
 12.3457e+03
 
@@ -346,7 +346,7 @@ For precision rounding, ``precision`` can be any integer.
 >>> from sciform import RoundMode
 >>> sform = Formatter(Fo(exp_mode=ExpMode.FIXEDPOINT,
 ...                      round_mode=RoundMode.DIG_PLACE,
-...                      precision=-2))
+...                      ndigits=-2))
 >>> print(sform(12345.678))
 12300
 
@@ -576,7 +576,7 @@ mode with :class:`AutoPrec` precision and the ``pdg_sig_figs`` flag.
 
 >>> from sciform import AutoPrec
 >>> sform = Formatter(Fo(round_mode=RoundMode.SIG_FIG,
-...                      precision=AutoPrec,
+...                      ndigits=AutoPrec,
 ...                      pdg_sig_figs=True))
 >>> print(sform(1, 0.0123))
 1.000 +/- 0.012
@@ -628,11 +628,11 @@ option:
 
 Or with other options:
 
->>> sform = Formatter(Fo(precision=2,
+>>> sform = Formatter(Fo(ndigits=2,
 ...                      bracket_unc=True))
 >>> print(sform(123.456, 0.789))
 123.46(79)
->>> sform = Formatter(Fo(precision=2,
+>>> sform = Formatter(Fo(ndigits=2,
 ...                      exp_mode=ExpMode.SCIENTIFIC,
 ...                      bracket_unc=True))
 >>> print(sform(123.456, 0.789))

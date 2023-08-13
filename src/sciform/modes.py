@@ -25,11 +25,11 @@ class AutoExp:
 
 class AutoPrec:
     """
-    Flag for auto precision calculation mode. Set ``precision=AutoPrec``
+    Flag for auto ndigits calculation mode. Set ``ndigits=AutoPrec``
     or an integer.
 
-    In both sig fig and precision round modes this auto precision
-    option chooses the precision so that the least significant digit of
+    In both sig fig and ndigits round modes this auto ndigits
+    option chooses the ndigits so that the least significant digit of
     the input number will be displayed.
     For example the number 123.456789 would be displayed with either 9
     significant figures or 6 digits past the decimal point so that in
