@@ -39,7 +39,7 @@ Auto Options
 
 .. autoclass:: AutoExp()
 
-.. autoclass:: AutoPrec()
+.. autoclass:: AutoRound()
 
 Global Configuration
 ====================

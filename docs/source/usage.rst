@@ -146,7 +146,7 @@ package default settings):
 {'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,
  'exp': <class 'sciform.modes.AutoExp'>,
  'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
- 'ndigits': <class 'sciform.modes.AutoPrec'>,
+ 'ndigits': <class 'sciform.modes.AutoRound'>,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
  'decimal_separator': <GroupingSeparator.POINT: 'point'>,
  'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,

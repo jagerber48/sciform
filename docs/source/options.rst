@@ -285,8 +285,8 @@ This is taken into account before the final presentation.
 
 In both cases, if no explicit precision value or number of significant
 figures is supplied then all digits of the number are displayed.
-To explicitly force this behavior use the :class:`AutoPrec` class by
-passing ``ndigits=AutoPrec``.
+To explicitly force this behavior use the :class:`AutoRound` class by
+passing ``ndigits=AutoRound``.
 This is the default value in the global configuration.
 
 If the number to be formatted is passed in as a :class:`float` (either
@@ -572,11 +572,11 @@ The algorithm is as follows.
 
 :mod:`sciform` provides the ability to use this algorithm when
 formatting value/uncertainty pairs by using significant figure rounding
-mode with :class:`AutoPrec` precision and the ``pdg_sig_figs`` flag.
+mode with :class:`AutoRound` precision and the ``pdg_sig_figs`` flag.
 
->>> from sciform import AutoPrec
+>>> from sciform import AutoRound
 >>> sform = Formatter(Fo(round_mode=RoundMode.SIG_FIG,
-...                      ndigits=AutoPrec,
+...                      ndigits=AutoRound,
 ...                      pdg_sig_figs=True))
 >>> print(sform(1, 0.0123))
 1.000 +/- 0.012
