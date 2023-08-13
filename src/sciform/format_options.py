@@ -5,7 +5,7 @@ from pprint import pprint
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
                            DecimalGroupingSeparators, RoundMode, ExpMode,
-                           AutoExp, AutoPrec)
+                           AutoExp, AutoRound)
 
 
 @dataclass(frozen=True)
@@ -13,7 +13,7 @@ class RenderedFormatOptions:
     exp_mode: ExpMode
     exp: Union[int, type(AutoExp)]
     round_mode: RoundMode
-    ndigits: Union[int, type(AutoPrec)]
+    ndigits: Union[int, type(AutoRound)]
     upper_separator: UpperGroupingSeparators
     decimal_separator: DecimalGroupingSeparators
     lower_separator: LowerGroupingSeparators
@@ -94,7 +94,7 @@ class FormatOptions:
     :param round_mode: :class:`RoundMode` indicating whether to round
       the number based on significant figures or digits past the
       decimal point
-    :param ndigits: :class:`int` or :class:`AutoPrec` sentinel indicating
+    :param ndigits: :class:`int` or :class:`AutoRound` sentinel indicating
       how many significant figures or digits past the decimal point to
       include for rounding. Must be >= 1 for significant figure
       rounding. May be any integer for digits-past-the-decimal rounding.
@@ -174,7 +174,7 @@ class FormatOptions:
     exp_mode: ExpMode = None
     exp: Union[int, type(AutoExp)] = None
     round_mode: RoundMode = None
-    ndigits: Union[int, type(AutoPrec)] = None
+    ndigits: Union[int, type(AutoRound)] = None
     upper_separator: UpperGroupingSeparators = None
     decimal_separator: DecimalGroupingSeparators = None
     lower_separator: LowerGroupingSeparators = None
@@ -309,7 +309,7 @@ PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
     exp_mode=ExpMode.FIXEDPOINT,
     exp=AutoExp,
     round_mode=RoundMode.SIG_FIG,
-    ndigits=AutoPrec,
+    ndigits=AutoRound,
     upper_separator=GroupingSeparator.NONE,
     decimal_separator=GroupingSeparator.POINT,
     lower_separator=GroupingSeparator.NONE,

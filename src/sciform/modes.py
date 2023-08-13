@@ -23,9 +23,9 @@ class AutoExp:
     pass
 
 
-class AutoPrec:
+class AutoRound:
     """
-    Flag for auto ndigits calculation mode. Set ``ndigits=AutoPrec``
+    Flag for auto ndigits calculation mode. Set ``ndigits=AutoRound``
     or an integer.
 
     In both sig fig and ndigits round modes this auto ndigits
