@@ -120,8 +120,8 @@ class RoundMode(Enum):
     #: Significant figure rounding
     SIG_FIG = 'sig_fig'
 
-    #: Decimal place
-    DEC_PLACE = 'dig_place'
+    #: Decimal place rounding
+    DEC_PLACE = 'dec_place'
 
 
 class ExpMode(Enum):
