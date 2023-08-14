@@ -66,7 +66,9 @@ class FormatOptions:
     :class:`FormatOptions` object:
 
     * ``ndigits`` >= 1 for significant figure rounding mode
-    * ``exp_val`` must be consistent with the exponent mode:
+    * ``exp_val`` must be consistent with the exponent mode. If
+      ``exp_val`` is specified (i.e. not ``None``) and ``exp_val`` is
+      not ``AutoExpVal`` then
 
       * ``exp_val`` must be 0 for fixed point and percent modes
       * ``exp_val`` must be a multiple of 3 for engineering and shifted
@@ -80,24 +82,22 @@ class FormatOptions:
     * ``lower_separator`` may only be :class:`GroupingSeparator.NONE`,
       :class:`GroupingSeparator.SPACE`, or
       :class:`GroupingSeparator.UNDERSCORE`
-    * Only one of ``prefix_exp`` and ``parts_per_exp`` may be selected.
+    * ``ndigits=None`` or ``ndigits=AutoRound`` if ``pdg_sig_figs=True``
+    * Only one of ``prefix_exp`` and ``parts_per_exp`` may be selected
 
     :param exp_mode: :class:`ExpMode` indicating the formatting
       mode to be used.
-    :param exp_val: :class:`int` or :class:`AutoExpVal` indicating the value which
-      should be used for the exponent. This parameter is ignored for the
-      fixed point exponent mode. For engineering, engineering shifted,
-      and binary iec modes, if this parameter is not consistent with the
-      rules of that mode (e.g. if it is not a multiple of 3), then the
-      exponent is rounded down to the nearest conforming value and a
-      warning is printed.
+    :param exp_val: :class:`int` or :class:`AutoExpVal` sentinel
+      indicating a value which must be used for the exponent. If
+      specified, this value must be 0 for fixed point and percent modes,
+      an integer multiple of 3 for engineering and engineering shifted
+      modes, and an integer multiple of 10 for binary IEC mode.
     :param round_mode: :class:`RoundMode` indicating whether to round
-      the number based on significant figures or digits past the
-      decimal point
-    :param ndigits: :class:`int` or :class:`AutoRound` sentinel indicating
-      how many significant figures or digits past the decimal point to
-      include for rounding. Must be >= 1 for significant figure
-      rounding. May be any integer for digits-past-the-decimal rounding.
+      the number based on significant figures or decimal places.
+    :param ndigits: :class:`int` or :class:`AutoRound` sentinel
+      indicating how many significant digits or which decimal place to
+      use for rounding. Must be >= 1 for significant figure rounding.
+      May be any integer for decimal place rounding.
     :param upper_separator: :class:`GroupingSeparator` indicating the
       character to be used to group digits above the decimal symbol.
     :param decimal_separator: :class:`GroupingSeparator` indicating
@@ -300,7 +300,7 @@ class FormatOptions:
 
         :param other: :class:`FormatOptions` instance containing options
           that will overwrite those of the current instance.
-        :return: New :class:`FormatOptions` instance
+        :return: New :class:`FormatOptions` instance.
         """
         return FormatOptions(**_merge_dicts(asdict(self), asdict(other)))
 

@@ -21,7 +21,7 @@ formatting presents numbers in the form::
 
    num = mantissa * base**exp
 
-Where exp is an integer and ``base`` is typically 10 or 2.
+Where exp is an integer and ``base`` is 10 or 2.
 The different exponent modes control how ``mantissa``, ``base`` and
 ``exp`` are chosen for a given input number ``num``.
 
@@ -154,10 +154,6 @@ Fixed Exponent
 ==============
 
 The user can coerce the exponent for the formatting to a fixed value.
-The requested exponent is ignored in fixed point mode.
-If a fixed exponent is requested for engineering, shifted engineering,
-or binary IEC mode, then the requested exponent is rounded down to the
-nearest multiple of 3 or 10.
 
 >>> sform = Formatter(Fo(exp_mode=ExpMode.SCIENTIFIC,
 ...                      exp_val=3))
@@ -165,8 +161,20 @@ nearest multiple of 3 or 10.
 0.123456e+03
 
 To explicitly force :mod:`sciform` to automatically select the exponent
-then use the :class:`AutoExpVal` option by passing ``exp_val=AutoExpVal``.
+then use the :class:`AutoExpVal` option by passing
+``exp_val=AutoExpVal``.
 This is the default value in the global configuration.
+
+Note that the forced exponent must be consistent with the requested
+exponent mode.
+For fixed point and percent modes an explicit fixed exponent must equal
+0.
+For engineering and shifted engineering modes an explicit fixed exponent
+must be an integer multiple of 3.
+For binary IEC mode an explicit fixed exponent must be an integer
+multiple of 10.
+Because of this constrained behavior, it is recommended to only use a
+fixed exponent with the scientific or binary exponent modes.
 
 Exponent String Replacement
 ===========================
@@ -273,27 +281,31 @@ Rounding
 ========
 
 :mod:`sciform` provides two rounding strategies: rounding based on
-significant figures, and rounding based on digits past the decimal
-point or "precision".
+significant figures, and rounding based on decimal places.
 In both cases, the rounding applies to the mantissa determined after
 identifying the appropriate exponent for display based on the selected
 exponent mode.
 In some cases, the rounding results in a modification to the chosen
-exponent (e.g. presenting 9.99 with a precision of 1 in scientific
-exponent mode).
+exponent (e.g. when presenting ``9.99`` in scientific exponent mode with
+two digits past the decimal point we display  ``"9.99e+00"``, but with
+one digit past the decimal point we display ``"1.0e+01"``).
 This is taken into account before the final presentation.
 
-In both cases, if no explicit precision value or number of significant
-figures is supplied then all digits of the number are displayed.
-To explicitly force this behavior use the :class:`AutoRound` class by
-passing ``ndigits=AutoRound``.
+If the user does not specify the number of significant digits or the
+digits place to which to round, then the decimal numbers are displayed
+with full precision.
+To explicitly request this behavior, the user may use the
+:class:`AutoRound` sentinel by passing ``ndigits=AutoRound``.
 This is the default value in the global configuration.
 
-If the number to be formatted is passed in as a :class:`float` (either
-to a :class:`Formatter`, :class:`SciNum`, or :class:`SciNumUnc`),
-then, if no precision or number of significant figures is supplied, the
-decimal digits of the :class:`float` are truncated to the minimum number
-of digits necessary for round-tripping.
+Note that surprising behavior may be observed if using :class:`float`
+inputs.
+A :class:`float` input is handled by first being converted to a string
+to realize the minimum number decimal digits necessary for the
+:class:`float` to round trip and is then cast to :class:`Decimal`
+instance before determining the mantissa and exponent and applying the
+rounding algorithm.
+See :ref:`dec_and_float` for more details.
 
 Significant Figures
 -------------------
@@ -319,20 +331,21 @@ just by looking at the resulting string.
 >>> print(sform(12345.678))
 12.35e+03
 
-Here ``precision`` input is used to indicate how many significant
+Here the ``ndigits`` input is used to indicate how many significant
 figures should be included.
-for significant figure rounding, ``precision`` must be an integer
+for significant figure rounding, ``ndigits`` must be an integer
 greater than or equal 1.
 
-Precision
----------
+Decimal Place
+-------------
 
-Precision simply indicates the number of digits to be displayed past the
-decimal point.
-So, e.g., a precision of 2 indicates rounding to the hundredths, or
-10\ :sup:`-2`, place.
-Much of the Python built-in string formatting mini-language is based on
-precision presentation.
+For decimal place rounding we specify the decimal place to which we want
+to round using ``ndigits``.
+The convention for ``ndigits`` is the same as that for the built-in
+`round function <https://docs.python.org/3/library/functions.html#round>`_.
+E.g. ``ndigits=2`` means to round to two digits past the decimal place,
+the hundredths or 10\ :sup:`-2` place, so that ``12.987`` would be
+rounded to ``12.99``.
 
 >>> from sciform import RoundMode
 >>> sform = Formatter(Fo(exp_mode=ExpMode.ENGINEERING,
@@ -341,7 +354,7 @@ precision presentation.
 >>> print(sform(12345.678))
 12.3457e+03
 
-For precision rounding, ``precision`` can be any integer.
+It is possibe for ``ndigits <= 0``:
 
 >>> from sciform import RoundMode
 >>> sform = Formatter(Fo(exp_mode=ExpMode.FIXEDPOINT,
@@ -349,6 +362,36 @@ For precision rounding, ``precision`` can be any integer.
 ...                      ndigits=-2))
 >>> print(sform(12345.678))
 12300
+
+Automatic Rounding
+------------------
+
+If the user does not specify ``ndigits`` or the user uses
+:class:`AutoRound` by passing ``ndigits=AutoRound``, then :mod:`sciform`
+will automatically determine how rounding should be performed.
+
+For single value formatting the auto rounding mode will display the
+input number with full precision.
+For :class:`str`, :class:`int` and :class:`Decimal` inputs this is
+unambiguous.
+For :class:`float` inputs the :class:`float` is first converted to a
+string and then converted to a decimal.
+This means that the :class:`float` will be rounded to the minimum
+necessary precision for it to "round-trip".
+See :ref:`dec_and_float` for more details.
+
+For value/uncertainty formatting, if ``ndigits=AutoRound`` and
+``pdg_sig_figs=False``, then the rounding strategy described in the
+previous paragraph is used to round the uncertainty and the value is
+rounded to the same decimal place as the uncertainty.
+If ``ndigits=AutoRound`` and ``pdg_sig_figs=True``, then the uncertainty
+will be rounded according to the Particle Data Group rounding algorithm
+and the value will rounded to the same decimal place as the uncertainty.
+See :ref:`pdg_sig_figs` for more details.
+
+If ``ndigits`` is specified (i.e. not ``None``) but
+``ndigits!=AutoRound`` and ``pdg_sig_figs=True`` then ``ValueError``
+is raised.
 
 Separators
 ==========
@@ -539,6 +582,8 @@ according to the options below.
 >>> print(sform(123.456, 0.789))
 123.456 +/- 0.789
 
+.. _pdg_sig_figs:
+
 Particle Data Group Significant Figures
 ---------------------------------------
 
@@ -584,6 +629,10 @@ mode with :class:`AutoRound` precision and the ``pdg_sig_figs`` flag.
 1.00 +/- 0.05
 >>> print(sform(1, 0.0997))
 1.00 +/- 0.10
+
+If ``ndigits`` is specified (i.e. not ``None``) but
+``ndigits!=AutoRound`` with ``pdg_sig_figs=True`` then ``ValueError`` is
+raised.
 
 Plus Minus Symbol Formatting
 ----------------------------
