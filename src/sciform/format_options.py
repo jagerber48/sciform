@@ -362,6 +362,12 @@ def set_global_defaults(format_options: FormatOptions):
     GLOBAL_DEFAULT_OPTIONS = format_options.render()
 
 
+def set_global_defaults_rendered(
+        rendered_format_options: RenderedFormatOptions):
+    global GLOBAL_DEFAULT_OPTIONS
+    GLOBAL_DEFAULT_OPTIONS = rendered_format_options
+
+
 def reset_global_defaults():
     """
     Reset global default options to package defaults.
@@ -434,10 +440,8 @@ class GlobalDefaultsContext:
         self.initial_global_defaults = None
 
     def __enter__(self):
-        global GLOBAL_DEFAULT_OPTIONS
-        self.initial_global_defaults = GLOBAL_DEFAULT_OPTIONS
-        GLOBAL_DEFAULT_OPTIONS = self.format_options.render()
+        self.initial_global_defaults = get_global_defaults()
+        set_global_defaults(self.format_options)
 
     def __exit__(self, exc_type, exc_value, exc_tb):
-        global GLOBAL_DEFAULT_OPTIONS
-        GLOBAL_DEFAULT_OPTIONS = self.initial_global_defaults
+        set_global_defaults_rendered(self.initial_global_defaults)
