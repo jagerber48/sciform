@@ -37,7 +37,7 @@ separator_mapping = {'n': GroupingSeparator.NONE,
                      None: None}
 
 round_mode_mapping = {'!': RoundMode.SIG_FIG,
-                      '.': RoundMode.DIG_PLACE,
+                      '.': RoundMode.DEC_PLACE,
                       None: None}
 
 
