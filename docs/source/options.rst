@@ -336,7 +336,7 @@ precision presentation.
 
 >>> from sciform import RoundMode
 >>> sform = Formatter(Fo(exp_mode=ExpMode.ENGINEERING,
-...                      round_mode=RoundMode.DIG_PLACE,
+...                      round_mode=RoundMode.DEC_PLACE,
 ...                      ndigits=4))
 >>> print(sform(12345.678))
 12.3457e+03
@@ -345,7 +345,7 @@ For precision rounding, ``precision`` can be any integer.
 
 >>> from sciform import RoundMode
 >>> sform = Formatter(Fo(exp_mode=ExpMode.FIXEDPOINT,
-...                      round_mode=RoundMode.DIG_PLACE,
+...                      round_mode=RoundMode.DEC_PLACE,
 ...                      ndigits=-2))
 >>> print(sform(12345.678))
 12300
