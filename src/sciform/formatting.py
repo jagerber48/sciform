@@ -258,7 +258,8 @@ def format_val_unc(val: Decimal, unc: Decimal,
                       superscript_exp=False,
                       latex=False,
                       prefix_exp=False,
-                      parts_per_exp=False))
+                      parts_per_exp=False,
+                      pdg_sig_figs=False))
 
     unc_format_options = val_format_options.merge(
         FormatOptions(sign_mode=SignMode.NEGATIVE))

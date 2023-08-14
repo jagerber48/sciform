@@ -168,6 +168,10 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
+    def test_pdg_ndigits_error(self):
+        self.assertRaises(ValueError, FormatOptions, pdg_sig_figs=True,
+                          ndigits=0)
+
 
 if __name__ == "__main__":
     unittest.main()
