@@ -1,6 +1,5 @@
 from typing import Union
 from math import floor, log10, log2
-from warnings import warn
 import re
 from copy import copy
 from decimal import Decimal
@@ -32,14 +31,10 @@ def get_bottom_digit(num: Decimal) -> int:
         return exp
 
 
-def get_top_and_bottom_digit(num: Decimal) -> tuple[int, int]:
-    return get_top_digit(num), get_bottom_digit(num)
-
-
 def get_mantissa_exp_base(
         num: Decimal,
         exp_mode: ExpMode,
-        exp_val: Union[int, type(AutoExpVal)] = None
+        input_exp_val: Union[int, type(AutoExpVal)] = None
 ) -> (Decimal, int, int):
     if (exp_mode is ExpMode.BINARY
             or exp_mode is ExpMode.BINARY_IEC):
@@ -49,55 +44,62 @@ def get_mantissa_exp_base(
 
     if not num.is_finite():
         mantissa = num
-        if exp_val is AutoExpVal:
+        if input_exp_val is AutoExpVal:
             exp_val = 0
+        else:
+            exp_val = input_exp_val
     elif num == 0:
         mantissa = Decimal(0)
-        if exp_val is AutoExpVal:
+        if input_exp_val is AutoExpVal:
             exp_val = 0
+        else:
+            exp_val = input_exp_val
     else:
         if exp_mode is ExpMode.FIXEDPOINT or exp_mode is ExpMode.PERCENT:
-            if exp_val is not AutoExpVal:
-                if exp_val != 0:
-                    warn('Attempt to set non-zero exponent explicity in fixed '
-                         'point or percent exponent mode. Coercing exponent '
-                         'to 0.')
+            if input_exp_val is not AutoExpVal and input_exp_val != 0:
+                raise ValueError('Cannot set non-zero exponent in fixed point '
+                                 'or percent exponent mode.')
             exp_val = 0
         elif exp_mode is ExpMode.SCIENTIFIC:
-            if exp_val is AutoExpVal:
+            if input_exp_val is AutoExpVal:
                 exp_val = get_top_digit(num)
+            else:
+                exp_val = input_exp_val
         elif (exp_mode is ExpMode.ENGINEERING
               or exp_mode is ExpMode.ENGINEERING_SHIFTED):
-            if exp_val is AutoExpVal:
+            if input_exp_val is AutoExpVal:
                 exp_val = get_top_digit(num)
                 if exp_mode is ExpMode.ENGINEERING:
                     exp_val = (exp_val // 3) * 3
                 else:
                     exp_val = ((exp_val + 1) // 3) * 3
             else:
-                if exp_val % 3 != 0:
-                    warn('Attempt to set exponent explicity to a non-integer '
-                         'multiple of 3 in engineering mode. Coercing to the '
-                         'next lower multiple of 3.')
-                    exp_val = (exp_val // 3) * 3
+                if input_exp_val % 3 != 0:
+                    raise ValueError(f'Exponent must be an integer multiple '
+                                     f'of 3 in engineering modes, not '
+                                     f'{input_exp_val}.')
+                exp_val = input_exp_val
         elif (exp_mode is ExpMode.BINARY
               or exp_mode is ExpMode.BINARY_IEC):
-            if exp_val is AutoExpVal:
+            if input_exp_val is AutoExpVal:
                 exp_val = get_top_digit(num, binary=True)
                 if exp_mode is ExpMode.BINARY_IEC:
                     exp_val = (exp_val // 10) * 10
             else:
-                if exp_mode is ExpMode.BINARY_IEC and exp_val % 10 != 0:
-                    warn('Attempt to set exponent explicity to a non-integer '
-                         'multiple of 10 in binary IEC mode. Coercing to the '
-                         'next lower multiple of 10.')
-                    exp_val = (exp_val // 10) * 10
+                if exp_mode is ExpMode.BINARY_IEC and input_exp_val % 10 != 0:
+                    raise ValueError(f'Exponent must be an integer multiple '
+                                     f'of 10 in binary IEC mode, not '
+                                     f'{input_exp_val}.')
+                exp_val = input_exp_val
+        else:
+            raise ValueError(f'Unhandled exponent mode {exp_mode}.')
+
         mantissa = num * Decimal(base)**Decimal(-exp_val)
         mantissa = mantissa.normalize()
     return mantissa, exp_val, base
 
 
-def get_exp_str(exp: int, exp_mode: ExpMode,
+def get_exp_str(exp_val: int, exp_mode: ExpMode,
                 capitalize: bool) -> str:
     if exp_mode is exp_mode.FIXEDPOINT or exp_mode is ExpMode.PERCENT:
         exp_str = ''
@@ -105,11 +107,11 @@ def get_exp_str(exp: int, exp_mode: ExpMode,
           or exp_mode is ExpMode.ENGINEERING
           or exp_mode is ExpMode.ENGINEERING_SHIFTED):
         exp_char = 'E' if capitalize else 'e'
-        exp_str = f'{exp_char}{exp:+03d}'
+        exp_str = f'{exp_char}{exp_val:+03d}'
     elif (exp_mode is ExpMode.BINARY
           or exp_mode is ExpMode.BINARY_IEC):
         exp_char = 'B' if capitalize else 'b'
-        exp_str = f'{exp_char}{exp:+03d}'
+        exp_str = f'{exp_char}{exp_val:+03d}'
     else:
         raise ValueError(f'Unhandled format type {exp_mode}')
     return exp_str
@@ -167,21 +169,21 @@ def get_pdg_round_digit(num: Decimal):
 
 def get_round_digit(num: Decimal,
                     round_mode: RoundMode,
-                    precision: Union[int, type(AutoRound)],
+                    ndigits: Union[int, type(AutoRound)],
                     pdg_sig_figs: bool = False) -> int:
     if round_mode is RoundMode.SIG_FIG:
-        if precision is AutoRound:
+        if ndigits is AutoRound:
             if pdg_sig_figs:
                 round_digit = get_pdg_round_digit(num)
             else:
                 round_digit = get_bottom_digit(num)
         else:
-            round_digit = get_top_digit(num) - (precision - 1)
+            round_digit = get_top_digit(num) - (ndigits - 1)
     elif round_mode is RoundMode.DEC_PLACE:
-        if precision is AutoRound:
+        if ndigits is AutoRound:
             round_digit = get_bottom_digit(num)
         else:
-            round_digit = -precision
+            round_digit = -ndigits
     else:
         raise TypeError(f'Unhandled round mode: {round_mode}.')
     return round_digit
