@@ -1,4 +1,4 @@
-0.26.0 (2023-08-14)
+0.26.0 (2023-08-15)
 -------------------
 
 * **[BREAKING]** Rename some format options to make their usage more
