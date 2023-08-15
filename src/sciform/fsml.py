@@ -13,7 +13,7 @@ pattern = re.compile(r'''^
                          (?P<upper_separator>[n,.s_])?
                          (?P<decimal_separator>[.,])?
                          (?P<lower_separator>[ns_])?
-                         (?:(?P<round_mode>[.!])(?P<prec>[+-]?\d+))?
+                         (?:(?P<round_mode>[.!])(?P<ndigits>[+-]?\d+))?
                          (?P<exp_mode>[fF%eErRbB])?
                          (?:x(?P<exp_val>[+-]?\d+))?
                          (?P<prefix_mode>p)?
@@ -81,11 +81,11 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
     round_mode_flag = match.group('round_mode')
     round_mode = round_mode_mapping[round_mode_flag]
 
-    precision = match.group('prec')
-    if precision is not None:
-        precision = int(precision)
+    ndigits = match.group('ndigits')
+    if ndigits is not None:
+        ndigits = int(ndigits)
     else:
-        precision = None
+        ndigits = None
 
     exp_mode = match.group('exp_mode')
     if exp_mode is not None:
@@ -108,13 +108,10 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
                 exp_mode = ExpMode.BINARY
     else:
         capitalize = None
-        exp_mode = None
 
-    exp = match.group('exp_val')
-    if exp is not None:
-        exp = int(exp)
-    else:
-        exp = None
+    exp_val = match.group('exp_val')
+    if exp_val is not None:
+        exp_val = int(exp_val)
 
     prefix_exp = match.group('prefix_mode')
     if prefix_exp is not None:
@@ -136,9 +133,9 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
         decimal_separator=decimal_separator,
         lower_separator=lower_separator,
         round_mode=round_mode,
-        ndigits=precision,
+        ndigits=ndigits,
         exp_mode=exp_mode,
-        exp_val=exp,
+        exp_val=exp_val,
         capitalize=capitalize,
         prefix_exp=prefix_exp,
         bracket_unc=bracket_unc,
