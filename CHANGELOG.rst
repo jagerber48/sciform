@@ -1,3 +1,30 @@
+0.26.0 (2023-08-15)
+-------------------
+
+* **[BREAKING]** Rename some format options to make their usage more
+  clear.
+
+   * ``exp`` to ``exp_val``
+   * ``precision`` to ``ndigits``
+   * ``RoundMode.PREC`` to ``RoundMode.DEC_PLACE``
+   * ``AutoExp`` to ``AutoExpVal``
+   * ``AutoPrec`` to ``AutoRound``
+
+* Raise more exceptions for incorrect options combinations.
+
+   * Raise an exception when using ``pdg_sig_figs`` with a user-supplied
+     ``exp_val``.
+   * Raise exceptions instead of warnings for invalid user-supplied
+     ``exp_val`` in ``get_mantissa_base_exp()``.
+
+* Minor refactor to ``GlobalDefaultsContext``.
+* Documentation:
+
+   * Update documentation to reflect name changes above.
+   * Better centralization of ``float``/``Decimal`` information.
+   * Better explanations of ``AutoExpVal`` and ``AutoRound`` behavior.
+   * More accurate descriptions of some invalid options combinations.
+
 0.25.2 (2023-08-11)
 -------------------
 
@@ -9,7 +36,7 @@
 * Refactor ``get_pdg_round_digit()`` into a dedicated function.
 
 0.25.0 (2023-08-02)
-------------------
+-------------------
 
 * **[BREAKING]** ``template`` option removed from ``FormatOptions``
   constructor.

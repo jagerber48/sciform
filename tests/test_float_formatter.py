@@ -71,11 +71,11 @@ class TestFormatting(unittest.TestCase):
             ]),
             (12345, [
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp=-1,
+                               exp_val=-1,
                                upper_separator=GroupingSeparator.UNDERSCORE,
                                latex=True), r'123\_450\times 10^{-1}'),
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp=3,
+                               exp_val=3,
                                prefix_exp=True,
                                latex=True), r'12.345\text{k}')
             ])
@@ -98,14 +98,14 @@ class TestFormatting(unittest.TestCase):
         cases_list = [
             (123e-3, [
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp=-3,
+                               exp_val=-3,
                                parts_per_exp=True,
                                add_ppth_form=True), '123 ppth'),
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp=-6,
+                               exp_val=-6,
                                parts_per_exp=True), '123000 ppm'),
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp=-2,
+                               exp_val=-2,
                                parts_per_exp=True), '12.3e-02')
             ]),
             (123e-9, [

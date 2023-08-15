@@ -36,6 +36,7 @@ html_theme_options = {
     'navigation_depth': 4,
 }
 todo_include_todos = True
+todo_emit_warnings = True
 
 # For wrapping of text in tables
 html_css_files = [

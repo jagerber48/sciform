@@ -2,9 +2,9 @@ from typing import Literal
 from enum import Enum
 
 
-class AutoExp:
+class AutoExpVal:
     """
-    Flag for auto-exponent calculation mode. Set ``exp=AutoExp`` or an
+    Flag for auto-exponent calculation mode. Set ``exp_val=AutoExpVal`` or an
     integer.
 
       * For scientific exponent mode the base-10 exponent is selected so
@@ -23,13 +23,13 @@ class AutoExp:
     pass
 
 
-class AutoPrec:
+class AutoRound:
     """
-    Flag for auto precision calculation mode. Set ``precision=AutoPrec``
+    Flag for auto ndigits calculation mode. Set ``ndigits=AutoRound``
     or an integer.
 
-    In both sig fig and precision round modes this auto precision
-    option chooses the precision so that the least significant digit of
+    In both sig fig and ndigits round modes this auto ndigits
+    option chooses the ndigits so that the least significant digit of
     the input number will be displayed.
     For example the number 123.456789 would be displayed with either 9
     significant figures or 6 digits past the decimal point so that in
@@ -120,8 +120,8 @@ class RoundMode(Enum):
     #: Significant figure rounding
     SIG_FIG = 'sig_fig'
 
-    #: Digits-past-the-decimal rounding
-    PREC = 'prec'
+    #: Decimal place rounding
+    DEC_PLACE = 'dec_place'
 
 
 class ExpMode(Enum):

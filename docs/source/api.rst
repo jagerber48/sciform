@@ -37,9 +37,9 @@ Mode Enums
 Auto Options
 ============
 
-.. autoclass:: AutoExp()
+.. autoclass:: AutoExpVal()
 
-.. autoclass:: AutoPrec()
+.. autoclass:: AutoRound()
 
 Global Configuration
 ====================

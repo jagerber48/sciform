@@ -45,14 +45,14 @@ at formatting time.
 
 >>> from sciform import FormatOptions as Fo
 >>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
->>> sform = Formatter(Fo(round_mode=RoundMode.PREC,
-...                      precision=6,
+>>> sform = Formatter(Fo(round_mode=RoundMode.DEC_PLACE,
+...                      ndigits=6,
 ...                      upper_separator=GroupingSeparator.SPACE,
 ...                      lower_separator=GroupingSeparator.SPACE))
 >>> print(sform(51413.14159265359))
 51 413.141 593
 >>> sform = Formatter(Fo(round_mode=RoundMode.SIG_FIG,
-...                      precision=4,
+...                      ndigits=4,
 ...                      exp_mode=ExpMode.ENGINEERING))
 >>> print(sform(123456.78))
 123.5e+03
@@ -91,7 +91,7 @@ using the :class:`SciNumUnc` object.
 
 >>> val = 84.3
 >>> unc = 0.2
->>> sform = Formatter(Fo(precision=2))
+>>> sform = Formatter(Fo(ndigits=2))
 >>> print(sform(val, unc))
 84.30 +/- 0.20
 
@@ -100,7 +100,7 @@ using the :class:`SciNumUnc` object.
 >>> print(f'{val_unc:!2}')
 84.30 +/- 0.20
 
-Value/uncertainty pairs can also be formatted in a common parentheses
+Value/uncertainty pairs can also be formatted using a parentheses
 notation in which the uncertainty is displayed in parentheses following
 the value.
 
@@ -111,17 +111,16 @@ Value/uncertainty pairs are formatted according to the following
 algorithm:
 
 #. Rounding is always performed using significant figure rounding
-   applied to the uncertainty. If a ``precision`` is supplied then the
-   uncertainty is rounded to significant figures consistent with the
-   supplied ``precision``. Otherwise the uncertainty is left un-rounded.
-#. The value is rounded to the digit corresponding to the least
+   applied to the uncertainty.
+   See :ref:`rounding` for more details about possible rounding options.
+#. The value is rounded to the decimal place corresponding to the least
    significant digit of the rounded uncertainty.
-#. The value for the exponent is resolved by applying the
-   ``exp_mode`` to the larger of the value and uncertainty.
+#. The value for the exponent is resolved by using ``exp_mode`` and
+   ``exp_val`` with the larger of the value or uncertainty.
 #. The value and uncertainty mantissas are determined according to the
    value of the exponent determined in the previous step.
 #. The value and uncertainty mantissas are formatted together with the
-   exponent according to the user-selected display options.
+   exponent according to other user-selected display options.
 
 .. _global_config:
 
@@ -144,9 +143,9 @@ package default settings):
 >>> from sciform import print_global_defaults
 >>> print_global_defaults()
 {'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,
- 'exp': <class 'sciform.modes.AutoExp'>,
+ 'exp_val': <class 'sciform.modes.AutoExpVal'>,
  'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
- 'precision': <class 'sciform.modes.AutoPrec'>,
+ 'ndigits': <class 'sciform.modes.AutoRound'>,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
  'decimal_separator': <GroupingSeparator.POINT: 'point'>,
  'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,
@@ -179,13 +178,13 @@ unchanged.
 ...                      GroupingSeparator)
 >>> set_global_defaults(Fo(fill_mode=FillMode.ZERO,
 ...                        exp_mode=ExpMode.ENGINEERING_SHIFTED,
-...                        precision=4,
+...                        ndigits=4,
 ...                        decimal_separator=GroupingSeparator.COMMA))
 >>> print_global_defaults()
 {'exp_mode': <ExpMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
- 'exp': <class 'sciform.modes.AutoExp'>,
+ 'exp_val': <class 'sciform.modes.AutoExpVal'>,
  'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
- 'precision': 4,
+ 'ndigits': 4,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
  'decimal_separator': <GroupingSeparator.COMMA: 'comma'>,
  'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,
@@ -269,17 +268,30 @@ or
 :class:`float` instances represent numbers using binary which means
 they are often only approximations of the decimal numbers users have in
 mind when they use :class:`float`.
-By contrast, :class:`Decimal` objects store a string of integers
-representing the decimal digits of the represented number so
-:class:`Decimal` objects are, therefore, exact representations of
+By contrast, :class:`Decimal` objects store sequences of integers
+representing the decimal digits of the represented numbers so,
+:class:`Decimal` instances are, therefore, exact representations of
 decimal numbers.
 
 Both of these representations have finite precision which can cause
 unexpected issues when manipulating numerical data.
-However, the :class:`Decimal` class is much better suited to address
-these issues.
-Internally, the :mod:`sciform` module uses :class:`Decimal`
-representations of the numbers it is formatting.
+However, in the :class:`Decimal` class, the main issue is that
+numbers may be truncated if their precision exceeds the configured
+:class:`Decimal` precision, but the rounding will be as expected.
+:class:`float` instances, unfortunately, may exhibit more surprising
+behavior, as will be explained below.
+For these reasons, the :mod:`sciform` module uses :class:`Decimal`
+representations in its internal formatting algorithms.
+
+Note, however, that :class:`Decimal` arithmetic operations are less
+performant that :class:`float` operations.
+So, the suggested workflow is to store and manipulate numerical data as
+:class:`float` instances, and only convert to :class:`Decimal`, or
+format using :mod:`sciform`, as the final step when numbers are being
+displayed for human readers.
+
+Float issues
+------------
 
 Here I would like to highlight some important facts and possible issues
 with :class:`float` objects that users should be aware of if they are

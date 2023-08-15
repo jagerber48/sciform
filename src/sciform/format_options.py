@@ -5,15 +5,15 @@ from pprint import pprint
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
                            DecimalGroupingSeparators, RoundMode, ExpMode,
-                           AutoExp, AutoPrec)
+                           AutoExpVal, AutoRound)
 
 
 @dataclass(frozen=True)
 class RenderedFormatOptions:
     exp_mode: ExpMode
-    exp: Union[int, type(AutoExp)]
+    exp_val: Union[int, type(AutoExpVal)]
     round_mode: RoundMode
-    precision: Union[int, type(AutoPrec)]
+    ndigits: Union[int, type(AutoRound)]
     upper_separator: UpperGroupingSeparators
     decimal_separator: DecimalGroupingSeparators
     lower_separator: LowerGroupingSeparators
@@ -65,13 +65,15 @@ class FormatOptions:
     The following checks are performed when creating a new
     :class:`FormatOptions` object:
 
-    * ``precision`` >= 1 for significant figure rounding mode
-    * ``exp`` must be consistent with the exponent mode:
+    * ``ndigits`` >= 1 for significant figure rounding mode
+    * ``exp_val`` must be consistent with the exponent mode. If
+      ``exp_val`` is specified (i.e. not ``None``) and ``exp_val`` is
+      not ``AutoExpVal`` then
 
-      * ``exp`` must be 0 for fixed point and percent modes
-      * ``exp`` must be a multiple of 3 for engineering and shifted
+      * ``exp_val`` must be 0 for fixed point and percent modes
+      * ``exp_val`` must be a multiple of 3 for engineering and shifted
         engineering modes
-      * ``exp`` must be a multiple of 10 for binary iec mode
+      * ``exp_val`` must be a multiple of 10 for binary iec mode
 
     * ``upper_separator`` may be any :class:`GroupingSeparator` but must
       be different from ``decimal_separator``
@@ -80,24 +82,22 @@ class FormatOptions:
     * ``lower_separator`` may only be :class:`GroupingSeparator.NONE`,
       :class:`GroupingSeparator.SPACE`, or
       :class:`GroupingSeparator.UNDERSCORE`
-    * Only one of ``prefix_exp`` and ``parts_per_exp`` may be selected.
+    * ``ndigits=None`` or ``ndigits=AutoRound`` if ``pdg_sig_figs=True``
+    * Only one of ``prefix_exp`` and ``parts_per_exp`` may be selected
 
     :param exp_mode: :class:`ExpMode` indicating the formatting
       mode to be used.
-    :param exp: :class:`int` or :class:`AutoExp` indicating the value which
-      should be used for the exponent. This parameter is ignored for the
-      fixed point exponent mode. For engineering, engineering shifted,
-      and binary iec modes, if this parameter is not consistent with the
-      rules of that mode (e.g. if it is not a multiple of 3), then the
-      exponent is rounded down to the nearest conforming value and a
-      warning is printed.
+    :param exp_val: :class:`int` or :class:`AutoExpVal` sentinel
+      indicating a value which must be used for the exponent. If
+      specified, this value must be 0 for fixed point and percent modes,
+      an integer multiple of 3 for engineering and engineering shifted
+      modes, and an integer multiple of 10 for binary IEC mode.
     :param round_mode: :class:`RoundMode` indicating whether to round
-      the number based on significant figures or digits past the
-      decimal point
-    :param precision: :class:`int` or :class:`AutoPrec` sentinel indicating
-      how many significant figures or digits past the decimal point to
-      include for rounding. Must be >= 1 for significant figure
-      rounding. May be any integer for digits-past-the-decimal rounding.
+      the number based on significant figures or decimal places.
+    :param ndigits: :class:`int` or :class:`AutoRound` sentinel
+      indicating how many significant digits or which decimal place to
+      use for rounding. Must be >= 1 for significant figure rounding.
+      May be any integer for decimal place rounding.
     :param upper_separator: :class:`GroupingSeparator` indicating the
       character to be used to group digits above the decimal symbol.
     :param decimal_separator: :class:`GroupingSeparator` indicating
@@ -172,9 +172,9 @@ class FormatOptions:
       ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
     """
     exp_mode: ExpMode = None
-    exp: Union[int, type(AutoExp)] = None
+    exp_val: Union[int, type(AutoExpVal)] = None
     round_mode: RoundMode = None
-    precision: Union[int, type(AutoPrec)] = None
+    ndigits: Union[int, type(AutoRound)] = None
     upper_separator: UpperGroupingSeparators = None
     decimal_separator: DecimalGroupingSeparators = None
     lower_separator: LowerGroupingSeparators = None
@@ -204,30 +204,38 @@ class FormatOptions:
     def __post_init__(self, add_c_prefix, add_small_si_prefixes,
                       add_ppth_form):
         if self.round_mode is RoundMode.SIG_FIG:
-            if isinstance(self.precision, int):
-                if self.precision < 1:
+            if isinstance(self.ndigits, int):
+                if self.ndigits < 1:
                     raise ValueError(f'Precision must be >= 1 for sig fig '
-                                     f'rounding, not {self.precision}.')
+                                     f'rounding, not {self.ndigits}.')
 
-        if self.exp is not AutoExp and self.exp is not None:
+        if (self.pdg_sig_figs and self.ndigits is not None
+                and self.ndigits is not AutoRound):
+            # TODO: test this
+            raise ValueError(f'pdg_sig_figs=True can only be used with '
+                             f'ndigits=AutoRound, not ndigits={self.ndigits}.')
+
+        if self.exp_val is not AutoExpVal and self.exp_val is not None:
+            # TODO: Test these errors
             if (self.exp_mode is ExpMode.FIXEDPOINT
                     or self.exp_mode is ExpMode.PERCENT):
-                if self.exp != 0:
+                if self.exp_val != 0:
                     raise ValueError(f'Exponent must must be 0, not '
-                                     f'exp={self.exp}, for fixed point and '
-                                     f'percent exponent modes.')
+                                     f'exp_val={self.exp_val}, for fixed '
+                                     f'point and percent exponent modes.')
             elif (self.exp_mode is ExpMode.ENGINEERING
                   or self.exp_mode is ExpMode.ENGINEERING_SHIFTED):
-                if self.exp % 3 != 0:
+                if self.exp_val % 3 != 0:
                     raise ValueError(f'Exponent must be a multiple of 3, not '
-                                     f'exp={self.exp}, for engineering '
-                                     f'exponent modes.')
+                                     f'exp_val={self.exp_val}, for '
+                                     f'engineering exponent modes.')
             elif self.exp_mode is ExpMode.BINARY_IEC:
-                if self.exp % 10 != 0:
+                if self.exp_val % 10 != 0:
                     raise ValueError(f'Exponent must be a multiple of 10, not '
-                                     f'exp={self.exp}, for binary IEC '
+                                     f'exp_val={self.exp_val}, for binary IEC '
                                      f'exponent mode.')
 
+        # TODO: Test all these separator errors
         if self.upper_separator is not None:
             if self.upper_separator not in get_args(UpperGroupingSeparators):
                 raise ValueError(f'upper_separator must be in '
@@ -255,6 +263,7 @@ class FormatOptions:
                 raise ValueError('Only one of prefix exponent and parts-per '
                                  'exponent modes may be selected.')
 
+        # TODO: Test that things do and don't get added appropriately
         if add_c_prefix:
             if self.extra_si_prefixes is None:
                 super().__setattr__('extra_si_prefixes', dict())
@@ -291,7 +300,7 @@ class FormatOptions:
 
         :param other: :class:`FormatOptions` instance containing options
           that will overwrite those of the current instance.
-        :return: New :class:`FormatOptions` instance
+        :return: New :class:`FormatOptions` instance.
         """
         return FormatOptions(**_merge_dicts(asdict(self), asdict(other)))
 
@@ -307,9 +316,9 @@ class FormatOptions:
 
 PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
     exp_mode=ExpMode.FIXEDPOINT,
-    exp=AutoExp,
+    exp_val=AutoExpVal,
     round_mode=RoundMode.SIG_FIG,
-    precision=AutoPrec,
+    ndigits=AutoRound,
     upper_separator=GroupingSeparator.NONE,
     decimal_separator=GroupingSeparator.POINT,
     lower_separator=GroupingSeparator.NONE,
@@ -351,6 +360,12 @@ def print_global_defaults():
 def set_global_defaults(format_options: FormatOptions):
     global GLOBAL_DEFAULT_OPTIONS
     GLOBAL_DEFAULT_OPTIONS = format_options.render()
+
+
+def set_global_defaults_rendered(
+        rendered_format_options: RenderedFormatOptions):
+    global GLOBAL_DEFAULT_OPTIONS
+    GLOBAL_DEFAULT_OPTIONS = rendered_format_options
 
 
 def reset_global_defaults():
@@ -425,10 +440,8 @@ class GlobalDefaultsContext:
         self.initial_global_defaults = None
 
     def __enter__(self):
-        global GLOBAL_DEFAULT_OPTIONS
-        self.initial_global_defaults = GLOBAL_DEFAULT_OPTIONS
-        GLOBAL_DEFAULT_OPTIONS = self.format_options.render()
+        self.initial_global_defaults = get_global_defaults()
+        set_global_defaults(self.format_options)
 
     def __exit__(self, exc_type, exc_value, exc_tb):
-        global GLOBAL_DEFAULT_OPTIONS
-        GLOBAL_DEFAULT_OPTIONS = self.initial_global_defaults
+        set_global_defaults_rendered(self.initial_global_defaults)

@@ -30,10 +30,10 @@ class TestFormatting(unittest.TestCase):
                 (FormatOptions(exp_mode=ExpMode.ENGINEERING_SHIFTED,
                                bracket_unc=True), '(0.123456(789))e+03'),
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp=+1,
+                               exp_val=+1,
                                bracket_unc=True), '(12.3456(789))e+01'),
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp=-1,
+                               exp_val=-1,
                                bracket_unc=True), '(1234.56(7.89))e-01'),
             ])
         ]
@@ -59,22 +59,22 @@ class TestFormatting(unittest.TestCase):
         cases_list = [
             ((123.456, 0.789), [
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp=-1,
+                               exp_val=-1,
                                bracket_unc=True), '(1234.56(7.89))e-01'),
                 (FormatOptions(
                     exp_mode=ExpMode.SCIENTIFIC,
-                    exp=-1,
+                    exp_val=-1,
                     bracket_unc_remove_seps=True,
                     bracket_unc=True), '(1234.56(789))e-01'),
             ]),
             ((0.789, 123.456), [
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp=-1,
+                               exp_val=-1,
                                bracket_unc=True), '(7.89(1234.56))e-01'),
                 # Don't remove "embedded" decimal unless val > unc.
                 (FormatOptions(
                     exp_mode=ExpMode.SCIENTIFIC,
-                    exp=-1,
+                    exp_val=-1,
                     bracket_unc_remove_seps=True,
                     bracket_unc=True), '(7.89(1234.56))e-01'),
             ])
@@ -116,14 +116,14 @@ class TestFormatting(unittest.TestCase):
         cases_list = [
             ((12345, 0.2), [
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp=-1,
+                               exp_val=-1,
                                upper_separator=GroupingSeparator.UNDERSCORE,
                                latex=True),
                  r'\left(123\_450 \pm 2\right)\times 10^{-1}'),
 
                 # Latex mode takes precedence over unicode_pm
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp=-1,
+                               exp_val=-1,
                                upper_separator=GroupingSeparator.UNDERSCORE,
                                unicode_pm=True,
                                latex=True),
@@ -167,6 +167,10 @@ class TestFormatting(unittest.TestCase):
         ]
 
         self.run_val_unc_formatter_cases(cases_list)
+
+    def test_pdg_ndigits_error(self):
+        self.assertRaises(ValueError, FormatOptions, pdg_sig_figs=True,
+                          ndigits=0)
 
 
 if __name__ == "__main__":

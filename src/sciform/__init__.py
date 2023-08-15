@@ -1,4 +1,4 @@
-__version__ = "0.25.2"
+__version__ = "0.26.0"
 
 from sciform.format_options import FormatOptions
 from sciform.formatter import Formatter
@@ -11,7 +11,7 @@ from sciform.format_options import (
     print_global_defaults, GlobalDefaultsContext)
 
 from sciform.modes import (FillMode, SignMode, GroupingSeparator, RoundMode,
-                           ExpMode, AutoExp, AutoPrec)
+                           ExpMode, AutoExpVal, AutoRound)
 
 __all__ = ['__version__', 'FormatOptions', 'Formatter', 'SciNum', 'SciNumUnc',
            'set_global_defaults', 'reset_global_defaults',
@@ -19,5 +19,5 @@ __all__ = ['__version__', 'FormatOptions', 'Formatter', 'SciNum', 'SciNumUnc',
            'global_reset_si_prefixes', 'global_add_ppth_form',
            'global_reset_iec_prefixes', 'global_reset_parts_per_forms',
            'print_global_defaults', 'GlobalDefaultsContext', 'FillMode',
-           'SignMode', 'GroupingSeparator', 'RoundMode', 'ExpMode', 'AutoExp',
-           'AutoPrec']
+           'SignMode', 'GroupingSeparator', 'RoundMode', 'ExpMode',
+           'AutoExpVal', 'AutoRound']

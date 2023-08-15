@@ -19,7 +19,7 @@ class Formatter:
     >>> sform = Formatter(FormatOptions(
     ...             exp_mode=ExpMode.ENGINEERING,
     ...             round_mode=RoundMode.SIG_FIG,
-    ...             precision=4))
+    ...             ndigits=4))
     >>> print(sform(12345.678))
     12.35e+03
 
@@ -29,7 +29,7 @@ class Formatter:
     >>> sform = Formatter(FormatOptions(
     ...             exp_mode=ExpMode.ENGINEERING,
     ...             round_mode=RoundMode.SIG_FIG,
-    ...             precision=2))
+    ...             ndigits=2))
     >>> print(sform(12345.678, 3.4))
     (12.3457 +/- 0.0034)e+03
 
