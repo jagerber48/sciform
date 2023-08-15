@@ -221,14 +221,14 @@ class FormatOptions:
                     or self.exp_mode is ExpMode.PERCENT):
                 if self.exp_val != 0:
                     raise ValueError(f'Exponent must must be 0, not '
-                                     f'exp_val={self.exp_val}, for fixed point and '
-                                     f'percent exponent modes.')
+                                     f'exp_val={self.exp_val}, for fixed '
+                                     f'point and percent exponent modes.')
             elif (self.exp_mode is ExpMode.ENGINEERING
                   or self.exp_mode is ExpMode.ENGINEERING_SHIFTED):
                 if self.exp_val % 3 != 0:
                     raise ValueError(f'Exponent must be a multiple of 3, not '
-                                     f'exp_val={self.exp_val}, for engineering '
-                                     f'exponent modes.')
+                                     f'exp_val={self.exp_val}, for '
+                                     f'engineering exponent modes.')
             elif self.exp_mode is ExpMode.BINARY_IEC:
                 if self.exp_val % 10 != 0:
                     raise ValueError(f'Exponent must be a multiple of 10, not '
