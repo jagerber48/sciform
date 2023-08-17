@@ -5,6 +5,9 @@ from sciform.formatting import format_num, format_val_unc
 from sciform.format_utils import Number
 
 
+# TODO: Support SciNum/SciNumUnc input to formatter?
+
+
 class Formatter:
     """
     :class:`Formatter` is used to convert numbers and pairs of numbers
