@@ -23,6 +23,10 @@ class TestFormatting(unittest.TestCase):
             (789, [
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
                                superscript_exp=True), '7.89×10²')
+            ]),
+            (1024, [
+                (FormatOptions(exp_mode=ExpMode.BINARY,
+                               superscript_exp=True), '1×2¹⁰')
             ])
         ]
 
