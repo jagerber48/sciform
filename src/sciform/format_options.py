@@ -8,68 +8,6 @@ from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            AutoExpVal, AutoRound)
 
 
-def validate_options(options: Union['FormatOptions', 'RenderedFormatOptions']):
-    if options.round_mode is RoundMode.SIG_FIG:
-        if isinstance(options.ndigits, int):
-            if options.ndigits < 1:
-                raise ValueError(f'Precision must be >= 1 for sig fig '
-                                 f'rounding, not {options.ndigits}.')
-
-    if (options.pdg_sig_figs and options.ndigits is not None
-            and options.ndigits is not AutoRound):
-        # TODO: test this
-        raise ValueError(f'pdg_sig_figs=True can only be used with '
-                         f'ndigits=AutoRound, not ndigits={options.ndigits}.')
-
-    if options.exp_val is not AutoExpVal and options.exp_val is not None:
-        # TODO: Test these errors
-        if (options.exp_mode is ExpMode.FIXEDPOINT
-                or options.exp_mode is ExpMode.PERCENT):
-            if options.exp_val != 0:
-                raise ValueError(f'Exponent must must be 0, not '
-                                 f'exp_val={options.exp_val}, for fixed '
-                                 f'point and percent exponent modes.')
-        elif (options.exp_mode is ExpMode.ENGINEERING
-              or options.exp_mode is ExpMode.ENGINEERING_SHIFTED):
-            if options.exp_val % 3 != 0:
-                raise ValueError(f'Exponent must be a multiple of 3, not '
-                                 f'exp_val={options.exp_val}, for '
-                                 f'engineering exponent modes.')
-        elif options.exp_mode is ExpMode.BINARY_IEC:
-            if options.exp_val % 10 != 0:
-                raise ValueError(f'Exponent must be a multiple of 10, not '
-                                 f'exp_val={options.exp_val}, for binary IEC '
-                                 f'exponent mode.')
-
-    # TODO: Test all these separator errors
-    if options.upper_separator is not None:
-        if options.upper_separator not in get_args(UpperGroupingSeparators):
-            raise ValueError(f'upper_separator must be in '
-                             f'{get_args(UpperGroupingSeparators)}, not '
-                             f'{options.upper_separator}.')
-        if options.upper_separator is options.decimal_separator:
-            raise ValueError(f'upper_separator and decimal_separator '
-                             f'({options.upper_separator}) cannot be equal.')
-
-    if options.decimal_separator is not None:
-        if (options.decimal_separator
-                not in get_args(DecimalGroupingSeparators)):
-            raise ValueError(f'upper_separator must be in '
-                             f'{get_args(DecimalGroupingSeparators)}, not '
-                             f'{options.upper_separator}.')
-
-    if options.lower_separator is not None:
-        if options.lower_separator not in get_args(LowerGroupingSeparators):
-            raise ValueError(f'upper_separator must be in '
-                             f'{get_args(LowerGroupingSeparators)}, not '
-                             f'{options.upper_separator}.')
-
-    if options.prefix_exp is not None and options.parts_per_exp is not None:
-        if options.prefix_exp and options.parts_per_exp:
-            raise ValueError('Only one of prefix exponent and parts-per '
-                             'exponent modes may be selected.')
-
-
 @dataclass(frozen=True)
 class RenderedFormatOptions:
     exp_mode: ExpMode
@@ -325,6 +263,65 @@ class FormatOptions:
                              f'with default options.') from e
 
         return rendered_format_options
+
+
+def validate_options(options: Union[FormatOptions, RenderedFormatOptions]):
+    if options.round_mode is RoundMode.SIG_FIG:
+        if isinstance(options.ndigits, int):
+            if options.ndigits < 1:
+                raise ValueError(f'Precision must be >= 1 for sig fig '
+                                 f'rounding, not {options.ndigits}.')
+
+    if (options.pdg_sig_figs and options.ndigits is not None
+            and options.ndigits is not AutoRound):
+        raise ValueError(f'pdg_sig_figs=True can only be used with '
+                         f'ndigits=AutoRound, not ndigits={options.ndigits}.')
+
+    if options.exp_val is not AutoExpVal and options.exp_val is not None:
+        if (options.exp_mode is ExpMode.FIXEDPOINT
+                or options.exp_mode is ExpMode.PERCENT):
+            if options.exp_val != 0:
+                raise ValueError(f'Exponent must must be 0, not '
+                                 f'exp_val={options.exp_val}, for fixed '
+                                 f'point and percent exponent modes.')
+        elif (options.exp_mode is ExpMode.ENGINEERING
+              or options.exp_mode is ExpMode.ENGINEERING_SHIFTED):
+            if options.exp_val % 3 != 0:
+                raise ValueError(f'Exponent must be a multiple of 3, not '
+                                 f'exp_val={options.exp_val}, for '
+                                 f'engineering exponent modes.')
+        elif options.exp_mode is ExpMode.BINARY_IEC:
+            if options.exp_val % 10 != 0:
+                raise ValueError(f'Exponent must be a multiple of 10, not '
+                                 f'exp_val={options.exp_val}, for binary IEC '
+                                 f'exponent mode.')
+
+    if options.upper_separator is not None:
+        if options.upper_separator not in get_args(UpperGroupingSeparators):
+            raise ValueError(f'upper_separator must be in '
+                             f'{get_args(UpperGroupingSeparators)}, not '
+                             f'{options.upper_separator}.')
+        if options.upper_separator is options.decimal_separator:
+            raise ValueError(f'upper_separator and decimal_separator '
+                             f'({options.upper_separator}) cannot be equal.')
+
+    if options.decimal_separator is not None:
+        if (options.decimal_separator
+                not in get_args(DecimalGroupingSeparators)):
+            raise ValueError(f'upper_separator must be in '
+                             f'{get_args(DecimalGroupingSeparators)}, not '
+                             f'{options.upper_separator}.')
+
+    if options.lower_separator is not None:
+        if options.lower_separator not in get_args(LowerGroupingSeparators):
+            raise ValueError(f'upper_separator must be in '
+                             f'{get_args(LowerGroupingSeparators)}, not '
+                             f'{options.upper_separator}.')
+
+    if options.prefix_exp is not None and options.parts_per_exp is not None:
+        if options.prefix_exp and options.parts_per_exp:
+            raise ValueError('Only one of prefix exponent and parts-per '
+                             'exponent modes may be selected.')
 
 
 PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
