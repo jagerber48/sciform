@@ -606,3 +606,7 @@ class TestFormatting(unittest.TestCase):
         ]
 
         self.run_float_fsml_cases(cases_list)
+
+    def test_invalid_format_spec(self):
+        num = SciNum(42)
+        self.assertRaises(ValueError, num.__format__, '.3g')
