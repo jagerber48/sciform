@@ -132,6 +132,10 @@ class TestFormatting(unittest.TestCase):
 
         self.run_float_formatter_cases(cases_list)
 
+    def test_no_options(self):
+        sform = Formatter()
+        self.assertEqual(sform(42), '42')
+
 
 if __name__ == "__main__":
     unittest.main()
