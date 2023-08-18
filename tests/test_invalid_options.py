@@ -91,8 +91,18 @@ class TestInvalidOptions(unittest.TestCase):
             lower_separator=GroupingSeparator.POINT
         )
 
-    @unittest.expectedFailure
     def test_upper_separator_point_default_merge(self):
+        """
+        This test raises a ValueError because the upper_separator is
+        requested to be POINT. But the package defaults set
+        decimal_separator to also be POINT. So when the FormatOptions
+        is rendered into RenderedFormatOptions, at format time, the
+        resulting RenderedFormatOptions have both
+        upper_separator=GroupingSeparator.POINT
+        and
+        decimal_separator=GroupingSeparator.POINT
+        This options combination is not allowed.
+        """
         sform = Formatter(
             FormatOptions(upper_separator=GroupingSeparator.POINT))
         self.assertRaises(ValueError, sform, 42)
