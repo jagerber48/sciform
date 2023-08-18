@@ -154,7 +154,7 @@ def get_pdg_round_digit(num: Decimal):
         round_digit = top_digit
     elif 950 <= num_top_three_digs <= 999:
         '''
-        Here we set the round digit equal to the top digit. But since 
+        Here we set the round digit equal to the top digit. But since
         the top three digits are >= 950 this means they will be rounded
         up to 1000. So with round digit set to the top digit this will
         correspond to displaying two digits of uncertainty: "10".

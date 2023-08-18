@@ -260,8 +260,8 @@ class FormatOptions:
                 **_merge_dicts(asdict(defaults), asdict(self))
             )
         except ValueError as e:
-            raise ValueError(f'Invalid format options resuling from merging '
-                             f'with default options.') from e
+            raise ValueError('Invalid format options resuling from merging '
+                             'with default options.') from e
 
         return rendered_format_options
 
