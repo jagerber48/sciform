@@ -41,7 +41,6 @@ class Formatter:
     """
     def __init__(self, format_options=None):
         if format_options is None:
-            # TODO: Test this
             format_options = FormatOptions()
         self.format_options = format_options
 
