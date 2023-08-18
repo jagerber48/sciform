@@ -211,12 +211,10 @@ class FormatOptions:
 
         if (self.pdg_sig_figs and self.ndigits is not None
                 and self.ndigits is not AutoRound):
-            # TODO: test this
             raise ValueError(f'pdg_sig_figs=True can only be used with '
                              f'ndigits=AutoRound, not ndigits={self.ndigits}.')
 
         if self.exp_val is not AutoExpVal and self.exp_val is not None:
-            # TODO: Test these errors
             if (self.exp_mode is ExpMode.FIXEDPOINT
                     or self.exp_mode is ExpMode.PERCENT):
                 if self.exp_val != 0:
@@ -235,7 +233,6 @@ class FormatOptions:
                                      f'exp_val={self.exp_val}, for binary IEC '
                                      f'exponent mode.')
 
-        # TODO: Test all these separator errors
         if self.upper_separator is not None:
             if self.upper_separator not in get_args(UpperGroupingSeparators):
                 raise ValueError(f'upper_separator must be in '

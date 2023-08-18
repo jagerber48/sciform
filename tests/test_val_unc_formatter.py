@@ -1,6 +1,7 @@
 import unittest
 
-from sciform import FormatOptions, Formatter, ExpMode, GroupingSeparator
+from sciform import (FormatOptions, Formatter, ExpMode, GroupingSeparator,
+                     RoundMode)
 
 
 ValUncFormatOptionsCases = list[tuple[tuple[float, float],
@@ -172,6 +173,6 @@ class TestFormatting(unittest.TestCase):
         self.assertRaises(ValueError, FormatOptions, pdg_sig_figs=True,
                           ndigits=0)
 
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_dec_place_warn(self):
+        sform = Formatter(FormatOptions(round_mode=RoundMode.DEC_PLACE))
+        self.assertWarns(Warning, sform, 42, 24)

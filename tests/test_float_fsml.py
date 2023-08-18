@@ -271,6 +271,16 @@ class TestFormatting(unittest.TestCase):
 
         self.run_float_fsml_cases(cases_list)
 
+    def test_binary(self):
+        cases_list = [
+            (1024, [
+                ('b', '1b+10'),
+                ('#b', '1b+10')
+            ])
+        ]
+
+        self.run_float_fsml_cases(cases_list)
+
     def test_exp(self):
         cases_list = [
             (123.456, [
@@ -290,7 +300,8 @@ class TestFormatting(unittest.TestCase):
                 ('rx0', '123.456e+00'),
                 ('rx-3', '123456e-03'),
                 ('rx+3', '0.123456e+03')
-            ])
+            ]),
+            (512, [('bx+10', '0.5b+10')])
         ]
 
         self.run_float_fsml_cases(cases_list)
@@ -583,10 +594,19 @@ class TestFormatting(unittest.TestCase):
             (3.1415e+28, [('ep', '3.1415e+28')]),
             (3.1415e+29, [('ep', '3.1415e+29')]),
             (3.1415e+30, [('ep', '3.1415 Q')]),
+            (2**10, [('bp', '1 Ki')]),
+            (2 ** 10, [('bp', '1 Ki')]),
+            (2 ** 20, [('bp', '1 Mi')]),
+            (2 ** 30, [('bp', '1 Gi')]),
+            (2 ** 40, [('bp', '1 Ti')]),
+            (2 ** 50, [('bp', '1 Pi')]),
+            (2 ** 60, [('bp', '1 Ei')]),
+            (2 ** 70, [('bp', '1 Zi')]),
+            (2 ** 80, [('bp', '1 Yi')])
         ]
 
         self.run_float_fsml_cases(cases_list)
 
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_invalid_format_spec(self):
+        num = SciNum(42)
+        self.assertRaises(ValueError, num.__format__, '.3g')

@@ -298,7 +298,3 @@ class TestFormatting(unittest.TestCase):
             ])
         ]
         self.run_val_unc_fsml_cases(cases_list)
-
-
-if __name__ == "__main__":
-    unittest.main()
