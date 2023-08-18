@@ -1,3 +1,12 @@
+0.26.2 (2023-08-18)
+-------------------
+
+* Fix a bug where illegal options combinations could be realized at
+  format time when certain global default objects were merged into
+  certain user specified options.
+  The bug is fixed by re-checking the options combinations after merging
+  in the global defaults but before formatting.
+
 0.26.1 (2023-08-18)
 -------------------
 
