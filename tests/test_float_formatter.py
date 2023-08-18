@@ -1,7 +1,7 @@
 import unittest
 
 from sciform import (FormatOptions, Formatter, ExpMode, GroupingSeparator,
-                     FillMode)
+                     FillMode, RoundMode, AutoRound)
 
 
 FloatFormatOptionsCases = list[tuple[float, list[tuple[FormatOptions, str]]]]
@@ -23,6 +23,10 @@ class TestFormatting(unittest.TestCase):
             (789, [
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
                                superscript_exp=True), '7.89×10²')
+            ]),
+            (1024, [
+                (FormatOptions(exp_mode=ExpMode.BINARY,
+                               superscript_exp=True), '1×2¹⁰')
             ])
         ]
 
@@ -78,6 +82,11 @@ class TestFormatting(unittest.TestCase):
                                exp_val=3,
                                prefix_exp=True,
                                latex=True), r'12.345\text{k}')
+            ]),
+            (1024, [
+                (FormatOptions(exp_mode=ExpMode.BINARY,
+                               exp_val=8,
+                               latex=True), r'4\times 2^{+8}')
             ])
         ]
 
@@ -128,6 +137,11 @@ class TestFormatting(unittest.TestCase):
 
         self.run_float_formatter_cases(cases_list)
 
+    def test_no_options(self):
+        sform = Formatter()
+        self.assertEqual(sform(42), '42')
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_dec_place_auto_round(self):
+        sform = Formatter(FormatOptions(round_mode=RoundMode.DEC_PLACE,
+                                        ndigits=AutoRound))
+        self.assertEqual(sform(123.456), '123.456')
