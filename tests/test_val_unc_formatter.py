@@ -171,7 +171,3 @@ class TestFormatting(unittest.TestCase):
     def test_pdg_ndigits_error(self):
         self.assertRaises(ValueError, FormatOptions, pdg_sig_figs=True,
                           ndigits=0)
-
-
-if __name__ == "__main__":
-    unittest.main()

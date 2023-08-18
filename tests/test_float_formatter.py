@@ -136,6 +136,7 @@ class TestFormatting(unittest.TestCase):
         sform = Formatter()
         self.assertEqual(sform(42), '42')
 
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_dec_place_auto_round(self):
+        sform = Formatter(FormatOptions(round_mode=RoundMode.DEC_PLACE,
+                                        ndigits=AutoRound))
+        self.assertEqual(sform(123.456), '123.456')

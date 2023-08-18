@@ -117,7 +117,3 @@ class TestInvalidOptions(unittest.TestCase):
             prefix_exp=True,
             parts_per_exp=True
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

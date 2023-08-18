@@ -65,7 +65,3 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(formatter(num), '2.4 ppth')
         global_reset_parts_per_forms()
         self.assertEqual(formatter(num), '2.4e-03')
-
-
-if __name__ == "__main__":
-    unittest.main()
