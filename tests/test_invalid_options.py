@@ -1,6 +1,7 @@
 import unittest
 
-from sciform import FormatOptions, RoundMode, ExpMode, GroupingSeparator
+from sciform import (Formatter, FormatOptions, RoundMode, ExpMode,
+                     GroupingSeparator)
 
 
 class TestInvalidOptions(unittest.TestCase):
@@ -15,23 +16,31 @@ class TestInvalidOptions(unittest.TestCase):
             ValueError, FormatOptions, pdg_sig_figs=True, ndigits=3
         )
 
-    def test_exp_mode_exp_val(self):
+    def test_fixed_point(self):
         self.assertRaises(
             ValueError, FormatOptions, exp_mode=ExpMode.FIXEDPOINT,
             exp_val=1
         )
+
+    def test_percent(self):
         self.assertRaises(
             ValueError, FormatOptions, exp_mode=ExpMode.PERCENT,
             exp_val=1
         )
+
+    def test_engineering(self):
         self.assertRaises(
             ValueError, FormatOptions, exp_mode=ExpMode.ENGINEERING,
             exp_val=1
         )
+
+    def test_engineering_shifted(self):
         self.assertRaises(
             ValueError, FormatOptions, exp_mode=ExpMode.ENGINEERING_SHIFTED,
             exp_val=1
         )
+
+    def test_binary_iec(self):
         self.assertRaises(
             ValueError, FormatOptions, exp_mode=ExpMode.BINARY_IEC,
             exp_val=5
@@ -42,46 +51,60 @@ class TestInvalidOptions(unittest.TestCase):
             ValueError, FormatOptions, upper_separator='_'
         )
 
-    def test_invalid_decimal_separator(self):
+    def test_decimal_separator_non_option(self):
         self.assertRaises(
             ValueError, FormatOptions, decimal_separator='_'
         )
+
+    def test_decimal_separator_underscore(self):
         self.assertRaises(
             ValueError, FormatOptions,
             decimal_separator=GroupingSeparator.UNDERSCORE
         )
+
+    def test_decimal_separator_space(self):
         self.assertRaises(
             ValueError, FormatOptions,
             decimal_separator=GroupingSeparator.SPACE
         )
+
+    def test_decimal_separator_none(self):
         self.assertRaises(
             ValueError, FormatOptions,
             decimal_separator=GroupingSeparator.NONE
         )
 
-    def test_invalid_lower_separator(self):
+    def test_lower_separator_non_option(self):
         self.assertRaises(
             ValueError, FormatOptions, lower_separator='_'
         )
+
+    def test_lower_separator_comma(self):
         self.assertRaises(
             ValueError, FormatOptions,
             lower_separator=GroupingSeparator.COMMA
         )
+
+    def test_lower_separator_point(self):
         self.assertRaises(
             ValueError, FormatOptions,
             lower_separator=GroupingSeparator.POINT
         )
 
-    def test_separator_conflict(self):
-        # self.assertRaises(
-        #     ValueError, FormatOptions,
-        #     upper_separator=GroupingSeparator.POINT
-        # )
+    @unittest.expectedFailure
+    def test_upper_separator_point_default_merge(self):
+        sform = Formatter(
+            FormatOptions(upper_separator=GroupingSeparator.POINT))
+        self.assertRaises(ValueError, sform, 42)
+
+    def test_upper_decimal_separator_point(self):
         self.assertRaises(
             ValueError, FormatOptions,
             upper_separator=GroupingSeparator.POINT,
             decimal_separator=GroupingSeparator.POINT
         )
+
+    def test_uppder_decimal_separator_comma(self):
         self.assertRaises(
             ValueError, FormatOptions,
             upper_separator=GroupingSeparator.COMMA,
