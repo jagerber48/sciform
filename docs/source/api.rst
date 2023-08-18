@@ -39,7 +39,7 @@ Auto Options
 
 .. autoclass:: AutoExpVal()
 
-.. autoclass:: AutoRound()
+.. autoclass:: AutoDigits()
 
 Global Configuration
 ====================

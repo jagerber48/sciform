@@ -295,7 +295,7 @@ If the user does not specify the number of significant digits or the
 digits place to which to round, then the decimal numbers are displayed
 with full precision.
 To explicitly request this behavior, the user may use the
-:class:`AutoRound` sentinel by passing ``ndigits=AutoRound``.
+:class:`AutoDigits` sentinel by passing ``ndigits=AutoDigits``.
 This is the default value in the global configuration.
 
 Note that surprising behavior may be observed if using :class:`float`
@@ -367,7 +367,7 @@ Automatic Rounding
 ------------------
 
 If the user does not specify ``ndigits`` or the user uses
-:class:`AutoRound` by passing ``ndigits=AutoRound``, then :mod:`sciform`
+:class:`AutoDigits` by passing ``ndigits=AutoDigits``, then :mod:`sciform`
 will automatically determine how rounding should be performed.
 
 For single value formatting the auto rounding mode will display the
@@ -380,17 +380,17 @@ This means that the :class:`float` will be rounded to the minimum
 necessary precision for it to "round-trip".
 See :ref:`dec_and_float` for more details.
 
-For value/uncertainty formatting, if ``ndigits=AutoRound`` and
+For value/uncertainty formatting, if ``ndigits=AutoDigits`` and
 ``pdg_sig_figs=False``, then the rounding strategy described in the
 previous paragraph is used to round the uncertainty and the value is
 rounded to the same decimal place as the uncertainty.
-If ``ndigits=AutoRound`` and ``pdg_sig_figs=True``, then the uncertainty
+If ``ndigits=AutoDigits`` and ``pdg_sig_figs=True``, then the uncertainty
 will be rounded according to the Particle Data Group rounding algorithm
 and the value will rounded to the same decimal place as the uncertainty.
 See :ref:`pdg_sig_figs` for more details.
 
 If ``ndigits`` is specified (i.e. not ``None``) but
-``ndigits!=AutoRound`` and ``pdg_sig_figs=True`` then ``ValueError``
+``ndigits!=AutoDigits`` and ``pdg_sig_figs=True`` then ``ValueError``
 is raised.
 
 Separators
@@ -617,11 +617,11 @@ The algorithm is as follows.
 
 :mod:`sciform` provides the ability to use this algorithm when
 formatting value/uncertainty pairs by using significant figure rounding
-mode with :class:`AutoRound` precision and the ``pdg_sig_figs`` flag.
+mode with :class:`AutoDigits` precision and the ``pdg_sig_figs`` flag.
 
->>> from sciform import AutoRound
+>>> from sciform import AutoDigits
 >>> sform = Formatter(Fo(round_mode=RoundMode.SIG_FIG,
-...                      ndigits=AutoRound,
+...                      ndigits=AutoDigits,
 ...                      pdg_sig_figs=True))
 >>> print(sform(1, 0.0123))
 1.000 +/- 0.012
@@ -631,7 +631,7 @@ mode with :class:`AutoRound` precision and the ``pdg_sig_figs`` flag.
 1.00 +/- 0.10
 
 If ``ndigits`` is specified (i.e. not ``None``) but
-``ndigits!=AutoRound`` with ``pdg_sig_figs=True`` then ``ValueError`` is
+``ndigits!=AutoDigits`` with ``pdg_sig_figs=True`` then ``ValueError`` is
 raised.
 
 Plus Minus Symbol Formatting

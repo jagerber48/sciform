@@ -5,7 +5,7 @@ from pprint import pprint
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
                            DecimalGroupingSeparators, RoundMode, ExpMode,
-                           AutoExpVal, AutoRound)
+                           AutoExpVal, AutoDigits)
 
 
 @dataclass(frozen=True)
@@ -13,7 +13,7 @@ class RenderedFormatOptions:
     exp_mode: ExpMode
     exp_val: Union[int, type(AutoExpVal)]
     round_mode: RoundMode
-    ndigits: Union[int, type(AutoRound)]
+    ndigits: Union[int, type(AutoDigits)]
     upper_separator: UpperGroupingSeparators
     decimal_separator: DecimalGroupingSeparators
     lower_separator: LowerGroupingSeparators
@@ -85,7 +85,8 @@ class FormatOptions:
     * ``lower_separator`` may only be :class:`GroupingSeparator.NONE`,
       :class:`GroupingSeparator.SPACE`, or
       :class:`GroupingSeparator.UNDERSCORE`
-    * ``ndigits=None`` or ``ndigits=AutoRound`` if ``pdg_sig_figs=True``
+    * ``ndigits=None`` or ``ndigits=AutoDigits`` if
+      ``pdg_sig_figs=True``
     * Only one of ``prefix_exp`` and ``parts_per_exp`` may be selected
 
     :param exp_mode: :class:`ExpMode` indicating the formatting
@@ -97,7 +98,7 @@ class FormatOptions:
       modes, and an integer multiple of 10 for binary IEC mode.
     :param round_mode: :class:`RoundMode` indicating whether to round
       the number based on significant figures or decimal places.
-    :param ndigits: :class:`int` or :class:`AutoRound` sentinel
+    :param ndigits: :class:`int` or :class:`AutoDigits` sentinel
       indicating how many significant digits or which decimal place to
       use for rounding. Must be >= 1 for significant figure rounding.
       May be any integer for decimal place rounding.
@@ -177,7 +178,7 @@ class FormatOptions:
     exp_mode: ExpMode = None
     exp_val: Union[int, type(AutoExpVal)] = None
     round_mode: RoundMode = None
-    ndigits: Union[int, type(AutoRound)] = None
+    ndigits: Union[int, type(AutoDigits)] = None
     upper_separator: UpperGroupingSeparators = None
     decimal_separator: DecimalGroupingSeparators = None
     lower_separator: LowerGroupingSeparators = None
@@ -273,9 +274,9 @@ def validate_options(options: Union[FormatOptions, RenderedFormatOptions]):
                                  f'rounding, not {options.ndigits}.')
 
     if (options.pdg_sig_figs and options.ndigits is not None
-            and options.ndigits is not AutoRound):
+            and options.ndigits is not AutoDigits):
         raise ValueError(f'pdg_sig_figs=True can only be used with '
-                         f'ndigits=AutoRound, not ndigits={options.ndigits}.')
+                         f'ndigits=AutoDigits, not ndigits={options.ndigits}.')
 
     if options.exp_val is not AutoExpVal and options.exp_val is not None:
         if (options.exp_mode is ExpMode.FIXEDPOINT
@@ -328,7 +329,7 @@ PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
     exp_mode=ExpMode.FIXEDPOINT,
     exp_val=AutoExpVal,
     round_mode=RoundMode.SIG_FIG,
-    ndigits=AutoRound,
+    ndigits=AutoDigits,
     upper_separator=GroupingSeparator.NONE,
     decimal_separator=GroupingSeparator.POINT,
     lower_separator=GroupingSeparator.NONE,

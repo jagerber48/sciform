@@ -4,7 +4,7 @@ import re
 from copy import copy
 from decimal import Decimal
 
-from sciform.modes import ExpMode, RoundMode, SignMode, AutoExpVal, AutoRound
+from sciform.modes import ExpMode, RoundMode, SignMode, AutoExpVal, AutoDigits
 from sciform.prefix import (si_val_to_prefix_dict, iec_val_to_prefix_dict,
                             pp_val_to_prefix_dict)
 
@@ -169,10 +169,10 @@ def get_pdg_round_digit(num: Decimal):
 
 def get_round_digit(num: Decimal,
                     round_mode: RoundMode,
-                    ndigits: Union[int, type(AutoRound)],
+                    ndigits: Union[int, type(AutoDigits)],
                     pdg_sig_figs: bool = False) -> int:
     if round_mode is RoundMode.SIG_FIG:
-        if ndigits is AutoRound:
+        if ndigits is AutoDigits:
             if pdg_sig_figs:
                 round_digit = get_pdg_round_digit(num)
             else:
@@ -180,7 +180,7 @@ def get_round_digit(num: Decimal,
         else:
             round_digit = get_top_digit(num) - (ndigits - 1)
     elif round_mode is RoundMode.DEC_PLACE:
-        if ndigits is AutoRound:
+        if ndigits is AutoDigits:
             round_digit = get_bottom_digit(num)
         else:
             round_digit = -ndigits
