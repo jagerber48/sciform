@@ -1,7 +1,7 @@
 import unittest
 
 from sciform import (FormatOptions, Formatter, ExpMode, GroupingSeparator,
-                     FillMode, RoundMode, AutoRound)
+                     FillMode, RoundMode, AutoDigits)
 
 
 FloatFormatOptionsCases = list[tuple[float, list[tuple[FormatOptions, str]]]]
@@ -143,5 +143,5 @@ class TestFormatting(unittest.TestCase):
 
     def test_dec_place_auto_round(self):
         sform = Formatter(FormatOptions(round_mode=RoundMode.DEC_PLACE,
-                                        ndigits=AutoRound))
+                                        ndigits=AutoDigits))
         self.assertEqual(sform(123.456), '123.456')
