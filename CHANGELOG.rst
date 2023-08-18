@@ -1,3 +1,8 @@
+0.26.1 (2023-08-18)
+-------------------
+
+* Add unit tests, increase test coverage.
+
 0.26.0 (2023-08-15)
 -------------------
 
@@ -65,7 +70,6 @@
   This is consistent with the previous behavior for ``SciNum`` and
   ``SciNumUnc`` objects.
 * Change ``pyproject.toml`` description
-
 
 0.22.2 (2023-07-27)
 -------------------
