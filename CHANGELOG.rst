@@ -1,3 +1,11 @@
+0.27.0 (2023-08-18)
+-------------------
+
+* **[BREAKING]** Rename ``AutoRound`` to ``AutoDigits``. This is
+  because, e.g., ``ndigits=AutoDigits`` sounds more correct than
+  ``ndigits=AutoRound``. Furthermore, ``AutoRound`` could likely be
+  confused as being an option for ``round_mode``, which it is not.
+
 0.26.2 (2023-08-18)
 -------------------
 
