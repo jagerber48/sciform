@@ -82,6 +82,11 @@ class TestFormatting(unittest.TestCase):
                                exp_val=3,
                                prefix_exp=True,
                                latex=True), r'12.345\text{k}')
+            ]),
+            (1024, [
+                (FormatOptions(exp_mode=ExpMode.BINARY,
+                               exp_val=8,
+                               latex=True), r'4\times 2^{+8}')
             ])
         ]
 
