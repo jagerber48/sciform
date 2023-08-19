@@ -21,7 +21,8 @@ release = version
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
-    'sphinx.ext.todo'
+    'sphinx.ext.todo',
+    'sphinx_toolbox.collapse'
 ]
 
 templates_path = ['_templates']
