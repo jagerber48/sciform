@@ -1,3 +1,11 @@
+0.27.1 (2023-08-18)
+-------------------
+
+* Add ``/examples/`` folder to hold example scripts used in the
+  documentation as well as the input data for these scripts and their
+  outputs which appear in the documentation.
+* Remove extra ``readthedocs.yaml`` file.
+
 0.27.0 (2023-08-18)
 -------------------
 
