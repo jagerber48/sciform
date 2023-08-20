@@ -1,6 +1,6 @@
 from typing import Union, get_args
 from dataclasses import dataclass, asdict, InitVar
-from pprint import pprint
+from pprint import pformat
 
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
@@ -38,6 +38,9 @@ class RenderedFormatOptions:
 
     def __post_init__(self):
         validate_options(self)
+
+    def __repr__(self):
+        return pformat(asdict(get_global_defaults()), sort_dicts=False)
 
 
 def _merge_dicts(left: dict, right: dict) -> dict:
@@ -265,6 +268,9 @@ class FormatOptions:
 
         return rendered_format_options
 
+    def __repr__(self):
+        return pformat(asdict(get_global_defaults()), sort_dicts=False)
+
 
 def validate_options(options: Union[FormatOptions, RenderedFormatOptions]):
     if options.round_mode is RoundMode.SIG_FIG:
@@ -365,7 +371,7 @@ def print_global_defaults():
     """
     Print current global default formatting options as a dictionary.
     """
-    pprint(asdict(get_global_defaults()), sort_dicts=False)
+    print(get_global_defaults())
 
 
 def set_global_defaults(format_options: FormatOptions):
