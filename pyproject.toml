@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sciform"
+version = "0.27.3"
 authors = [
     {name = "Justin Gerber", email="justin.gerber48@gmail.com"}
 ]
@@ -11,12 +12,11 @@ description = "A package for formatting numbers into scientific formatted string
 classifiers = [
     "License :: OSI Approved :: MIT License"
 ]
-dynamic = ["version", "readme"]
+dynamic = ["readme"]
 
 [project.urls]
 homepage = "https://github.com/jagerber48/sciform"
 documentation = "https://sciform.readthedocs.io"
 
 [tool.setuptools.dynamic]
-version = {attr = "sciform.__version__"}
 readme = {file = "README.rst"}
