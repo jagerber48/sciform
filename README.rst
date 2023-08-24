@@ -74,7 +74,7 @@ For brevity, the user may consider abbreviating ``FormatOptions`` as
 ``Fo``.
 
 >>> from sciform import (Formatter, FormatOptions, RoundMode,
->>>                      GroupingSeparator, ExpMode)
+...                      GroupingSeparator, ExpMode)
 >>> sform = Formatter(FormatOptions(
 ...             round_mode=RoundMode.DEC_PLACE,
 ...             ndigits=6,
