@@ -1,6 +1,9 @@
 Unreleased
 ----------
 
+0.27.3 (2023-08-23)
+-------------------
+
 * Added ``Unreleased`` section to changelog.
 * Removed ``version`` from source code.
   Project version is now derived from a git version tag using
