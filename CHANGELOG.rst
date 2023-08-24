@@ -1,3 +1,8 @@
+Unreleased
+----------
+
+* Add `Unreleased` section to changelog
+
 0.27.2 (2023-08-20)
 -------------------
 
