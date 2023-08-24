@@ -1,10 +1,11 @@
 Unreleased
 ----------
 
-* Add ``Unreleased`` section to changelog
-* Remove ``version`` from source code.
+* Added ``Unreleased`` section to changelog.
+* Removed ``version`` from source code.
   Project version is now derived from a git version tag using
   ``setuptools_scm``.
+* Stopped encouraging ``import FormatOptions as Fo``.
 
 0.27.2 (2023-08-20)
 -------------------
