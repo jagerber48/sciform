@@ -148,11 +148,11 @@ For this reason, the usage of this notation is sometimes discouraged.
 Note that it is possible, using the ``extra_parts_per_forms`` option to
 override the standard mappings listed above.
 
->>> from sciform import FormatOptions as Fo
->>> from sciform import Formatter, ExpMode
->>> sform = Formatter(Fo(exp_mode=ExpMode.ENGINEERING,
-...                      parts_per_exp=True,
-...                      extra_parts_per_forms={-9: None, -12: 'ppb'}))
+>>> from sciform import Formatter, FormatOptions, ExpMode
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.ENGINEERING,
+...             parts_per_exp=True,
+...             extra_parts_per_forms={-9: None, -12: 'ppb'}))
 >>> print(sform(33e-9))
 33e-09
 >>> print(sform(33e-12))

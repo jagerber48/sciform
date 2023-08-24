@@ -43,17 +43,18 @@ returns a corresponding formatted string.
 Note that global default options are used to populate unfilled options
 at formatting time.
 
->>> from sciform import FormatOptions as Fo
->>> from sciform import Formatter, RoundMode, GroupingSeparator, ExpMode
->>> sform = Formatter(Fo(round_mode=RoundMode.DEC_PLACE,
-...                      ndigits=6,
-...                      upper_separator=GroupingSeparator.SPACE,
-...                      lower_separator=GroupingSeparator.SPACE))
+>>> from sciform import Formatter, FormatOptions, RoundMode, GroupingSeparator, ExpMode
+>>> sform = Formatter(FormatOptions(
+...             round_mode=RoundMode.DEC_PLACE,
+...             ndigits=6,
+...             upper_separator=GroupingSeparator.SPACE,
+...             lower_separator=GroupingSeparator.SPACE))
 >>> print(sform(51413.14159265359))
 51 413.141 593
->>> sform = Formatter(Fo(round_mode=RoundMode.SIG_FIG,
-...                      ndigits=4,
-...                      exp_mode=ExpMode.ENGINEERING))
+>>> sform = Formatter(FormatOptions(
+...             round_mode=RoundMode.SIG_FIG,
+...             ndigits=4,
+...             exp_mode=ExpMode.ENGINEERING))
 >>> print(sform(123456.78))
 123.5e+03
 
@@ -91,7 +92,7 @@ using the :class:`SciNumUnc` object.
 
 >>> val = 84.3
 >>> unc = 0.2
->>> sform = Formatter(Fo(ndigits=2))
+>>> sform = Formatter(FormatOptions(ndigits=2))
 >>> print(sform(val, unc))
 84.30 +/- 0.20
 
@@ -176,10 +177,11 @@ unchanged.
 
 >>> from sciform import (set_global_defaults, FillMode, ExpMode,
 ...                      GroupingSeparator)
->>> set_global_defaults(Fo(fill_mode=FillMode.ZERO,
-...                        exp_mode=ExpMode.ENGINEERING_SHIFTED,
-...                        ndigits=4,
-...                        decimal_separator=GroupingSeparator.COMMA))
+>>> set_global_defaults(FormatOptions(
+...     fill_mode=FillMode.ZERO,
+...     exp_mode=ExpMode.ENGINEERING_SHIFTED,
+...     ndigits=4,
+...     decimal_separator=GroupingSeparator.COMMA))
 >>> print_global_defaults()
 {'exp_mode': <ExpMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
  'exp_val': <class 'sciform.modes.AutoExpVal'>,
@@ -244,7 +246,7 @@ values.
 >>> snum = SciNum(0.0123)
 >>> print(f'{snum:.2ep}')
 1.23e-02
->>> with GlobalDefaultsContext(Fo(add_c_prefix=True)):
+>>> with GlobalDefaultsContext(FormatOptions(add_c_prefix=True)):
 ...     print(f'{snum:.2ep}')
 1.23 c
 
