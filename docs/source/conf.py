@@ -3,7 +3,7 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-from sciform import __version__
+from importlib import metadata
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -12,7 +12,7 @@ project = 'sciform'
 copyright = '2023, Justin Gerber'
 author = 'Justin Gerber'
 
-version = __version__
+version = metadata.version(project)
 release = version
 
 # -- General configuration ---------------------------------------------------
