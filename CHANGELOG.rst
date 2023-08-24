@@ -2,6 +2,8 @@ Unreleased
 ----------
 
 * Add `Unreleased` section to changelog
+* Remove ``version`` from source code.
+  Project version is now derived from git tag using ``setuptools_scm``.
 
 0.27.2 (2023-08-20)
 -------------------
