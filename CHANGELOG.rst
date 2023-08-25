@@ -1,6 +1,11 @@
 Unreleased
 ----------
 
+0.27.4 (2023-08-25)
+-------------------
+
+* Setup github action to automatically build and publish on release.
+
 0.27.3 (2023-08-23)
 -------------------
 
