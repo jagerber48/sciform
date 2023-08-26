@@ -89,7 +89,6 @@ class FormatOptions:
       :class:`GroupingSeparator.UNDERSCORE`
     * ``ndigits=None`` or ``ndigits=AutoDigits`` if
       ``pdg_sig_figs=True``
-    * Only one of ``prefix_exp`` and ``parts_per_exp`` may be selected
 
     :param exp_mode: :class:`ExpMode` indicating the formatting
       mode to be used.
@@ -123,10 +122,10 @@ class FormatOptions:
       to which the string will be left padded before the sign symbol. 0
       corresponds to the ones place, 1 corresponds to the tens place
       etc. E.g. ``top_dig_place=4`` will convert ``12`` into ``00012``.
-    :param prefix_exp: :class:`bool` indicating if exponents should be
-      replaced with either SI or IEC prefixes as appropriate.
-    :param parts_per_exp: :class:`bool` indicating if "parts-per" exponent
-      translations should be used.
+    :param exp_format: :class:`ExpFormat` indicating if exponents should
+      be displayed in standard ``e+01`` format, if they should be
+      translated into SI or IEC prefixes, or if they should be
+      translated into "parts-per" format.
     :param extra_si_prefixes: ``dict[int, Union[str, None]]`` mapping
       additional exponent values to si prefixes. Entries overwrite
       default values. A value of ``None`` means that exponent will not
