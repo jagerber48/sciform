@@ -101,7 +101,7 @@ def get_mantissa_exp_base(
 
 def get_exp_str(exp_val: int, exp_mode: ExpMode,
                 capitalize: bool) -> str:
-    if exp_mode is exp_mode.FIXEDPOINT or exp_mode is ExpMode.PERCENT:
+    if exp_mode is ExpMode.FIXEDPOINT or exp_mode is ExpMode.PERCENT:
         exp_str = ''
     elif (exp_mode is ExpMode.SCIENTIFIC
           or exp_mode is ExpMode.ENGINEERING
@@ -161,8 +161,8 @@ def get_pdg_round_digit(num: Decimal):
         e.g. 123.45632 +/- 0.987 would be rounded as 123.5 +/- 1.0.
         '''
         round_digit = top_digit
-    else:
-        raise ValueError
+    else:  # pragma: no cover
+        assert False, "unreachable"
 
     return round_digit
 
@@ -185,7 +185,7 @@ def get_round_digit(num: Decimal,
         else:
             round_digit = -ndigits
     else:
-        raise TypeError(f'Unhandled round mode: {round_mode}.')
+        raise ValueError(f'Unhandled round mode: {round_mode}.')
     return round_digit
 
 
