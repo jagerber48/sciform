@@ -145,6 +145,7 @@ def get_exp_str(exp_val: int,
                 exp_format: ExpFormat,
                 capitalize: bool,
                 latex: bool,
+                latex_trim_whitespace: bool,
                 superscript: bool,
                 extra_si_prefixes: dict[int, str] = None,
                 extra_iec_prefixes: dict[int, str] = None,
@@ -193,6 +194,8 @@ def get_exp_str(exp_val: int,
             exp_str = f' {prefix_dict[exp_val]}'
             exp_str = exp_str.rstrip(' ')
             if latex:
+                if latex_trim_whitespace:
+                    exp_str = exp_str.lstrip(' ')
                 exp_str = rf'\text{{{exp_str}}}'
             return exp_str
 

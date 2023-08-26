@@ -28,15 +28,18 @@ def format_non_finite(num: Decimal, options: RenderedFormatOptions) -> str:
         if options.exp_val is AutoExpVal:
             exp_val = 0
 
-        exp_str = get_exp_str(exp_val,
-                              exp_mode,
-                              options.exp_format,
-                              options.capitalize,
-                              options.latex,
-                              options.superscript_exp,
-                              options.extra_si_prefixes,
-                              options.extra_iec_prefixes,
-                              options.extra_parts_per_forms)
+        exp_str = get_exp_str(
+            exp_val=exp_val,
+            exp_mode=exp_mode,
+            exp_format=options.exp_format,
+            capitalize=options.capitalize,
+            latex=options.latex,
+            latex_trim_whitespace=True,
+            superscript=options.superscript_exp,
+            extra_si_prefixes=options.extra_si_prefixes,
+            extra_iec_prefixes=options.extra_iec_prefixes,
+            extra_parts_per_forms=options.extra_parts_per_forms
+        )
     else:
         exp_str = ''
 
@@ -110,15 +113,18 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
                                   lower_separator,
                                   group_size=3)
 
-    exp_str = get_exp_str(exp_val,
-                          exp_mode,
-                          options.exp_format,
-                          options.capitalize,
-                          options.latex,
-                          options.superscript_exp,
-                          options.extra_si_prefixes,
-                          options.extra_iec_prefixes,
-                          options.extra_parts_per_forms)
+    exp_str = get_exp_str(
+        exp_val=exp_val,
+        exp_mode=exp_mode,
+        exp_format=options.exp_format,
+        capitalize=options.capitalize,
+        latex=options.latex,
+        latex_trim_whitespace=False,
+        superscript=options.superscript_exp,
+        extra_si_prefixes=options.extra_si_prefixes,
+        extra_iec_prefixes=options.extra_iec_prefixes,
+        extra_parts_per_forms=options.extra_parts_per_forms
+    )
 
     result = f'{mantissa_str}{exp_str}'
 
@@ -296,15 +302,18 @@ def format_val_unc(val: Decimal, unc: Decimal,
 
     if exp_str is not None:
         base, exp_val = parse_standard_exp_str(exp_str)
-        exp_str = get_exp_str(exp_val,
-                              exp_mode,
-                              options.exp_format,
-                              options.capitalize,
-                              options.latex,
-                              options.superscript_exp,
-                              options.extra_si_prefixes,
-                              options.extra_iec_prefixes,
-                              options.extra_parts_per_forms)
+        exp_str = get_exp_str(
+            exp_val=exp_val,
+            exp_mode=exp_mode,
+            exp_format=options.exp_format,
+            capitalize=options.capitalize,
+            latex=options.latex,
+            latex_trim_whitespace=True,
+            superscript=options.superscript_exp,
+            extra_si_prefixes=options.extra_si_prefixes,
+            extra_iec_prefixes=options.extra_iec_prefixes,
+            extra_parts_per_forms=options.extra_parts_per_forms
+        )
         val_unc_exp_str = f'({val_unc_str}){exp_str}'
     else:
         val_unc_exp_str = val_unc_str
