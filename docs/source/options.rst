@@ -573,7 +573,7 @@ Include Exponent on nan and inf
 
 Python supports ``'nan'``, ``'inf'``, and
 ``'-inf'`` numbers which are simply formatted to ``'nan'``, ``'inf'``,
-and ``'-inf'`` or ``'NAN'``, ``'INF'``, and ``'-INF'`` respectively
+and ``'-inf'`` or ``'NAN'``, ``'INF'``, and ``'-INF'``, respectively,
 depending on ``capitalize``.
 However, if ``nan_inf_exp=True`` (default ``False``), then, for
 scientific, percent, engineering, and binary exponent modes, these will
