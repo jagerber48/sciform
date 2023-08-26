@@ -571,11 +571,10 @@ Note that use of ``latex`` renders the use of ``unicode_pm`` and
 Include Exponent on nan and inf
 ===============================
 
-Python supports ``float('nan')``, ``float('inf')``, and
-``float('-inf')``.
-Typically these are formatted to ``'nan'``, ``'inf'``, and ``'-inf'`` or
-``'NAN'``, ``'INF'``, and ``'-INF'`` respectively depending on
-``capitalize``.
+Python supports ``'nan'``, ``'inf'``, and
+``'-inf'`` numbers which are simply formatted to ``'nan'``, ``'inf'``,
+and ``'-inf'`` or ``'NAN'``, ``'INF'``, and ``'-INF'`` respectively
+depending on ``capitalize``.
 However, if ``nan_inf_exp=True`` (default ``False``), then, for
 scientific, percent, engineering, and binary exponent modes, these will
 instead be formatted as, e.g. ``'(nan)e+00'``.
