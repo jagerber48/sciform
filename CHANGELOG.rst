@@ -16,6 +16,7 @@ Unreleased
   before the translated exponent string.
 * In ``latex=True`` mode ``'nan'`` and ``'inf'`` strings are now wrapped
   in ``'\text{}'``.
+* Refactor code for resolving the exponent string.
 
 0.27.4 (2023-08-25)
 -------------------
