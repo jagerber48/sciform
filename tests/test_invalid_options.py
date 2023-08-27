@@ -128,7 +128,7 @@ class TestInvalidOptions(unittest.TestCase):
             decimal_separator=GroupingSeparator.COMMA
         )
 
-    def test_format_non_inf(self):
+    def test_format_non_finite(self):
         self.assertRaises(ValueError, format_non_finite, Decimal(1.0),
                           FormatOptions().render())
 
