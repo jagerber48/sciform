@@ -3,6 +3,8 @@ Unreleased
 
 * Make ``FormatOptions`` inputs ``Optional`` so that ``None`` inputs
   pass type checks.
+* Configure format-specification mini-language to refer to existing
+  format options to avoid documentation duplication.
 
 0.28.0 (2023-08-27)
 -------------------
