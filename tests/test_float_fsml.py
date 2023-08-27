@@ -376,7 +376,7 @@ class TestFormatting(unittest.TestCase):
                 ('f', 'nan'),
                 ('F', 'NAN'),
                 ('E', 'NAN'),
-                ('%', '(nan)%')
+                ('%', 'nan')
             ]),
             (float('inf'), [
                 ('', 'inf'),

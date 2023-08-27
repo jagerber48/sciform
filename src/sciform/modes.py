@@ -139,3 +139,14 @@ class ExpMode(Enum):
 
     #: Binary IEC
     BINARY_IEC = 'binary_iec'
+
+
+class ExpFormat(Enum):
+    #: Standard Format
+    STANDARD = 'standard'
+
+    #: Prefix Format
+    PREFIX = 'prefix'
+
+    #: Parts-Per Format
+    PARTS_PER = 'parts_per'

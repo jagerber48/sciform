@@ -34,6 +34,9 @@ Mode Enums
 .. autoclass:: ExpMode()
    :members:
 
+.. autoclass:: ExpFormat()
+   :members:
+
 Auto Options
 ============
 

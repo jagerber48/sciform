@@ -1,6 +1,23 @@
 Unreleased
 ----------
 
+* **[BREAKING]** Replace ``prefix_exp`` and ``parts_per_exp`` options
+  with an ``exp_format`` option which can be configured to
+  ``ExpFormat.STANDARD``, ``ExpFormat.PREFIX`` or
+  ``ExpFormat.PARTS_PER``.
+* Previously formating a non-finite number in percent mode would always
+  display a ``'%'`` symbol, e.g. ``'(nan)%'``.
+  Now the brackets and ``'%'`` symbol will be omitted unless
+  ``nan_inf_exp=True``.
+* In ``latex=True`` mode there is now a space between the number and a
+  prefix or part-per translated exponent. For value/uncertainty
+  formatting the space is still absent. For ``latex=False`` there is
+  still always a space for number and value/uncertainty formatting
+  before the translated exponent string.
+* In ``latex=True`` mode ``'nan'`` and ``'inf'`` strings are now wrapped
+  in ``'\text{}'``.
+* Refactor code for resolving the exponent string.
+
 0.27.4 (2023-08-25)
 -------------------
 

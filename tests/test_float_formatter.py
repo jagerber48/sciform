@@ -1,7 +1,7 @@
 import unittest
 
-from sciform import (FormatOptions, Formatter, ExpMode, GroupingSeparator,
-                     FillMode, RoundMode, AutoDigits)
+from sciform import (FormatOptions, Formatter, ExpMode, ExpFormat,
+                     GroupingSeparator, FillMode, RoundMode, AutoDigits)
 
 
 FloatFormatOptionsCases = list[tuple[float, list[tuple[FormatOptions, str]]]]
@@ -80,8 +80,8 @@ class TestFormatting(unittest.TestCase):
                                latex=True), r'123\_450\times 10^{-1}'),
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
                                exp_val=3,
-                               prefix_exp=True,
-                               latex=True), r'12.345\text{k}')
+                               exp_format=ExpFormat.PREFIX,
+                               latex=True), r'12.345\text{ k}')
             ]),
             (1024, [
                 (FormatOptions(exp_mode=ExpMode.BINARY,
@@ -95,9 +95,14 @@ class TestFormatting(unittest.TestCase):
     def test_nan(self):
         cases_list = [
             (float('nan'), [
-                (FormatOptions(exp_mode=ExpMode.PERCENT), '(nan)%'),
+                (FormatOptions(exp_mode=ExpMode.PERCENT), 'nan'),
                 (FormatOptions(exp_mode=ExpMode.PERCENT,
-                               latex=True), r'\left(nan\right)\%')
+                               nan_inf_exp=True), '(nan)%'),
+                (FormatOptions(exp_mode=ExpMode.PERCENT,
+                               latex=True), r'\text{nan}'),
+                (FormatOptions(exp_mode=ExpMode.PERCENT,
+                               latex=True,
+                               nan_inf_exp=True), r'\left(\text{nan}\right)\%')
             ])
         ]
 
@@ -108,28 +113,28 @@ class TestFormatting(unittest.TestCase):
             (123e-3, [
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
                                exp_val=-3,
-                               parts_per_exp=True,
+                               exp_format=ExpFormat.PARTS_PER,
                                add_ppth_form=True), '123 ppth'),
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
                                exp_val=-6,
-                               parts_per_exp=True), '123000 ppm'),
+                               exp_format=ExpFormat.PARTS_PER), '123000 ppm'),
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
                                exp_val=-2,
-                               parts_per_exp=True), '12.3e-02')
+                               exp_format=ExpFormat.PARTS_PER), '12.3e-02')
             ]),
             (123e-9, [
                 (FormatOptions(exp_mode=ExpMode.ENGINEERING,
-                               parts_per_exp=True), '123 ppb'),
+                               exp_format=ExpFormat.PARTS_PER), '123 ppb'),
                 (FormatOptions(exp_mode=ExpMode.ENGINEERING,
-                               parts_per_exp=True,
+                               exp_format=ExpFormat.PARTS_PER,
                                extra_parts_per_forms={-9: None, -12: 'ppb'}),
                  '123e-09')
             ]),
             (123e-12, [
                 (FormatOptions(exp_mode=ExpMode.ENGINEERING,
-                               parts_per_exp=True), '123 ppt'),
+                               exp_format=ExpFormat.PARTS_PER), '123 ppt'),
                 (FormatOptions(exp_mode=ExpMode.ENGINEERING,
-                               parts_per_exp=True,
+                               exp_format=ExpFormat.PARTS_PER,
                                extra_parts_per_forms={-9: None, -12: 'ppb'}),
                  '123 ppb')
             ])

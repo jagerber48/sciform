@@ -2,18 +2,16 @@ from warnings import warn
 import re
 from decimal import Decimal
 
-from sciform.modes import ExpMode, SignMode, AutoExpVal, RoundMode
+from sciform.modes import ExpMode, SignMode, AutoExpVal, RoundMode, ExpFormat
 from sciform.format_options import FormatOptions, RenderedFormatOptions
-from sciform.format_utils import (get_mantissa_exp_base, get_exp_str,
-                                  get_top_digit,
-                                  get_round_digit,
-                                  format_num_by_top_bottom_dig,
-                                  convert_exp_str,
-                                  latex_translate)
+from sciform.format_utils import (
+    get_mantissa_exp_base, get_exp_str, get_top_digit, get_round_digit,
+    format_num_by_top_bottom_dig, latex_translate, parse_standard_exp_str
+)
 from sciform.grouping import add_separators
 
 
-def format_non_inf(num: Decimal, options: RenderedFormatOptions) -> str:
+def format_non_finite(num: Decimal, options: RenderedFormatOptions) -> str:
     if num.is_nan():
         num_str = 'nan'
     elif num == Decimal('inf'):
@@ -21,7 +19,7 @@ def format_non_inf(num: Decimal, options: RenderedFormatOptions) -> str:
     elif num == Decimal('-inf'):
         num_str = '-inf'
     else:
-        raise ValueError(f'format_non_inf() cannot format {num}.')
+        raise ValueError(f'format_non_finite() cannot format {num}.')
 
     if options.nan_inf_exp:
         exp_mode = options.exp_mode
@@ -30,23 +28,18 @@ def format_non_inf(num: Decimal, options: RenderedFormatOptions) -> str:
         if options.exp_val is AutoExpVal:
             exp_val = 0
 
-        if exp_mode is ExpMode.FIXEDPOINT:
-            exp_str = ''
-        elif (exp_mode is ExpMode.SCIENTIFIC
-              or exp_mode is ExpMode.ENGINEERING
-              or exp_mode is ExpMode.ENGINEERING_SHIFTED):
-            exp_str = f'e+{exp_val:02d}'
-        else:
-            exp_str = f'b+{exp_val:02d}'
-
-        exp_str = convert_exp_str(exp_str,
-                                  options.prefix_exp,
-                                  options.parts_per_exp,
-                                  options.latex,
-                                  options.superscript_exp,
-                                  options.extra_si_prefixes,
-                                  options.extra_iec_prefixes,
-                                  options.extra_parts_per_forms)
+        exp_str = get_exp_str(
+            exp_val=exp_val,
+            exp_mode=exp_mode,
+            exp_format=options.exp_format,
+            capitalize=options.capitalize,
+            latex=options.latex,
+            latex_trim_whitespace=True,
+            superscript=options.superscript_exp,
+            extra_si_prefixes=options.extra_si_prefixes,
+            extra_iec_prefixes=options.extra_iec_prefixes,
+            extra_parts_per_forms=options.extra_parts_per_forms
+        )
     else:
         exp_str = ''
 
@@ -54,9 +47,6 @@ def format_non_inf(num: Decimal, options: RenderedFormatOptions) -> str:
         result = f'({num_str}){exp_str}'
     else:
         result = f'{num_str}'
-
-    if options.exp_mode is ExpMode.PERCENT:
-        result = f'({result})%'
 
     if options.capitalize:
         result = result.upper()
@@ -73,7 +63,7 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
     options = unrendered_options.render()
 
     if not num.is_finite():
-        return format_non_inf(num, options)
+        return format_non_finite(num, options)
 
     if options.exp_mode is ExpMode.PERCENT:
         num *= 100
@@ -123,20 +113,20 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
                                   lower_separator,
                                   group_size=3)
 
-    exp_str = get_exp_str(exp_val, exp_mode, options.capitalize)
-    exp_str = convert_exp_str(exp_str,
-                              options.prefix_exp,
-                              options.parts_per_exp,
-                              options.latex,
-                              options.superscript_exp,
-                              options.extra_si_prefixes,
-                              options.extra_iec_prefixes,
-                              options.extra_parts_per_forms)
+    exp_str = get_exp_str(
+        exp_val=exp_val,
+        exp_mode=exp_mode,
+        exp_format=options.exp_format,
+        capitalize=options.capitalize,
+        latex=options.latex,
+        latex_trim_whitespace=False,
+        superscript=options.superscript_exp,
+        extra_si_prefixes=options.extra_si_prefixes,
+        extra_iec_prefixes=options.extra_iec_prefixes,
+        extra_parts_per_forms=options.extra_parts_per_forms
+    )
 
     result = f'{mantissa_str}{exp_str}'
-
-    if options.exp_mode is ExpMode.PERCENT:
-        result = f'{result}%'
 
     if options.latex:
         result = latex_translate(result)
@@ -259,8 +249,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
                       exp_val=exp_val,
                       superscript_exp=False,
                       latex=False,
-                      prefix_exp=False,
-                      parts_per_exp=False,
+                      exp_format=ExpFormat.STANDARD,
                       pdg_sig_figs=False))
 
     unc_format_options = val_format_options.merge(
@@ -312,14 +301,19 @@ def format_val_unc(val: Decimal, unc: Decimal,
         val_unc_str = f'{val_str}({unc_str})'
 
     if exp_str is not None:
-        exp_str = convert_exp_str(exp_str,
-                                  options.prefix_exp,
-                                  options.parts_per_exp,
-                                  options.latex,
-                                  options.superscript_exp,
-                                  options.extra_si_prefixes,
-                                  options.extra_iec_prefixes,
-                                  options.extra_parts_per_forms)
+        base, exp_val = parse_standard_exp_str(exp_str)
+        exp_str = get_exp_str(
+            exp_val=exp_val,
+            exp_mode=exp_mode,
+            exp_format=options.exp_format,
+            capitalize=options.capitalize,
+            latex=options.latex,
+            latex_trim_whitespace=True,
+            superscript=options.superscript_exp,
+            extra_si_prefixes=options.extra_si_prefixes,
+            extra_iec_prefixes=options.extra_iec_prefixes,
+            extra_parts_per_forms=options.extra_parts_per_forms
+        )
         val_unc_exp_str = f'({val_unc_str}){exp_str}'
     else:
         val_unc_exp_str = val_unc_str

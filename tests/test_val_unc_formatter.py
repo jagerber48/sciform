@@ -1,7 +1,7 @@
 import unittest
 
 from sciform import (FormatOptions, Formatter, ExpMode, GroupingSeparator,
-                     RoundMode)
+                     RoundMode, ExpFormat)
 
 
 ValUncFormatOptionsCases = list[tuple[tuple[float, float],
@@ -128,7 +128,12 @@ class TestFormatting(unittest.TestCase):
                                upper_separator=GroupingSeparator.UNDERSCORE,
                                unicode_pm=True,
                                latex=True),
-                 r'\left(123\_450 \pm 2\right)\times 10^{-1}')
+                 r'\left(123\_450 \pm 2\right)\times 10^{-1}'),
+                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
+                               exp_format=ExpFormat.PREFIX,
+                               exp_val=3,
+                               latex=True),
+                 r'\left(12.3450 \pm 0.0002\right)\text{k}')
             ]),
             ((0.123_456_78, 0.000_002_55), [
                 (FormatOptions(lower_separator=GroupingSeparator.UNDERSCORE,
