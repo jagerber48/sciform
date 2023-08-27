@@ -213,8 +213,8 @@ class TestInvalidOptions(unittest.TestCase):
                           extra_parts_per_forms={})
 
     def test_parse_standard_exp_str_binary(self):
-        '''
+        """
         This is the only place that this is tested while binary
         value/uncertainty is not implemented.
-        '''
-        self.assertEqual(parse_standard_exp_str(f'b+10'), (2, 10))
+        """
+        self.assertEqual(parse_standard_exp_str('b+10'), (2, 10))

@@ -64,7 +64,6 @@ class TestConfig(unittest.TestCase):
         global_reset_iec_prefixes()
         self.assertEqual(f'{num:{fmt_spec}}', '1 Ki')
 
-
     def test_ppth_form(self):
         num = 0.0024
         formatter = Formatter(FormatOptions(
