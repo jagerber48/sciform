@@ -217,7 +217,7 @@ def parse_standard_exp_str(exp_str: str) -> tuple[int, int]:
         base = 10
     elif exp_symb.lower() == 'b':
         base = 2
-    else:
+    else:  # pragma: no cover
         assert False, 'unreachable'
 
     exp_val = int(f'{exp_sign}{exp_digits}')
