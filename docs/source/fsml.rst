@@ -32,9 +32,16 @@ The :mod:`sciform` format specification mini-language is given by::
     exp_mode           ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" | "b" | "B" |
     exp_val            ::=  [+-]?digit+
 
+Example:
+
+>>> from sciform import SciNum
+>>> print(f'{SciNum(123456.654321):_,_.4}')
+123_456,654_3
+
 See below for details about how the terms in the FSML correspond to
 formatting options.
-For further details about the options see :ref:`formatting_options`.
+Further details about the options can be found at
+:ref:`formatting_options`.
 
 .. list-table:: :mod:`sciform` Format Specification Mini-Language Terms
    :widths: 15 30
@@ -44,114 +51,79 @@ For further details about the options see :ref:`formatting_options`.
      - Description
    * - | fill
        | (``'0='``, ``' ='``)
-     - Fill characters will be padded between the most signifant digit
-       and the sign symbol until the digit corresponding to the
-       ``fill_top_digit`` is filled.
+     - Configure ``fill_mode`` to be :class:`FillMode.ZERO` or
+       :class:`FillMode.SPACE`. See :ref:`left_filling`.
    * - | sign
        | (``'-'``, ``'+'``, ``' '``)
-     - ``'-'`` will include a sign symbol only for negative numbers.
-       ``'+'`` will include a sign symbol for all numbers.
-       ``' '`` will include a minus symbol for negative numbers and a
-       space for positive numbers. Zero is always considered to be
-       positive.
+     - Configure ``sign_mode`` to be :class:`SignMode.NEGATIVE`,
+       :class:`SignMode.ALWAYS` or :class:`SignMode.SPACE`. See
+       :ref:`sign_mode`.
    * - | alternate mode
        | (``'#'``)
-     - Alternate mode is enabled (disabled by default) if the ``'#'``
-       flag is included in the format specification.
-       In engineering mode (``r`` or ``R``), the alternate mode engages
-       :ref:`engineering_shifted` mode.
-       In binary mode (``b`` or ``B``), the alternate mode engages
-       :ref:`binary_iec` mode.
+     - The alternate mode flag indicates to use
+       :ref:`engineering_shifted` mode when the exponent mode flag is
+       ``'r'`` or ``'R'`` or to use :ref:`binary_iec` mode when the
+       exponent mode flag is ``'b'`` or ``'B'``.
    * - | fill_top_digit
        | (``\d+``)
-     - Any non-negative integer, default (0).
-       Indicates the decimal or binary place to which the formatted
-       string should be padded.
-       e.g. ``f'{SciNum(123):0=4}'`` will give ``'00123'``, i.e. padding
-       to the ``10^4`` place.
+     - Sets ``top_dig_place`` to any non-negative integer.
+       See :ref:`left_filling`.
    * - | upper_separator
        | (``'n'``, ``','``, ``'.'``, ``'s'``, ``'_'``)
-     - Indicates the character to use as the separator between groups of
-       three digits above the decimal point. For base 10 formats this is
-       the "thousands" separator.
-       ``'n'`` is no separator, ``'s'`` is a single-whitespace separator
-       and ``','``, ``'.'``, and ``'_'`` are comma, period, and
-       underscore separators.
-       Note that NIST discourages the use of ``','`` or ``'.'`` as
-       thousands seperators because they can be confused with the
-       decimal separators depending on the locality.
-       See
-       `NIST Guide to the SI 10.5.3 <https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-10-more-printing-and-using-symbols-and-numbers#1053>`_.
+     - Sets ``upper_separator`` to :class:`GroupingSeparator.NONE`,
+       :class:`GroupingSeparator.COMMA`,
+       :class:`GroupingSeparator.POINT`,
+       :class:`GroupingSeparator.SPACE`, or
+       :class:`GroupingSeparator.UNDERSCORE`.
+       See :ref:`separators`.
    * - | decimal_separator
        | (``'.'``, ``','``)
-     - Symbol to use as the decimal separator.
-       Note that the decimal separator must be different than the upper
-       separator.
+     - Sets ``decimal_separator`` to :class:`GroupingSeparator.POINT` or
+       :class:`GroupingSeparator.COMMA`.
+       See :ref:`separators`.
    * - | lower_separator
        | (``'n'``, ``'s'``, ``'_'``)
-     - Indicates the character to use as the separator between groups of
-       three digits below the decimal point.
-       ``'n'`` is no separator, ``'s'`` is a single-whitespace separator
-       and ``'_'`` is an underscore separators.
+     - Sets ``lower_separator`` to :class:`GroupingSeparator.NONE`,
+       :class:`GroupingSeparator.SPACE`, or
+       :class:`GroupingSeparator.UNDERSCORE`.
+       See :ref:`separators`.
    * - | round_mode
        | (``'!'``, ``'.'``)
-     - Indicates whether the number will be rounded and displayed
-       according to decimal places ``'.'`` or significant figures
-       ``'!'``.
-       E.g. ``f'{SciNum(123.456):.2f}'`` gives ``'123.46'`` while
-       ``f'{SciNum(123.456):!2f}'`` gives ``'120'``.
+     - Sets ``round_mode`` to :class:`RoundMode.SIG_FIG` or
+       :class:`RoundMode.DEC_PLACE`.
+       See :ref:`rounding`.
    * - | ndigits
        | (``[+-]?\d+``)
-     - Integer indicating the decimal place or number of significant
-       figures to which the number shall be rounded and displayed.
-       Can be any integer for decimal place rounding mode.
-       Must be greater than zero for significant figure mode.
+     - Sets ``ndigits`` to an integer to control rounding.
+       See :ref:`rounding`.
    * - | exp_mode
        | (``'f'``, ``'F'``, ``'%'``, ``'e'``, ``'E'``, ``'r'``, ``'R'``,
          ``'b'``, ``'B'``)
-     - Indicates which exponent mode should be used. In all cases the
-       capitalization of the exponent symbol matches the capitalization
-       of the exponent mode flag.
+     - Sets ``exponent_mode``.
+       If this flag is capitalized then ``capitalize`` is set to
+       ``True``.
+       See :ref:`exp_mode`.
 
-       * ``'f'`` and ``'F'`` indicate :ref:`fixed_point` mode in which
-         no exponent is used to display the number.
-       * ``'%'`` indicates :ref:`percent_mode` mode which multiplies the
-         number by 100 prior to formatting and appends a ``'%'``
-         character.
-       * ``'e'`` and ``'E'`` indicate :ref:`scientific` exponent mode in
-         which the exponent is chosen so that the mantissa satisfies
-         ``1 <= m < 10``.
-       * ``'r'`` and ``'R'`` indicate :ref:`engineering` exponent mode
-         in which the exponent is chosen to be a multiple of 3 and so
-         that the mantissa ``m`` satisfies ``1 <= m <= 1000``.
-         If the alternate mode is enabled then
-         :ref:`engineering_shifted` exponent mode is used in which the
-         exponent is a multiple of 3 but the mantissa satisfies
-         ``0.1 <= m < 100``.
-       * ``'b'`` and ``'B'`` indicate :ref:`binary` exponent mode in
-         which the number is presented as a mantissa and exponent in
-         base 2.
-         The mantissa satisfies ``1 <= m < 2``.
-         If alternate mode is enabled then :ref:`binary_iec` exponent
-         mode is engaged so that the exponent is a multiple of 10 and
-         the mantissa satisfies ``1 <= m < 1024 = 2^10``.
+       * ``'f'`` and ``'F'`` set :ref:`fixed_point` exponent mode.
+       * ``'%'`` sets :ref:`percent_mode` exponent mode.
+       * ``'e'`` and ``'E'`` set :ref:`scientific` exponent mode.
+       * ``'r'`` and ``'R'`` set :ref:`engineering` or
+         :ref:`engineering_shifted` exponent modes depending on if the
+         alternate mode flag is used..
+       * ``'b'`` and ``'B'`` set :ref:`binary` or :ref:`binary_iec`
+         exponent modes depending on if the alternate mode flag is used.
    * - | exp_val
        | (``x[+-]\d+``)
-     - Positive or negative integer that can be used to force the
-       exponent to take a particular value.
-       This value must be compatible with the requested exponent mode.
+     - Sets ``exp_val`` to an integer.
+       See :ref:`fixed_exp`.
    * - | prefix mode
        | (``'p'``)
-     -  Flag (default off) indicating whether exponent strings should be
-        replaced with SI or IEC prefix characters. E.g.
-        ``'123e+03' -> '123 k'`` or ``'857.2B+20' -> '857.2 Mi'``.
+     - Sets ``exp_format`` to :class:`ExpFormat.PREFIX`.
+       See :ref:`exp_str_replacement`.
    * - | bracket uncertainty
        | (``'()'``)
-     - Flag (default off) indicating if :ref:`bracket_uncertainty` mode
-       should be used so that uncertainty appears in parentheses rather
-       than after a plus/minus symbol. E.g.
-       ``'1.0 +/- 0.5' -> '1.0(5)'``.
-
+     - Sets ``bracket_unc=True``.
+       See :ref:`bracket_uncertainty`.
 
 
 Incompatibilities With Built-in Format Specification Mini Language
