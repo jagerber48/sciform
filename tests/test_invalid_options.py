@@ -2,12 +2,12 @@ import unittest
 from decimal import Decimal
 
 from sciform import (Formatter, FormatOptions, RoundMode, ExpMode,
-                     GroupingSeparator)
-from sciform.formatting import format_non_inf
+                     GroupingSeparator, ExpFormat)
+from sciform.formatting import format_non_finite
 from sciform.grouping import add_group_chars_between_numbers, add_separators
 from sciform.format_utils import (
     get_top_digit, get_mantissa_exp_base, get_exp_str, get_sign_str,
-    get_round_digit
+    get_round_digit, get_prefix_dict, parse_standard_exp_str
 )
 
 
@@ -128,15 +128,8 @@ class TestInvalidOptions(unittest.TestCase):
             decimal_separator=GroupingSeparator.COMMA
         )
 
-    def test_prefix_and_parts_per_exp(self):
-        self.assertRaises(
-            ValueError, FormatOptions,
-            prefix_exp=True,
-            parts_per_exp=True
-        )
-
     def test_format_non_inf(self):
-        self.assertRaises(ValueError, format_non_inf, Decimal(1.0),
+        self.assertRaises(ValueError, format_non_finite, Decimal(1.0),
                           FormatOptions().render())
 
     def test_add_group_chars(self):
@@ -183,7 +176,14 @@ class TestInvalidOptions(unittest.TestCase):
         self.assertRaises(ValueError, get_exp_str,
                           exp_val=2,
                           exp_mode='sci',
-                          capitalize=False)
+                          exp_format=ExpFormat.STANDARD,
+                          capitalize=False,
+                          latex=False,
+                          latex_trim_whitespace=False,
+                          superscript=False,
+                          extra_si_prefixes={},
+                          extra_iec_prefixes={},
+                          extra_parts_per_forms={})
 
     def test_get_sign_str_bad_sign_mode(self):
         self.assertRaises(ValueError, get_sign_str,
@@ -195,3 +195,26 @@ class TestInvalidOptions(unittest.TestCase):
                           num=Decimal(123.456),
                           round_mode='none',
                           ndigits=0)
+
+    def test_get_prefix_dict_bad_base(self):
+        self.assertRaises(ValueError, get_prefix_dict,
+                          exp_format=ExpFormat.PREFIX,
+                          base=3,
+                          extra_si_prefixes={},
+                          extra_iec_prefixes={},
+                          extra_parts_per_forms={})
+
+    def test_get_prefix_dict_bad_format(self):
+        self.assertRaises(ValueError, get_prefix_dict,
+                          exp_format='pref',
+                          base=10,
+                          extra_si_prefixes={},
+                          extra_iec_prefixes={},
+                          extra_parts_per_forms={})
+
+    def test_parse_standard_exp_str_binary(self):
+        '''
+        This is the only place that this is tested while binary
+        value/uncertainty is not implemented.
+        '''
+        self.assertEqual(parse_standard_exp_str(f'b+10'), (2, 10))
