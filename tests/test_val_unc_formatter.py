@@ -174,6 +174,15 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
+    def test_binary_not_implemented(self):
+        sform = Formatter(FormatOptions(exp_mode=ExpMode.BINARY))
+        self.assertRaises(NotImplementedError, sform, 1024, 32)
+
+    @unittest.expectedFailure
+    def test_binary(self):
+        sform = Formatter(FormatOptions(exp_mode=ExpMode.BINARY))
+        self.assertEqual(sform(1024, 32), '(1.00000 +/- 0.03125)b+10')
+
     def test_pdg_ndigits_error(self):
         self.assertRaises(ValueError, FormatOptions, pdg_sig_figs=True,
                           ndigits=0)
