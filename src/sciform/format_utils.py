@@ -217,7 +217,7 @@ def parse_standard_exp_str(exp_str: str) -> tuple[int, int]:
         base = 10
     elif exp_symb.lower() == 'b':
         base = 2
-    else:
+    else:  # pragma: no cover
         assert False, 'unreachable'
 
     exp_val = int(f'{exp_sign}{exp_digits}')
@@ -269,8 +269,8 @@ def get_pdg_round_digit(num: Decimal) -> int:
         e.g. 123.45632 +/- 0.987 would be rounded as 123.5 +/- 1.0.
         '''
         round_digit = top_digit
-    else:
-        raise ValueError
+    else:  # pragma: no cover
+        assert False, "unreachable"
 
     return round_digit
 
@@ -293,7 +293,7 @@ def get_round_digit(num: Decimal,
         else:
             round_digit = -ndigits
     else:
-        raise TypeError(f'Unhandled round mode: {round_mode}.')
+        raise ValueError(f'Unhandled round mode: {round_mode}.')
     return round_digit
 
 

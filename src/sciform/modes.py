@@ -51,12 +51,11 @@ class FillMode(Enum):
     ZERO = 'zero'
 
     def to_char(self) -> str:
-        if self is FillMode.SPACE:
-            return ' '
-        elif self is FillMode.ZERO:
-            return '0'
-        else:
-            raise ValueError(f'Invalid fill mode: {self}')
+        char_dict = {
+            FillMode.SPACE: ' ',
+            FillMode.ZERO: '0'
+        }
+        return char_dict[self]
 
 
 class SignMode(Enum):
@@ -87,19 +86,14 @@ class GroupingSeparator(Enum):
     SPACE = 'space'
 
     def to_char(self) -> str:
-        if self is GroupingSeparator.NONE:
-            return ''
-        elif self is GroupingSeparator.COMMA:
-            return ','
-        elif self is GroupingSeparator.POINT:
-            return '.'
-        elif self is GroupingSeparator.UNDERSCORE:
-            return '_'
-        elif self is GroupingSeparator.SPACE:
-            return ' '
-        else:
-            raise ValueError(f'Invalid grouping separator: '
-                             f'{self}')
+        char_dict = {
+            GroupingSeparator.NONE: '',
+            GroupingSeparator.COMMA: ',',
+            GroupingSeparator.POINT: '.',
+            GroupingSeparator.UNDERSCORE: '_',
+            GroupingSeparator.SPACE: ' '
+        }
+        return char_dict[self]
 
 
 UpperGroupingSeparators = Literal[GroupingSeparator.NONE,

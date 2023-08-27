@@ -137,6 +137,10 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
 def format_val_unc(val: Decimal, unc: Decimal,
                    unrendered_options: FormatOptions):
     options = unrendered_options.render()
+    if (options.exp_mode is ExpMode.BINARY
+            or options.exp_mode is ExpMode.BINARY_IEC):
+        raise NotImplementedError('Binary exponent modes are not supported '
+                                  'for value/uncertainty formatting.')
 
     if options.round_mode is RoundMode.DEC_PLACE:
         warn('Precision round mode not available for value/uncertainty '

@@ -6,7 +6,7 @@ from sciform import (FormatOptions, SciNum, GlobalDefaultsContext, ExpMode,
                      set_global_defaults, reset_global_defaults,
                      global_add_c_prefix, global_add_small_si_prefixes,
                      global_add_ppth_form, global_reset_si_prefixes,
-                     global_reset_parts_per_forms)
+                     global_reset_parts_per_forms, global_reset_iec_prefixes)
 
 
 class TestConfig(unittest.TestCase):
@@ -54,6 +54,15 @@ class TestConfig(unittest.TestCase):
             num_str = f'{num:ex{exp:+}p}'
             self.assertEqual(num_str, expected_num_str)
         global_reset_si_prefixes()
+
+    def test_iec_prefix(self):
+        num = SciNum(1024)
+        fmt_spec = 'bp'
+        self.assertEqual(f'{num:{fmt_spec}}', '1 Ki')
+        set_global_defaults(FormatOptions(extra_iec_prefixes={10: 'KiB'}))
+        self.assertEqual(f'{num:{fmt_spec}}', '1 KiB')
+        global_reset_iec_prefixes()
+        self.assertEqual(f'{num:{fmt_spec}}', '1 Ki')
 
     def test_ppth_form(self):
         num = 0.0024
