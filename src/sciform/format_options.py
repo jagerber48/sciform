@@ -1,4 +1,4 @@
-from typing import Union, get_args
+from typing import Union, get_args, Optional
 from dataclasses import dataclass, asdict, InitVar
 from pprint import pformat
 
@@ -176,30 +176,30 @@ class FormatOptions:
     :param add_ppth_form: :class:`bool` (default ``False``) if ``True`` adds
       ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
     """
-    exp_mode: ExpMode = None
-    exp_val: Union[int, type(AutoExpVal)] = None
-    round_mode: RoundMode = None
-    ndigits: Union[int, type(AutoDigits)] = None
-    upper_separator: UpperGroupingSeparators = None
-    decimal_separator: DecimalGroupingSeparators = None
-    lower_separator: LowerGroupingSeparators = None
-    sign_mode: SignMode = None
-    fill_mode: FillMode = None
-    top_dig_place: int = None
-    exp_format: ExpFormat = None
-    extra_si_prefixes: dict[int, str] = None
-    extra_iec_prefixes: dict[int, str] = None
-    extra_parts_per_forms: dict[int, str] = None
-    capitalize: bool = None
-    superscript_exp: bool = None
-    latex: bool = None
-    nan_inf_exp: bool = None
-    bracket_unc: bool = None
-    pdg_sig_figs: bool = None
-    val_unc_match_widths: bool = None
-    bracket_unc_remove_seps: bool = None
-    unicode_pm: bool = None
-    unc_pm_whitespace: bool = None
+    exp_mode: Optional[ExpMode] = None
+    exp_val: Optional[Union[int, type(AutoExpVal)]] = None
+    round_mode: Optional[RoundMode] = None
+    ndigits: Optional[Union[int, type(AutoDigits)]] = None
+    upper_separator: Optional[UpperGroupingSeparators] = None
+    decimal_separator: Optional[DecimalGroupingSeparators] = None
+    lower_separator: Optional[LowerGroupingSeparators] = None
+    sign_mode: Optional[SignMode] = None
+    fill_mode: Optional[FillMode] = None
+    top_dig_place: Optional[int] = None
+    exp_format: Optional[ExpFormat] = None
+    extra_si_prefixes: Optional[dict[int, str]] = None
+    extra_iec_prefixes: Optional[dict[int, str]] = None
+    extra_parts_per_forms: Optional[dict[int, str]] = None
+    capitalize: Optional[bool] = None
+    superscript_exp: Optional[bool] = None
+    latex: Optional[bool] = None
+    nan_inf_exp: Optional[bool] = None
+    bracket_unc: Optional[bool] = None
+    pdg_sig_figs: Optional[bool] = None
+    val_unc_match_widths: Optional[bool] = None
+    bracket_unc_remove_seps: Optional[bool] = None
+    unicode_pm: Optional[bool] = None
+    unc_pm_whitespace: Optional[bool] = None
 
     add_c_prefix: InitVar[bool] = False
     add_small_si_prefixes: InitVar[bool] = False
