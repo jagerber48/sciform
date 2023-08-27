@@ -180,6 +180,10 @@ class TestFormatting(unittest.TestCase):
 
     @unittest.expectedFailure
     def test_binary(self):
+        """
+        This test should pass when binary value/uncertainty formatting
+        is implemented
+        """
         sform = Formatter(FormatOptions(exp_mode=ExpMode.BINARY))
         self.assertEqual(sform(1024, 32), '(1.00000 +/- 0.03125)b+10')
 
