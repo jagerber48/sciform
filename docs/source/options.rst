@@ -12,6 +12,8 @@ formatted strings.
 These options including control over the rounding strategy, scientific
 notation formatting, separation characters and more.
 
+.. _exp_mode:
+
 Exponent Mode
 =============
 
@@ -149,6 +151,8 @@ notation in base-2.
 >>> print(sform(2048))
 2b+10
 
+.. _fixed_exp:
+
 Fixed Exponent
 ==============
 
@@ -175,6 +179,8 @@ For binary IEC mode an explicit fixed exponent must be an integer
 multiple of 10.
 Because of this constrained behavior, it is recommended to only use a
 fixed exponent with the scientific or binary exponent modes.
+
+.. _exp_str_replacement:
 
 Exponent String Replacement
 ===========================
@@ -406,6 +412,8 @@ If ``ndigits`` is specified (i.e. not ``None``) but
 ``ndigits!=AutoDigits`` and ``pdg_sig_figs=True`` then ``ValueError``
 is raised.
 
+.. _separators:
+
 Separators
 ==========
 
@@ -442,6 +450,8 @@ NIST discourages the use of ``','`` or ``'.'`` as thousands seperators
 because they can be confused with the decimal separators depending on
 the locality. See
 `NIST Guide to the SI 10.5.3 <https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-10-more-printing-and-using-symbols-and-numbers#1053>`_.
+
+.. _sign_mode:
 
 Sign Mode
 =========
@@ -493,6 +503,8 @@ The ``capitalize`` flag also controls the capitalization of ``nan`` and
 NAN
 >>> print(sform(float('-inf')))
 -INF
+
+.. _left_filling:
 
 Left Filling
 ============
