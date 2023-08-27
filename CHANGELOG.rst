@@ -17,6 +17,11 @@ Unreleased
 * In ``latex=True`` mode ``'nan'`` and ``'inf'`` strings are now wrapped
   in ``'\text{}'``.
 * Refactor code for resolving the exponent string.
+* More unit tests to reach 100% test coverage. Mostly adding test cases
+  for invalid internal inputs.
+* Raise `NotImplementedError` when attempting value/uncertainty
+  formatting with binary exponent modes. This feature is not fully
+  functional.
 
 0.27.4 (2023-08-25)
 -------------------
