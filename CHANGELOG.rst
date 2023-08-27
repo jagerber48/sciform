@@ -10,18 +10,19 @@ Unreleased
   Now the brackets and ``'%'`` symbol will be omitted unless
   ``nan_inf_exp=True``.
 * In ``latex=True`` mode there is now a space between the number and a
-  prefix or part-per translated exponent. For value/uncertainty
-  formatting the space is still absent. For ``latex=False`` there is
-  still always a space for number and value/uncertainty formatting
-  before the translated exponent string.
+  prefix or parts-per translated exponent.
+  For value/uncertainty formatting the space is still absent.
+  For ``latex=False`` there is still always a space for number and
+  value/uncertainty formatting before the translated exponent string.
 * In ``latex=True`` mode ``'nan'`` and ``'inf'`` strings are now wrapped
   in ``'\text{}'``.
-* Refactor code for resolving the exponent string.
-* More unit tests to reach 100% test coverage. Mostly adding test cases
-  for invalid internal inputs.
-* Raise `NotImplementedError` when attempting value/uncertainty
-  formatting with binary exponent modes. This feature is not fully
-  functional.
+* Refactored code for resolving exponent strings.
+* Added more unit tests to reach 100% test coverage. Mostly added test
+  cases for invalid internal inputs.
+* Raise ``NotImplementedError`` when attempting value/uncertainty
+  formatting with binary exponent modes.
+  Rounding and truncating are not properly implemented in binary mode
+  yet.
 
 0.27.4 (2023-08-25)
 -------------------
