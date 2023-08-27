@@ -1,6 +1,11 @@
 Unreleased
 ----------
 
+* No unreleased changes
+
+0.28.0 (2023-08-27)
+-------------------
+
 * **[BREAKING]** Replace ``prefix_exp`` and ``parts_per_exp`` options
   with an ``exp_format`` option which can be configured to
   ``ExpFormat.STANDARD``, ``ExpFormat.PREFIX`` or
