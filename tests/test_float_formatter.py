@@ -24,6 +24,13 @@ class TestFormatting(unittest.TestCase):
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
                                superscript_exp=True), '7.89×10²')
             ]),
+
+            # Superscript in prefix mode when there's no replacement
+            (789, [
+                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
+                               exp_format=ExpFormat.PREFIX,
+                               superscript_exp=True), '7.89×10²')
+            ]),
             (1024, [
                 (FormatOptions(exp_mode=ExpMode.BINARY,
                                superscript_exp=True), '1×2¹⁰')
