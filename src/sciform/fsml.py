@@ -2,7 +2,7 @@ import re
 
 from sciform.format_options import FormatOptions
 from sciform.modes import (FillMode, SignMode, GroupingSeparator, RoundMode,
-                           ExpMode)
+                           ExpMode, ExpFormat)
 
 
 pattern = re.compile(r'''^
@@ -115,9 +115,9 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
 
     prefix_exp = match.group('prefix_mode')
     if prefix_exp is not None:
-        prefix_exp = True
+        exp_format = ExpFormat.PREFIX
     else:
-        prefix_exp = None
+        exp_format = ExpFormat.STANDARD
 
     bracket_unc = match.group('bracket_unc')
     if bracket_unc is not None:
@@ -136,8 +136,8 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
         ndigits=ndigits,
         exp_mode=exp_mode,
         exp_val=exp_val,
+        exp_format=exp_format,
         capitalize=capitalize,
-        prefix_exp=prefix_exp,
         bracket_unc=bracket_unc,
         val_unc_match_widths=val_unc_match_widths
     )

@@ -5,7 +5,7 @@ from pprint import pformat
 from sciform.modes import (FillMode, SignMode, GroupingSeparator,
                            UpperGroupingSeparators, LowerGroupingSeparators,
                            DecimalGroupingSeparators, RoundMode, ExpMode,
-                           AutoExpVal, AutoDigits)
+                           ExpFormat, AutoExpVal, AutoDigits)
 
 
 @dataclass(frozen=True)
@@ -20,8 +20,7 @@ class RenderedFormatOptions:
     sign_mode: SignMode
     fill_mode: FillMode
     top_dig_place: int
-    prefix_exp: bool
-    parts_per_exp: bool
+    exp_format: ExpFormat
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
     extra_parts_per_forms: dict[int, str]
@@ -90,7 +89,6 @@ class FormatOptions:
       :class:`GroupingSeparator.UNDERSCORE`
     * ``ndigits=None`` or ``ndigits=AutoDigits`` if
       ``pdg_sig_figs=True``
-    * Only one of ``prefix_exp`` and ``parts_per_exp`` may be selected
 
     :param exp_mode: :class:`ExpMode` indicating the formatting
       mode to be used.
@@ -124,10 +122,10 @@ class FormatOptions:
       to which the string will be left padded before the sign symbol. 0
       corresponds to the ones place, 1 corresponds to the tens place
       etc. E.g. ``top_dig_place=4`` will convert ``12`` into ``00012``.
-    :param prefix_exp: :class:`bool` indicating if exponents should be
-      replaced with either SI or IEC prefixes as appropriate.
-    :param parts_per_exp: :class:`bool` indicating if "parts-per" exponent
-      translations should be used.
+    :param exp_format: :class:`ExpFormat` indicating if exponents should
+      be displayed in standard ``e+01`` format, if they should be
+      translated into SI or IEC prefixes, or if they should be
+      translated into "parts-per" format.
     :param extra_si_prefixes: ``dict[int, Union[str, None]]`` mapping
       additional exponent values to si prefixes. Entries overwrite
       default values. A value of ``None`` means that exponent will not
@@ -188,8 +186,7 @@ class FormatOptions:
     sign_mode: SignMode = None
     fill_mode: FillMode = None
     top_dig_place: int = None
-    prefix_exp: bool = None
-    parts_per_exp: bool = None
+    exp_format: ExpFormat = None
     extra_si_prefixes: dict[int, str] = None
     extra_iec_prefixes: dict[int, str] = None
     extra_parts_per_forms: dict[int, str] = None
@@ -325,11 +322,6 @@ def validate_options(options: Union[FormatOptions, RenderedFormatOptions]):
                              f'{get_args(LowerGroupingSeparators)}, not '
                              f'{options.upper_separator}.')
 
-    if options.prefix_exp is not None and options.parts_per_exp is not None:
-        if options.prefix_exp and options.parts_per_exp:
-            raise ValueError('Only one of prefix exponent and parts-per '
-                             'exponent modes may be selected.')
-
 
 PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
     exp_mode=ExpMode.FIXEDPOINT,
@@ -342,8 +334,7 @@ PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
     sign_mode=SignMode.NEGATIVE,
     fill_mode=FillMode.SPACE,
     top_dig_place=0,
-    prefix_exp=False,
-    parts_per_exp=False,
+    exp_format=ExpFormat.STANDARD,
     extra_si_prefixes=dict(),
     extra_iec_prefixes=dict(),
     extra_parts_per_forms=dict(),

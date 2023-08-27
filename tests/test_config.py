@@ -1,6 +1,7 @@
 import unittest
 
 from sciform import (FormatOptions, SciNum, GlobalDefaultsContext, ExpMode,
+                     ExpFormat,
                      Formatter, GroupingSeparator, RoundMode, SignMode,
                      set_global_defaults, reset_global_defaults,
                      global_add_c_prefix, global_add_small_si_prefixes,
@@ -58,7 +59,7 @@ class TestConfig(unittest.TestCase):
         num = 0.0024
         formatter = Formatter(FormatOptions(
             exp_mode=ExpMode.ENGINEERING,
-            parts_per_exp=True
+            exp_format=ExpFormat.PARTS_PER
         ))
         self.assertEqual(formatter(num), '2.4e-03')
         global_add_ppth_form()

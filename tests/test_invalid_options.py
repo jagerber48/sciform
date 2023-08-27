@@ -114,16 +114,9 @@ class TestInvalidOptions(unittest.TestCase):
             decimal_separator=GroupingSeparator.POINT
         )
 
-    def test_uppder_decimal_separator_comma(self):
+    def test_upper_decimal_separator_comma(self):
         self.assertRaises(
             ValueError, FormatOptions,
             upper_separator=GroupingSeparator.COMMA,
             decimal_separator=GroupingSeparator.COMMA
-        )
-
-    def test_prefix_and_parts_per_exp(self):
-        self.assertRaises(
-            ValueError, FormatOptions,
-            prefix_exp=True,
-            parts_per_exp=True
         )

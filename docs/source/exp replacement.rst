@@ -148,10 +148,10 @@ For this reason, the usage of this notation is sometimes discouraged.
 Note that it is possible, using the ``extra_parts_per_forms`` option to
 override the standard mappings listed above.
 
->>> from sciform import Formatter, FormatOptions, ExpMode
+>>> from sciform import Formatter, FormatOptions, ExpMode, ExpFormat
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.ENGINEERING,
-...             parts_per_exp=True,
+...             exp_format=ExpFormat.PARTS_PER,
 ...             extra_parts_per_forms={-9: None, -12: 'ppb'}))
 >>> print(sform(33e-9))
 33e-09

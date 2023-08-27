@@ -192,21 +192,22 @@ Furthermore, it is possible to customize :class:`FormatOptions`
 objects or the global configuration settings to map additional
 translations, in addition to those provided by default.
 
+>>> from sciform import ExpFormat
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.ENGINEERING,
-...             prefix_exp=True))
+...             exp_format=ExpFormat.PREFIX))
 >>> print(sform(4242.13))
 4.24213 k
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.BINARY_IEC,
 ...             round_mode=RoundMode.SIG_FIG,
 ...             ndigits=4,
-...             prefix_exp=True))
+...             exp_format=ExpFormat.PREFIX))
 >>> print(sform(1300))
 1.270 Ki
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.ENGINEERING,
-...             parts_per_exp=True))
+...             exp_format=ExpFormat.PARTS_PER))
 >>> print(sform(12.3e-6))
 12.3 ppm
 
@@ -228,7 +229,7 @@ mappings.
 
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.SCIENTIFIC,
-...             prefix_exp=True,
+...             exp_format=ExpFormat.PREFIX,
 ...             extra_si_prefixes={-2: 'c'}))
 >>> print(sform(3e-2))
 3 c
@@ -238,12 +239,12 @@ force that exponent to not be translated.
 
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.ENGINEERING,
-...             parts_per_exp=True))
+...             exp_format=ExpFormat.PARTS_PER))
 >>> print(sform(3e-9))
 3 ppb
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.ENGINEERING,
-...             parts_per_exp=True,
+...             exp_format=ExpFormat.PARTS_PER,
 ...             extra_parts_per_forms={-9: None}))
 >>> print(sform(3e-9))
 3e-09
@@ -261,13 +262,13 @@ However, they can be easily be included using the ``add_c_prefix`` and
 
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.SCIENTIFIC,
-...             prefix_exp=True,
+...             exp_format=ExpFormat.PREFIX,
 ...             add_c_prefix=True))
 >>> print(sform(0.025))
 2.5 c
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.SCIENTIFIC,
-...             prefix_exp=True,
+...             exp_format=ExpFormat.PREFIX,
 ...             add_small_si_prefixes=True))
 >>> print(sform(25))
 2.5 da
@@ -279,7 +280,7 @@ but it is one that the author has found useful.
 
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.ENGINEERING,
-...             parts_per_exp=True,
+...             exp_format=ExpFormat.PARTS_PER,
 ...             add_ppth_form=True))
 >>> print(sform(12.3e-3))
 12.3 ppth
@@ -560,6 +561,9 @@ The latex format makes the following changes:
 * Replace ``'+/-'`` by ``'\pm'``
 * Replace ``'_'`` by ``'\_'``
 * Replace ``'%'`` by ``'\%'``
+* Exponent replacements such as ``'M'``, ``'Ki'``, or ``'ppb'`` and
+  non-finite numbers such as ``'nan'``, ``'NAN'``, ``'inf'``, and
+  ``'INF'`` are wrapped in ``'\text{}'``.
 
 Note that use of ``latex`` renders the use of ``unicode_pm`` and
 ``superscript_exp`` meaningless.
@@ -567,21 +571,38 @@ Note that use of ``latex`` renders the use of ``unicode_pm`` and
 Include Exponent on nan and inf
 ===============================
 
-Python supports ``float('nan')``, ``float('inf')``, and
-``float('-inf')``.
-Typically these are formatted to ``'nan'``, ``'inf'``, and ``'-inf'`` or
-``'NAN'``, ``'INF'``, and ``'-INF'`` respectively depending on
-``capitalize``.
+Python supports ``'nan'``, ``'inf'``, and
+``'-inf'`` numbers which are simply formatted to ``'nan'``, ``'inf'``,
+and ``'-inf'`` or ``'NAN'``, ``'INF'``, and ``'-INF'``, respectively,
+depending on ``capitalize``.
 However, if ``nan_inf_exp=True`` (default ``False``), then, for
-scientific, engineering, and binary exponent modes, these will instead
-be formatted as, e.g. ``'(nan)e+00'``.
+scientific, percent, engineering, and binary exponent modes, these will
+instead be formatted as, e.g. ``'(nan)e+00'``.
 
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.SCIENTIFIC,
+...             nan_inf_exp=False,
+...             capitalize=True))
+>>> print(sform(float('-inf')))
+-INF
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.SCIENTIFIC,
 ...             nan_inf_exp=True,
 ...             capitalize=True))
 >>> print(sform(float('-inf')))
 (-INF)E+00
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.PERCENT,
+...             nan_inf_exp=False,
+...             capitalize=True))
+>>> print(sform(float('-inf')))
+-INF
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.PERCENT,
+...             nan_inf_exp=True,
+...             capitalize=True))
+>>> print(sform(float('-inf')))
+(-INF)%
 
 .. _val_unc_formatting_options:
 

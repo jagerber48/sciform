@@ -1,10 +1,10 @@
 from typing import Union
 from math import floor, log10, log2
 import re
-from copy import copy
 from decimal import Decimal
 
-from sciform.modes import ExpMode, RoundMode, SignMode, AutoExpVal, AutoDigits
+from sciform.modes import (ExpMode, ExpFormat, RoundMode, SignMode, AutoExpVal,
+                           AutoDigits)
 from sciform.prefix import (si_val_to_prefix_dict, iec_val_to_prefix_dict,
                             pp_val_to_prefix_dict)
 
@@ -99,22 +99,130 @@ def get_mantissa_exp_base(
     return mantissa, exp_val, base
 
 
-def get_exp_str(exp_val: int, exp_mode: ExpMode,
-                capitalize: bool) -> str:
-    if exp_mode is exp_mode.FIXEDPOINT or exp_mode is ExpMode.PERCENT:
-        exp_str = ''
-    elif (exp_mode is ExpMode.SCIENTIFIC
-          or exp_mode is ExpMode.ENGINEERING
-          or exp_mode is ExpMode.ENGINEERING_SHIFTED):
-        exp_char = 'E' if capitalize else 'e'
-        exp_str = f'{exp_char}{exp_val:+03d}'
+def get_standard_exp_str(base: int,
+                         exp_val: int,
+                         capitalize: bool) -> str:
+    base_exp_symb_dict = {10: 'e', 2: 'b'}
+    exp_symb = base_exp_symb_dict[base]
+    if capitalize:
+        exp_symb = exp_symb.capitalize()
+    return f'{exp_symb}{exp_val:+03d}'
+
+
+def get_superscript_exp_str(base: int,
+                            exp_val: int) -> str:
+    sup_trans = str.maketrans("+-0123456789", "⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹")
+    exp_val_str = f'{exp_val}'.translate(sup_trans)
+    return f'×{base}{exp_val_str}'
+
+
+def get_prefix_dict(exp_format: ExpFormat,
+                    base: int,
+                    extra_si_prefixes: dict[int, str] = None,
+                    extra_iec_prefixes: dict[int, str] = None,
+                    extra_parts_per_forms: dict[int, str] = None
+                    ) -> dict[int, str]:
+    if exp_format is ExpFormat.PREFIX:
+        if base == 10:
+            prefix_dict = si_val_to_prefix_dict.copy()
+            prefix_dict.update(extra_si_prefixes)
+        elif base == 2:
+            prefix_dict = iec_val_to_prefix_dict.copy()
+            prefix_dict.update(extra_iec_prefixes)
+        else:
+            raise ValueError(f'Unhandled base {base}')
+    elif exp_format is ExpFormat.PARTS_PER:
+        prefix_dict = pp_val_to_prefix_dict.copy()
+        prefix_dict.update(extra_parts_per_forms)
+    else:
+        raise ValueError(f'Unhandled ExpFormat, {exp_format}.')
+
+    return prefix_dict
+
+
+def get_exp_str(exp_val: int,
+                exp_mode: ExpMode,
+                exp_format: ExpFormat,
+                capitalize: bool,
+                latex: bool,
+                latex_trim_whitespace: bool,
+                superscript: bool,
+                extra_si_prefixes: dict[int, str] = None,
+                extra_iec_prefixes: dict[int, str] = None,
+                extra_parts_per_forms: dict[int, str] = None) -> str:
+    if exp_mode is ExpMode.FIXEDPOINT:
+        return ''
+    elif exp_mode is ExpMode.PERCENT:
+        return '%'
+
+    if (exp_mode is ExpMode.SCIENTIFIC
+            or exp_mode is ExpMode.ENGINEERING
+            or exp_mode is ExpMode.ENGINEERING_SHIFTED):
+        base = 10
     elif (exp_mode is ExpMode.BINARY
           or exp_mode is ExpMode.BINARY_IEC):
-        exp_char = 'B' if capitalize else 'b'
-        exp_str = f'{exp_char}{exp_val:+03d}'
+        base = 2
     else:
-        raise ValueError(f'Unhandled format type {exp_mode}')
-    return exp_str
+        raise ValueError(f'Unhandled exp_mode: {exp_mode}')
+
+    if exp_format is ExpFormat.STANDARD:
+        if latex:
+            return rf'\times {base}^{{{exp_val:+}}}'
+        elif superscript:
+            return get_superscript_exp_str(base, exp_val)
+        else:
+            return get_standard_exp_str(base, exp_val, capitalize)
+    elif (exp_format is ExpFormat.PREFIX
+            or exp_format is ExpFormat.PARTS_PER):
+        prefix_dict = get_prefix_dict(exp_format,
+                                      base,
+                                      extra_si_prefixes,
+                                      extra_iec_prefixes,
+                                      extra_parts_per_forms)
+
+        use_prefix = False
+        if exp_val in prefix_dict:
+            if prefix_dict[exp_val] is not None:
+                use_prefix = True
+
+        if not use_prefix:
+            if superscript:
+                return get_superscript_exp_str(base, exp_val)
+            else:
+                return get_standard_exp_str(base, exp_val, capitalize)
+        else:
+            exp_str = f' {prefix_dict[exp_val]}'
+            exp_str = exp_str.rstrip(' ')
+            if latex:
+                if latex_trim_whitespace:
+                    exp_str = exp_str.lstrip(' ')
+                exp_str = rf'\text{{{exp_str}}}'
+            return exp_str
+
+
+def parse_standard_exp_str(exp_str: str) -> tuple[int, int]:
+    match = re.match(
+        r'''
+         ^
+         (?P<exp_symb>[eEbB])
+         (?P<exp_sign>[+-])
+         (?P<exp_digits>\d+)
+         $
+         ''',
+        exp_str, re.VERBOSE)
+    exp_symb = match.group('exp_symb')
+    exp_sign = match.group('exp_sign')
+    exp_digits = match.group('exp_digits')
+    if exp_symb.lower() == 'e':
+        base = 10
+    elif exp_symb.lower() == 'b':
+        base = 2
+    else:
+        assert False, 'unreachable'
+
+    exp_val = int(f'{exp_sign}{exp_digits}')
+
+    return base, exp_val
 
 
 def get_sign_str(num: Decimal, sign_mode: SignMode) -> str:
@@ -132,7 +240,7 @@ def get_sign_str(num: Decimal, sign_mode: SignMode) -> str:
     return sign_str
 
 
-def get_pdg_round_digit(num: Decimal):
+def get_pdg_round_digit(num: Decimal) -> int:
     """
     Determine what digit a number should be rounded to according to the
     particle data group 3-5-4 rounding rules.
@@ -215,137 +323,14 @@ def format_num_by_top_bottom_dig(num: Decimal,
     return num_str
 
 
-def get_exp_symb_sign_digits(exp_str: str):
-    if exp_str == '':
-        return exp_str
-    match = re.match(
-        r'''
-         ^
-         (?P<exp_symb>[eEbB])
-         (?P<exp_sign>[+-])
-         (?P<exp_digits>\d+)
-         $
-         ''',
-        exp_str, re.VERBOSE)
-    exp_symb = match.group('exp_symb')
-    exp_sign = match.group('exp_sign')
-    exp_digits = match.group('exp_digits')
-    return exp_symb, exp_sign, exp_digits
-
-
-def convert_exp_str_to_superscript(exp_str: str):
-    if exp_str == '':
-        return exp_str
-
-    exp_symb, exp_sign, exp_digits = get_exp_symb_sign_digits(exp_str)
-
-    if exp_sign == '+':
-        # Superscript + does not look good, so drop it.
-        exp_sign = ''
-    exp_digits = exp_digits.lstrip('0')
-    if exp_digits == '':
-        exp_digits = '0'
-
-    sup_trans = str.maketrans("+-0123456789", "⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹")
-    if exp_symb in ['e', 'E']:
-        base = '10'
-    else:
-        base = '2'
-    exp_val_str = f'{exp_sign}{exp_digits}'.translate(sup_trans)
-    super_script_exp_str = f'×{base}{exp_val_str}'
-    return super_script_exp_str
-
-
-def convert_exp_str_to_latex(exp_str):
-    if exp_str == '':
-        return exp_str
-
-    exp_symb, exp_sign, exp_digits = get_exp_symb_sign_digits(exp_str)
-
-    exp_digits = exp_digits.lstrip('0')
-    if exp_digits == '':
-        exp_digits = '0'
-
-    if exp_symb in ['e', 'E']:
-        base = '10'
-    else:
-        base = '2'
-
-    latex_exp_str = rf'\times {base}^{{{exp_sign}{exp_digits}}}'
-    return latex_exp_str
-
-
-def translate_exp_str(exp_str: str,
-                      parts_per_exp: bool = False,
-                      extra_si_prefixes: dict[int, str] = None,
-                      extra_iec_prefixes: dict[int, str] = None,
-                      extra_parts_per_forms: dict[int, str] = None) -> str:
-    if exp_str == '':
-        return exp_str
-
-    exp_symb, exp_sign, exp_digits = get_exp_symb_sign_digits(exp_str)
-
-    exp_val = int(f'{exp_sign}{exp_digits}')
-    if exp_val == 0:
-        return ''
-
-    if exp_symb in ['e', 'E']:
-        if parts_per_exp:
-            val_to_prefix_dict = copy(pp_val_to_prefix_dict)
-            if extra_parts_per_forms is not None:
-                val_to_prefix_dict.update(extra_parts_per_forms)
-        else:
-            val_to_prefix_dict = copy(si_val_to_prefix_dict)
-            if extra_si_prefixes is not None:
-                val_to_prefix_dict.update(extra_si_prefixes)
-    else:
-        val_to_prefix_dict = copy(iec_val_to_prefix_dict)
-        if extra_iec_prefixes is not None:
-            val_to_prefix_dict.update(extra_iec_prefixes)
-
-    if exp_val in val_to_prefix_dict:
-        prefix = val_to_prefix_dict[exp_val]
-        if prefix is not None:
-            exp_str = f' {prefix}'
-
-    return exp_str
-
-
-def convert_exp_str(exp_str: str,
-                    prefix_exp: bool,
-                    parts_per_exp: bool,
-                    latex: bool,
-                    superscript_exp: bool,
-                    extra_si_prefixes: dict[int, str] = None,
-                    extra_iec_prefixes: dict[int, str] = None,
-                    extra_parts_per_forms: dict[int, str] = None) -> str:
-    transform_applied = False
-    if prefix_exp or parts_per_exp:
-        transformed_exp_str = translate_exp_str(exp_str,
-                                                parts_per_exp,
-                                                extra_si_prefixes,
-                                                extra_iec_prefixes,
-                                                extra_parts_per_forms)
-        if transformed_exp_str != exp_str:
-            transform_applied = True
-            exp_str = transformed_exp_str
-
-    if transform_applied:
-        if latex:
-            exp_str = rf'\text{{{exp_str.lstrip(" ")}}}'
-        return exp_str
-    else:
-        if latex:
-            exp_str = convert_exp_str_to_latex(exp_str)
-        elif superscript_exp:
-            exp_str = convert_exp_str_to_superscript(exp_str)
-    return exp_str
-
-
 def latex_translate(input_str: str) -> str:
     result_str = input_str
     result_str = result_str.replace('(', r'\left(')
     result_str = result_str.replace(')', r'\right)')
     result_str = result_str.replace('%', r'\%')
     result_str = result_str.replace('_', r'\_')
+    result_str = result_str.replace('nan', r'\text{nan}')
+    result_str = result_str.replace('NAN', r'\text{NAN}')
+    result_str = result_str.replace('inf', r'\text{inf}')
+    result_str = result_str.replace('INF', r'\text{INF}')
     return result_str
