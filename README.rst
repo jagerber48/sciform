@@ -7,6 +7,9 @@
 .. image:: https://img.shields.io/pypi/v/sciform?logo=pypi
      :target: https://pypi.org/project/sciform/
      :alt: PyPI - Version
+.. image:: https://img.shields.io/pypi/pyversions/sciform?logo=python
+     :target: https://pypi.org/project/sciform/
+     :alt: PyPI - Python Version
 .. image:: https://img.shields.io/codecov/c/github/jagerber48/sciform?logo=codecov
      :target: https://codecov.io/gh/jagerber48/sciform
      :alt: Codecov
