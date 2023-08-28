@@ -9,7 +9,12 @@ authors = [
 ]
 description = "A package for formatting numbers into scientific formatted strings."
 classifiers = [
-    "License :: OSI Approved :: MIT License"
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
 ]
 dynamic = ["version", "readme"]
 
