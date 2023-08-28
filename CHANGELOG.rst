@@ -1,6 +1,11 @@
 Unreleased
 ----------
 
+* No unreleased changes.
+
+0.28.1 (2023-08-28)
+-------------------
+
 * Make ``FormatOptions`` inputs ``Optional`` so that ``None`` inputs
   pass type checks.
 * Write format-specification mini-language documentation to refer to
