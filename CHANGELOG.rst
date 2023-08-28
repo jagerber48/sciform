@@ -4,9 +4,11 @@ Unreleased
 * Make ``FormatOptions`` inputs ``Optional`` so that ``None`` inputs
   pass type checks.
 * Write format-specification mini-language documentation to refer to
-  existing format options to avoid documentation duplication.
-* Perform test coverage report and upload to `<https://codecov.io>`_.
-  Add badge to readme.
+  existing format options documentation to avoid documentation
+  duplication.
+* Setup test coverage analysis automation and upload report to
+  `codecov <https://codecov.io/gh/jagerber48/sciform>`_.
+* Add package status badges to readme.
 
 0.28.0 (2023-08-27)
 -------------------

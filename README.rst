@@ -1,5 +1,19 @@
-.. image:: https://codecov.io/gh/jagerber48/sciform/graph/badge.svg?token=UI929LMGLY
- :target: https://codecov.io/gh/jagerber48/sciform
+.. image:: https://www.repostatus.org/badges/latest/wip.svg
+     :target: https://www.repostatus.org/#wip
+     :alt: Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.
+.. image:: https://img.shields.io/readthedocs/sciform?logo=readthedocs&link=https%3A%2F%2Fsciform.readthedocs.io%2Fen%2Fstable%2F
+     :target: https://sciform.readthedocs.io/en/stable/
+     :alt: Read the Docs
+.. image:: https://img.shields.io/pypi/v/sciform?logo=pypi
+     :target: https://pypi.org/project/sciform/
+     :alt: PyPI - Version
+.. image:: https://img.shields.io/codecov/c/github/jagerber48/sciform?logo=codecov
+     :target: https://codecov.io/gh/jagerber48/sciform
+     :alt: Codecov
+.. image:: https://img.shields.io/github/actions/workflow/status/jagerber48/sciform/python-package.yml?logo=github%20actions
+     :target: https://github.com/jagerber48/sciform/blob/main/.github/workflows/python-package.yml
+     :alt: GitHub Workflow Status
+
 
 #######
 sciform
