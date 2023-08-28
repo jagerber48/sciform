@@ -1,3 +1,6 @@
+.. image:: https://codecov.io/gh/jagerber48/sciform/graph/badge.svg?token=UI929LMGLY
+ :target: https://codecov.io/gh/jagerber48/sciform
+
 #######
 sciform
 #######
