@@ -9,6 +9,8 @@ Unreleased
 * Setup test coverage analysis automation and upload report to
   `codecov <https://codecov.io/gh/jagerber48/sciform>`_.
 * Add package status badges to readme.
+* Test against Python 3.11.
+* List supported Python versions in ``pyproject.toml`` classifiers.
 
 0.28.0 (2023-08-27)
 -------------------
