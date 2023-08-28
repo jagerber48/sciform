@@ -5,7 +5,8 @@ Unreleased
   pass type checks.
 * Write format-specification mini-language documentation to refer to
   existing format options to avoid documentation duplication.
-* Perform test coverage report and upload to `<codecov.io>`_.
+* Perform test coverage report and upload to `<https://codecov.io>`_.
+  Add badge to readme.
 
 0.28.0 (2023-08-27)
 -------------------
