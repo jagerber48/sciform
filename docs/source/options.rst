@@ -9,7 +9,7 @@ Formatting Options
 
 :mod:`sciform` provides a variety of options for converting numbers into
 formatted strings.
-These options including control over the rounding strategy, scientific
+These options include control over the rounding strategy, scientific
 notation formatting, separation characters and more.
 
 .. _exp_mode:
@@ -72,11 +72,13 @@ mantissa ``m`` satisfies ``1 <= m < 10``.
 >>> print(sform(123.456, 0.001))
 (1.23456 +/- 0.00001)e+02
 
-Note that for all exponent modes, the exponent integer is always displayed
-with a sign symbol (+ or -) and is left padded with a zero so that it is
-at least two digits wide. There are no options to modify this behavior
-for standard exponent display. The :ref:`superscript_exp` or
-:ref:`latex_format` can be used as alternatives.
+Note that, for all exponent modes, the exponent integer is always
+displayed with a sign symbol (+ or -) and is left padded with a zero so
+that it is at least two digits wide.
+There are no options to modify this behavior for standard exponent
+display.
+The :ref:`superscript_exp` or :ref:`latex_format` can be used as
+alternatives.
 
 .. _engineering:
 
@@ -143,9 +145,6 @@ In this mode number are expressed in base-2 exponent notation, but the
 exponent is constrained to be a multiple of 10, consistent with the
 IEC binary prefixes.
 The mantissa ``m`` satisfies ``1 <= m < 1024``.
-
-Binary formatting can be chosen to display a number in scientific
-notation in base-2.
 
 >>> sform = Formatter(FormatOptions(exp_mode=ExpMode.BINARY_IEC))
 >>> print(sform(2048))
@@ -303,8 +302,9 @@ identifying the appropriate exponent for display based on the selected
 exponent mode.
 In some cases, the rounding results in a modification to the chosen
 exponent (e.g. when presenting ``9.99`` in scientific exponent mode with
-two digits past the decimal point we display  ``"9.99e+00"``, but with
-one digit past the decimal point we display ``"1.0e+01"``).
+two digits past the decimal point :mod:`sciform` displays
+``"9.99e+00"``, but with one digit past the decimal point :mod:`sciform`
+displays ``"1.0e+01"``).
 This is taken into account before the final presentation.
 
 If the user does not specify the number of significant digits or the
@@ -751,7 +751,7 @@ decimal point could appear in the uncertainty in the brackets.
 For example: ``18.4 +/- 2.1 -> 18.4(2.1)``.
 In such cases, there is no official guidance on if the decimal symbol
 should be included in the bracket symbols or not.
-That is, one may format ``18.4 +/- 2.1 -> 18.4 (21)``.
+That is, one may format ``18.4 +/- 2.1 -> 18.4(21)``.
 The interpretation here is that the uncertainty is 21 tenths, since the
 least significant digit of the value is in the tenths place.
 The author's preference is to keep the decimal symbol because it allows
