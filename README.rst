@@ -90,19 +90,6 @@ strings according to the selected options.
 >>> print(sform(123456.78))
 123.5e+03
 
-For brevity, the user may consider abbreviating ``FormatOptions`` as
-``Fo``.
-
->>> from sciform import (Formatter, FormatOptions, RoundMode,
-...                      GroupingSeparator, ExpMode)
->>> sform = Formatter(FormatOptions(
-...             round_mode=RoundMode.DEC_PLACE,
-...             ndigits=6,
-...             upper_separator=GroupingSeparator.SPACE,
-...             lower_separator=GroupingSeparator.SPACE))
->>> print(sform(51413.14159265359))
-51 413.141 593
-
 Users can also format numbers by constructing ``SciNum`` objects and
 using string formatting to format the ``SciNum`` instances according
 to a custom FSML.
