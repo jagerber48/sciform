@@ -38,8 +38,8 @@ Formatter
 
 The :class:`Formatter` object is initialized and configured using a
 :class:`FormatOptions` object which contains the formatting settings.
-The :class:`FormatOptions` object is then called with a number and
-returns a corresponding formatted string.
+The :class:`Formatter` object is then called with a number and returns
+a corresponding formatted string.
 Note that global default options are used to populate unfilled options
 at formatting time.
 
@@ -95,7 +95,6 @@ using the :class:`SciNumUnc` object.
 >>> sform = Formatter(FormatOptions(ndigits=2))
 >>> print(sform(val, unc))
 84.30 +/- 0.20
-
 >>> from sciform import SciNumUnc
 >>> val_unc = SciNumUnc(val, unc)
 >>> print(f'{val_unc:!2}')
@@ -247,13 +246,15 @@ values.
 >>> with GlobalDefaultsContext(FormatOptions(add_c_prefix=True)):
 ...     print(f'{snum:.2ep}')
 1.23 c
+>>> print(f'{snum:.2ep}')
+1.23e-02
 
 Note that the :ref:`FSML <fsml>` does not provide complete control over
 all possible format options.
 For example, there is no code in the :ref:`FSML <fsml>` for configuring
 the ``unicode_pm`` option.
-If the user wishes to configure these options but also use the
-:ref:`FSML <fsml>` then they must do so by modifying the global default
+If the user wishes to configure these options, but also use the
+:ref:`FSML <fsml>`, then they must do so by modifying the global default
 settings.
 
 .. _dec_and_float:
@@ -285,9 +286,10 @@ representations in its internal formatting algorithms.
 
 Note, however, that :class:`Decimal` arithmetic operations are less
 performant that :class:`float` operations.
-So, the suggested workflow is to store and manipulate numerical data as
-:class:`float` instances, and only convert to :class:`Decimal`, or
-format using :mod:`sciform`, as the final step when numbers are being
+So, unless very high precision is needed at all steps of the
+calculation, the suggested workflow is to store and manipulate numerical
+data as :class:`float` instances, and only convert to :class:`Decimal`,
+or format using :mod:`sciform`, as the final step when numbers are being
 displayed for human readers.
 
 Float issues
@@ -300,7 +302,7 @@ concerned with the exact decimal representation of their numerical data.
 * Python uses
   `double-precision floating-point format <https://en.wikipedia.org/wiki/Double-precision_floating-point_format>`_
   for its :class:`float`.
-  In this format a :class:`float` occupies 64 bits of memory: 52 bits
+  In this format, a :class:`float` occupies 64 bits of memory: 52 bits
   for the mantissa, 11 bits for the exponent and 1 bit for the sign.
 * Any decimal with 15 digits between about ``+/- 1.8e+308`` can be
   uniquely represented by a :class:`float`.
@@ -360,18 +362,20 @@ Here I would like to highlight two specific issues.
    ``print(Decimal(0.00355))`` gives
    ``"0.003550000000000000204003480774872514302842319011688232421875"``
    which should round to ``0.0036``.
-   So we see that the rounding behavior for :class:`float` depends on
+   So, we see that the rounding behavior for :class:`float` may depend on
    digits of the decimal representation of the :class:`float` which are
    beyond the minimum number of digits necessary for the :class:`float`
-   to round trip and, thus,beyond the number of digits that will be
+   to round trip and, thus, beyond the number of digits that will be
    displayed by default.
 #. **Representation of numbers with high precision**.
    Conservatively, :class:`float` provides 15 digits of precision.
    That is, any two decimal numbers (within the :class:`float` range)
-   with 15 digits of precision correspond to unique :class:`float`
-   instances.
-   It is rare in applications that we require more than 15 digits of
-   precision, but in some cases we do.
+   with 15 or fewer digits of precision are guaranteed to correspond to
+   unique :class:`float` instances.
+   Decimal numbers with 16 digits or more of precision may not
+   correspond to unique :class:`float` instances.
+   It is rare, in scientific applications, that we require more than 15
+   digits of precision, but in some cases we do.
    One example is precision frequency metrology, such as that
    involved in atomic clocks.
    The relative uncertainty of primary frequency standards is
@@ -400,8 +404,9 @@ In all cases the input will typically be a :class:`Decimal`,
 :class:`float`, :class:`str`, or :class:`int`.
 :class:`Decimal`, :class:`str` and :class:`int` are unambiguously
 converted to :class:`Decimal` objects.
-For :class:`float` input, we first cast the float to a :class:`str` to
-get its shortest round-trippable decimal representation, then convert to
-:class:`Decimal`.
+For :class:`float` inputs, the values are first cast to :class:`str`
+instances to get their shortest round-trippable decimal representations.
+These shortest round-trippable strings are then converted into
+:class:`Decimal` instances.
 For high precision applications it is recommended that users provide
 input to :mod:`sciform` either as :class:`str` or :class:`Decimal`.
