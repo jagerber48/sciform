@@ -534,7 +534,7 @@ Superscript Exponent Format
 ===========================
 
 The ``superscript_exp`` option can be chosen to present exponents in
-standard superscript notation as opposed to e.g. ``e+02`` notation.
+superscript notation as opposed to e.g. ``e+02`` notation.
 
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.SCIENTIFIC,
