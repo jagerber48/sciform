@@ -54,8 +54,8 @@ ExpReplaceDict = dict[int, Union[str, None]]
 class FormatOptions:
     # TODO: __repr__
     """
-    :class:`FormatOptions` stores all the configuration options used to
-    format numbers and number/uncertainty pairs. See
+    :class:`FormatOptions` instances store all the configuration options
+    used to format numbers and number/uncertainty pairs. See
     :ref:`formatting_options` for more details on the available options.
     :class:`FormatOptions` instances are used to create
     :class:`Formatter` instances and to modify the global default
@@ -87,8 +87,8 @@ class FormatOptions:
     * ``lower_separator`` may only be :class:`GroupingSeparator.NONE`,
       :class:`GroupingSeparator.SPACE`, or
       :class:`GroupingSeparator.UNDERSCORE`
-    * ``ndigits=None`` or ``ndigits=AutoDigits`` if
-      ``pdg_sig_figs=True``
+    * if ``pdg_sig_figs=True`` then ``ndigits=None`` or
+      ``ndigits=AutoDigits``.
 
     :param exp_mode: :class:`ExpMode` indicating the formatting
       mode to be used.
@@ -138,33 +138,35 @@ class FormatOptions:
       mapping additional exponent values to "parts-per" forms. Entries
       overwrite default values. A value of ``None`` means that exponent
       will not be converted.
-    :param capitalize: :class:`bool` indicating whether the exponentiation
-      symbol should be upper- or lower-case.
-    :param superscript_exp: :class:`bool` indicating if the exponent string
-      should be converted into superscript notation. E.g. ``'1.23e+02'``
-      is converted to ``'1.23×10²'``
-    :param latex: :class:`bool` indicating if the resulting string should be
-      converted into a latex parseable code, e.g.
+    :param capitalize: :class:`bool` indicating whether the
+      exponentiation symbol should be upper- or lower-case.
+    :param superscript_exp: :class:`bool` indicating if the exponent
+      string should be converted into superscript notation. E.g.
+      ``'1.23e+02'`` is converted to ``'1.23×10²'``
+    :param latex: :class:`bool` indicating if the resulting string
+      should be converted into a latex parseable code, e.g.
       ``'\\left(1.23 \\pm 0.01\\right)\\times 10^{2}'``.
-    :param nan_inf_exp: :class:`bool` indicating whether non-finite numbers
-      such as ``float('nan')`` or ``float('inf')`` should be formatted
-      with exponent symbols when exponent modes including exponent
-      symbols are selected.
-    :param bracket_unc: :class:`bool` indicating if bracket uncertainty mode
-      (e.g. ``12.34(82)`` instead of ``12.34 +/- 0.82``) should be used.
+    :param nan_inf_exp: :class:`bool` indicating whether non-finite
+      numbers such as ``float('nan')`` or ``float('inf')`` should be
+      formatted with exponent symbols when exponent modes including
+      exponent symbols are selected.
+    :param bracket_unc: :class:`bool` indicating if bracket uncertainty
+      mode (e.g. ``12.34(82)`` instead of ``12.34 +/- 0.82``) should be
+      used.
     :param pdg_sig_figs: :class:`bool` indicating whether the
       particle-data-group conventions should be used to automatically
       determine the number of significant figures to use for
       uncertainty.
-    :param val_unc_match_widths: :class:`bool` indicating if the value or
-      uncertainty should be left padded to ensure they are both left
+    :param val_unc_match_widths: :class:`bool` indicating if the value
+      or uncertainty should be left padded to ensure they are both left
       padded to the same digits place.
-    :param bracket_unc_remove_seps: :class:`bool` indicating if separator
-      symbols should be removed from the uncertainty when using bracket
-      uncertainty mode. E.g. expressing ``123.4 +/- 2.3`` as
-      ``123.4(23)`` instead of ``123.4(2.3)``.
-    :param unicode_pm: :class:`bool` indicating if the '+/-' separator should
-      be replaced with the unicode plus minus symbol '±'.
+    :param bracket_unc_remove_seps: :class:`bool` indicating if
+      separator symbols should be removed from the uncertainty when
+      using bracket uncertainty mode. E.g. expressing ``123.4 +/- 2.3``
+      as ``123.4(23)`` instead of ``123.4(2.3)``.
+    :param unicode_pm: :class:`bool` indicating if the ``'+/-'``
+      separator should be replaced with the unicode plus minus symbol
+      ``'±'``.
     :param unc_pm_whitespace: :class:`bool` indicating if there should be
       whitespace surrounding the ``'+/-'`` symbols when formatting. E.g.
       ``123.4+/-2.3`` compared to ``123.4 +/- 2.3``.
@@ -238,11 +240,11 @@ class FormatOptions:
         """
         Generate a new :class:`FormatOptions` instance from the current
         instance and another :class:`FormatOptions` instance,
-        ``other``. The options for the new :class:`FormatOptions` are
-        constructed by replacing the options from the current instance
-        by any filled options from ``other``. Note that, even after
-        merging, the resulting :class:`FormatOptions` may still have
-        unfilled options.
+        ``other``. The options for the new :class:`FormatOptions`
+        instance are constructed by replacing the options from the
+        current instance by any filled options from ``other``. Note
+        that, even after merging, the resulting :class:`FormatOptions`
+        may still have unfilled options.
 
         :param other: :class:`FormatOptions` instance containing options
           that will overwrite those of the current instance.
