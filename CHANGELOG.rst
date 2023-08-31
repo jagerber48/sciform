@@ -1,7 +1,11 @@
 Unreleased
 ----------
 
-* No unreleased changes.
+Fixed
+^^^^^
+
+* Fixed a bug when using ``pdg_sig_figs`` with uncertainties larger than
+  about 1000 by cleaning up ``Decimal`` math.
 
 0.28.1 (2023-08-28)
 -------------------
