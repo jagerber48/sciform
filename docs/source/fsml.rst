@@ -1,6 +1,6 @@
 .. _fsml:
 
-Format Specification Mini Language
+Format Specification Mini-Language
 ##################################
 
 .. module:: sciform
@@ -126,7 +126,7 @@ Further details about the options can be found at
        See :ref:`bracket_uncertainty`.
 
 
-Incompatibilities With Built-in Format Specification Mini Language
+Incompatibilities With Built-in Format Specification Mini-Language
 ==================================================================
 
 The :mod:`sciform` FSML extends the functionality of the

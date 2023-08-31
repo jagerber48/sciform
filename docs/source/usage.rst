@@ -11,7 +11,7 @@ Formatting
 scientific formatted strings.
 The first is via the :class:`Formatter` object and the second is
 using string formatting and the
-:ref:`Format Specification Mini Language (FSML) <fsml>` with the
+:ref:`Format Specification Mini-Language (FSML) <fsml>` with the
 :class:`SciNum` or :class:`SciNumUnc` objects.
 
 FormatOptions
