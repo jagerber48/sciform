@@ -1,6 +1,6 @@
 .. _fsml:
 
-Format Specification Mini Language
+Format Specification Mini-Language
 ##################################
 
 .. module:: sciform
@@ -126,7 +126,7 @@ Further details about the options can be found at
        See :ref:`bracket_uncertainty`.
 
 
-Incompatibilities With Built-in Format Specification Mini Language
+Incompatibilities With Built-in Format Specification Mini-Language
 ==================================================================
 
 The :mod:`sciform` FSML extends the functionality of the
@@ -163,7 +163,7 @@ for scientific formatting.
   precision (``ndigits``) is supplied.
   :mod:`sciform`, instead, converts :class:`float` instances into
   :class:`str` and then :class:`Decimal` so that they are displayed with
-  as many digits as necessary "round-trip" when no ``ndigits`` is
+  as many digits as necessary to "round-trip" when no ``ndigits`` is
   supplied.
   E.g. ``f'{float(0.3):f}'`` yields ``0.300000`` while
   ``f'{SciNum(0.3):f}`` yields ``0.3``.
@@ -182,7 +182,7 @@ for scientific formatting.
   There is no ``0`` flag, as in the built-in FSML, that may be placed
   before the width field to indicate sign-aware zero padding.
   E.g. ``f'{float(12): =4}`` yields ``'  12'`` while
-  ``f{SciNum(12): =4}`` yeilds ``'   12'``, fill characters are padded
+  ``f{SciNum(12): =4}`` yields ``'   12'``, fill characters are padded
   up to the 10\ :sup:`4` digits place.
 
 * The built-in FSML supports displaying negative zero, but also supports

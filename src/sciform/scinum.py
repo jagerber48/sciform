@@ -8,7 +8,7 @@ from sciform.fsml import format_options_from_fmt_spec
 class SciNum:
     """
     :class:`SciNum` objects are used in combination with the
-    :mod:`sciform` format specification mini language for scientific
+    :mod:`sciform` format specification mini-language for scientific
     formatting of numbers. Any options not configured by the format
     specification will be populated with global default settings at
     format time.
