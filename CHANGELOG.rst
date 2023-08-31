@@ -1,10 +1,14 @@
 Unreleased
-----------
+==========
 
-* No unreleased changes.
+Fixed
+-----
+
+* Fixed a bug when using ``pdg_sig_figs`` with 
+
 
 0.28.1 (2023-08-28)
--------------------
+===================
 
 * Make ``FormatOptions`` inputs ``Optional`` so that ``None`` inputs
   pass type checks.
@@ -18,7 +22,7 @@ Unreleased
 * List supported Python versions in ``pyproject.toml`` classifiers.
 
 0.28.0 (2023-08-27)
--------------------
+===================
 
 * **[BREAKING]** Replace ``prefix_exp`` and ``parts_per_exp`` options
   with an ``exp_format`` option which can be configured to
@@ -44,12 +48,12 @@ Unreleased
   yet.
 
 0.27.4 (2023-08-25)
--------------------
+===================
 
 * Setup github action to automatically build and publish on release.
 
 0.27.3 (2023-08-23)
--------------------
+===================
 
 * Added ``Unreleased`` section to changelog.
 * Removed ``version`` from source code.
@@ -58,13 +62,13 @@ Unreleased
 * Stopped encouraging ``import FormatOptions as Fo``.
 
 0.27.2 (2023-08-20)
--------------------
+===================
 
 * Add ``__repr__()`` for ``FormatOptions`` and
   ``RenderedFormatOptions``.
 
 0.27.1 (2023-08-18)
--------------------
+===================
 
 * Add ``examples/`` folder to hold example scripts used in the
   documentation as well as the input data for these scripts and their
@@ -72,7 +76,7 @@ Unreleased
 * Remove extra ``readthedocs.yaml`` file.
 
 0.27.0 (2023-08-18)
--------------------
+===================
 
 * **[BREAKING]** Rename ``AutoRound`` to ``AutoDigits``. This is
   because, e.g., ``ndigits=AutoDigits`` sounds more correct than
@@ -80,7 +84,7 @@ Unreleased
   confused as being an option for ``round_mode``, which it is not.
 
 0.26.2 (2023-08-18)
--------------------
+===================
 
 * Fix a bug where illegal options combinations could be realized at
   format time when certain global default objects were merged into
@@ -89,12 +93,12 @@ Unreleased
   in the global defaults but before formatting.
 
 0.26.1 (2023-08-18)
--------------------
+===================
 
 * Add unit tests, increase test coverage.
 
 0.26.0 (2023-08-15)
--------------------
+===================
 
 * **[BREAKING]** Rename some format options to make their usage more
   clear.
@@ -121,17 +125,17 @@ Unreleased
    * More accurate descriptions of some invalid options combinations.
 
 0.25.2 (2023-08-11)
--------------------
+===================
 
 * Update roadmap
 
 0.25.1 (2023-08-10)
--------------------
+===================
 
 * Refactor ``get_pdg_round_digit()`` into a dedicated function.
 
 0.25.0 (2023-08-02)
--------------------
+===================
 
 * **[BREAKING]** ``template`` option removed from ``FormatOptions``
   constructor.
@@ -140,14 +144,14 @@ Unreleased
 * Minor documentation improvements.
 
 0.24.0 (2023-07-30)
--------------------
+===================
 
 * **[BREAKING]** percent mode is now accessed via an exponent mode,
   ``ExpMode.PERCENT``.
   There is no longer a ``percent`` keyword argument.
 
 0.23.0 (2023-07-29)
--------------------
+===================
 
 * **[BREAKING]** Users now construct ``FormatOptions`` objects which
   they pass into ``Formatter`` objects and global configuration
@@ -162,18 +166,18 @@ Unreleased
 * Change ``pyproject.toml`` description
 
 0.22.2 (2023-07-27)
--------------------
+===================
 
 * Add ``.readthedocs.yaml`` and update documentation
   ``requirements.txt`` for reproducible documentation builds.
 
 0.22.1 (2023-07-27)
--------------------
+===================
 
 * Fix a date typo in the changelog for the entry for version ``0.22.0``.
 
 0.22.0 (2023-07-27)
--------------------
+===================
 
 * **[BREAKING]** Rename ``sfloat`` to ``SciNum`` and ``vufloat`` to
   ``SciNumUnc``
@@ -201,7 +205,7 @@ Unreleased
    * Add "under construction" message to README.
 
 0.21.0 (2023-07-22)
--------------------
+===================
 
 * Use ``Decimal`` under the hood for numerical formatting instead of
   ``float``. ``Decimal`` instances support higher precision than
@@ -211,7 +215,7 @@ Unreleased
 * Minor cleanup of ``sfloat`` arithemetic functions.
 
 0.20.1 (2023-06-24)
--------------------
+===================
 
 * Refactor unit tests to use lists and tuples instead of dicts. Literal
   dicts allow the possibility for defining the same key (test case) with
@@ -222,7 +226,7 @@ Unreleased
   creating a ``Formatter`` object first.
 
 0.20.0 (2023-06-22)
--------------------
+===================
 
 * Support passing ``None`` as a value into ``extra_si_prefixes``,
   ``extra_iec_prefixes``, or ``extra_parts_per_forms`` to prevent
@@ -237,19 +241,19 @@ Unreleased
 * Link to test cases on examples page.
 
 0.19.0 (2023-06-22)
--------------------
+===================
 
 * Add python-package.yaml github workflows. Allows automated testing,
   doc testing, and flake8 scans during github pull requests.
 * Minor flake8 cleanup
 
 0.18.1 (2023-06-21)
--------------------
+===================
 
 * Documentation improvements
 
 0.18.0 (2023-06-19)
--------------------
+===================
 
 * Add Particle Data Group significant figure auto selection feature,
   documentation, and tests.
@@ -262,14 +266,14 @@ Unreleased
   explicitly indicate automatic precision and exponent selection.
 
 0.17.1 (2023-06-19)
--------------------
+===================
 
 * Code restructure to make formatting algorithm easier to follow
   including more verbose clarifying comments.
 * Minor documentation cleanup
 
 0.17.0 (2023-06-19)
--------------------
+===================
 
 * Add parts-per notation feature, documentation, and tests.
 * **[BREAKING]** Rename ``use_prefix`` option to ``prefix_exp``.
@@ -277,31 +281,31 @@ Unreleased
 * Fix some cross links in documentation.
 
 0.16.0 (2023-06-18)
--------------------
+===================
 
 * Add ``latex`` option with documentation and tests.
 * Refactor exponent string conversion.
 * Percent mode for non-finite numbers.
 
 0.15.2 (2023-06-18)
--------------------
+===================
 
 * Fix a bug involving space filling and separators.
 
 0.15.1 (2023-06-17)
--------------------
+===================
 
 * Changelog formatting typo.
 
 0.15.0 (2023-06-17)
--------------------
+===================
 
 * Add ``superscript_exp`` option with documentation and tests.
 * Forbid percent mode unless using fixed point exponent mode.
 * Add PyPi link to readme.
 
 0.14.0 (2023-06-17)
--------------------
+===================
 
 * Add Changelog.
 * Add ``unicode_pm`` option with documentation and tests.
