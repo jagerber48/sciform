@@ -9,6 +9,87 @@ The :mod:`sciform`
 contains hundreds of example formatting test cases which showcase the
 many available formatting options.
 
+Formatter
+=========
+
+Here are a small selection of examples which demonstrate some of the
+available formatting options.
+
+>>> from sciform import (FormatOptions, Formatter, ExpMode, RoundMode,
+...                      SignMode, GroupingSeparator, ExpFormat)
+>>> num = 12345.54321
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.SCIENTIFIC,
+...             round_mode=RoundMode.SIG_FIG,
+...             ndigits=4))
+>>> print(sform(num))
+1.235e+04
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.ENGINEERING,
+...             round_mode=RoundMode.DEC_PLACE,
+...             ndigits=10,
+...             sign_mode=SignMode.SPACE,
+...             superscript_exp=True))
+>>> print(sform(num))
+ 12.3455432100×10³
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.FIXEDPOINT,
+...             upper_separator=GroupingSeparator.SPACE,
+...             decimal_separator=GroupingSeparator.COMMA,
+...             lower_separator=GroupingSeparator.UNDERSCORE,
+...             sign_mode=SignMode.ALWAYS))
+>>> print(sform(num))
++12 345,543_21
+
+>>> num = 0.076543
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.SCIENTIFIC,
+...             exp_val=-3,
+...             exp_format=ExpFormat.PARTS_PER,
+...             add_ppth_form=True))
+>>> print(sform(num))
+76.543 ppth
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.SCIENTIFIC,
+...             exp_val=-2,
+...             exp_format=ExpFormat.PREFIX,
+...             add_c_prefix=True))
+>>> print(sform(num))
+7.6543 c
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.SCIENTIFIC,
+...             exp_val=-6,
+...             exp_format=ExpFormat.PREFIX))
+>>> print(sform(num))
+76543 μ
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.PERCENT))
+>>> print(sform(num))
+7.6543%
+
+>>> num = 3141592.7
+>>> unc = 1618
+>>> sform = Formatter()
+>>> print(sform(num, unc))
+3141593 +/- 1618
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.ENGINEERING,
+...             exp_format=ExpFormat.PREFIX,
+...             pdg_sig_figs=True,
+...             unicode_pm=True,
+...             unc_pm_whitespace=False))
+>>> print(sform(num, unc))
+(3.1416±0.0016) M
+
+>>> num = 314159.27
+>>> unc = 1618
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.ENGINEERING_SHIFTED,
+...             pdg_sig_figs=True,
+...             bracket_unc=True))
+>>> print(sform(num, unc))
+(0.3142(16))e+06
+
 Plotting and Tabulating Fit Data
 ================================
 
