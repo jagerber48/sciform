@@ -117,7 +117,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
     if prefix_exp is not None:
         exp_format = ExpFormat.PREFIX
     else:
-        exp_format = ExpFormat.STANDARD
+        exp_format = None
 
     bracket_unc = match.group('bracket_unc')
     if bracket_unc is not None:
