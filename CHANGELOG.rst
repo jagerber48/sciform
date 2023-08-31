@@ -1,6 +1,11 @@
 Unreleased
 ----------
 
+* No unreleased changes
+
+0.28.2 (2023-08-31)
+-------------------
+
 Improved
 ^^^^^^^^
 
