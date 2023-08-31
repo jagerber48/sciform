@@ -1,6 +1,9 @@
 Examples
 ########
 
+.. module:: sciform
+   :noindex:
+
 Test Cases
 ==========
 
@@ -88,6 +91,63 @@ available formatting options.
 ...             pdg_sig_figs=True,
 ...             bracket_unc=True))
 >>> print(sform(num, unc))
+(0.3142(16))e+06
+
+SciNum, SciNumUnc, and Global Options
+=====================================
+
+Here are a small selection of examples which demonstrate some of the
+available string formatting options.
+Note that many options are not available through the :ref:`fsml`, so
+these options must be selected by configuring the global default options
+during formatting.
+Here this is done using the :class:`GlobalDefaultsContext` context
+manager, but this could have been done using :func:`set_global_defaults`
+instead.
+
+>>> from sciform import SciNum, SciNumUnc, GlobalDefaultsContext
+>>> snum = SciNum(12345.54321)
+>>> print(f'{snum:!4e}')
+1.235e+04
+>>> print(f'{snum: .10r}')
+ 12.3455432100e+03
+>>> print(f'{snum:+s,_}')
++12 345,543_21
+
+>>> snum = SciNum(0.076543)
+>>> with GlobalDefaultsContext(FormatOptions(
+...         exp_format=ExpFormat.PARTS_PER,
+...         add_ppth_form=True)):
+...     print(f'{snum:ex-3}')
+76.543 ppth
+>>> with GlobalDefaultsContext(FormatOptions(
+...             exp_format=ExpFormat.PREFIX,
+...             add_c_prefix=True)):
+...     print(f'{snum:ex-2}')
+7.6543 c
+>>> with GlobalDefaultsContext(FormatOptions(
+...             exp_mode=ExpMode.SCIENTIFIC,
+...             exp_val=-6,
+...             exp_format=ExpFormat.PREFIX)):
+...     print(f'{snum:ex-6}')
+76543 μ
+>>> print(f'{snum:%}')
+7.6543%
+
+>>> num_unc = SciNumUnc(3141592.7, 1618)
+>>> print(f'{num_unc}')
+3141593 +/- 1618
+>>> with GlobalDefaultsContext(FormatOptions(
+...             pdg_sig_figs=True,
+...             unicode_pm=True,
+...             unc_pm_whitespace=False)):
+...     print(f'{num_unc:rp}')
+(3.1416±0.0016) M
+
+>>> num_unc = SciNumUnc(314159.27, 1618)
+>>> with GlobalDefaultsContext(FormatOptions(
+...             pdg_sig_figs=True)):
+...     print(f'{num_unc:#r()}')
 (0.3142(16))e+06
 
 Plotting and Tabulating Fit Data
