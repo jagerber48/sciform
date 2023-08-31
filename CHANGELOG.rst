@@ -1,11 +1,29 @@
 Unreleased
 ----------
 
+Improved
+^^^^^^^^
+
+* General wording and grammar improvements throughout documentation.
+* Include more usage examples in the examples documentation in addition
+  to referring the reader to the test suite.
+
 Fixed
 ^^^^^
 
 * Fixed a bug when using ``pdg_sig_figs`` with uncertainties larger than
   about 1000 by cleaning up ``Decimal`` math.
+* Previously, when formatting using the format specification
+  mini-language, if the prefix exponent format flag was omitted then the
+  exponent format was forced to ``ExpFormat.STANDARD`` rather than
+  ``None``.
+  This meant that it was impossible, using the format specification
+  mini-language combined with global configuration options, to set
+  ``ExpFormat.PARTS_PER``.
+  Now when the prefix flag is omitted ``exp_format`` is set to ``None``
+  so that it will be populated by the global default option.
+  In the future a flag may be added to select "parts-per" formatting
+  using the format specification mini-language.
 
 0.28.1 (2023-08-28)
 -------------------
