@@ -86,7 +86,7 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
     mantissa, exp_val, base = get_mantissa_exp_base(rounded_num, exp_mode,
                                                     exp_val)
     round_digit = get_round_digit(mantissa, round_mode, ndigits)
-    mantissa_rounded = Decimal(round(mantissa, -int(round_digit)))
+    mantissa_rounded = round(mantissa, -int(round_digit))
 
     if mantissa_rounded == 0:
         '''
