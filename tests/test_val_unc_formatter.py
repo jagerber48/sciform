@@ -54,6 +54,9 @@ class TestFormatting(unittest.TestCase):
             ]),
             ((123456, 789), [
                 (FormatOptions(bracket_unc=True,
+                               exp_mode=ExpMode.FIXEDPOINT,
+                               exp_format=ExpFormat.PREFIX), '123456(789)'),
+                (FormatOptions(bracket_unc=True,
                                exp_mode=ExpMode.ENGINEERING,
                                exp_format=ExpFormat.PREFIX), '123.456(789) k'),
                 (FormatOptions(bracket_unc=True,
