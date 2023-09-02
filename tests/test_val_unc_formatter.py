@@ -41,6 +41,40 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
+    def test_prefix(self):
+        cases_list = [
+            ((123.456, 0.789), [
+                (FormatOptions(bracket_unc=True,
+                               exp_mode=ExpMode.ENGINEERING,
+                               exp_format=ExpFormat.PREFIX), '123.456(789)'),
+                (FormatOptions(bracket_unc=True,
+                               exp_mode=ExpMode.ENGINEERING_SHIFTED,
+                               exp_format=ExpFormat.PREFIX),
+                 '0.123456(789) k'),
+            ]),
+            ((123456, 789), [
+                (FormatOptions(bracket_unc=True,
+                               exp_mode=ExpMode.ENGINEERING,
+                               exp_format=ExpFormat.PREFIX), '123.456(789) k'),
+                (FormatOptions(bracket_unc=True,
+                               exp_mode=ExpMode.ENGINEERING_SHIFTED,
+                               exp_format=ExpFormat.PREFIX), '0.123456(789) M')
+            ]),
+            ((123456e-9, 789e-9), [
+                (FormatOptions(bracket_unc=True,
+                               exp_mode=ExpMode.ENGINEERING,
+                               exp_format=ExpFormat.PARTS_PER),
+                 '123.456(789) ppm'),
+                (FormatOptions(bracket_unc=True,
+                               exp_mode=ExpMode.ENGINEERING_SHIFTED,
+                               exp_format=ExpFormat.PARTS_PER,
+                               add_ppth_form=True),
+                 '0.123456(789) ppth')
+            ])
+        ]
+
+        self.run_val_unc_formatter_cases(cases_list)
+
     def test_percent(self):
         cases_list = [
             ((0.123_456_78, 0.000_002_55), [
