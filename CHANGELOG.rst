@@ -19,6 +19,11 @@ Changed
   or ``b+02`` is used to indicate the exponent then the value and
   uncertainty are always wrapped in parentheses.
 
+Improved
+^^^^^^^^
+
+* Fixed minor typos in documentation.
+
 0.28.2 (2023-08-31)
 -------------------
 
