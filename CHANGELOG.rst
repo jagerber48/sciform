@@ -4,12 +4,12 @@ Unreleased
 Changed
 ^^^^^^^
 
-* Previously when using ``bracket_unc=True`` with any exponent string
-  (such as ``e-06``, ``μ`` or ``ppm``) the value and uncertainty were
+* Previously, when using ``bracket_unc=True`` with any exponent string
+  (such as ``e-06``, ``μ`` or ``ppm``), the value and uncertainty were
   always wrapped in parentheses, e.g. ``(1.03(25))e-06``,
   ``(1.03(25)) μ`` or ``(1.03(25)) ppm``.
   Now, when using ``bracket_unc=True`` with prefix or parts-per exponent
-  format modes, if the exponent is replaced with an alphabet
+  format modes, if the exponent is replaced with an alphabetic
   replacement, then the value and uncertainty are no longer wrapped in
   parentheses, e.g. ``1.03(25) μ`` and ``1.03(25) ppm``.
   This is consistent with
