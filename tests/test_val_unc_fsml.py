@@ -13,12 +13,12 @@ class TestFormatting(unittest.TestCase):
     def run_val_unc_fsml_cases(self, cases_list: ValUncFSMLCases):
         for (val, unc), formats_list in cases_list:
             for format_spec, expected_str in formats_list:
-                vunum = SciNumUnc(val, unc)
-                vunum_str = f'{vunum:{format_spec}}'
+                snum = SciNumUnc(val, unc)
+                snum_str = f'{snum:{format_spec}}'
                 with self.subTest(val=val, unc=unc, format_spec=format_spec,
                                   expected_str=expected_str,
-                                  actual_str=vunum_str):
-                    self.assertEqual(vunum_str, expected_str)
+                                  actual_str=snum_str):
+                    self.assertEqual(snum_str, expected_str)
 
     def test_fixed(self):
         cases_list = [

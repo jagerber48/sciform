@@ -387,7 +387,7 @@ Here I would like to highlight two specific issues.
    In Table 2 the :sup:`87` Rb ground-state hyperfine splitting is cited
    as ``6 834 682 610.904 312 6 Hz`` with 17 digits. Suppose the last
    digit was a ``5`` instead of a ``6``. Python :class:`float` cannot
-   tell the diffence:
+   tell the difference:
    ``float(6834682610.9043126) == float(6834682610.9043125)`` returns
    ``True``.
 

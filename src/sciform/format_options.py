@@ -262,7 +262,7 @@ class FormatOptions:
                 **_merge_dicts(asdict(defaults), asdict(self))
             )
         except ValueError as e:
-            raise ValueError('Invalid format options resuling from merging '
+            raise ValueError('Invalid format options resulting from merging '
                              'with default options.') from e
 
         return rendered_format_options
@@ -275,7 +275,7 @@ def validate_options(options: Union[FormatOptions, RenderedFormatOptions]):
     if options.round_mode is RoundMode.SIG_FIG:
         if isinstance(options.ndigits, int):
             if options.ndigits < 1:
-                raise ValueError(f'Precision must be >= 1 for sig fig '
+                raise ValueError(f'ndigits must be >= 1 for sig fig '
                                  f'rounding, not {options.ndigits}.')
 
     if (options.pdg_sig_figs and options.ndigits is not None

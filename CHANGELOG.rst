@@ -19,6 +19,11 @@ Changed
   or ``b+02`` is used to indicate the exponent then the value and
   uncertainty are always wrapped in parentheses.
 
+Improved
+^^^^^^^^
+
+* Fixed minor typos in documentation.
+
 0.28.2 (2023-08-31)
 -------------------
 
@@ -67,7 +72,7 @@ Fixed
   with an ``exp_format`` option which can be configured to
   ``ExpFormat.STANDARD``, ``ExpFormat.PREFIX`` or
   ``ExpFormat.PARTS_PER``.
-* Previously formating a non-finite number in percent mode would always
+* Previously formatting a non-finite number in percent mode would always
   display a ``'%'`` symbol, e.g. ``'(nan)%'``.
   Now the brackets and ``'%'`` symbol will be omitted unless
   ``nan_inf_exp=True``.
@@ -251,7 +256,7 @@ Fixed
   ``float`` and more reliable rounding behavior.
 * Update particle data group uncertainty rounding unit tests since edge
   cases are now handled property as a result of adopting ``Decimal``.
-* Minor cleanup of ``sfloat`` arithemetic functions.
+* Minor cleanup of ``sfloat`` arithmetic functions.
 
 0.20.1 (2023-06-24)
 -------------------
