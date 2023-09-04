@@ -14,7 +14,7 @@ configured using :class:`FormatOptions` instances, users can construct
 :class:`SciNum` or :class:`SciNumUnc` instances and format them using
 string formatting with format specification strings from the
 :mod:`sciform` format specification mini-language (FSML).
-This is analagous to how python :class:`int`, :class:`float`, and
+This is analogous to how python :class:`int`, :class:`float`, and
 :class:`Decimal` instances can be formatted using the built-in
 `format specification mini-language <https://docs.python.org/3/library/string.html#format-specification-mini-language>`_.
 The :mod:`sciform` format specification mini-language is given by::
@@ -158,9 +158,9 @@ for scientific formatting.
   * Inclusion of a hanging decimal point, e.g. ``123.``.
     :mod:`sciform` never includes a hanging decimal point.
 
-* For :class:`float` instances, Python formatting uses a default precion
-  of 6 for ``f``, ``F``, ``%``, ``e``, and ``E`` modes if no explicit
-  precision (``ndigits``) is supplied.
+* For :class:`float` instances, Python formatting uses a default
+  precision of 6 for ``f``, ``F``, ``%``, ``e``, and ``E`` modes if no
+  explicit precision (``ndigits``) is supplied.
   :mod:`sciform`, instead, converts :class:`float` instances into
   :class:`str` and then :class:`Decimal` so that they are displayed with
   as many digits as necessary to "round-trip" when no ``ndigits`` is

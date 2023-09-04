@@ -48,7 +48,7 @@ Percent
 -------
 
 Percent mode is similar to fixed point mode.
-For percent mode, the number is multipled by 100 and a ``%`` symbol is
+For percent mode, the number is multiplied by 100 and a ``%`` symbol is
 appended to the end of the formatted string.
 
 >>> sform = Formatter(FormatOptions(exp_mode=ExpMode.PERCENT))
@@ -90,7 +90,7 @@ exponent is chosen to be an integer multiple of 3.
 In standard engineering notation, the mantissa ``m`` satisfies
 ``1 <= m < 1000``.
 Engineering notation is compatible with the SI prefixes which are
-defined for any integer mulitple of 3 exponent, e.g.::
+defined for any integer multiple of 3 exponent, e.g.::
 
    369,000,00 Hz = 369e+06 Hz = 369 MHz
 
@@ -372,7 +372,7 @@ rounded to ``12.99``.
 >>> print(sform(12345.678))
 12.3457e+03
 
-It is possibe for ``ndigits <= 0``:
+It is possible for ``ndigits <= 0``:
 
 >>> from sciform import RoundMode
 >>> sform = Formatter(FormatOptions(
@@ -446,7 +446,7 @@ decimal separator.
 >>> print(sform(1234567.7654321))
 1 234 567,765_432_1
 
-NIST discourages the use of ``','`` or ``'.'`` as thousands seperators
+NIST discourages the use of ``','`` or ``'.'`` as thousands separators
 because they can be confused with the decimal separators depending on
 the locality. See
 `NIST Guide to the SI 10.5.3 <https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-10-more-printing-and-using-symbols-and-numbers#1053>`_.

@@ -60,7 +60,7 @@ continue to change until version ``1.0.0`` is released.
 API changes will be announced after new releases in the
 `changelog <https://sciform.readthedocs.io/en/stable/project.html#changelog>`_.
 If you have an idea or opinion about how ``sciform`` should be designed,
-now is a great to
+now is a great time to
 `post a discussion topic <https://github.com/jagerber48/sciform/discussions>`_
 about it!
 

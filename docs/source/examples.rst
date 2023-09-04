@@ -248,5 +248,5 @@ We can see the plot and table are immediately much more legible.
 Less characters are needed to communicate the data in both
 visualizations.
 The relative scaling of parameters between datasets and the relative
-scalings between the value and uncertainty for each entry are
+scaling between the value and uncertainty for each entry are
 immediately clear.
