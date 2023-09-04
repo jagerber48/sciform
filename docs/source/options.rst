@@ -743,6 +743,20 @@ Or with other options:
 >>> print(sform(123.456, 0.789))
 (1.2346(79))e+02
 
+When ``bracket_unc=True`` is used with the prefix or parts-per exponent
+formats, if the exponent string is replaced, then the enclosing brackets
+around the value/uncertainty pair are omitted.
+This is consistent with
+`BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
+
+>>> from sciform import ExpFormat
+>>> sform = Formatter(FormatOptions(
+...             exp_mode=ExpMode.ENGINEERING,
+...             exp_format=ExpFormat.PREFIX,
+...             bracket_unc=True))
+>>> print(sform(523.4e-3,  1.2e-3))
+523.4(1.2) m
+
 Remove Separators for Bracket Uncertainty
 --------------------------------------------
 
