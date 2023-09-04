@@ -1,3 +1,7 @@
+This project adheres to `Semantic Versioning <https://semver.org/>`_.
+
+----
+
 Unreleased
 ----------
 
@@ -23,6 +27,8 @@ Improved
 ^^^^^^^^
 
 * Fixed minor typos in documentation.
+
+----
 
 0.28.2 (2023-08-31)
 -------------------
@@ -51,6 +57,8 @@ Fixed
   In the future a flag may be added to select "parts-per" formatting
   using the format specification mini-language.
 
+----
+
 0.28.1 (2023-08-28)
 -------------------
 
@@ -64,6 +72,8 @@ Fixed
 * Add package status badges to readme.
 * Test against Python 3.11.
 * List supported Python versions in ``pyproject.toml`` classifiers.
+
+----
 
 0.28.0 (2023-08-27)
 -------------------
@@ -91,10 +101,14 @@ Fixed
   Rounding and truncating are not properly implemented in binary mode
   yet.
 
+----
+
 0.27.4 (2023-08-25)
 -------------------
 
 * Setup github action to automatically build and publish on release.
+
+----
 
 0.27.3 (2023-08-23)
 -------------------
@@ -105,11 +119,15 @@ Fixed
   ``setuptools_scm``.
 * Stopped encouraging ``import FormatOptions as Fo``.
 
+----
+
 0.27.2 (2023-08-20)
 -------------------
 
 * Add ``__repr__()`` for ``FormatOptions`` and
   ``RenderedFormatOptions``.
+
+----
 
 0.27.1 (2023-08-18)
 -------------------
@@ -119,6 +137,8 @@ Fixed
   outputs which appear in the documentation.
 * Remove extra ``readthedocs.yaml`` file.
 
+----
+
 0.27.0 (2023-08-18)
 -------------------
 
@@ -126,6 +146,8 @@ Fixed
   because, e.g., ``ndigits=AutoDigits`` sounds more correct than
   ``ndigits=AutoRound``. Furthermore, ``AutoRound`` could likely be
   confused as being an option for ``round_mode``, which it is not.
+
+----
 
 0.26.2 (2023-08-18)
 -------------------
@@ -136,10 +158,14 @@ Fixed
   The bug is fixed by re-checking the options combinations after merging
   in the global defaults but before formatting.
 
+----
+
 0.26.1 (2023-08-18)
 -------------------
 
 * Add unit tests, increase test coverage.
+
+----
 
 0.26.0 (2023-08-15)
 -------------------
@@ -168,15 +194,21 @@ Fixed
    * Better explanations of ``AutoExpVal`` and ``AutoRound`` behavior.
    * More accurate descriptions of some invalid options combinations.
 
+----
+
 0.25.2 (2023-08-11)
 -------------------
 
 * Update roadmap
 
+----
+
 0.25.1 (2023-08-10)
 -------------------
 
 * Refactor ``get_pdg_round_digit()`` into a dedicated function.
+
+----
 
 0.25.0 (2023-08-02)
 -------------------
@@ -187,12 +219,16 @@ Fixed
   ``FormatOptions`` instances using the ``merge()`` method.
 * Minor documentation improvements.
 
+----
+
 0.24.0 (2023-07-30)
 -------------------
 
 * **[BREAKING]** percent mode is now accessed via an exponent mode,
   ``ExpMode.PERCENT``.
   There is no longer a ``percent`` keyword argument.
+
+----
 
 0.23.0 (2023-07-29)
 -------------------
@@ -209,16 +245,22 @@ Fixed
   ``SciNumUnc`` objects.
 * Change ``pyproject.toml`` description
 
+----
+
 0.22.2 (2023-07-27)
 -------------------
 
 * Add ``.readthedocs.yaml`` and update documentation
   ``requirements.txt`` for reproducible documentation builds.
 
+----
+
 0.22.1 (2023-07-27)
 -------------------
 
 * Fix a date typo in the changelog for the entry for version ``0.22.0``.
+
+----
 
 0.22.0 (2023-07-27)
 -------------------
@@ -248,6 +290,8 @@ Fixed
      was corrected.
    * Add "under construction" message to README.
 
+----
+
 0.21.0 (2023-07-22)
 -------------------
 
@@ -257,6 +301,8 @@ Fixed
 * Update particle data group uncertainty rounding unit tests since edge
   cases are now handled property as a result of adopting ``Decimal``.
 * Minor cleanup of ``sfloat`` arithmetic functions.
+
+----
 
 0.20.1 (2023-06-24)
 -------------------
@@ -268,6 +314,8 @@ Fixed
 * Refactor ``sfloat`` and ``vufloat`` ``__format__()`` functions to call
   ``format_float()`` and ``format_val_unc()`` directly instead of
   creating a ``Formatter`` object first.
+
+----
 
 0.20.0 (2023-06-22)
 -------------------
@@ -284,6 +332,8 @@ Fixed
   mode: e.g. ``\text{Mi}``.
 * Link to test cases on examples page.
 
+----
+
 0.19.0 (2023-06-22)
 -------------------
 
@@ -291,10 +341,14 @@ Fixed
   doc testing, and flake8 scans during github pull requests.
 * Minor flake8 cleanup
 
+----
+
 0.18.1 (2023-06-21)
 -------------------
 
 * Documentation improvements
+
+----
 
 0.18.0 (2023-06-19)
 -------------------
@@ -309,12 +363,16 @@ Fixed
 * Expose ``AutoPrec`` and ``AutoExp`` sentinel classes so that users can
   explicitly indicate automatic precision and exponent selection.
 
+----
+
 0.17.1 (2023-06-19)
 -------------------
 
 * Code restructure to make formatting algorithm easier to follow
   including more verbose clarifying comments.
 * Minor documentation cleanup
+
+----
 
 0.17.0 (2023-06-19)
 -------------------
@@ -324,6 +382,8 @@ Fixed
 * Fix typos in binary IEC prefixes table.
 * Fix some cross links in documentation.
 
+----
+
 0.16.0 (2023-06-18)
 -------------------
 
@@ -331,15 +391,21 @@ Fixed
 * Refactor exponent string conversion.
 * Percent mode for non-finite numbers.
 
+----
+
 0.15.2 (2023-06-18)
 -------------------
 
 * Fix a bug involving space filling and separators.
 
+----
+
 0.15.1 (2023-06-17)
 -------------------
 
 * Changelog formatting typo.
+
+----
 
 0.15.0 (2023-06-17)
 -------------------
@@ -348,8 +414,12 @@ Fixed
 * Forbid percent mode unless using fixed point exponent mode.
 * Add PyPi link to readme.
 
+----
+
 0.14.0 (2023-06-17)
 -------------------
 
 * Add Changelog.
 * Add ``unicode_pm`` option with documentation and tests.
+
+----
