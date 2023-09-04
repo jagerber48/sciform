@@ -26,7 +26,7 @@ Changed
 Improved
 ^^^^^^^^
 
-* Fixed minor typos in documentation.
+* Documentation improvements including typos and neatening up changelog.
 
 ----
 
