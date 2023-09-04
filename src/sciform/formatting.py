@@ -318,7 +318,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
             extra_iec_prefixes=options.extra_iec_prefixes,
             extra_parts_per_forms=options.extra_parts_per_forms
         )
-        if re.match(r'^[\sa-zA-Z]*$', exp_str) and options.bracket_unc:
+        if options.bracket_unc and not re.match(r'^[eEbB][+-]\d+$', exp_str):
             val_unc_exp_str = f'{val_unc_str}{exp_str}'
         else:
             val_unc_exp_str = f'({val_unc_str}){exp_str}'
