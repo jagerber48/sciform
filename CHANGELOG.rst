@@ -9,13 +9,15 @@ Changed
   always wrapped in parentheses, e.g. ``(1.03(25))e-06``,
   ``(1.03(25)) μ`` or ``(1.03(25)) ppm``.
   Now, when using ``bracket_unc=True`` with prefix or parts-per exponent
-  format modes, the value and uncertainty are no longer wrapped in
+  format modes, if the exponent is replaced with an alphabet
+  replacement, then the value and uncertainty are no longer wrapped in
   parentheses, e.g. ``1.03(25) μ`` and ``1.03(25) ppm``.
   This is consistent with
   `BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
-  Note that the value and uncertainty are always wrapped in parentheses
-  for the standard format mode and when using ``bracket_unc=False``,
-  i.e. ``+/-`` style, formatting.
+  Specifically, any time ``bracket_unc=False`` the value and uncertainty
+  are always wrapped in parentheses, and any time notation like ``e+02``
+  or ``b+02`` is used to indicate the exponent then the value and
+  uncertainty are always wrapped in parentheses.
 
 0.28.2 (2023-08-31)
 -------------------
