@@ -23,6 +23,12 @@ Changed
   or ``b+02`` is used to indicate the exponent then the value and
   uncertainty are always wrapped in parentheses.
 
+Fixed
+^^^^^
+
+* Correct ``fit_plot_with_sciform.py`` example script to use new
+  ``exp_format=ExpFormat.PREFIX`` instead of old ``prefix_exp=True``.
+
 Improved
 ^^^^^^^^
 
