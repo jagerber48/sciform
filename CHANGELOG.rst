@@ -5,6 +5,13 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+* There are no unreleased changes
+
+----
+
+0.29.0 (2023-09-05)
+-------------------
+
 Changed
 ^^^^^^^
 
