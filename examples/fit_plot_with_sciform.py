@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from tabulate import tabulate
 
-from sciform import Formatter, ExpMode, RoundMode, SignMode, FormatOptions
+from sciform import (Formatter, ExpMode, RoundMode, SignMode, FormatOptions,
+                     ExpFormat)
 
 
 def get_scale_and_offset_from_offset_str(
@@ -54,11 +55,11 @@ def prefix_exp_ticks(ax: plt.Axes, axis: Literal['x', 'y'],
         exp_mode = ExpMode.ENGINEERING_SHIFTED
     tick_formatter = Formatter(FormatOptions(
         exp_mode=exp_mode,
-        prefix_exp=True))
+        exp_format=ExpFormat.PREFIX))
     offset_formatter = Formatter(FormatOptions(
         sign_mode=SignMode.ALWAYS,
         exp_mode=exp_mode,
-        prefix_exp=True))
+        exp_format=ExpFormat.PREFIX))
 
     ax.ticklabel_format(axis=axis, style='sci')
 
