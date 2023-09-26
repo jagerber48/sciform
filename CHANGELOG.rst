@@ -5,7 +5,11 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* There are no unreleased changes
+Changed
+^^^^^^^
+
+* Replace `-e .` with `.` in `requirements.txt`. There is no need to
+  install `sciform` in editable mode for code automation routines.
 
 ----
 
