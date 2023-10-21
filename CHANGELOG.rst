@@ -5,6 +5,19 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Fixed
+^^^^^
+
+* Fixed bugs where values were incorrectly rounded when
+  `pdg_sig_figs` was used with 0 uncertainty.
+  Previously, if the value was positive it would possibly be rounded
+  incorrectly.
+  Now the value will be rounded under the same rules as `AutoDigits`.
+  Previously, if the value was zero or negative a spurious exception
+  would be raised.
+  Now the value/uncertainty pair is formatted correctly without an
+  exceptions.
+
 Changed
 ^^^^^^^
 
