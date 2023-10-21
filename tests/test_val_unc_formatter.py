@@ -215,6 +215,18 @@ class TestFormatting(unittest.TestCase):
                 (FormatOptions(exp_mode=ExpMode.ENGINEERING,
                                exp_format=ExpFormat.PREFIX,
                                pdg_sig_figs=True), '(3.1416 +/- 0.0016) M')
+            ]),
+            ((123, 0), [
+                (FormatOptions(pdg_sig_figs=True), '123 +/- 0')
+            ]),
+            ((-123, 0), [
+                (FormatOptions(pdg_sig_figs=True), '-123 +/- 0')
+            ]),
+            ((-1, 0), [
+                (FormatOptions(pdg_sig_figs=True), '-1 +/- 0')
+            ]),
+            ((0, 0), [
+                (FormatOptions(pdg_sig_figs=True), '0 +/- 0')
             ])
         ]
 
