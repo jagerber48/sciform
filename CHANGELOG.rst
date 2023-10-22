@@ -9,10 +9,10 @@ Fixed
 ^^^^^
 
 * Fixed bugs where values were incorrectly rounded when
-  `pdg_sig_figs` was used with 0 or non-finite uncertainty.
+  ``pdg_sig_figs`` was used with 0 or non-finite uncertainty.
   Previously, if the value was positive it would possibly be rounded
   incorrectly.
-  Now the value will be rounded under the same rules as `AutoDigits`.
+  Now the value will be rounded under the same rules as ``AutoDigits``.
   Previously, if the value was zero or negative a spurious exception
   would be raised.
   Now the value/uncertainty pair is formatted correctly without raising
