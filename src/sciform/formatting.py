@@ -202,7 +202,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
         exp_mode = ExpMode.FIXEDPOINT
 
     if val.is_finite() and unc.is_finite():
-        if val >= unc:
+        if abs(val) >= unc:
             exp_driver = val_rounded
             val_exp_driver = True
         else:
@@ -296,7 +296,9 @@ def format_val_unc(val: Decimal, unc: Decimal,
         val_unc_str = f'{val_str}{pm_symb}{unc_str}'
     else:
         if unc.is_finite() and val.is_finite():
-            if unc < val:
+            if unc == 0:
+                unc_str = '0'
+            elif unc < abs(val):
                 unc_str = unc_str.lstrip('0.,_ ')
         if options.bracket_unc_remove_seps:
             unc_str = unc_str.replace(
