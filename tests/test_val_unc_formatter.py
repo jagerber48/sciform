@@ -46,12 +46,18 @@ class TestFormatting(unittest.TestCase):
             ((123, 0), [
                 (FormatOptions(bracket_unc=True), '123(0)')
             ]),
+            ((-123, 0), [
+                (FormatOptions(bracket_unc=True), '-123(0)')
+            ]),
             ((123, float('nan')), [
                 (FormatOptions(bracket_unc=True), '123(nan)')
             ]),
             ((123, float('inf')), [
                 (FormatOptions(bracket_unc=True), '123(inf)')
-            ])
+            ]),
+            ((0, 0), [
+                (FormatOptions(bracket_unc=True), '0(0)')
+            ]),
         ]
 
         self.run_val_unc_formatter_cases(cases_list)
