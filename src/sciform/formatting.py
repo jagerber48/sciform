@@ -157,11 +157,17 @@ def format_val_unc(val: Decimal, unc: Decimal,
     # Find the digit place to round to
     if unc.is_finite() and unc != 0:
         round_driver = unc
+        use_pdg_sig_figs = options.pdg_sig_figs
     else:
         round_driver = val
+        '''
+        Don't use pdg sig figs if the uncertainty doesn't drive the number of 
+        sig figs.
+        '''
+        use_pdg_sig_figs = False
 
     round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
-                                  options.ndigits, options.pdg_sig_figs)
+                                  options.ndigits, use_pdg_sig_figs)
     if unc.is_finite():
         unc_rounded = round(unc, -round_digit)
     else:
@@ -173,14 +179,14 @@ def format_val_unc(val: Decimal, unc: Decimal,
     if round_driver.is_finite():
         round_driver = round(round_driver, -round_digit)
 
-    if not options.pdg_sig_figs:
+    if not use_pdg_sig_figs:
         '''
         Re-round the rounded values in case the first rounding changed the most
         significant digit place. When using pdg_sig_figs this case is handled
         directly in the first call to get_round_digit.
         '''
         round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
-                                      options.ndigits, options.pdg_sig_figs)
+                                      options.ndigits, use_pdg_sig_figs)
         if unc_rounded.is_finite():
             unc_rounded = round(unc_rounded, -round_digit)
         if val_rounded.is_finite():

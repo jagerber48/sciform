@@ -220,6 +220,31 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
+    def test_pdg_invalid_unc(self):
+        cases_list = [
+            ((123, 0), [
+                (FormatOptions(pdg_sig_figs=True), '123 +/- 0')
+            ]),
+            ((-123, 0), [
+                (FormatOptions(pdg_sig_figs=True), '-123 +/- 0')
+            ]),
+            ((0, 0), [
+                (FormatOptions(pdg_sig_figs=True), '0 +/- 0')
+            ]),
+            ((123, float('nan')), [
+                (FormatOptions(pdg_sig_figs=True), '123 +/- nan')
+            ]),
+            ((-123, float('nan')), [
+                (FormatOptions(pdg_sig_figs=True), '-123 +/- nan')
+            ]),
+            ((0, float('nan')), [
+                (FormatOptions(pdg_sig_figs=True), '0 +/- nan')
+            ]),
+        ]
+
+        self.run_val_unc_formatter_cases(cases_list)
+
+
     def test_binary_not_implemented(self):
         sform = Formatter(FormatOptions(exp_mode=ExpMode.BINARY))
         self.assertRaises(NotImplementedError, sform, 1024, 32)
