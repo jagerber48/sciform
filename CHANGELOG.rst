@@ -8,15 +8,49 @@ Unreleased
 Fixed
 ^^^^^
 
-* Fixed bugs where values were incorrectly rounded when
-  ``pdg_sig_figs`` was used with 0 or non-finite uncertainty.
-  Previously, if the value was positive it would possibly be rounded
-  incorrectly.
-  Now the value will be rounded under the same rules as ``AutoDigits``.
-  Previously, if the value was zero or negative a spurious exception
-  would be raised.
-  Now the value/uncertainty pair is formatted correctly without raising
-  and exception.
+* Fixed a bug where if the uncertainty was 0 and bracket uncertainty was
+  enabled the uncertainty brackets would appear empty.
+  That is ``f'{SciNumUnc(1, 0):()}'`` would render as ``'1()'`` instead
+  of ``'1(0)'``.
+  Now, a single 0 appears in the brackets if the uncertainty is 0.
+* Fixed two bugs involving the value being negative, but the uncertainty
+  being smaller in magnitude in the value.
+
+  * Previously, if the value was negative and the uncertainty had a
+    smaller magnitude than the value, then the exponent would
+    erroneously be selected based on the magnitude of the uncertainty
+    rather than the value.
+    Now the exponent will be selected based on whichever has the largest
+    magnitude regardless of the sign of the value.
+  * Previously, if the value was negative, the uncertainty had a
+    smaller magnitude than the value, and the most significant digit of
+    the uncertainty was to the right of the decimal point, the leading
+    zeros and separator characters would erroneously not be trimmed from
+    the final format.
+    For example, ``f'{SciNum(-123.456, 0.789):()}'`` would
+    erroneously render as ``'-123.456(0.789)'`` instead of
+    ``'-123.456(789)'``.
+    Now, in these cases, leading zeros and separator characters are
+    trimmed regardless of the sign of the value.
+
+* Fixed two bugs involving ``pdg_sig_figs`` used with 0 or
+  non-finite uncertainty.
+
+  * Previously, if the uncertainty was 0 or non-finite and the value was
+    positive, the resulting string would erroneously display the value
+    rounded according to the PDG rounding rules.
+    E.g. ``SciNumUnc(123, 0)`` would be formatted as ``'120 +/- 0'``.
+    However, the rounding rules should only apply to rounding of the
+    uncertainty.
+    Now, if the uncertainty is zero or non-finite, the value is rounded
+    according to the ``AutoDigits`` rounding rules.
+    E.g. ``SciNumUnc(123, 0)`` will format to ``'123 +/- 0'``.
+  * Previously, if the uncertainty was 0 or non-finite and the value was
+    0 or negative then a spurious exception would be raised.
+    Now, if the uncertainty is 0 or non-finite then the value is
+    formatted and displayed according to the ``AutoDigits`` rounding
+    rule and no exception is raised.
+
 
 Changed
 ^^^^^^^
