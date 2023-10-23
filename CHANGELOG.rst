@@ -31,8 +31,8 @@ Fixed
 Changed
 ^^^^^^^
 
-* Replace `-e .` with `.` in `requirements.txt`. There is no need to
-  install `sciform` in editable mode for code automation routines.
+* Replace ``-e .`` with ``.`` in ``requirements.txt``. There is no need
+  to install ``sciform`` in editable mode for code automation routines.
 
 ----
 
