@@ -13,7 +13,7 @@ Fixed
   [`#66 <https://github.com/jagerber48/sciform/issues/66>`_]
 * Fixed a bug where the exponent value was erroneously calculated
   from the uncertainty rather than the value when the value was
-  negative.
+  negative (but larger in magnitude than the uncertainty).
   [`#68 <https://github.com/jagerber48/sciform/issues/68>`_]
 * Fixed a bug where certain leading digits were erroneously not
   stripped from the uncertainty when using bracket uncertainty with
