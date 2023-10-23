@@ -8,21 +8,31 @@ Unreleased
 Fixed
 ^^^^^
 
-* Fixed bugs where values were incorrectly rounded when
-  ``pdg_sig_figs`` was used with 0 or non-finite uncertainty.
-  Previously, if the value was positive it would possibly be rounded
-  incorrectly.
-  Now the value will be rounded under the same rules as ``AutoDigits``.
-  Previously, if the value was zero or negative a spurious exception
-  would be raised.
-  Now the value/uncertainty pair is formatted correctly without raising
-  and exception.
+* Fixed a bug where bracket uncertainties erroneously appeared as
+  empty parentheses for zero or non-finite uncertainties.
+  [`#66 <https://github.com/jagerber48/sciform/issues/66>`_]
+* Fixed a bug where the exponent value was erroneously calculated
+  from the uncertainty rather than the value when the value was
+  negative (but larger in magnitude than the uncertainty).
+  [`#68 <https://github.com/jagerber48/sciform/issues/68>`_]
+* Fixed a bug where certain leading digits were erroneously not
+  stripped from the uncertainty when using bracket uncertainty with
+  negative values.
+  [`#68 <https://github.com/jagerber48/sciform/issues/68>`_]
+* Fixed a bug where the value was erroneously being rounded
+  according to the PDG rounding rules when ``pdg_sig_figs=True``,
+  the uncertainty was zero or non-finite, and the value was
+  positive. [`#71 <https://github.com/jagerber48/sciform/issues/71>`_]
+* Fixed a bug where a spurious error was raised when
+  ``pdg_sig_figs=True``, the uncertainty was zero or non-finite, and
+  the value was zero or negative.
+  [`#65 <https://github.com/jagerber48/sciform/issues/65>`_]
 
 Changed
 ^^^^^^^
 
-* Replace `-e .` with `.` in `requirements.txt`. There is no need to
-  install `sciform` in editable mode for code automation routines.
+* Replace ``-e .`` with ``.`` in ``requirements.txt``. There is no need
+  to install ``sciform`` in editable mode for code automation routines.
 
 ----
 

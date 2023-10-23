@@ -253,7 +253,7 @@ def get_pdg_round_digit(num: Decimal) -> int:
 
     # Bring num to be between 100 and 1000.
     num_top_three_digs = num * Decimal(10) ** (Decimal(2) - Decimal(top_digit))
-    num_top_three_digs = round(num_top_three_digs, 0)
+    num_top_three_digs.quantize(1)
     new_top_digit = get_top_digit(num_top_three_digs)
     num_top_three_digs = num_top_three_digs * 10 ** (2 - new_top_digit)
     if 100 <= num_top_three_digs <= 354:
