@@ -161,7 +161,7 @@ def format_val_unc(val: Decimal, unc: Decimal,
     else:
         round_driver = val
         '''
-        Don't use pdg sig figs if the uncertainty doesn't drive the number of 
+        Don't use pdg sig figs if the uncertainty doesn't drive the number of
         sig figs.
         '''
         use_pdg_sig_figs = False

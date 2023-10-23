@@ -61,6 +61,7 @@ class TestFormatting(unittest.TestCase):
         ]
 
         self.run_val_unc_formatter_cases(cases_list)
+
     def test_prefix(self):
         cases_list = [
             ((123.456, 0.789), [
@@ -263,7 +264,6 @@ class TestFormatting(unittest.TestCase):
         ]
 
         self.run_val_unc_formatter_cases(cases_list)
-
 
     def test_binary_not_implemented(self):
         sform = Formatter(FormatOptions(exp_mode=ExpMode.BINARY))
