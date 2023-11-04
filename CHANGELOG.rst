@@ -468,5 +468,3 @@ Fixed
 
 * Add Changelog.
 * Add ``unicode_pm`` option with documentation and tests.
-
-----

@@ -6,6 +6,7 @@ Changelog
 
 .. include:: ../../CHANGELOG.rst
 
+----
 
 Roadmap
 =======
@@ -14,3 +15,7 @@ Roadmap
 * Consider support for scientific units.
 * Consider support for helper utility features such as formatting of
   sequences or arrays and arithmetic of ``SciNum`` objects.
+
+----
+
+.. include:: ../../CODE_OF_CONDUCT.rst
