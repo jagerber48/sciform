@@ -36,13 +36,13 @@ class TestPrint(unittest.TestCase):
             " 'bracket_unc_remove_seps': False,\n"
             " 'unicode_pm': False,\n"
             " 'unc_pm_whitespace': True}\n"
-            ""
         )
         self.assertEqual(actual_printout, expected_printout)
 
     def test_unrendered_options_repr(self):
         with redirect_stdout(StringIO()) as sout:
-            print(FormatOptions())
+            print(FormatOptions(top_dig_place=3,
+                                capitalize=True))
         actual_printout = sout.getvalue()
         expected_printout = (
             "{'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,\n"
@@ -54,12 +54,12 @@ class TestPrint(unittest.TestCase):
             " 'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,\n"
             " 'sign_mode': <SignMode.NEGATIVE: 'negative'>,\n"
             " 'fill_mode': <FillMode.SPACE: 'space'>,\n"
-            " 'top_dig_place': 0,\n"
+            " 'top_dig_place': 3,\n"
             " 'exp_format': <ExpFormat.STANDARD: 'standard'>,\n"
             " 'extra_si_prefixes': {},\n"
             " 'extra_iec_prefixes': {},\n"
             " 'extra_parts_per_forms': {},\n"
-            " 'capitalize': False,\n"
+            " 'capitalize': True,\n"
             " 'superscript_exp': False,\n"
             " 'latex': False,\n"
             " 'nan_inf_exp': False,\n"
@@ -69,6 +69,5 @@ class TestPrint(unittest.TestCase):
             " 'bracket_unc_remove_seps': False,\n"
             " 'unicode_pm': False,\n"
             " 'unc_pm_whitespace': True}\n"
-            ""
         )
         self.assertEqual(actual_printout, expected_printout)
