@@ -368,6 +368,14 @@ def print_global_defaults():
 
 
 def set_global_defaults(format_options: FormatOptions):
+    """
+    Configure global default format options
+
+    :param format_options: :class:`FormatOptions` to be used as the new
+      global default options. Note that any options left unpopulated in
+      `format_options` will be populated by the corresponding values
+      from the old global default options.
+    """
     global GLOBAL_DEFAULT_OPTIONS
     GLOBAL_DEFAULT_OPTIONS = format_options.render()
 
