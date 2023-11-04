@@ -454,6 +454,12 @@ class GlobalDefaultsContext:
     re-applied when the context is exited.
     """
     def __init__(self, format_options: FormatOptions):
+        """
+        :param format_options: :class:`FormatOptions` to be used as the
+          global defaults during the local context. Any unpopulated
+          parameters in `format_options` will be populated with the
+          corresponding options from the current global default options.
+        """
         self.format_options = format_options
         self.initial_global_defaults = None
 
