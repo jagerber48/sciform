@@ -108,7 +108,7 @@ class TestFormatting(unittest.TestCase):
             ((0.123_456_78, 0.000_002_55), [
                 (FormatOptions(exp_mode=ExpMode.PERCENT,
                                lower_separator=GroupingSeparator.UNDERSCORE),
-                 '(12.345_678 +/- 0.000_255)%'),
+                 '(12.345_678 ± 0.000_255)%'),
                 (FormatOptions(exp_mode=ExpMode.PERCENT,
                                bracket_unc=True,
                                lower_separator=GroupingSeparator.UNDERSCORE),
@@ -148,17 +148,8 @@ class TestFormatting(unittest.TestCase):
     def test_unc_pm_whitespace(self):
         cases_list = [
             ((123.456, 0.789), [
-                (FormatOptions(unc_pm_whitespace=True), '123.456 +/- 0.789'),
-                (FormatOptions(unc_pm_whitespace=False), '123.456+/-0.789')
-            ])
-        ]
-
-        self.run_val_unc_formatter_cases(cases_list)
-
-    def test_unicode_pm(self):
-        cases_list = [
-            ((123.456, 0.789), [
-                (FormatOptions(unicode_pm=True), '123.456 ± 0.789')
+                (FormatOptions(unc_pm_whitespace=True), '123.456 ± 0.789'),
+                (FormatOptions(unc_pm_whitespace=False), '123.456±0.789')
             ])
         ]
 
@@ -169,7 +160,7 @@ class TestFormatting(unittest.TestCase):
             ((789, 0.01), [
                 (FormatOptions(
                     exp_mode=ExpMode.SCIENTIFIC,
-                    superscript_exp=True), '(7.8900 +/- 0.0001)×10²')
+                    superscript_exp=True), '(7.8900 ± 0.0001)×10²')
             ])
         ]
 
@@ -181,14 +172,6 @@ class TestFormatting(unittest.TestCase):
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
                                exp_val=-1,
                                upper_separator=GroupingSeparator.UNDERSCORE,
-                               latex=True),
-                 r'\left(123\_450 \pm 2\right)\times 10^{-1}'),
-
-                # Latex mode takes precedence over unicode_pm
-                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp_val=-1,
-                               upper_separator=GroupingSeparator.UNDERSCORE,
-                               unicode_pm=True,
                                latex=True),
                  r'\left(123\_450 \pm 2\right)\times 10^{-1}'),
                 (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
@@ -215,27 +198,27 @@ class TestFormatting(unittest.TestCase):
     def test_pdg(self):
         cases_list = [
             ((10, 0.0353), [
-                (FormatOptions(pdg_sig_figs=True), '10.000 +/- 0.035')
+                (FormatOptions(pdg_sig_figs=True), '10.000 ± 0.035')
             ]),
             ((10, 0.0354), [
-                (FormatOptions(pdg_sig_figs=True), '10.000 +/- 0.035')
+                (FormatOptions(pdg_sig_figs=True), '10.000 ± 0.035')
             ]),
             ((10, 0.0355), [
-                (FormatOptions(pdg_sig_figs=True), '10.00 +/- 0.04')
+                (FormatOptions(pdg_sig_figs=True), '10.00 ± 0.04')
             ]),
             ((10, 0.0949), [
-                (FormatOptions(pdg_sig_figs=True), '10.00 +/- 0.09')
+                (FormatOptions(pdg_sig_figs=True), '10.00 ± 0.09')
             ]),
             ((10, 0.0950), [
-                (FormatOptions(pdg_sig_figs=True), '10.00 +/- 0.10')
+                (FormatOptions(pdg_sig_figs=True), '10.00 ± 0.10')
             ]),
             ((10, 0.0951), [
-                (FormatOptions(pdg_sig_figs=True), '10.00 +/- 0.10')
+                (FormatOptions(pdg_sig_figs=True), '10.00 ± 0.10')
             ]),
             ((3141592.7, 1618), [
                 (FormatOptions(exp_mode=ExpMode.ENGINEERING,
                                exp_format=ExpFormat.PREFIX,
-                               pdg_sig_figs=True), '(3.1416 +/- 0.0016) M')
+                               pdg_sig_figs=True), '(3.1416 ± 0.0016) M')
             ])
         ]
 
@@ -244,22 +227,22 @@ class TestFormatting(unittest.TestCase):
     def test_pdg_invalid_unc(self):
         cases_list = [
             ((123, 0), [
-                (FormatOptions(pdg_sig_figs=True), '123 +/- 0')
+                (FormatOptions(pdg_sig_figs=True), '123 ± 0')
             ]),
             ((-123, 0), [
-                (FormatOptions(pdg_sig_figs=True), '-123 +/- 0')
+                (FormatOptions(pdg_sig_figs=True), '-123 ± 0')
             ]),
             ((0, 0), [
-                (FormatOptions(pdg_sig_figs=True), '0 +/- 0')
+                (FormatOptions(pdg_sig_figs=True), '0 ± 0')
             ]),
             ((123, float('nan')), [
-                (FormatOptions(pdg_sig_figs=True), '123 +/- nan')
+                (FormatOptions(pdg_sig_figs=True), '123 ± nan')
             ]),
             ((-123, float('nan')), [
-                (FormatOptions(pdg_sig_figs=True), '-123 +/- nan')
+                (FormatOptions(pdg_sig_figs=True), '-123 ± nan')
             ]),
             ((0, float('nan')), [
-                (FormatOptions(pdg_sig_figs=True), '0 +/- nan')
+                (FormatOptions(pdg_sig_figs=True), '0 ± nan')
             ])
         ]
 
@@ -276,7 +259,7 @@ class TestFormatting(unittest.TestCase):
         is implemented
         """
         sform = Formatter(FormatOptions(exp_mode=ExpMode.BINARY))
-        self.assertEqual(sform(1024, 32), '(1.00000 +/- 0.03125)b+10')
+        self.assertEqual(sform(1024, 32), '(1.00000 ± 0.03125)b+10')
 
     def test_pdg_ndigits_error(self):
         self.assertRaises(ValueError, FormatOptions, pdg_sig_figs=True,
