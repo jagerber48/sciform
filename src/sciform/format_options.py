@@ -39,7 +39,7 @@ class RenderedFormatOptions:
         validate_options(self)
 
     def __repr__(self):
-        return pformat(asdict(get_global_defaults()), sort_dicts=False)
+        return pformat(asdict(self), sort_dicts=False)
 
 
 def _merge_dicts(left: dict, right: dict) -> dict:
@@ -268,7 +268,7 @@ class FormatOptions:
         return rendered_format_options
 
     def __repr__(self):
-        return pformat(asdict(get_global_defaults()), sort_dicts=False)
+        return repr(self._render())
 
 
 def validate_options(options: Union[FormatOptions, RenderedFormatOptions]):
