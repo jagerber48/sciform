@@ -5,7 +5,12 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* There are no unreleased changes
+Fixed
+^^^^^
+
+* Fixed a bug where the `repr` for `FormatOptions` would return a string
+  containing information about the global format options rather than
+  about the specific `FormatOptions` instance.
 
 ----
 
