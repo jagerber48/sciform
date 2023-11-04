@@ -268,7 +268,7 @@ class FormatOptions:
         return rendered_format_options
 
     def __repr__(self):
-        return repr(self._render())
+        return repr(self.render())
 
 
 def validate_options(options: Union[FormatOptions, RenderedFormatOptions]):
