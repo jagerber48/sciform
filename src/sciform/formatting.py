@@ -60,7 +60,7 @@ def format_non_finite(num: Decimal, options: RenderedFormatOptions) -> str:
 
 
 def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
-    options = unrendered_options.render()
+    options = unrendered_options._render()
 
     if not num.is_finite():
         return format_non_finite(num, options)
@@ -136,7 +136,7 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
 
 def format_val_unc(val: Decimal, unc: Decimal,
                    unrendered_options: FormatOptions):
-    options = unrendered_options.render()
+    options = unrendered_options._render()
     if (options.exp_mode is ExpMode.BINARY
             or options.exp_mode is ExpMode.BINARY_IEC):
         raise NotImplementedError('Binary exponent modes are not supported '

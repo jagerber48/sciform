@@ -252,7 +252,7 @@ class FormatOptions:
         """
         return FormatOptions(**_merge_dicts(asdict(self), asdict(other)))
 
-    def render(
+    def _render(
             self, defaults: RenderedFormatOptions = None
                ) -> RenderedFormatOptions:
         if defaults is None:
@@ -377,7 +377,7 @@ def set_global_defaults(format_options: FormatOptions):
       from the old global default options.
     """
     global GLOBAL_DEFAULT_OPTIONS
-    GLOBAL_DEFAULT_OPTIONS = format_options.render()
+    GLOBAL_DEFAULT_OPTIONS = format_options._render()
 
 
 def set_global_defaults_rendered(

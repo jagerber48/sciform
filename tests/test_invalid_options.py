@@ -130,7 +130,7 @@ class TestInvalidOptions(unittest.TestCase):
 
     def test_format_non_finite(self):
         self.assertRaises(ValueError, format_non_finite, Decimal(1.0),
-                          FormatOptions().render())
+                          FormatOptions()._render())
 
     def test_add_group_chars(self):
         self.assertRaises(ValueError, add_group_chars_between_numbers,
