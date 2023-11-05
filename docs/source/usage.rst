@@ -77,7 +77,7 @@ Value/Uncertainty Formatting
 
 One of the most important use cases for scientific formatting is
 formatting a value together with its specified uncertainty, e.g.
-``84.3 +/- 0.2``.
+``84.3 ± 0.2``.
 :mod:`sciform` provides the ability to format pairs of numbers into
 value/uncertainty strings.
 :mod:`sciform` attempts to follow
@@ -94,11 +94,11 @@ using the :class:`SciNumUnc` object.
 >>> unc = 0.2
 >>> sform = Formatter(FormatOptions(ndigits=2))
 >>> print(sform(val, unc))
-84.30 +/- 0.20
+84.30 ± 0.20
 >>> from sciform import SciNumUnc
 >>> val_unc = SciNumUnc(val, unc)
 >>> print(f'{val_unc:!2}')
-84.30 +/- 0.20
+84.30 ± 0.20
 
 Value/uncertainty pairs can also be formatted using a parentheses
 notation in which the uncertainty is displayed in parentheses following
@@ -164,7 +164,6 @@ package default settings):
  'pdg_sig_figs': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
- 'unicode_pm': False,
  'unc_pm_whitespace': True}
 
 The global default settings can be modified by passing
@@ -203,7 +202,6 @@ unchanged.
  'pdg_sig_figs': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
- 'unicode_pm': False,
  'unc_pm_whitespace': True}
 
 The global default settings can be reset to the :mod:`sciform` defaults
@@ -304,7 +302,7 @@ concerned with the exact decimal representation of their numerical data.
   for its :class:`float`.
   In this format, a :class:`float` occupies 64 bits of memory: 52 bits
   for the mantissa, 11 bits for the exponent and 1 bit for the sign.
-* Any decimal with 15 digits between about ``+/- 1.8e+308`` can be
+* Any decimal with 15 digits between about ``± 1.8e+308`` can be
   uniquely represented by a :class:`float`.
   However, two decimals with more than 15 digits may map to the same
   :class:`float`.

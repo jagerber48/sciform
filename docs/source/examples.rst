@@ -74,7 +74,7 @@ available formatting options.
 >>> unc = 1618
 >>> sform = Formatter()
 >>> print(sform(num, unc))
-3141593 +/- 1618
+3141593 ± 1618
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.ENGINEERING,
 ...             exp_format=ExpFormat.PREFIX,
@@ -136,7 +136,7 @@ instead.
 
 >>> num_unc = SciNumUnc(3141592.7, 1618)
 >>> print(f'{num_unc}')
-3141593 +/- 1618
+3141593 ± 1618
 >>> with GlobalDefaultsContext(FormatOptions(
 ...             pdg_sig_figs=True,
 ...             unicode_pm=True,

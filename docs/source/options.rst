@@ -40,7 +40,7 @@ directly with no extra exponent.
 >>> print(sform(123.456))
 123.456
 >>> print(sform(123.456, 0.001))
-123.456 +/- 0.001
+123.456 ± 0.001
 
 .. _percent_mode:
 
@@ -55,7 +55,7 @@ appended to the end of the formatted string.
 >>> print(sform(0.12345))
 12.345%
 >>> print(sform(0.12345, 0.001))
-(12.3 +/- 0.1)%
+(12.3 ± 0.1)%
 
 .. _scientific:
 
@@ -70,7 +70,7 @@ mantissa ``m`` satisfies ``1 <= m < 10``.
 >>> print(sform(123.456))
 1.23456e+02
 >>> print(sform(123.456, 0.001))
-(1.23456 +/- 0.00001)e+02
+(1.23456 ± 0.00001)e+02
 
 Note that, for all exponent modes, the exponent integer is always
 displayed with a sign symbol (+ or -) and is left padded with a zero so
@@ -103,7 +103,7 @@ notation.
 >>> print(sform(123.456))
 123.456e+00
 >>> print(sform(123.456, 0.001))
-(123.456 +/- 0.001)e+00
+(123.456 ± 0.001)e+00
 
 .. _engineering_shifted:
 
@@ -118,7 +118,7 @@ the exponent is chosen so that the mantissa ``m`` satisfies
 >>> print(sform(123.456))
 0.123456e+03
 >>> print(sform(123.456, 0.001))
-(0.123456 +/- 0.000001)e+03
+(0.123456 ± 0.000001)e+03
 
 .. _binary:
 
@@ -570,7 +570,7 @@ The latex format makes the following changes:
   superscript strings like ``'\times 10^{+2}``
 * Replace ``'('`` and ``')'`` by latex size-aware delimiters
   ``'\left('`` and ``'\right)'``.
-* Replace ``'+/-'`` by ``'\pm'``
+* Replace ``'±'`` by ``'\pm'``
 * Replace ``'_'`` by ``'\_'``
 * Replace ``'%'`` by ``'\%'``
 * Exponent replacements such as ``'M'``, ``'Ki'``, or ``'ppb'`` and
@@ -633,7 +633,7 @@ according to the options below.
 
 >>> sform = Formatter()
 >>> print(sform(123.456, 0.789))
-123.456 +/- 0.789
+123.456 ± 0.789
 
 .. _pdg_sig_figs:
 
@@ -678,11 +678,11 @@ mode with :class:`AutoDigits` precision and the ``pdg_sig_figs`` flag.
 ...             ndigits=AutoDigits,
 ...             pdg_sig_figs=True))
 >>> print(sform(1, 0.0123))
-1.000 +/- 0.012
+1.000 ± 0.012
 >>> print(sform(1, 0.0483))
-1.00 +/- 0.05
+1.00 ± 0.05
 >>> print(sform(1, 0.0997))
-1.00 +/- 0.10
+1.00 ± 0.10
 
 If ``ndigits`` is specified (i.e. not ``None``) but
 ``ndigits!=AutoDigits`` with ``pdg_sig_figs=True`` then ``ValueError`` is
@@ -696,12 +696,12 @@ symbol when formatting value/uncertainties.
 
 >>> sform = Formatter()
 >>> print(sform(123.456, 0.789))
-123.456 +/- 0.789
+123.456 ± 0.789
 >>> sform = Formatter(FormatOptions(unc_pm_whitespace=False))
 >>> print(sform(123.456, 0.789))
-123.456+/-0.789
+123.456±0.789
 
-The user can also replace the ``'+/-'`` symbol with a unicode ``'±'``
+The user can also replace the ``'±'`` symbol with a unicode ``'±'``
 symbol using the ``unicode_pm`` option.
 
 >>> sform = Formatter(FormatOptions(unicode_pm=True))
@@ -713,7 +713,7 @@ symbol using the ``unicode_pm`` option.
 Bracket Uncertainty
 -------------------
 
-Instead of displaying ``123.456 +/- 0.789``, there is a notation where
+Instead of displaying ``123.456 ± 0.789``, there is a notation where
 the uncertainty is shown in brackets after the value as
 ``123.456(789)``.
 Here the ``(789)`` in parentheses is meant to be "matched up" with the
@@ -762,10 +762,10 @@ Remove Separators for Bracket Uncertainty
 
 In some cases using bracket uncertainty results in digits such that the
 decimal point could appear in the uncertainty in the brackets.
-For example: ``18.4 +/- 2.1 -> 18.4(2.1)``.
+For example: ``18.4 ± 2.1 -> 18.4(2.1)``.
 In such cases, there is no official guidance on if the decimal symbol
 should be included in the bracket symbols or not.
-That is, one may format ``18.4 +/- 2.1 -> 18.4(21)``.
+That is, one may format ``18.4 ± 2.1 -> 18.4(21)``.
 The interpretation here is that the uncertainty is 21 tenths, since the
 least significant digit of the value is in the tenths place.
 The author's preference is to keep the decimal symbol because it allows
@@ -831,10 +831,10 @@ This feature is accessed with the ``val_unc_match_widths`` option.
 ...             top_dig_place=2,
 ...             val_unc_match_widths=False))
 >>> print(sform(12345, 1.23))
-12345.00 +/- 001.23
+12345.00 ± 001.23
 >>> sform = Formatter(FormatOptions(
 ...             fill_mode=FillMode.ZERO,
 ...             top_dig_place=2,
 ...             val_unc_match_widths=True))
 >>> print(sform(12345, 1.23))
-12345.00 +/- 00001.23
+12345.00 ± 00001.23
