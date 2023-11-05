@@ -34,7 +34,7 @@ class Formatter:
     ...             round_mode=RoundMode.SIG_FIG,
     ...             ndigits=2))
     >>> print(sform(12345.678, 3.4))
-    (12.3457 +/- 0.0034)e+03
+    (12.3457 ± 0.0034)e+03
 
     :param format_options: :class:`FormatOptions` indicating which
       format options should be used for formatting.

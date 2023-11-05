@@ -79,7 +79,6 @@ available formatting options.
 ...             exp_mode=ExpMode.ENGINEERING,
 ...             exp_format=ExpFormat.PREFIX,
 ...             pdg_sig_figs=True,
-...             unicode_pm=True,
 ...             unc_pm_whitespace=False))
 >>> print(sform(num, unc))
 (3.1416±0.0016) M
@@ -139,7 +138,6 @@ instead.
 3141593 ± 1618
 >>> with GlobalDefaultsContext(FormatOptions(
 ...             pdg_sig_figs=True,
-...             unicode_pm=True,
 ...             unc_pm_whitespace=False)):
 ...     print(f'{num_unc:rp}')
 (3.1416±0.0016) M

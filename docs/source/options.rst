@@ -688,26 +688,6 @@ If ``ndigits`` is specified (i.e. not ``None``) but
 ``ndigits!=AutoDigits`` with ``pdg_sig_figs=True`` then ``ValueError`` is
 raised.
 
-Plus Minus Symbol Formatting
-----------------------------
-
-The user can enable (default) or disable white space around the plus/minus
-symbol when formatting value/uncertainties.
-
->>> sform = Formatter()
->>> print(sform(123.456, 0.789))
-123.456 ± 0.789
->>> sform = Formatter(FormatOptions(unc_pm_whitespace=False))
->>> print(sform(123.456, 0.789))
-123.456±0.789
-
-The user can also replace the ``'±'`` symbol with a unicode ``'±'``
-symbol using the ``unicode_pm`` option.
-
->>> sform = Formatter(FormatOptions(unicode_pm=True))
->>> print(sform(123.456, 0.789))
-123.456 ± 0.789
-
 .. _bracket_uncertainty:
 
 Bracket Uncertainty
