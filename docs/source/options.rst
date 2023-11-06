@@ -578,7 +578,7 @@ The latex format makes the following changes:
   ``'INF'`` are wrapped in ``'\text{}'``.
 
 Note that use of ``latex`` renders the use of the ``superscript_exp``
-meaningless.
+option meaningless.
 
 Include Exponent on nan and inf
 ===============================
