@@ -8,9 +8,9 @@ Unreleased
 Fixed
 ^^^^^
 
-* Fixed a bug where the `repr` for `FormatOptions` would return a string
-  containing information about the global format options rather than
-  about the specific `FormatOptions` instance.
+* Fixed a bug where the ``repr`` for ``FormatOptions`` would return a
+  string containing information about the global format options rather
+  than about the specific ``FormatOptions`` instance.
   [`#75 <https://github.com/jagerber48/sciform/issues/75>`_]
 
 Removed
