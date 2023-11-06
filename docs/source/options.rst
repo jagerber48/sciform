@@ -577,8 +577,8 @@ The latex format makes the following changes:
   non-finite numbers such as ``'nan'``, ``'NAN'``, ``'inf'``, and
   ``'INF'`` are wrapped in ``'\text{}'``.
 
-Note that use of ``latex`` renders the use of ``unicode_pm`` and
-``superscript_exp`` meaningless.
+Note that use of ``latex`` renders the use of the ``superscript_exp``
+meaningless.
 
 Include Exponent on nan and inf
 ===============================

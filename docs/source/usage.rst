@@ -250,7 +250,7 @@ values.
 Note that the :ref:`FSML <fsml>` does not provide complete control over
 all possible format options.
 For example, there is no code in the :ref:`FSML <fsml>` for configuring
-the ``unicode_pm`` option.
+the ``pdg_sig_figs`` option.
 If the user wishes to configure these options, but also use the
 :ref:`FSML <fsml>`, then they must do so by modifying the global default
 settings.
