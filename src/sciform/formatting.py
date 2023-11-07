@@ -3,7 +3,7 @@ import re
 from decimal import Decimal
 
 from sciform.modes import ExpMode, SignMode, AutoExpVal, RoundMode, ExpFormat
-from sciform.format_options import FormatOptions, RenderedFormatOptions
+from sciform.format_options import FormatOptions, RenderedFormatOptions, render_options
 from sciform.format_utils import (
     get_mantissa_exp_base, get_exp_str, get_top_digit, get_round_digit,
     format_num_by_top_bottom_dig, latex_translate, parse_standard_exp_str
@@ -60,7 +60,7 @@ def format_non_finite(num: Decimal, options: RenderedFormatOptions) -> str:
 
 
 def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
-    options = unrendered_options.render()
+    options = render_options(unrendered_options)
 
     if not num.is_finite():
         return format_non_finite(num, options)
@@ -136,7 +136,7 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
 
 def format_val_unc(val: Decimal, unc: Decimal,
                    unrendered_options: FormatOptions):
-    options = unrendered_options.render()
+    options = render_options(unrendered_options)
     if (options.exp_mode is ExpMode.BINARY
             or options.exp_mode is ExpMode.BINARY_IEC):
         raise NotImplementedError('Binary exponent modes are not supported '

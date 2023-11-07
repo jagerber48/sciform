@@ -247,23 +247,27 @@ class FormatOptions:
         """
         return FormatOptions(**_merge_dicts(asdict(self), asdict(other)))
 
-    def render(
-            self, defaults: RenderedFormatOptions = None
-               ) -> RenderedFormatOptions:
-        if defaults is None:
-            defaults = get_global_defaults()
-        try:
-            rendered_format_options = RenderedFormatOptions(
-                **_merge_dicts(asdict(defaults), asdict(self))
-            )
-        except ValueError as e:
-            raise ValueError('Invalid format options resulting from merging '
-                             'with default options.') from e
 
-        return rendered_format_options
 
     def __repr__(self):
-        return repr(self.render())
+        return repr(render_options(self))
+
+
+def render_options(
+        format_options: FormatOptions,
+        defaults: RenderedFormatOptions = None
+) -> RenderedFormatOptions:
+    if defaults is None:
+        defaults = get_global_defaults()
+    try:
+        rendered_format_options = RenderedFormatOptions(
+            **_merge_dicts(asdict(defaults), asdict(format_options))
+        )
+    except ValueError as e:
+        raise ValueError('Invalid format options resulting from merging '
+                         'with default options.') from e
+
+    return rendered_format_options
 
 
 def validate_options(options: Union[FormatOptions, RenderedFormatOptions]):
@@ -362,8 +366,16 @@ def print_global_defaults():
 
 
 def set_global_defaults(format_options: FormatOptions):
+    """
+    Configure global default format options
+
+    :param format_options: :class:`FormatOptions` to be used as the new
+      global default options. Note that any options left unpopulated in
+      `format_options` will be populated by the corresponding values
+      from the old global default options.
+    """
     global GLOBAL_DEFAULT_OPTIONS
-    GLOBAL_DEFAULT_OPTIONS = format_options.render()
+    GLOBAL_DEFAULT_OPTIONS = render_options(format_options)
 
 
 def set_global_defaults_rendered(
@@ -440,6 +452,12 @@ class GlobalDefaultsContext:
     re-applied when the context is exited.
     """
     def __init__(self, format_options: FormatOptions):
+        """
+        :param format_options: :class:`FormatOptions` to be used as the
+          global defaults during the local context. Any unpopulated
+          parameters in `format_options` will be populated with the
+          corresponding options from the current global default options.
+        """
         self.format_options = format_options
         self.initial_global_defaults = None
 

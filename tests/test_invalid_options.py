@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from sciform import (Formatter, FormatOptions, RoundMode, ExpMode,
                      GroupingSeparator, ExpFormat)
-from sciform.formatting import format_non_finite
+from sciform.formatting import format_non_finite, render_options
 from sciform.grouping import add_group_chars_between_numbers, add_separators
 from sciform.format_utils import (
     get_top_digit, get_mantissa_exp_base, get_exp_str, get_sign_str,
@@ -130,7 +130,7 @@ class TestInvalidOptions(unittest.TestCase):
 
     def test_format_non_finite(self):
         self.assertRaises(ValueError, format_non_finite, Decimal(1.0),
-                          FormatOptions().render())
+                          render_options(FormatOptions()))
 
     def test_add_group_chars(self):
         self.assertRaises(ValueError, add_group_chars_between_numbers,

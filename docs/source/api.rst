@@ -48,6 +48,7 @@ Global Configuration
 ====================
 
 .. autoclass:: GlobalDefaultsContext()
+   :members: __init__
 
 .. autofunction:: print_global_defaults()
 
