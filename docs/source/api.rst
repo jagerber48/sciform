@@ -48,9 +48,7 @@ Global Configuration
 ====================
 
 .. autoclass:: GlobalDefaultsContext()
-   :members:
-
-   .. automethod:: __init__
+   :members: __init__
 
 .. autofunction:: print_global_defaults()
 
