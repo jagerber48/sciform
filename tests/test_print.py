@@ -34,7 +34,6 @@ class TestPrint(unittest.TestCase):
             " 'pdg_sig_figs': False,\n"
             " 'val_unc_match_widths': False,\n"
             " 'bracket_unc_remove_seps': False,\n"
-            " 'unicode_pm': False,\n"
             " 'unc_pm_whitespace': True}\n"
         )
         self.assertEqual(actual_printout, expected_printout)
@@ -67,7 +66,6 @@ class TestPrint(unittest.TestCase):
             " 'pdg_sig_figs': False,\n"
             " 'val_unc_match_widths': False,\n"
             " 'bracket_unc_remove_seps': False,\n"
-            " 'unicode_pm': False,\n"
             " 'unc_pm_whitespace': True}\n"
         )
         self.assertEqual(actual_printout, expected_printout)

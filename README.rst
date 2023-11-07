@@ -109,17 +109,17 @@ using the ``SciNumUnc`` object.
 ...             upper_separator=GroupingSeparator.SPACE,
 ...             lower_separator=GroupingSeparator.SPACE))
 >>> print(sform(123456.654321, 0.0034))
-123 456.654 3 +/- 0.003 4
+123 456.654 3 ± 0.003 4
 >>> sform = Formatter(FormatOptions(
 ...             ndigits=4,
 ...             exp_mode=ExpMode.ENGINEERING))
 >>> print(sform(123456.654321, 0.0034))
-(123.456654321 +/- 0.000003400)e+03
+(123.456654321 ± 0.000003400)e+03
 
 >>> from sciform import SciNumUnc
 >>> num = SciNumUnc(123456.654321, 0.0034)
 >>> print(f'{num:_!2f}')
-123_456.6543 +/- 0.0034
+123_456.6543 ± 0.0034
 >>> print(f'{num:_!2f()}')
 123_456.6543(34)
 
@@ -130,5 +130,5 @@ Acknowledgements
 
 ``sciform`` was heavily motivated by the prefix formatting provided in
 the `prefixed <https://github.com/Rockhopper-Technologies/prefixed>`_
-package and the value +/- uncertainty formatting in the
+package and the value ± uncertainty formatting in the
 `uncertainties <https://github.com/lebigot/uncertainties>`_ package.

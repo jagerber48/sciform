@@ -13,10 +13,20 @@ Added
 Fixed
 ^^^^^
 
-* Fixed a bug where the `repr` for `FormatOptions` would return a string
-  containing information about the global format options rather than
-  about the specific `FormatOptions` instance.
+* Fixed a bug where the ``repr`` for ``FormatOptions`` would return a
+  string containing information about the global format options rather
+  than about the specific ``FormatOptions`` instance.
   [`#75 <https://github.com/jagerber48/sciform/issues/75>`_]
+
+Removed
+^^^^^^^
+
+* Removed the ``unicode_pm`` feature which allowed toggling between
+  using ``'+/-'`` or ``'±'`` in value/uncertainty strings. Previously
+  ``unicode_pm`` defaulted to ``False`` so that ``'+/-'`` was the
+  default behavior. Now the default behavior is to use ``'±'`` and there
+  is no way to change to the old ``'+/-'`` behavior.
+  [`#10 <https://github.com/jagerber48/sciform/discussions/10>`_]
 
 ----
 
