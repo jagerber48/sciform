@@ -49,6 +49,8 @@ Install with pip::
 
    pip install sciform
 
+``sciform`` is compatible with Python versions >=3.9.
+
 ==================
 Under Construction
 ==================
