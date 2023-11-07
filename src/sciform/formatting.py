@@ -285,10 +285,8 @@ def format_val_unc(val: Decimal, unc: Decimal,
     if not options.bracket_unc:
         if options.latex:
             pm_symb = r'\pm'
-        elif options.unicode_pm:
-            pm_symb = '±'
         else:
-            pm_symb = '+/-'
+            pm_symb = '±'
 
         if options.unc_pm_whitespace:
             pm_symb = f' {pm_symb} '
