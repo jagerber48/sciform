@@ -32,14 +32,13 @@ class RenderedFormatOptions:
     pdg_sig_figs: bool
     val_unc_match_widths: bool
     bracket_unc_remove_seps: bool
-    unicode_pm: bool
     unc_pm_whitespace: bool
 
     def __post_init__(self):
         validate_options(self)
 
     def __repr__(self):
-        return pformat(asdict(get_global_defaults()), sort_dicts=False)
+        return pformat(asdict(self), sort_dicts=False)
 
 
 def _merge_dicts(left: dict, right: dict) -> dict:
@@ -164,9 +163,6 @@ class FormatOptions:
       separator symbols should be removed from the uncertainty when
       using bracket uncertainty mode. E.g. expressing ``123.4 +/- 2.3``
       as ``123.4(23)`` instead of ``123.4(2.3)``.
-    :param unicode_pm: :class:`bool` indicating if the ``'+/-'``
-      separator should be replaced with the unicode plus minus symbol
-      ``'±'``.
     :param unc_pm_whitespace: :class:`bool` indicating if there should be
       whitespace surrounding the ``'+/-'`` symbols when formatting. E.g.
       ``123.4+/-2.3`` compared to ``123.4 +/- 2.3``.
@@ -200,7 +196,6 @@ class FormatOptions:
     pdg_sig_figs: Optional[bool] = None
     val_unc_match_widths: Optional[bool] = None
     bracket_unc_remove_seps: Optional[bool] = None
-    unicode_pm: Optional[bool] = None
     unc_pm_whitespace: Optional[bool] = None
 
     add_c_prefix: InitVar[bool] = False
@@ -268,7 +263,7 @@ class FormatOptions:
         return rendered_format_options
 
     def __repr__(self):
-        return pformat(asdict(get_global_defaults()), sort_dicts=False)
+        return repr(self.render())
 
 
 def validate_options(options: Union[FormatOptions, RenderedFormatOptions]):
@@ -348,7 +343,6 @@ PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
     pdg_sig_figs=False,
     val_unc_match_widths=False,
     bracket_unc_remove_seps=False,
-    unicode_pm=False,
     unc_pm_whitespace=True
 )
 
