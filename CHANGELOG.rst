@@ -5,6 +5,11 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Added
+^^^^^
+
+* Added code of conduct.
+
 Fixed
 ^^^^^
 
@@ -484,5 +489,3 @@ Fixed
 
 * Add Changelog.
 * Add ``unicode_pm`` option with documentation and tests.
-
-----
