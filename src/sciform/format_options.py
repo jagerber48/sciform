@@ -247,23 +247,27 @@ class FormatOptions:
         """
         return FormatOptions(**_merge_dicts(asdict(self), asdict(other)))
 
-    def _render(
-            self, defaults: RenderedFormatOptions = None
-               ) -> RenderedFormatOptions:
-        if defaults is None:
-            defaults = get_global_defaults()
-        try:
-            rendered_format_options = RenderedFormatOptions(
-                **_merge_dicts(asdict(defaults), asdict(self))
-            )
-        except ValueError as e:
-            raise ValueError('Invalid format options resulting from merging '
-                             'with default options.') from e
 
-        return rendered_format_options
 
     def __repr__(self):
-        return repr(self._render())
+        return repr(render_options(self))
+
+
+def render_options(
+        format_options: FormatOptions,
+        defaults: RenderedFormatOptions = None
+) -> RenderedFormatOptions:
+    if defaults is None:
+        defaults = get_global_defaults()
+    try:
+        rendered_format_options = RenderedFormatOptions(
+            **_merge_dicts(asdict(defaults), asdict(format_options))
+        )
+    except ValueError as e:
+        raise ValueError('Invalid format options resulting from merging '
+                         'with default options.') from e
+
+    return rendered_format_options
 
 
 def validate_options(options: Union[FormatOptions, RenderedFormatOptions]):
@@ -371,7 +375,7 @@ def set_global_defaults(format_options: FormatOptions):
       from the old global default options.
     """
     global GLOBAL_DEFAULT_OPTIONS
-    GLOBAL_DEFAULT_OPTIONS = format_options._render()
+    GLOBAL_DEFAULT_OPTIONS = render_options(format_options)
 
 
 def set_global_defaults_rendered(
