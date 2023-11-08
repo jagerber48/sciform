@@ -9,6 +9,7 @@ Added
 ^^^^^
 
 * Added code of conduct.
+* Added Python 3.12 to automated testing.
 
 Fixed
 ^^^^^
