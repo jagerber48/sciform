@@ -46,23 +46,15 @@ class AutoDigits:
 UserFillMode = Literal[' ', '0']
 
 class FillMode(str, Enum):
-    #: Fill with white space
     SPACE = ' '
-
-    #: Fill with zeros
     ZERO = '0'
 
 
 UserSignMode = Literal['-', '+', ' ']
 
 class SignMode(str, Enum):
-    #: Only include sign symbol on negative numbers
     NEGATIVE = '-'
-
-    #: Always include sign symbol
     ALWAYS = '+'
-
-    #: Include extra white space in front of positive numbers
     SPACE = ' '
 
 
@@ -71,19 +63,10 @@ UserDecimalSeparators = Literal['.', ',']
 UserLowerSeparators = Literal['', ' ', '_']
 
 class Separator(str, Enum):
-    #: No separator
     NONE = ''
-
-    #: Comma separator (not valid as lower separator)
     COMMA = ','
-
-    #: Point separator (not valid as lower separator)
     POINT = '.'
-
-    #: Underscore separator
     UNDERSCORE = '_'
-
-    #: White space separator
     SPACE = ' '
 
 UpperSeparators = Literal[Separator.NONE,
@@ -101,10 +84,7 @@ LowerSeparators = Literal[Separator.NONE,
 UserRoundMode = Literal['sig_fig', 'dec_place']
 
 class RoundMode(Enum):
-    #: Significant figure rounding
     SIG_FIG = 'sig_fig'
-
-    #: Decimal place rounding
     DEC_PLACE = 'dec_place'
 
 
@@ -113,38 +93,20 @@ UserExpMode = Literal['fixed_point', 'percent', 'scientific', 'engineering',
                       'engineering_shifted', 'binary', 'binary_iec']
 
 class ExpMode(Enum):
-    #: Fixed point
     FIXEDPOINT = 'fixed_point'
-
-    #: Percent
     PERCENT = 'percent'
-
-    #: Scientific
     SCIENTIFIC = 'scientific'
-
-    #: Engineering
     ENGINEERING = 'engineering'
-
-    #: Shifted Engineering
     ENGINEERING_SHIFTED = 'engineering_shifted'
-
-    #: Binary
     BINARY = 'binary'
-
-    #: Binary IEC
     BINARY_IEC = 'binary_iec'
 
 
 UserExpFormat = Literal['standard', 'prefix', 'parts_per']
 
 class ExpFormat(Enum):
-    #: Standard Format
     STANDARD = 'standard'
-
-    #: Prefix Format
     PREFIX = 'prefix'
-
-    #: Parts-Per Format
     PARTS_PER = 'parts_per'
 
 
