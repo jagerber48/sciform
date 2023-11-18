@@ -1,8 +1,6 @@
 import re
 
-from sciform.format_options import FormatOptions
-from sciform.modes import (FillMode, SignMode, GroupingSeparator, RoundMode,
-                           ExpMode, ExpFormat)
+from sciform.user_options import UserOptions
 
 
 pattern = re.compile(r'''^
@@ -20,43 +18,13 @@ pattern = re.compile(r'''^
                          (?P<bracket_unc>\(\))?
                          $''', re.VERBOSE)
 
-fill_mode_mapping = {' ': FillMode.SPACE,
-                     '0': FillMode.ZERO,
-                     None: None}
-
-sign_mode_mapping = {'-': SignMode.NEGATIVE,
-                     '+': SignMode.ALWAYS,
-                     ' ': SignMode.SPACE,
-                     None: None}
-
-separator_mapping = {'n': GroupingSeparator.NONE,
-                     ',': GroupingSeparator.COMMA,
-                     '.': GroupingSeparator.POINT,
-                     's': GroupingSeparator.SPACE,
-                     '_': GroupingSeparator.UNDERSCORE,
-                     None: None}
-
-round_mode_mapping = {'!': RoundMode.SIG_FIG,
-                      '.': RoundMode.DEC_PLACE,
-                      None: None}
-
-
-def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
+def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
     match = pattern.match(fmt_spec)
     if match is None:
         raise ValueError(f'Invalid format specifier: \'{fmt_spec}\'')
 
-    fill_mode_flag = match.group('fill_mode')
-    if fill_mode_flag is not None:
-        fill_mode = fill_mode_mapping[fill_mode_flag]
-    else:
-        fill_mode = None
-
-    sign_mode_flag = match.group('sign_mode')
-    if sign_mode_flag is not None:
-        sign_mode = sign_mode_mapping[sign_mode_flag]
-    else:
-        sign_mode = None
+    fill_mode = match.group('fill_mode')
+    sign_mode = match.group('sign_mode')
 
     alternate_mode = match.group('alternate_mode')
     alternate_mode = alternate_mode is not None
@@ -69,14 +37,21 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
         top_dig_place = None
         val_unc_match_widths = None
 
-    upper_separator_flag = match.group('upper_separator')
-    upper_separator = separator_mapping[upper_separator_flag]
+    upper_separator = match.group('upper_separator')
+    if upper_separator is not None:
+        upper_separator = upper_separator.replace('n', '')
+        upper_separator = upper_separator.replace('s', ' ')
 
-    decimal_separator_flag = match.group('decimal_separator')
-    decimal_separator = separator_mapping[decimal_separator_flag]
+    decimal_separator = match.group('decimal_separator')
 
-    lower_separator_flag = match.group('lower_separator')
-    lower_separator = separator_mapping[lower_separator_flag]
+    lower_separator = match.group('lower_separator')
+    if lower_separator is not None:
+        lower_separator = lower_separator.replace('n', '')
+        lower_separator = lower_separator.replace('s', ' ')
+
+    round_mode_mapping = {'!': 'sig_fig',
+                          '.': 'dec_place',
+                          None: None}
 
     round_mode_flag = match.group('round_mode')
     round_mode = round_mode_mapping[round_mode_flag]
@@ -91,21 +66,21 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
     if exp_mode is not None:
         capitalize = exp_mode.isupper()
         if exp_mode in ['f', 'F']:
-            exp_mode = ExpMode.FIXEDPOINT
+            exp_mode = 'fixed_point'
         elif exp_mode == '%':
-            exp_mode = ExpMode.PERCENT
+            exp_mode = 'percent'
         elif exp_mode in ['e', 'E']:
-            exp_mode = ExpMode.SCIENTIFIC
+            exp_mode = 'scientific'
         elif exp_mode in ['r', 'R']:
             if alternate_mode:
-                exp_mode = ExpMode.ENGINEERING_SHIFTED
+                exp_mode = 'engineering_shifted'
             else:
-                exp_mode = ExpMode.ENGINEERING
+                exp_mode = 'engineering'
         elif exp_mode in ['b', 'B']:
             if alternate_mode:
-                exp_mode = ExpMode.BINARY_IEC
+                exp_mode = 'binary_iec'
             else:
-                exp_mode = ExpMode.BINARY
+                exp_mode = 'binary'
     else:
         capitalize = None
 
@@ -115,7 +90,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
 
     prefix_exp = match.group('prefix_mode')
     if prefix_exp is not None:
-        exp_format = ExpFormat.PREFIX
+        exp_format = 'prefix'
     else:
         exp_format = None
 
@@ -125,7 +100,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> 'FormatOptions':
     else:
         bracket_unc = None
 
-    return FormatOptions(
+    return UserOptions(
         fill_mode=fill_mode,
         sign_mode=sign_mode,
         top_dig_place=top_dig_place,

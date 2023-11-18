@@ -1,17 +1,15 @@
 import unittest
 
-from sciform import (FormatOptions, Formatter, ExpMode, ExpFormat,
-                     GroupingSeparator, FillMode, RoundMode, AutoDigits)
+from sciform import Formatter, AutoDigits
 
 
-FloatFormatOptionsCases = list[tuple[float, list[tuple[FormatOptions, str]]]]
+FloatFormatterCases = list[tuple[float, list[tuple[Formatter, str]]]]
 
 
 class TestFormatting(unittest.TestCase):
-    def run_float_formatter_cases(self, cases_list: FloatFormatOptionsCases):
+    def run_float_formatter_cases(self, cases_list: FloatFormatterCases):
         for num, formats_list in cases_list:
-            for format_options, expected_num_str in formats_list:
-                formatter = Formatter(format_options)
+            for formatter, expected_num_str in formats_list:
                 snum_str = formatter(num)
                 with self.subTest(num=num,
                                   expected_num_str=expected_num_str,
@@ -21,19 +19,19 @@ class TestFormatting(unittest.TestCase):
     def test_superscript_exp(self):
         cases_list = [
             (789, [
-                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               superscript_exp=True), '7.89×10²')
+                (Formatter(exp_mode='scientific',
+                           superscript_exp=True), '7.89×10²')
             ]),
 
             # Superscript in prefix mode when there's no replacement
             (789, [
-                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp_format=ExpFormat.PREFIX,
-                               superscript_exp=True), '7.89×10²')
+                (Formatter(exp_mode='scientific',
+                           exp_format='prefix',
+                           superscript_exp=True), '7.89×10²')
             ]),
             (1024, [
-                (FormatOptions(exp_mode=ExpMode.BINARY,
-                               superscript_exp=True), '1×2¹⁰')
+                (Formatter(exp_mode='binary',
+                           superscript_exp=True), '1×2¹⁰')
             ])
         ]
 
@@ -42,27 +40,27 @@ class TestFormatting(unittest.TestCase):
     def test_fill_and_separators(self):
         cases_list = [
             (123456789.654321, [
-                (FormatOptions(
-                    upper_separator=GroupingSeparator.UNDERSCORE,
-                    lower_separator=GroupingSeparator.UNDERSCORE,
-                    fill_mode=FillMode.ZERO,
+                (Formatter(
+                    upper_separator='_',
+                    lower_separator='_',
+                    fill_mode='0',
                     top_dig_place=14), '000_000_123_456_789.654_321'),
-                (FormatOptions(
-                    upper_separator=GroupingSeparator.UNDERSCORE,
-                    lower_separator=GroupingSeparator.UNDERSCORE,
-                    fill_mode=FillMode.SPACE,
+                (Formatter(
+                    upper_separator='_',
+                    lower_separator='_',
+                    fill_mode=' ',
                     top_dig_place=14), '      123_456_789.654_321'),
             ]),
             (4567899.7654321, [
-                (FormatOptions(
-                    upper_separator=GroupingSeparator.UNDERSCORE,
-                    lower_separator=GroupingSeparator.UNDERSCORE,
-                    fill_mode=FillMode.ZERO,
+                (Formatter(
+                    upper_separator='_',
+                    lower_separator='_',
+                    fill_mode='0',
                     top_dig_place=14), '000_000_004_567_899.765_432_1'),
-                (FormatOptions(
-                    upper_separator=GroupingSeparator.UNDERSCORE,
-                    lower_separator=GroupingSeparator.UNDERSCORE,
-                    fill_mode=FillMode.SPACE,
+                (Formatter(
+                    upper_separator='_',
+                    lower_separator='_',
+                    fill_mode=' ',
                     top_dig_place=14), '        4_567_899.765_432_1'),
             ])
         ]
@@ -72,28 +70,28 @@ class TestFormatting(unittest.TestCase):
     def test_latex(self):
         cases_list = [
             (789, [
-                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               latex=True), r'7.89\times 10^{+2}'),
+                (Formatter(exp_mode='scientific',
+                           latex=True), r'7.89\times 10^{+2}'),
 
                 # Latex mode takes precedence over superscript_exp
-                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               latex=True,
-                               superscript_exp=True), r'7.89\times 10^{+2}')
+                (Formatter(exp_mode='scientific',
+                           latex=True,
+                           superscript_exp=True), r'7.89\times 10^{+2}')
             ]),
             (12345, [
-                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp_val=-1,
-                               upper_separator=GroupingSeparator.UNDERSCORE,
-                               latex=True), r'123\_450\times 10^{-1}'),
-                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp_val=3,
-                               exp_format=ExpFormat.PREFIX,
-                               latex=True), r'12.345\text{ k}')
+                (Formatter(exp_mode='scientific',
+                           exp_val=-1,
+                           upper_separator='_',
+                           latex=True), r'123\_450\times 10^{-1}'),
+                (Formatter(exp_mode='scientific',
+                           exp_val=3,
+                           exp_format='prefix',
+                           latex=True), r'12.345\text{ k}')
             ]),
             (1024, [
-                (FormatOptions(exp_mode=ExpMode.BINARY,
-                               exp_val=8,
-                               latex=True), r'4\times 2^{+8}')
+                (Formatter(exp_mode='binary',
+                           exp_val=8,
+                           latex=True), r'4\times 2^{+8}')
             ])
         ]
 
@@ -102,14 +100,14 @@ class TestFormatting(unittest.TestCase):
     def test_nan(self):
         cases_list = [
             (float('nan'), [
-                (FormatOptions(exp_mode=ExpMode.PERCENT), 'nan'),
-                (FormatOptions(exp_mode=ExpMode.PERCENT,
-                               nan_inf_exp=True), '(nan)%'),
-                (FormatOptions(exp_mode=ExpMode.PERCENT,
-                               latex=True), r'\text{nan}'),
-                (FormatOptions(exp_mode=ExpMode.PERCENT,
-                               latex=True,
-                               nan_inf_exp=True), r'\left(\text{nan}\right)\%')
+                (Formatter(exp_mode='percent'), 'nan'),
+                (Formatter(exp_mode='percent',
+                           nan_inf_exp=True), '(nan)%'),
+                (Formatter(exp_mode='percent',
+                           latex=True), r'\text{nan}'),
+                (Formatter(exp_mode='percent',
+                           latex=True,
+                           nan_inf_exp=True), r'\left(\text{nan}\right)\%')
             ])
         ]
 
@@ -118,31 +116,31 @@ class TestFormatting(unittest.TestCase):
     def test_parts_per_exp(self):
         cases_list = [
             (123e-3, [
-                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp_val=-3,
-                               exp_format=ExpFormat.PARTS_PER,
-                               add_ppth_form=True), '123 ppth'),
-                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp_val=-6,
-                               exp_format=ExpFormat.PARTS_PER), '123000 ppm'),
-                (FormatOptions(exp_mode=ExpMode.SCIENTIFIC,
-                               exp_val=-2,
-                               exp_format=ExpFormat.PARTS_PER), '12.3e-02')
+                (Formatter(exp_mode='scientific',
+                           exp_val=-3,
+                           exp_format='parts_per',
+                           add_ppth_form=True), '123 ppth'),
+                (Formatter(exp_mode='scientific',
+                           exp_val=-6,
+                           exp_format='parts_per'), '123000 ppm'),
+                (Formatter(exp_mode='scientific',
+                           exp_val=-2,
+                           exp_format='parts_per'), '12.3e-02')
             ]),
             (123e-9, [
-                (FormatOptions(exp_mode=ExpMode.ENGINEERING,
-                               exp_format=ExpFormat.PARTS_PER), '123 ppb'),
-                (FormatOptions(exp_mode=ExpMode.ENGINEERING,
-                               exp_format=ExpFormat.PARTS_PER,
-                               extra_parts_per_forms={-9: None, -12: 'ppb'}),
+                (Formatter(exp_mode='engineering',
+                           exp_format='parts_per'), '123 ppb'),
+                (Formatter(exp_mode='engineering',
+                           exp_format='parts_per',
+                           extra_parts_per_forms={-9: None, -12: 'ppb'}),
                  '123e-09')
             ]),
             (123e-12, [
-                (FormatOptions(exp_mode=ExpMode.ENGINEERING,
-                               exp_format=ExpFormat.PARTS_PER), '123 ppt'),
-                (FormatOptions(exp_mode=ExpMode.ENGINEERING,
-                               exp_format=ExpFormat.PARTS_PER,
-                               extra_parts_per_forms={-9: None, -12: 'ppb'}),
+                (Formatter(exp_mode='engineering',
+                           exp_format='parts_per'), '123 ppt'),
+                (Formatter(exp_mode='engineering',
+                           exp_format='parts_per',
+                           extra_parts_per_forms={-9: None, -12: 'ppb'}),
                  '123 ppb')
             ])
         ]
@@ -154,6 +152,6 @@ class TestFormatting(unittest.TestCase):
         self.assertEqual(sform(42), '42')
 
     def test_dec_place_auto_round(self):
-        sform = Formatter(FormatOptions(round_mode=RoundMode.DEC_PLACE,
-                                        ndigits=AutoDigits))
+        sform = Formatter(round_mode='dec_place',
+                          ndigits=AutoDigits)
         self.assertEqual(sform(123.456), '123.456')

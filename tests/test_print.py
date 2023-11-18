@@ -3,7 +3,7 @@ from contextlib import redirect_stdout
 
 import unittest
 
-from sciform import print_global_defaults, FormatOptions
+from sciform import print_global_defaults, GlobalDefaultsContext
 
 
 class TestPrint(unittest.TestCase):
@@ -16,11 +16,11 @@ class TestPrint(unittest.TestCase):
             " 'exp_val': <class 'sciform.modes.AutoExpVal'>,\n"
             " 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,\n"
             " 'ndigits': <class 'sciform.modes.AutoDigits'>,\n"
-            " 'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,\n"
-            " 'decimal_separator': <GroupingSeparator.POINT: 'point'>,\n"
-            " 'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,\n"
-            " 'sign_mode': <SignMode.NEGATIVE: 'negative'>,\n"
-            " 'fill_mode': <FillMode.SPACE: 'space'>,\n"
+            " 'upper_separator': <Separator.NONE: ''>,\n"
+            " 'decimal_separator': <Separator.POINT: '.'>,\n"
+            " 'lower_separator': <Separator.NONE: ''>,\n"
+            " 'sign_mode': <SignMode.NEGATIVE: '-'>,\n"
+            " 'fill_mode': <FillMode.SPACE: ' '>,\n"
             " 'top_dig_place': 0,\n"
             " 'exp_format': <ExpFormat.STANDARD: 'standard'>,\n"
             " 'extra_si_prefixes': {},\n"
@@ -40,19 +40,20 @@ class TestPrint(unittest.TestCase):
 
     def test_unrendered_options_repr(self):
         with redirect_stdout(StringIO()) as sout:
-            print(FormatOptions(top_dig_place=3,
-                                capitalize=True))
+            with GlobalDefaultsContext(top_dig_place=3, capitalize=True):
+                print_global_defaults()
+
         actual_printout = sout.getvalue()
         expected_printout = (
             "{'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,\n"
             " 'exp_val': <class 'sciform.modes.AutoExpVal'>,\n"
             " 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,\n"
             " 'ndigits': <class 'sciform.modes.AutoDigits'>,\n"
-            " 'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,\n"
-            " 'decimal_separator': <GroupingSeparator.POINT: 'point'>,\n"
-            " 'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,\n"
-            " 'sign_mode': <SignMode.NEGATIVE: 'negative'>,\n"
-            " 'fill_mode': <FillMode.SPACE: 'space'>,\n"
+            " 'upper_separator': <Separator.NONE: ''>,\n"
+            " 'decimal_separator': <Separator.POINT: '.'>,\n"
+            " 'lower_separator': <Separator.NONE: ''>,\n"
+            " 'sign_mode': <SignMode.NEGATIVE: '-'>,\n"
+            " 'fill_mode': <FillMode.SPACE: ' '>,\n"
             " 'top_dig_place': 3,\n"
             " 'exp_format': <ExpFormat.STANDARD: 'standard'>,\n"
             " 'extra_si_prefixes': {},\n"

@@ -22,9 +22,10 @@ class SciNum:
         self.value = Decimal(str(value))
 
     def __format__(self, fmt: str):
-        format_options = format_options_from_fmt_spec(fmt)
+        user_options = format_options_from_fmt_spec(fmt)
+        rendered_options = user_options.render()
         return format_num(self.value,
-                          format_options)
+                          rendered_options)
 
     def __repr__(self):
         return f'{self.__class__.__name__}({self.value})'
@@ -50,10 +51,11 @@ class SciNumUnc:
         self.uncertainty = Decimal(str(uncertainty))
 
     def __format__(self, fmt: str):
-        format_options = format_options_from_fmt_spec(fmt)
+        user_options = format_options_from_fmt_spec(fmt)
+        rendered_options = user_options.render()
         return format_val_unc(self.value,
                               self.uncertainty,
-                              format_options)
+                              rendered_options)
 
     def __repr__(self):
         return f'{self.__class__.__name__}({self.value}, {self.uncertainty})'
