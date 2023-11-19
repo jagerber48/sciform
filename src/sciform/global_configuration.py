@@ -1,7 +1,7 @@
 from typing import Optional, Union
 from sciform import global_options, modes
 from sciform.user_options import UserOptions
-from sciform.rendered_options import RenderedFormatOptions
+from sciform.rendered_options import RenderedOptions
 
 
 def print_global_defaults():
@@ -74,9 +74,8 @@ def set_global_defaults(
     set_global_defaults_rendered(user_options.render())
 
 
-def set_global_defaults_rendered(
-        rendered_format_options: RenderedFormatOptions):
-    global_options.GLOBAL_DEFAULT_OPTIONS = rendered_format_options
+def set_global_defaults_rendered(rendered_options: RenderedOptions):
+    global_options.GLOBAL_DEFAULT_OPTIONS = rendered_options
 
 
 def reset_global_defaults():

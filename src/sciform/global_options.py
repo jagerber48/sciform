@@ -1,7 +1,7 @@
-from sciform.rendered_options import RenderedFormatOptions
+from sciform.rendered_options import RenderedOptions
 from sciform import modes
 
-PKG_DEFAULT_OPTIONS = RenderedFormatOptions(
+PKG_DEFAULT_OPTIONS = RenderedOptions(
     exp_mode=modes.ExpMode.FIXEDPOINT,
     exp_val=modes.AutoExpVal,
     round_mode=modes.RoundMode.SIG_FIG,

@@ -4,7 +4,7 @@ from pprint import pformat
 
 from sciform import modes
 from sciform import global_options
-from sciform.rendered_options import RenderedFormatOptions
+from sciform.rendered_options import RenderedOptions
 
 
 @dataclass(frozen=True)
@@ -71,7 +71,7 @@ class UserOptions:
                 self.extra_parts_per_forms[-3] = 'ppth'
 
     @staticmethod
-    def validate(options: Union['UserOptions', RenderedFormatOptions]):
+    def validate(options: Union['UserOptions', RenderedOptions]):
         if options.round_mode == 'sig_fig':
             if isinstance(options.ndigits, int):
                 if options.ndigits < 1:
@@ -125,7 +125,7 @@ class UserOptions:
                                  f'{get_args(modes.UserLowerSeparators)}, '
                                  f'not {options.lower_separator}.')
 
-    def render(self) -> RenderedFormatOptions:
+    def render(self) -> RenderedOptions:
         key_to_enum_dict = {
             'exp_mode': modes.ExpMode,
             'round_mode': modes.RoundMode,
@@ -150,7 +150,7 @@ class UserOptions:
             else:
                 rendered_value = value
             kwargs[key] = rendered_value
-        rendered_options = RenderedFormatOptions(**kwargs)
+        rendered_options = RenderedOptions(**kwargs)
         self.validate(rendered_options)
         return rendered_options
 

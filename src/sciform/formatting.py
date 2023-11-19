@@ -4,7 +4,7 @@ import re
 from decimal import Decimal
 
 from sciform.modes import ExpMode, SignMode, AutoExpVal, RoundMode, ExpFormat
-from sciform.rendered_options import RenderedFormatOptions
+from sciform.rendered_options import RenderedOptions
 from sciform.format_utils import (
     get_mantissa_exp_base, get_exp_str, get_top_digit, get_round_digit,
     format_num_by_top_bottom_dig, latex_translate, parse_standard_exp_str
@@ -12,7 +12,7 @@ from sciform.format_utils import (
 from sciform.grouping import add_separators
 
 
-def format_non_finite(num: Decimal, options: RenderedFormatOptions) -> str:
+def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
     if num.is_nan():
         num_str = 'nan'
     elif num == Decimal('inf'):
@@ -60,7 +60,7 @@ def format_non_finite(num: Decimal, options: RenderedFormatOptions) -> str:
     return result
 
 
-def format_num(num: Decimal, options: RenderedFormatOptions) -> str:
+def format_num(num: Decimal, options: RenderedOptions) -> str:
     if not num.is_finite():
         return format_non_finite(num, options)
 
@@ -133,8 +133,7 @@ def format_num(num: Decimal, options: RenderedFormatOptions) -> str:
     return result
 
 
-def format_val_unc(val: Decimal, unc: Decimal,
-                   options: RenderedFormatOptions):
+def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions):
     if (options.exp_mode is ExpMode.BINARY
             or options.exp_mode is ExpMode.BINARY_IEC):
         raise NotImplementedError('Binary exponent modes are not supported '
