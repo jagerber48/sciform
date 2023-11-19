@@ -118,7 +118,7 @@ Further details about the options can be found at
        See :ref:`fixed_exp`.
    * - | prefix mode
        | (``'p'``)
-     - Sets ``exp_format`` to :class:`ExpFormat.PREFIX`.
+     - Sets ``exp_format`` to :class:`'prefix'`.
        See :ref:`exp_str_replacement`.
    * - | bracket uncertainty
        | (``'()'``)

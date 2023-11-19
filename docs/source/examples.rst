@@ -18,55 +18,54 @@ Formatter
 Here are a small selection of examples which demonstrate some of the
 available formatting options.
 
->>> from sciform import (FormatOptions, Formatter, ExpMode, RoundMode,
-...                      SignMode, GroupingSeparator, ExpFormat)
+>>> from sciform import Formatter
 >>> num = 12345.54321
->>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.SCIENTIFIC,
+>>> sform = Formatter(
+...             exp_mode='scientific',
 ...             round_mode='sig_fig',
-...             ndigits=4))
+...             ndigits=4)
 >>> print(sform(num))
 1.235e+04
->>> sform = Formatter(FormatOptions(
+>>> sform = Formatter(
 ...             exp_mode='engineering',
 ...             round_mode='dec_place',
 ...             ndigits=10,
-...             sign_mode=SignMode.SPACE,
-...             superscript_exp=True))
+...             sign_mode=' ',
+...             superscript_exp=True)
 >>> print(sform(num))
  12.3455432100×10³
->>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.FIXEDPOINT,
+>>> sform = Formatter(
+...             exp_mode='fixed_point',
 ...             upper_separator=' ',
 ...             decimal_separator=',',
 ...             lower_separator='_',
-...             sign_mode=SignMode.ALWAYS))
+...             sign_mode='+')
 >>> print(sform(num))
 +12 345,543_21
 
 >>> num = 0.076543
->>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.SCIENTIFIC,
+>>> sform = Formatter(
+...             exp_mode='scientific',
 ...             exp_val=-3,
-...             exp_format=ExpFormat.PARTS_PER,
-...             add_ppth_form=True))
+...             exp_format='parts_per',
+...             add_ppth_form=True)
 >>> print(sform(num))
 76.543 ppth
->>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.SCIENTIFIC,
+>>> sform = Formatter(
+...             exp_mode='scientific',
 ...             exp_val=-2,
-...             exp_format=ExpFormat.PREFIX,
-...             add_c_prefix=True))
+...             exp_format='prefix',
+...             add_c_prefix=True)
 >>> print(sform(num))
 7.6543 c
->>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.SCIENTIFIC,
+>>> sform = Formatter(
+...             exp_mode='scientific',
 ...             exp_val=-6,
-...             exp_format=ExpFormat.PREFIX))
+...             exp_format='prefix')
 >>> print(sform(num))
 76543 μ
->>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.PERCENT))
+>>> sform = Formatter(
+...             exp_mode='percent')
 >>> print(sform(num))
 7.6543%
 
@@ -75,20 +74,20 @@ available formatting options.
 >>> sform = Formatter()
 >>> print(sform(num, unc))
 3141593 ± 1618
->>> sform = Formatter(FormatOptions(
+>>> sform = Formatter(
 ...             exp_mode='engineering',
-...             exp_format=ExpFormat.PREFIX,
+...             exp_format='prefix',
 ...             pdg_sig_figs=True,
-...             unc_pm_whitespace=False))
+...             unc_pm_whitespace=False)
 >>> print(sform(num, unc))
 (3.1416±0.0016) M
 
 >>> num = 314159.27
 >>> unc = 1618
->>> sform = Formatter(FormatOptions(
-...             exp_mode='engineering',
+>>> sform = Formatter(
+...             exp_mode='engineering_shifted',
 ...             pdg_sig_figs=True,
-...             bracket_unc=True))
+...             bracket_unc=True)
 >>> print(sform(num, unc))
 (0.3142(16))e+06
 
@@ -114,20 +113,20 @@ instead.
 +12 345,543_21
 
 >>> snum = SciNum(0.076543)
->>> with GlobalDefaultsContext(FormatOptions(
-...         exp_format=ExpFormat.PARTS_PER,
-...         add_ppth_form=True)):
+>>> with GlobalDefaultsContext(
+...         exp_format='parts_per',
+...         add_ppth_form=True):
 ...     print(f'{snum:ex-3}')
 76.543 ppth
->>> with GlobalDefaultsContext(FormatOptions(
-...             exp_format=ExpFormat.PREFIX,
-...             add_c_prefix=True)):
+>>> with GlobalDefaultsContext(
+...             exp_format='prefix',
+...             add_c_prefix=True):
 ...     print(f'{snum:ex-2}')
 7.6543 c
->>> with GlobalDefaultsContext(FormatOptions(
-...             exp_mode=ExpMode.SCIENTIFIC,
+>>> with GlobalDefaultsContext(
+...             exp_mode='scientific',
 ...             exp_val=-6,
-...             exp_format=ExpFormat.PREFIX)):
+...             exp_format='prefix'):
 ...     print(f'{snum:ex-6}')
 76543 μ
 >>> print(f'{snum:%}')
@@ -136,15 +135,15 @@ instead.
 >>> num_unc = SciNumUnc(3141592.7, 1618)
 >>> print(f'{num_unc}')
 3141593 ± 1618
->>> with GlobalDefaultsContext(FormatOptions(
+>>> with GlobalDefaultsContext(
 ...             pdg_sig_figs=True,
-...             unc_pm_whitespace=False)):
+...             unc_pm_whitespace=False):
 ...     print(f'{num_unc:rp}')
 (3.1416±0.0016) M
 
 >>> num_unc = SciNumUnc(314159.27, 1618)
->>> with GlobalDefaultsContext(FormatOptions(
-...             pdg_sig_figs=True)):
+>>> with GlobalDefaultsContext(
+...             pdg_sig_figs=True):
 ...     print(f'{num_unc:#r()}')
 (0.3142(16))e+06
 
