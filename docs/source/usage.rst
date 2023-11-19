@@ -262,6 +262,8 @@ unexpected issues when manipulating numerical data.
 However, in the :class:`Decimal` class, the main issue is that
 numbers may be truncated if their precision exceeds the configured
 :class:`Decimal` precision, but the rounding will be as expected.
+That said, the precision used for :class:`Decimal` numbers can
+easily be modified if necessary.
 :class:`float` instances, unfortunately, may exhibit more surprising
 behavior, as will be explained below.
 For these reasons, the :mod:`sciform` module uses :class:`Decimal`
