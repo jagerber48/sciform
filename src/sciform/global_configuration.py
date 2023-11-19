@@ -40,7 +40,8 @@ def set_global_defaults(
             add_ppth_form: bool = False,
     ):
     """
-    Configure global default format options
+    Configure global default format options. Accepts the same keyword
+    arguments as :class:`Formatter`.
     """
     user_options = UserOptions(
         exp_mode=exp_mode,
@@ -80,11 +81,16 @@ def set_global_defaults_rendered(
 
 def reset_global_defaults():
     """
-    Reset global default options to package defaults.
+    Reset global default options to :mod:`sciform` package defaults.
     """
     global_options.GLOBAL_DEFAULT_OPTIONS = global_options.PKG_DEFAULT_OPTIONS
 
 
+# TODO: Need to clean up the semantics on add_c_prefix in both Formatter
+#  and these global configuration options. Does it truly just add the
+#  value to the dict if it's not present? Or does the whole dict get
+#  overwritten? Are these helpers even needed? They're redundant with
+#  set_global_defaults.
 def global_add_c_prefix():
     """
     Include ``c`` as a prefix for the exponent value -2. Has no effect
@@ -142,7 +148,8 @@ class GlobalDefaultsContext:
     """
     Temporarily update global default options. New settings are applied
     when the context is entered and original global settings are
-    re-applied when the context is exited.
+    re-applied when the context is exited. Accepts the same keyword
+    arguments as :class:`Formatter`.
     """
     def __init__(
             self,

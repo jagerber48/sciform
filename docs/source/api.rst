@@ -23,14 +23,13 @@ Auto Options
 Global Configuration
 ====================
 
-.. autoclass:: GlobalDefaultsContext()
-   :members: __init__
-
 .. autofunction:: print_global_defaults()
 
 .. autofunction:: set_global_defaults()
 
 .. autofunction:: reset_global_defaults()
+
+.. autoclass:: GlobalDefaultsContext()
 
 .. autofunction:: global_add_c_prefix()
 
