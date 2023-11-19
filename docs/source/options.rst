@@ -523,7 +523,7 @@ to the 10\ :sup:`4` (ten-thousands) place.
 
 >>> from sciform import FillMode
 >>> sform = Formatter(FormatOptions(
-...             fill_mode=FillMode.ZERO,
+...             fill_mode='0',
 ...             top_dig_place=4))
 >>> print(sform(42))
 00042
@@ -807,13 +807,13 @@ uncertainty.
 This feature is accessed with the ``val_unc_match_widths`` option.
 
 >>> sform = Formatter(FormatOptions(
-...             fill_mode=FillMode.ZERO,
+...             fill_mode='0',
 ...             top_dig_place=2,
 ...             val_unc_match_widths=False))
 >>> print(sform(12345, 1.23))
 12345.00 ± 001.23
 >>> sform = Formatter(FormatOptions(
-...             fill_mode=FillMode.ZERO,
+...             fill_mode='0',
 ...             top_dig_place=2,
 ...             val_unc_match_widths=True))
 >>> print(sform(12345, 1.23))

@@ -51,7 +51,7 @@ Further details about the options can be found at
      - Description
    * - | fill
        | (``'0='``, ``' ='``)
-     - Configure ``fill_mode`` to be :class:`FillMode.ZERO` or
+     - Configure ``fill_mode`` to be :class:`'0'` or
        :class:`FillMode.SPACE`. See :ref:`left_filling`.
    * - | sign
        | (``'-'``, ``'+'``, ``' '``)

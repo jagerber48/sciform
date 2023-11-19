@@ -151,28 +151,28 @@ package default settings):
  'bracket_unc_remove_seps': False,
  'unc_pm_whitespace': True}
 
-The global default settings can be modified by passing
-:class:`FormatOptions` into :func:`set_global_defaults()`.
-Any options passed in the :class:`FormatOptions` will overwrite the
+The global default settings can be modified using the
+:func:`set_global_defaults()` function.
+Any options passed will overwrite the corresponding options in the
 current global default settings and any unfilled options will remain
 unchanged.
 
 >>> from sciform import set_global_defaults
 >>> set_global_defaults(
-...     fill_mode=FillMode.ZERO,
-...     exp_mode='engineering',
+...     fill_mode='0',
+...     exp_mode='engineering_shifted',
 ...     ndigits=4,
-...     decimal_separator=','))
+...     decimal_separator=',')
 >>> print_global_defaults()
-{'exp_mode': <'engineering': 'engineering_shifted'>,
+{'exp_mode': <ExpMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
  'exp_val': <class 'sciform.modes.AutoExpVal'>,
- 'round_mode': <'sig_fig': 'sig_fig'>,
+ 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
  'ndigits': 4,
- 'upper_separator': <'': 'no_grouping'>,
- 'decimal_separator': <',': 'comma'>,
- 'lower_separator': <'': 'no_grouping'>,
- 'sign_mode': <SignMode.NEGATIVE: 'negative'>,
- 'fill_mode': <FillMode.ZERO: 'zero'>,
+ 'upper_separator': <Separator.NONE: ''>,
+ 'decimal_separator': <Separator.COMMA: ','>,
+ 'lower_separator': <Separator.NONE: ''>,
+ 'sign_mode': <SignMode.NEGATIVE: '-'>,
+ 'fill_mode': <FillMode.ZERO: '0'>,
  'top_dig_place': 0,
  'exp_format': <ExpFormat.STANDARD: 'standard'>,
  'extra_si_prefixes': {},
@@ -215,7 +215,8 @@ There are also helper functions for managing supported
 
 The global default settings can be temporarily modified using the
 :class:`GlobalDefaultsContext` context manager.
-The context manager is also configured using :class:`FormatOptions`.
+The context manager is configured using the same options as
+:class:`Formatter`.
 Within the context of :class:`GlobalDefaultsContext` manager, the
 global defaults take on the specified input settings, but when the
 context is exited, the global default settings revert to their previous
@@ -225,7 +226,7 @@ values.
 >>> snum = SciNum(0.0123)
 >>> print(f'{snum:.2ep}')
 1.23e-02
->>> with GlobalDefaultsContext(FormatOptions(add_c_prefix=True)):
+>>> with GlobalDefaultsContext(add_c_prefix=True):
 ...     print(f'{snum:.2ep}')
 1.23 c
 >>> print(f'{snum:.2ep}')
