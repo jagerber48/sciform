@@ -213,9 +213,6 @@ class Formatter:
         )
 
     def __call__(self, value: Number, uncertainty: Number = None, /):
-        return self.format(value, uncertainty)
-
-    def format(self, value: Number, uncertainty: Number = None, /):
         rendered_options = self.user_options.render()
         if uncertainty is None:
             return format_num(Decimal(str(value)), rendered_options)
