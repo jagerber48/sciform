@@ -220,3 +220,5 @@ class Formatter:
             return format_val_unc(Decimal(str(value)),
                                   Decimal(str(uncertainty)),
                                   rendered_options)
+
+    # TODO: __repr__
