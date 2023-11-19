@@ -193,7 +193,7 @@ parts-per identifiers and binary exponent strings can be replaced with
 IEC prefixes.
 See :ref:`exp_replacements` for all default supported
 replacements.
-Furthermore, it is possible to customize :class:`FormatOptions`
+Furthermore, it is possible to customize :class:`Formatter`
 objects or the global configuration settings to map additional
 translations, in addition to those provided by default.
 
