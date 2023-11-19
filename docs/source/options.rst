@@ -99,7 +99,7 @@ Here it may be more convenient to display the number with an exponent of
 to an exponent of 8 which would be chosen for standard scientific
 notation.
 
->>> sform = Formatter(FormatOptions(exp_mode=ExpMode.ENGINEERING))
+>>> sform = Formatter(FormatOptions(exp_mode='engineering'))
 >>> print(sform(123.456))
 123.456e+00
 >>> print(sform(123.456, 0.001))
@@ -114,7 +114,7 @@ Shifted engineering notation is the same as engineering notation except
 the exponent is chosen so that the mantissa ``m`` satisfies
 ``0.1 <= m < 100``.
 
->>> sform = Formatter(FormatOptions(exp_mode=ExpMode.ENGINEERING_SHIFTED))
+>>> sform = Formatter(FormatOptions(exp_mode='engineering'_SHIFTED))
 >>> print(sform(123.456))
 0.123456e+03
 >>> print(sform(123.456, 0.001))
@@ -199,19 +199,19 @@ translations, in addition to those provided by default.
 
 >>> from sciform import ExpFormat
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING,
+...             exp_mode='engineering',
 ...             exp_format=ExpFormat.PREFIX))
 >>> print(sform(4242.13))
 4.24213 k
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.BINARY_IEC,
-...             round_mode=RoundMode.SIG_FIG,
+...             round_mode='sig_fig',
 ...             ndigits=4,
 ...             exp_format=ExpFormat.PREFIX))
 >>> print(sform(1300))
 1.270 Ki
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING,
+...             exp_mode='engineering',
 ...             exp_format=ExpFormat.PARTS_PER))
 >>> print(sform(12.3e-6))
 12.3 ppm
@@ -243,12 +243,12 @@ Passing ``None`` for the value for a corresponding exponent value will
 force that exponent to not be translated.
 
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING,
+...             exp_mode='engineering',
 ...             exp_format=ExpFormat.PARTS_PER))
 >>> print(sform(3e-9))
 3 ppb
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING,
+...             exp_mode='engineering',
 ...             exp_format=ExpFormat.PARTS_PER,
 ...             extra_parts_per_forms={-9: None}))
 >>> print(sform(3e-9))
@@ -284,7 +284,7 @@ Note that ``ppth`` is not a standard notation for "parts-per-thousand",
 but it is one that the author has found useful.
 
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING,
+...             exp_mode='engineering',
 ...             exp_format=ExpFormat.PARTS_PER,
 ...             add_ppth_form=True))
 >>> print(sform(12.3e-3))
@@ -342,8 +342,8 @@ just by looking at the resulting string.
 
 >>> from sciform import RoundMode
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING,
-...             round_mode=RoundMode.SIG_FIG,
+...             exp_mode='engineering',
+...             round_mode='sig_fig',
 ...             ndigits=4))
 >>> print(sform(12345.678))
 12.35e+03
@@ -366,8 +366,8 @@ rounded to ``12.99``.
 
 >>> from sciform import RoundMode
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING,
-...             round_mode=RoundMode.DEC_PLACE,
+...             exp_mode='engineering',
+...             round_mode='dec_place',
 ...             ndigits=4))
 >>> print(sform(12345.678))
 12.3457e+03
@@ -377,7 +377,7 @@ It is possible for ``ndigits <= 0``:
 >>> from sciform import RoundMode
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.FIXEDPOINT,
-...             round_mode=RoundMode.DEC_PLACE,
+...             round_mode='dec_place',
 ...             ndigits=-2))
 >>> print(sform(12345.678))
 12300
@@ -440,7 +440,7 @@ decimal separator.
 
 >>> from sciform import GroupingSeparator
 >>> sform = Formatter(FormatOptions(
-...             upper_separator=GroupingSeparator.SPACE,
+...             upper_separator=' ',
 ...             decimal_separator=GroupingSeparator.COMMA,
 ...             lower_separator=GroupingSeparator.UNDERSCORE))
 >>> print(sform(1234567.7654321))
@@ -674,7 +674,7 @@ mode with :class:`AutoDigits` precision and the ``pdg_sig_figs`` flag.
 
 >>> from sciform import AutoDigits
 >>> sform = Formatter(FormatOptions(
-...             round_mode=RoundMode.SIG_FIG,
+...             round_mode='sig_fig',
 ...             ndigits=AutoDigits,
 ...             pdg_sig_figs=True))
 >>> print(sform(1, 0.0123))
@@ -731,7 +731,7 @@ This is consistent with
 
 >>> from sciform import ExpFormat
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING,
+...             exp_mode='engineering',
 ...             exp_format=ExpFormat.PREFIX,
 ...             bracket_unc=True))
 >>> print(sform(523.4e-3,  1.2e-3))

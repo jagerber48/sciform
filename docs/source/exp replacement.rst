@@ -150,7 +150,7 @@ override the standard mappings listed above.
 
 >>> from sciform import Formatter, FormatOptions, ExpMode, ExpFormat
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING,
+...             exp_mode='engineering',
 ...             exp_format=ExpFormat.PARTS_PER,
 ...             extra_parts_per_forms={-9: None, -12: 'ppb'}))
 >>> print(sform(33e-9))

@@ -23,13 +23,13 @@ available formatting options.
 >>> num = 12345.54321
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.SCIENTIFIC,
-...             round_mode=RoundMode.SIG_FIG,
+...             round_mode='sig_fig',
 ...             ndigits=4))
 >>> print(sform(num))
 1.235e+04
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING,
-...             round_mode=RoundMode.DEC_PLACE,
+...             exp_mode='engineering',
+...             round_mode='dec_place',
 ...             ndigits=10,
 ...             sign_mode=SignMode.SPACE,
 ...             superscript_exp=True))
@@ -37,7 +37,7 @@ available formatting options.
  12.3455432100×10³
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.FIXEDPOINT,
-...             upper_separator=GroupingSeparator.SPACE,
+...             upper_separator=' ',
 ...             decimal_separator=GroupingSeparator.COMMA,
 ...             lower_separator=GroupingSeparator.UNDERSCORE,
 ...             sign_mode=SignMode.ALWAYS))
@@ -76,7 +76,7 @@ available formatting options.
 >>> print(sform(num, unc))
 3141593 ± 1618
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING,
+...             exp_mode='engineering',
 ...             exp_format=ExpFormat.PREFIX,
 ...             pdg_sig_figs=True,
 ...             unc_pm_whitespace=False))
@@ -86,7 +86,7 @@ available formatting options.
 >>> num = 314159.27
 >>> unc = 1618
 >>> sform = Formatter(FormatOptions(
-...             exp_mode=ExpMode.ENGINEERING_SHIFTED,
+...             exp_mode='engineering'_SHIFTED,
 ...             pdg_sig_figs=True,
 ...             bracket_unc=True))
 >>> print(sform(num, unc))

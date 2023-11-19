@@ -73,7 +73,7 @@ Further details about the options can be found at
      - Sets ``upper_separator`` to :class:`GroupingSeparator.NONE`,
        :class:`GroupingSeparator.COMMA`,
        :class:`GroupingSeparator.POINT`,
-       :class:`GroupingSeparator.SPACE`, or
+       :class:`' '`, or
        :class:`GroupingSeparator.UNDERSCORE`.
        See :ref:`separators`.
    * - | decimal_separator
@@ -84,13 +84,13 @@ Further details about the options can be found at
    * - | lower_separator
        | (``'n'``, ``'s'``, ``'_'``)
      - Sets ``lower_separator`` to :class:`GroupingSeparator.NONE`,
-       :class:`GroupingSeparator.SPACE`, or
+       :class:`' '`, or
        :class:`GroupingSeparator.UNDERSCORE`.
        See :ref:`separators`.
    * - | round_mode
        | (``'!'``, ``'.'``)
-     - Sets ``round_mode`` to :class:`RoundMode.SIG_FIG` or
-       :class:`RoundMode.DEC_PLACE`.
+     - Sets ``round_mode`` to :class:`'sig_fig'` or
+       :class:`'dec_place'`.
        See :ref:`rounding`.
    * - | ndigits
        | (``[+-]?\d+``)

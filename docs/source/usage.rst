@@ -14,49 +14,34 @@ using string formatting and the
 :ref:`Format Specification Mini-Language (FSML) <fsml>` with the
 :class:`SciNum` or :class:`SciNumUnc` objects.
 
-FormatOptions
--------------
-
-``sciform`` formatting options can be configured using a
-:class:`FormatOptions` object.
-See :class:`FormatOptions` for a complete list of
-keyword arguments used to construct :class:`FormatOptions` and see
-:ref:`formatting_options` for more details on the different options.
-The :meth:`FormatOptions.merge` method can be used to combine two
-:class:`FormatOptions` instances into a new one by overwriting any
-option from the first instance with the corresponding option from the
-second instance if it is populated.
-
-It is not necessary to provide input for all options. At format time,
-any un-populated options will be populated with the
-corresponding options from the global default options.
-See :ref:`global_config` for details about how to view and modify the
-global default options.
-
 Formatter
 ---------
 
-The :class:`Formatter` object is initialized and configured using a
-:class:`FormatOptions` object which contains the formatting settings.
+The :class:`Formatter` class is initialized and configured using a
+number of formatting options described in :ref:`formatting_options`.
 The :class:`Formatter` object is then called with a number and returns
 a corresponding formatted string.
-Note that global default options are used to populate unfilled options
-at formatting time.
 
->>> from sciform import Formatter, FormatOptions, RoundMode, GroupingSeparator, ExpMode
->>> sform = Formatter(FormatOptions(
-...             round_mode=RoundMode.DEC_PLACE,
+>>> from sciform import Formatter
+>>> sform = Formatter(
+...             round_mode='dec_place',
 ...             ndigits=6,
-...             upper_separator=GroupingSeparator.SPACE,
-...             lower_separator=GroupingSeparator.SPACE))
+...             upper_separator=' ',
+...             lower_separator=' ')
 >>> print(sform(51413.14159265359))
 51 413.141 593
 >>> sform = Formatter(FormatOptions(
-...             round_mode=RoundMode.SIG_FIG,
+...             round_mode='sig_fig',
 ...             ndigits=4,
-...             exp_mode=ExpMode.ENGINEERING))
+...             exp_mode='engineering'))
 >>> print(sform(123456.78))
 123.5e+03
+
+It is not necessary to provide input for all options.
+At format time, any un-populated options will be populated with the
+corresponding options from the global default options.
+See :ref:`global_config` for details about how to view and modify the
+global default options.
 
 SciNum
 ------
@@ -144,7 +129,7 @@ package default settings):
 >>> print_global_defaults()
 {'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,
  'exp_val': <class 'sciform.modes.AutoExpVal'>,
- 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
+ 'round_mode': <'sig_fig': 'sig_fig'>,
  'ndigits': <class 'sciform.modes.AutoDigits'>,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
  'decimal_separator': <GroupingSeparator.POINT: 'point'>,
@@ -176,13 +161,13 @@ unchanged.
 ...                      GroupingSeparator)
 >>> set_global_defaults(FormatOptions(
 ...     fill_mode=FillMode.ZERO,
-...     exp_mode=ExpMode.ENGINEERING_SHIFTED,
+...     exp_mode='engineering'_SHIFTED,
 ...     ndigits=4,
 ...     decimal_separator=GroupingSeparator.COMMA))
 >>> print_global_defaults()
-{'exp_mode': <ExpMode.ENGINEERING_SHIFTED: 'engineering_shifted'>,
+{'exp_mode': <'engineering'_SHIFTED: 'engineering_shifted'>,
  'exp_val': <class 'sciform.modes.AutoExpVal'>,
- 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
+ 'round_mode': <'sig_fig': 'sig_fig'>,
  'ndigits': 4,
  'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
  'decimal_separator': <GroupingSeparator.COMMA: 'comma'>,
