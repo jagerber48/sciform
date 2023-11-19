@@ -38,8 +38,8 @@ available formatting options.
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.FIXEDPOINT,
 ...             upper_separator=' ',
-...             decimal_separator=GroupingSeparator.COMMA,
-...             lower_separator=GroupingSeparator.UNDERSCORE,
+...             decimal_separator=',',
+...             lower_separator='_',
 ...             sign_mode=SignMode.ALWAYS))
 >>> print(sform(num))
 +12 345,543_21
@@ -86,7 +86,7 @@ available formatting options.
 >>> num = 314159.27
 >>> unc = 1618
 >>> sform = Formatter(FormatOptions(
-...             exp_mode='engineering'_SHIFTED,
+...             exp_mode='engineering',
 ...             pdg_sig_figs=True,
 ...             bracket_unc=True))
 >>> print(sform(num, unc))

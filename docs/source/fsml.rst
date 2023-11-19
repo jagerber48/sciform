@@ -70,22 +70,22 @@ Further details about the options can be found at
        See :ref:`left_filling`.
    * - | upper_separator
        | (``'n'``, ``','``, ``'.'``, ``'s'``, ``'_'``)
-     - Sets ``upper_separator`` to :class:`GroupingSeparator.NONE`,
-       :class:`GroupingSeparator.COMMA`,
-       :class:`GroupingSeparator.POINT`,
+     - Sets ``upper_separator`` to :class:`''`,
+       :class:`','`,
+       :class:`'.'`,
        :class:`' '`, or
-       :class:`GroupingSeparator.UNDERSCORE`.
+       :class:`'_'`.
        See :ref:`separators`.
    * - | decimal_separator
        | (``'.'``, ``','``)
-     - Sets ``decimal_separator`` to :class:`GroupingSeparator.POINT` or
-       :class:`GroupingSeparator.COMMA`.
+     - Sets ``decimal_separator`` to :class:`'.'` or
+       :class:`','`.
        See :ref:`separators`.
    * - | lower_separator
        | (``'n'``, ``'s'``, ``'_'``)
-     - Sets ``lower_separator`` to :class:`GroupingSeparator.NONE`,
+     - Sets ``lower_separator`` to :class:`''`,
        :class:`' '`, or
-       :class:`GroupingSeparator.UNDERSCORE`.
+       :class:`'_'`.
        See :ref:`separators`.
    * - | round_mode
        | (``'!'``, ``'.'``)

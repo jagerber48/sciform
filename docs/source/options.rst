@@ -114,7 +114,7 @@ Shifted engineering notation is the same as engineering notation except
 the exponent is chosen so that the mantissa ``m`` satisfies
 ``0.1 <= m < 100``.
 
->>> sform = Formatter(FormatOptions(exp_mode='engineering'_SHIFTED))
+>>> sform = Formatter(FormatOptions(exp_mode='engineering'))
 >>> print(sform(123.456))
 0.123456e+03
 >>> print(sform(123.456, 0.001))
@@ -434,15 +434,15 @@ Note that the upper separator character must be different than the
 decimal separator.
 
 >>> from sciform import GroupingSeparator
->>> sform = Formatter(FormatOptions(upper_separator=GroupingSeparator.COMMA))
+>>> sform = Formatter(FormatOptions(upper_separator=','))
 >>> print(sform(12345678.987))
 12,345,678.987
 
 >>> from sciform import GroupingSeparator
 >>> sform = Formatter(FormatOptions(
 ...             upper_separator=' ',
-...             decimal_separator=GroupingSeparator.COMMA,
-...             lower_separator=GroupingSeparator.UNDERSCORE))
+...             decimal_separator=',',
+...             lower_separator='_'))
 >>> print(sform(1234567.7654321))
 1 234 567,765_432_1
 
@@ -553,13 +553,13 @@ parseable codes.
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.SCIENTIFIC,
 ...             exp_val=-1,
-...             upper_separator=GroupingSeparator.UNDERSCORE,
+...             upper_separator='_',
 ...             latex=True))
 >>> print(sform(12345))
 123\_450\times 10^{-1}
 >>> sform = Formatter(FormatOptions(
 ...             exp_mode=ExpMode.PERCENT,
-...             lower_separator=GroupingSeparator.UNDERSCORE,
+...             lower_separator='_',
 ...             latex=True))
 >>> print(sform(0.12345678, 0.00000255))
 \left(12.345\_678 \pm 0.000\_255\right)\%
@@ -771,17 +771,17 @@ Note that the ``bracket_unc_remove_seps`` removes *all* separator
 symbols from the uncertainty in the brackets.
 
 >>> sform = Formatter(FormatOptions(
-...             upper_separator=GroupingSeparator.POINT,
-...             decimal_separator=GroupingSeparator.COMMA,
-...             lower_separator=GroupingSeparator.UNDERSCORE,
+...             upper_separator='.',
+...             decimal_separator=',',
+...             lower_separator='_',
 ...             bracket_unc=True,
 ...             bracket_unc_remove_seps=False))
 >>> print(sform(987654, 1234.4321))
 987.654,000_0(1.234,432_1)
 >>> sform = Formatter(FormatOptions(
-...             upper_separator=GroupingSeparator.POINT,
-...             decimal_separator=GroupingSeparator.COMMA,
-...             lower_separator=GroupingSeparator.UNDERSCORE,
+...             upper_separator='.',
+...             decimal_separator=',',
+...             lower_separator='_',
 ...             bracket_unc=True,
 ...             bracket_unc_remove_seps=True))
 >>> print(sform(987654, 1234.4321))

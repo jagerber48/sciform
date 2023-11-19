@@ -30,10 +30,10 @@ a corresponding formatted string.
 ...             lower_separator=' ')
 >>> print(sform(51413.14159265359))
 51 413.141 593
->>> sform = Formatter(FormatOptions(
+>>> sform = Formatter(
 ...             round_mode='sig_fig',
 ...             ndigits=4,
-...             exp_mode='engineering'))
+...             exp_mode='engineering')
 >>> print(sform(123456.78))
 123.5e+03
 
@@ -71,13 +71,13 @@ or `NIST <https://www.nist.gov/pml/nist-technical-note-1297>`_
 recommendations for conventions when possible.
 
 Value/uncertainty pairs can be formatted either by passing two numbers
-into a :class:`Formatter`, and configuring the :class:`Formatter` using
+into a :class:`Formatter`, configured with the corresponding
 :ref:`formatting_options` and :ref:`val_unc_formatting_options`, or by
 using the :class:`SciNumUnc` object.
 
 >>> val = 84.3
 >>> unc = 0.2
->>> sform = Formatter(FormatOptions(ndigits=2))
+>>> sform = Formatter(ndigits=2)
 >>> print(sform(val, unc))
 84.30 ± 0.20
 >>> from sciform import SciNumUnc
@@ -115,9 +115,9 @@ Global Configuration
 It is possible to modify the global default configuration for
 :mod:`sciform` to avoid repetition of verbose configuration options or
 format specification strings.
-When the user creates a :class:`FormatOptions` object or formats a
-string using the :ref:`FSML <fsml>`, they typically do not specify
-settings for all available options.
+When the user creates a :class:`Formatter` object or formats a string
+using the :ref:`FSML <fsml>`, they typically do not specify settings for
+all available options.
 In these cases, the unspecified options resolve their values from the
 global default settings at format time.
 
@@ -129,13 +129,13 @@ package default settings):
 >>> print_global_defaults()
 {'exp_mode': <ExpMode.FIXEDPOINT: 'fixed_point'>,
  'exp_val': <class 'sciform.modes.AutoExpVal'>,
- 'round_mode': <'sig_fig': 'sig_fig'>,
+ 'round_mode': <RoundMode.SIG_FIG: 'sig_fig'>,
  'ndigits': <class 'sciform.modes.AutoDigits'>,
- 'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
- 'decimal_separator': <GroupingSeparator.POINT: 'point'>,
- 'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,
- 'sign_mode': <SignMode.NEGATIVE: 'negative'>,
- 'fill_mode': <FillMode.SPACE: 'space'>,
+ 'upper_separator': <Separator.NONE: ''>,
+ 'decimal_separator': <Separator.POINT: '.'>,
+ 'lower_separator': <Separator.NONE: ''>,
+ 'sign_mode': <SignMode.NEGATIVE: '-'>,
+ 'fill_mode': <FillMode.SPACE: ' '>,
  'top_dig_place': 0,
  'exp_format': <ExpFormat.STANDARD: 'standard'>,
  'extra_si_prefixes': {},
@@ -157,21 +157,20 @@ Any options passed in the :class:`FormatOptions` will overwrite the
 current global default settings and any unfilled options will remain
 unchanged.
 
->>> from sciform import (set_global_defaults, FillMode, ExpMode,
-...                      GroupingSeparator)
->>> set_global_defaults(FormatOptions(
+>>> from sciform import set_global_defaults
+>>> set_global_defaults(
 ...     fill_mode=FillMode.ZERO,
-...     exp_mode='engineering'_SHIFTED,
+...     exp_mode='engineering',
 ...     ndigits=4,
-...     decimal_separator=GroupingSeparator.COMMA))
+...     decimal_separator=','))
 >>> print_global_defaults()
-{'exp_mode': <'engineering'_SHIFTED: 'engineering_shifted'>,
+{'exp_mode': <'engineering': 'engineering_shifted'>,
  'exp_val': <class 'sciform.modes.AutoExpVal'>,
  'round_mode': <'sig_fig': 'sig_fig'>,
  'ndigits': 4,
- 'upper_separator': <GroupingSeparator.NONE: 'no_grouping'>,
- 'decimal_separator': <GroupingSeparator.COMMA: 'comma'>,
- 'lower_separator': <GroupingSeparator.NONE: 'no_grouping'>,
+ 'upper_separator': <'': 'no_grouping'>,
+ 'decimal_separator': <',': 'comma'>,
+ 'lower_separator': <'': 'no_grouping'>,
  'sign_mode': <SignMode.NEGATIVE: 'negative'>,
  'fill_mode': <FillMode.ZERO: 'zero'>,
  'top_dig_place': 0,
