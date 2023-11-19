@@ -70,25 +70,22 @@ about it!
 Usage
 =====
 
-``sciform`` provides a wide variety of formatting options.
-These options are configured using the ``FormatOptions`` object.
-Users can construct ``FormatOptions`` objects and pass them into
-``Formatter`` objects which can then be used to format numbers into
-strings according to the selected options.
+``sciform`` provides a wide variety of formatting options which can be
+controlled when constructing ``Formatter`` objects which are then used
+to format numbers into strings according to the selected options.
 
->>> from sciform import (FormatOptions, Formatter, RoundMode,
-...                      GroupingSeparator, ExpMode)
->>> sform = Formatter(FormatOptions(
-...             round_mode=RoundMode.DEC_PLACE,
+>>> from sciform import Formatter
+>>> sform = Formatter(
+...             round_mode='dec_place',
 ...             ndigits=6,
-...             upper_separator=GroupingSeparator.SPACE,
-...             lower_separator=GroupingSeparator.SPACE))
+...             upper_separator=' ',
+...             lower_separator=' ')
 >>> print(sform(51413.14159265359))
 51 413.141 593
->>> sform = Formatter(FormatOptions(
-...             round_mode=RoundMode.SIG_FIG,
+>>> sform = Formatter(
+...             round_mode='sig_fig',
 ...             ndigits=4,
-...             exp_mode=ExpMode.ENGINEERING))
+...             exp_mode='engineering')
 >>> print(sform(123456.78))
 123.5e+03
 
@@ -106,15 +103,15 @@ to format pairs of numbers as value/uncertainty pairs.
 This can be done by passing two numbers into a ``Formatter`` call or by
 using the ``SciNumUnc`` object.
 
->>> sform = Formatter(FormatOptions(
+>>> sform = Formatter(
 ...             ndigits=2,
-...             upper_separator=GroupingSeparator.SPACE,
-...             lower_separator=GroupingSeparator.SPACE))
+...             upper_separator=' ',
+...             lower_separator=' ')
 >>> print(sform(123456.654321, 0.0034))
 123 456.654 3 ± 0.003 4
->>> sform = Formatter(FormatOptions(
+>>> sform = Formatter(
 ...             ndigits=4,
-...             exp_mode=ExpMode.ENGINEERING))
+...             exp_mode='engineering')
 >>> print(sform(123456.654321, 0.0034))
 (123.456654321 ± 0.000003400)e+03
 
