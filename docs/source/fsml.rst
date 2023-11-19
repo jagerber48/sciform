@@ -9,10 +9,9 @@ Format Specification Mini-Language
 Specification
 =============
 
-Instead of explicitly constructing :class:`Formatter` instances
-configured using :class:`FormatOptions` instances, users can construct
-:class:`SciNum` or :class:`SciNumUnc` instances and format them using
-string formatting with format specification strings from the
+Instead of explicitly constructing :class:`Formatter` instances, users
+can construct :class:`SciNum` or :class:`SciNumUnc` instances and format
+them using string formatting with format specification strings from the
 :mod:`sciform` format specification mini-language (FSML).
 This is analogous to how python :class:`int`, :class:`float`, and
 :class:`Decimal` instances can be formatted using the built-in
@@ -51,12 +50,11 @@ Further details about the options can be found at
      - Description
    * - | fill
        | (``'0='``, ``' ='``)
-     - Configure ``fill_mode`` to be :class:`'0'` or
-       :class:`FillMode.SPACE`. See :ref:`left_filling`.
+     - Configure ``fill_mode`` to be ``'0'`` or ``' '``. See
+       :ref:`left_filling`.
    * - | sign
        | (``'-'``, ``'+'``, ``' '``)
-     - Configure ``sign_mode`` to be :class:`SignMode.NEGATIVE`,
-       :class:`SignMode.ALWAYS` or :class:`SignMode.SPACE`. See
+     - Configure ``sign_mode`` to be ``'-'``, ``'+'``, or ``' '``. See
        :ref:`sign_mode`.
    * - | alternate mode
        | (``'#'``)
@@ -70,27 +68,19 @@ Further details about the options can be found at
        See :ref:`left_filling`.
    * - | upper_separator
        | (``'n'``, ``','``, ``'.'``, ``'s'``, ``'_'``)
-     - Sets ``upper_separator`` to :class:`''`,
-       :class:`','`,
-       :class:`'.'`,
-       :class:`' '`, or
-       :class:`'_'`.
-       See :ref:`separators`.
+     - Sets ``upper_separator`` to ``''``, ``','``, ``'.'``, ``' '``,
+       or ``'_'``. See :ref:`separators`.
    * - | decimal_separator
        | (``'.'``, ``','``)
-     - Sets ``decimal_separator`` to :class:`'.'` or
-       :class:`','`.
+     - Sets ``decimal_separator`` to ``'.'`` or ``','``.
        See :ref:`separators`.
    * - | lower_separator
        | (``'n'``, ``'s'``, ``'_'``)
-     - Sets ``lower_separator`` to :class:`''`,
-       :class:`' '`, or
-       :class:`'_'`.
+     - Sets ``lower_separator`` to ``''``, ``' '``, or ``'_'``.
        See :ref:`separators`.
    * - | round_mode
        | (``'!'``, ``'.'``)
-     - Sets ``round_mode`` to :class:`'sig_fig'` or
-       :class:`'dec_place'`.
+     - Sets ``round_mode`` to ``'sig_fig'`` or ``'dec_place'``.
        See :ref:`rounding`.
    * - | ndigits
        | (``[+-]?\d+``)
