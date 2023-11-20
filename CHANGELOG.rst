@@ -25,6 +25,7 @@ Added
 ^^^^^
 
 * Added code of conduct.
+* Added contributing guidelines.
 * Added Python 3.12 to automated testing.
 
 Fixed
