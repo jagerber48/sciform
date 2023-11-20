@@ -1,5 +1,5 @@
-Contributing Guidelines
-=======================
+How to Contribute
+=================
 
 Contributions to ``sciform`` are welcome.
 Here are some ways you can contribute:
