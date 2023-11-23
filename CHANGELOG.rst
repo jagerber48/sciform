@@ -11,15 +11,15 @@ Changed
 * **[BREAKING]** Remove the ``FormatOptions`` class from the user
   interface. Now users configure ``Formatter`` instances by passing the
   formatting keyword arguments into the ``Formatter`` constructor
-  directly. Configuration of the global default options via
-  ``set_global_defaults()`` or the ``GlobalDefaultsContext`` are also
-  configured using this new interface. This change reduces the amount of
-  boilerplate code needed to use ``sciform``.
+  directly. Global configuration via ``set_global_defaults()`` or the
+  ``GlobalDefaultsContext`` is also done by passing formatting keywords
+  directly. This change reduces the amount of boilerplate code and
+  keystrokes needed to use ``sciform``.
 * **[BREAKING]** Options such as ``exp_mode`` and ``exp_format`` were
   previously configured using ``Enum`` objects such as ``ExpMode`` or
-  ``ExpFormat``. Now these options are configured more simply using
-  string literals. This change also reduces the amount of boilerplate
-  code needed to use ``sciform``.
+  ``ExpFormat``. Now these options are configured using string literals.
+  This change also reduces the amount of boilerplate code and keystrokes
+  needed to use ``sciform``.
 
 Added
 ^^^^^
