@@ -17,7 +17,7 @@ using string formatting and the
 Formatter
 ---------
 
-The :class:`Formatter` class is initialized and configured using a
+The :class:`Formatter` object is initialized and configured using a
 number of formatting options described in :ref:`formatting_options`.
 The :class:`Formatter` object is then called with a number and returns
 a corresponding formatted string.
