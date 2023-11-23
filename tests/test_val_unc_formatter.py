@@ -4,7 +4,7 @@ from sciform import Formatter
 
 
 ValUncFormatterCases = list[tuple[tuple[float, float],
-                                      list[tuple[Formatter, str]]]]
+                                  list[tuple[Formatter, str]]]]
 
 
 class TestFormatting(unittest.TestCase):
@@ -23,17 +23,17 @@ class TestFormatting(unittest.TestCase):
             ((123.456, 0.789), [
                 (Formatter(bracket_unc=True), '123.456(789)'),
                 (Formatter(exp_mode='scientific',
-                               bracket_unc=True), '(1.23456(789))e+02'),
+                           bracket_unc=True), '(1.23456(789))e+02'),
                 (Formatter(exp_mode='engineering',
-                               bracket_unc=True), '(123.456(789))e+00'),
+                           bracket_unc=True), '(123.456(789))e+00'),
                 (Formatter(exp_mode='engineering_shifted',
-                               bracket_unc=True), '(0.123456(789))e+03'),
+                           bracket_unc=True), '(0.123456(789))e+03'),
                 (Formatter(exp_mode='scientific',
-                               exp_val=+1,
-                               bracket_unc=True), '(12.3456(789))e+01'),
+                           exp_val=+1,
+                           bracket_unc=True), '(12.3456(789))e+01'),
                 (Formatter(exp_mode='scientific',
-                               exp_val=-1,
-                               bracket_unc=True), '(1234.56(7.89))e-01'),
+                           exp_val=-1,
+                           bracket_unc=True), '(1234.56(7.89))e-01'),
             ])
         ]
 
@@ -64,37 +64,37 @@ class TestFormatting(unittest.TestCase):
         cases_list = [
             ((123.456, 0.789), [
                 (Formatter(bracket_unc=True,
-                               exp_mode='engineering',
-                               exp_format='prefix'), '123.456(789)'),
+                           exp_mode='engineering',
+                           exp_format='prefix'), '123.456(789)'),
                 (Formatter(bracket_unc=True,
-                               exp_mode='engineering_shifted',
-                               exp_format='prefix'),
+                           exp_mode='engineering_shifted',
+                           exp_format='prefix'),
                  '0.123456(789) k'),
             ]),
             ((123456, 789), [
                 (Formatter(bracket_unc=True,
-                               exp_mode='fixed_point',
-                               exp_format='prefix'), '123456(789)'),
+                           exp_mode='fixed_point',
+                           exp_format='prefix'), '123456(789)'),
                 (Formatter(bracket_unc=True,
-                               exp_mode='engineering',
-                               exp_format='prefix'), '123.456(789) k'),
+                           exp_mode='engineering',
+                           exp_format='prefix'), '123.456(789) k'),
                 (Formatter(bracket_unc=True,
-                               exp_mode='engineering_shifted',
-                               exp_format='prefix'), '0.123456(789) M')
+                           exp_mode='engineering_shifted',
+                           exp_format='prefix'), '0.123456(789) M')
             ]),
             ((123456e-9, 789e-9), [
                 (Formatter(bracket_unc=True,
-                               exp_mode='engineering',
-                               exp_format='parts_per'),
+                           exp_mode='engineering',
+                           exp_format='parts_per'),
                  '123.456(789) ppm'),
                 (Formatter(bracket_unc=True,
-                               exp_mode='engineering',
-                               exp_format='prefix'),
+                           exp_mode='engineering',
+                           exp_format='prefix'),
                  '123.456(789) μ'),
                 (Formatter(bracket_unc=True,
-                               exp_mode='engineering_shifted',
-                               exp_format='parts_per',
-                               add_ppth_form=True),
+                           exp_mode='engineering_shifted',
+                           exp_format='parts_per',
+                           add_ppth_form=True),
                  '0.123456(789) ppth')
             ])
         ]
@@ -105,11 +105,11 @@ class TestFormatting(unittest.TestCase):
         cases_list = [
             ((0.123_456_78, 0.000_002_55), [
                 (Formatter(exp_mode='percent',
-                               lower_separator='_'),
+                           lower_separator='_'),
                  '(12.345_678 ± 0.000_255)%'),
                 (Formatter(exp_mode='percent',
-                               bracket_unc=True,
-                               lower_separator='_'),
+                           bracket_unc=True,
+                           lower_separator='_'),
                  '(12.345_678(255))%')
             ])
         ]
@@ -120,8 +120,8 @@ class TestFormatting(unittest.TestCase):
         cases_list = [
             ((123.456, 0.789), [
                 (Formatter(exp_mode='scientific',
-                               exp_val=-1,
-                               bracket_unc=True), '(1234.56(7.89))e-01'),
+                           exp_val=-1,
+                           bracket_unc=True), '(1234.56(7.89))e-01'),
                 (Formatter(
                     exp_mode='scientific',
                     exp_val=-1,
@@ -130,8 +130,8 @@ class TestFormatting(unittest.TestCase):
             ]),
             ((0.789, 123.456), [
                 (Formatter(exp_mode='scientific',
-                               exp_val=-1,
-                               bracket_unc=True), '(7.89(1234.56))e-01'),
+                           exp_val=-1,
+                           bracket_unc=True), '(7.89(1234.56))e-01'),
                 # Don't remove "embedded" decimal unless val > unc.
                 (Formatter(
                     exp_mode='scientific',
@@ -168,25 +168,25 @@ class TestFormatting(unittest.TestCase):
         cases_list = [
             ((12345, 0.2), [
                 (Formatter(exp_mode='scientific',
-                               exp_val=-1,
-                               upper_separator='_',
-                               latex=True),
+                           exp_val=-1,
+                           upper_separator='_',
+                           latex=True),
                  r'\left(123\_450 \pm 2\right)\times 10^{-1}'),
                 (Formatter(exp_mode='scientific',
-                               exp_format='prefix',
-                               exp_val=3,
-                               latex=True),
+                           exp_format='prefix',
+                           exp_val=3,
+                           latex=True),
                  r'\left(12.3450 \pm 0.0002\right)\text{k}')
             ]),
             ((0.123_456_78, 0.000_002_55), [
                 (Formatter(lower_separator='_',
-                               exp_mode='percent',
-                               latex=True),
+                           exp_mode='percent',
+                           latex=True),
                  r'\left(12.345\_678 \pm 0.000\_255\right)\%'),
                 (Formatter(lower_separator='_',
-                               exp_mode='percent',
-                               bracket_unc=True,
-                               latex=True),
+                           exp_mode='percent',
+                           bracket_unc=True,
+                           latex=True),
                  r'\left(12.345\_678\left(255\right)\right)\%')
             ])
         ]
@@ -215,8 +215,8 @@ class TestFormatting(unittest.TestCase):
             ]),
             ((3141592.7, 1618), [
                 (Formatter(exp_mode='engineering',
-                               exp_format='prefix',
-                               pdg_sig_figs=True), '(3.1416 ± 0.0016) M')
+                           exp_format='prefix',
+                           pdg_sig_figs=True), '(3.1416 ± 0.0016) M')
             ])
         ]
 
