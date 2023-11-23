@@ -250,15 +250,15 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions):
     '''
     val_format_options = replace(
         options,
-        top_dig_place =new_top_digit,
-        round_mode =RoundMode.DEC_PLACE,
-        ndigits =ndigits,
-        exp_mode =exp_mode,
-        exp_val =exp_val,
-        superscript_exp =False,
-        latex =False,
-        exp_format =ExpFormat.STANDARD,
-        pdg_sig_figs =False
+        top_dig_place=new_top_digit,
+        round_mode=RoundMode.DEC_PLACE,
+        ndigits=ndigits,
+        exp_mode=exp_mode,
+        exp_val=exp_val,
+        superscript_exp=False,
+        latex=False,
+        exp_format=ExpFormat.STANDARD,
+        pdg_sig_figs=False
     )
 
     unc_format_options = replace(

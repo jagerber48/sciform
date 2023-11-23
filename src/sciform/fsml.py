@@ -18,6 +18,7 @@ pattern = re.compile(r'''^
                          (?P<bracket_unc>\(\))?
                          $''', re.VERBOSE)
 
+
 def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
     match = pattern.match(fmt_spec)
     if match is None:

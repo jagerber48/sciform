@@ -38,7 +38,7 @@ def set_global_defaults(
             add_c_prefix: bool = False,
             add_small_si_prefixes: bool = False,
             add_ppth_form: bool = False,
-    ):
+):
     """
     Configure global default format options. Accepts the same keyword
     arguments as :class:`Formatter`.

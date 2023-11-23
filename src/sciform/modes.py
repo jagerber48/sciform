@@ -45,12 +45,14 @@ class AutoDigits:
 
 UserFillMode = Literal[' ', '0']
 
+
 class FillMode(str, Enum):
     SPACE = ' '
     ZERO = '0'
 
 
 UserSignMode = Literal['-', '+', ' ']
+
 
 class SignMode(str, Enum):
     NEGATIVE = '-'
@@ -62,12 +64,14 @@ UserUpperSeparators = Literal['', ',', '.', ' ', '_']
 UserDecimalSeparators = Literal['.', ',']
 UserLowerSeparators = Literal['', ' ', '_']
 
+
 class Separator(str, Enum):
     NONE = ''
     COMMA = ','
     POINT = '.'
     UNDERSCORE = '_'
     SPACE = ' '
+
 
 UpperSeparators = Literal[Separator.NONE,
                           Separator.COMMA,
@@ -83,14 +87,15 @@ LowerSeparators = Literal[Separator.NONE,
 
 UserRoundMode = Literal['sig_fig', 'dec_place']
 
+
 class RoundMode(Enum):
     SIG_FIG = 'sig_fig'
     DEC_PLACE = 'dec_place'
 
 
-
 UserExpMode = Literal['fixed_point', 'percent', 'scientific', 'engineering',
                       'engineering_shifted', 'binary', 'binary_iec']
+
 
 class ExpMode(Enum):
     FIXEDPOINT = 'fixed_point'
@@ -104,6 +109,7 @@ class ExpMode(Enum):
 
 UserExpFormat = Literal['standard', 'prefix', 'parts_per']
 
+
 class ExpFormat(Enum):
     STANDARD = 'standard'
     PREFIX = 'prefix'
@@ -111,6 +117,7 @@ class ExpFormat(Enum):
 
 
 T = TypeVar('T', bound=Enum)
+
 
 def mode_str_to_enum(mode_str: str, enum: type[T]) -> T:
     for member in enum:

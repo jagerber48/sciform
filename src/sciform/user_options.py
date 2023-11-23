@@ -38,7 +38,7 @@ class UserOptions:
     add_ppth_form: InitVar[bool] = False
 
     def __post_init__(self, add_c_prefix, add_small_si_prefixes,
-                       add_ppth_form):
+                      add_ppth_form):
         self.populate_dicts(add_c_prefix, add_small_si_prefixes,
                             add_ppth_form)
         self.validate(self)
@@ -84,7 +84,8 @@ class UserOptions:
                                  f'ndigits=AutoDigits, not '
                                  f'ndigits={options.ndigits}.')
 
-        if options.exp_val is not modes.AutoExpVal and options.exp_val is not None:
+        if (options.exp_val is not modes.AutoExpVal
+                and options.exp_val is not None):
             if options.exp_mode in ['fixed_point', 'percent']:
                 if options.exp_val != 0:
                     raise ValueError(f'Exponent must must be 0, not '
@@ -98,8 +99,8 @@ class UserOptions:
             elif options.exp_mode == 'binary_iec':
                 if options.exp_val % 10 != 0:
                     raise ValueError(f'Exponent must be a multiple of 10, not '
-                                     f'exp_val={options.exp_val}, for binary IEC '
-                                     f'exponent mode.')
+                                     f'exp_val={options.exp_val}, for binary '
+                                     f'IEC exponent mode.')
 
         if options.upper_separator is not None:
             if (options.upper_separator not in
@@ -109,7 +110,8 @@ class UserOptions:
                                  f'{options.upper_separator}.')
             if options.upper_separator == options.decimal_separator:
                 raise ValueError(f'upper_separator and decimal_separator '
-                                 f'({options.upper_separator}) cannot be equal.')
+                                 f'({options.upper_separator}) cannot be '
+                                 f'equal.')
 
         if options.decimal_separator is not None:
             if (options.decimal_separator not in
