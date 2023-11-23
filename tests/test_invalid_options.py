@@ -103,12 +103,10 @@ class TestInvalidOptions(unittest.TestCase):
         This test raises a ValueError because the upper_separator is
         requested to be POINT. But the package defaults set
         decimal_separator to also be POINT. So when the Formatter
-        is rendered into RenderedFormatter, at format time, the
-        resulting RenderedFormatter have both
-        upper_separator=GroupingSeparator.POINT
-        and
-        decimal_separator=GroupingSeparator.POINT
-        This options combination is not allowed.
+        UserOptions are rendered into RenderedOptions, at format time,
+        the result is that both upper_separator=GroupingSeparator.POINT
+        and decimal_separator=GroupingSeparator.POINT This options
+        combination is not allowed.
         """
         sform = Formatter(upper_separator='.')
         self.assertRaises(ValueError, sform, 42)
