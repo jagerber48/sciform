@@ -5,6 +5,7 @@ from sciform import Formatter
 from sciform.formatting import format_non_finite
 from sciform.grouping import add_group_chars_between_numbers, add_separators
 from sciform.user_options import UserOptions
+from sciform import modes
 from sciform.format_utils import (
     get_top_digit, get_mantissa_exp_base, get_exp_str, get_sign_str,
     get_round_digit, get_prefix_dict, parse_standard_exp_str
@@ -148,19 +149,19 @@ class TestInvalidOptions(unittest.TestCase):
     def test_get_mantissa_exp_base_fixed_point_set_exp(self):
         self.assertRaises(ValueError, get_mantissa_exp_base,
                           num=Decimal(3),
-                          exp_mode='fixed_point',
+                          exp_mode=modes.ExpMode.FIXEDPOINT,
                           input_exp_val=1)
 
     def test_get_mantissa_exp_base_engineering_set_exp(self):
         self.assertRaises(ValueError, get_mantissa_exp_base,
                           num=Decimal(3),
-                          exp_mode='engineering',
+                          exp_mode=modes.ExpMode.ENGINEERING,
                           input_exp_val=1)
 
     def test_get_mantissa_exp_base_binary_iec_set_exp(self):
         self.assertRaises(ValueError, get_mantissa_exp_base,
                           num=Decimal(3),
-                          exp_mode='binary_iec',
+                          exp_mode=modes.ExpMode.BINARY_IEC,
                           input_exp_val=3)
 
     def test_get_mantissa_exp_base_bad_exp_mode(self):
@@ -173,7 +174,7 @@ class TestInvalidOptions(unittest.TestCase):
         self.assertRaises(ValueError, get_exp_str,
                           exp_val=2,
                           exp_mode='sci',
-                          exp_format='standard',
+                          exp_format=modes.ExpFormat.STANDARD,
                           capitalize=False,
                           latex=False,
                           latex_trim_whitespace=False,
@@ -195,7 +196,7 @@ class TestInvalidOptions(unittest.TestCase):
 
     def test_get_prefix_dict_bad_base(self):
         self.assertRaises(ValueError, get_prefix_dict,
-                          exp_format='prefix',
+                          exp_format=modes.ExpFormat.PREFIX,
                           base=3,
                           extra_si_prefixes={},
                           extra_iec_prefixes={},
