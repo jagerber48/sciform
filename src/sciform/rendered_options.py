@@ -31,13 +31,5 @@ class RenderedOptions:
     bracket_unc_remove_seps: bool
     unc_pm_whitespace: bool
 
-    def merge(self, other: 'RenderedOptions') -> 'RenderedOptions':
-        self_dict = asdict(self)
-        other_dict = asdict(other)
-        other_pruned_dict = {key: val for key, val in other_dict.items() if
-                             val is not None}
-        kwargs = {**self_dict, **other_pruned_dict}
-        return RenderedOptions(**kwargs)
-
     def __repr__(self):
         return pformat(asdict(self), sort_dicts=False)
