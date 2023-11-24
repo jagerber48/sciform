@@ -216,3 +216,11 @@ class TestInvalidOptions(unittest.TestCase):
         value/uncertainty is not implemented.
         """
         self.assertEqual(parse_standard_exp_str('b+10'), (2, 10))
+
+    def test_mode_str_to_enum_fail(self):
+        self.assertRaises(
+            ValueError,
+            modes.mode_str_to_enum,
+            'eng',
+            modes.ExpMode
+        )
