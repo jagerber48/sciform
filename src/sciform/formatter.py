@@ -183,7 +183,7 @@ class Formatter:
             add_small_si_prefixes: bool = False,
             add_ppth_form: bool = False,
     ):
-        self.user_options = UserOptions(
+        self._user_options = UserOptions(
             exp_mode=exp_mode,
             exp_val=exp_val,
             round_mode=round_mode,
@@ -213,7 +213,7 @@ class Formatter:
         )
 
     def __call__(self, value: Number, uncertainty: Number = None, /):
-        rendered_options = self.user_options.render()
+        rendered_options = self._user_options.render()
         if uncertainty is None:
             return format_num(Decimal(str(value)), rendered_options)
         else:
@@ -221,4 +221,4 @@ class Formatter:
                                   Decimal(str(uncertainty)),
                                   rendered_options)
 
-    # TODO: __repr__
+    # TODO: print_options and print_resolve_options?
