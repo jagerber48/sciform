@@ -155,6 +155,3 @@ class UserOptions:
         rendered_options = RenderedOptions(**kwargs)
         self.validate(rendered_options)
         return rendered_options
-
-    def __str__(self):
-        return pformat(asdict(self), sort_dicts=False)

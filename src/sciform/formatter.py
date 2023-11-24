@@ -221,4 +221,4 @@ class Formatter:
                                   Decimal(str(uncertainty)),
                                   rendered_options)
 
-    # TODO: print_options and print_resolve_options?
+    # TODO: print_options and print_resolved_options?
