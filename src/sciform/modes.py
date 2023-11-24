@@ -88,7 +88,7 @@ LowerSeparators = Literal[Separator.NONE,
 UserRoundMode = Literal['sig_fig', 'dec_place']
 
 
-class RoundMode(Enum):
+class RoundMode(str, Enum):
     SIG_FIG = 'sig_fig'
     DEC_PLACE = 'dec_place'
 
@@ -97,7 +97,7 @@ UserExpMode = Literal['fixed_point', 'percent', 'scientific', 'engineering',
                       'engineering_shifted', 'binary', 'binary_iec']
 
 
-class ExpMode(Enum):
+class ExpMode(str, Enum):
     FIXEDPOINT = 'fixed_point'
     PERCENT = 'percent'
     SCIENTIFIC = 'scientific'
@@ -110,7 +110,7 @@ class ExpMode(Enum):
 UserExpFormat = Literal['standard', 'prefix', 'parts_per']
 
 
-class ExpFormat(Enum):
+class ExpFormat(str, Enum):
     STANDARD = 'standard'
     PREFIX = 'prefix'
     PARTS_PER = 'parts_per'
