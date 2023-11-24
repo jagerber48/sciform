@@ -8,7 +8,7 @@ def print_global_defaults():
     """
     Print current global default formatting options as a dictionary.
     """
-    print(repr(global_options.GLOBAL_DEFAULT_OPTIONS))
+    print(str(global_options.GLOBAL_DEFAULT_OPTIONS))
 
 
 def set_global_defaults(

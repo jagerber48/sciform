@@ -1,6 +1,7 @@
 from typing import Union
 from dataclasses import dataclass, asdict
 from pprint import pformat
+from enum import Enum
 
 from sciform import modes
 
@@ -31,5 +32,9 @@ class RenderedOptions:
     bracket_unc_remove_seps: bool
     unc_pm_whitespace: bool
 
-    def __repr__(self):
-        return pformat(asdict(self), sort_dicts=False)
+    def __str__(self):
+        options_dict = asdict(self)
+        for key, value in options_dict.items():
+            if isinstance(value, Enum):
+                options_dict[key] = value.value
+        return pformat(options_dict, sort_dicts=False)

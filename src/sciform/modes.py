@@ -2,7 +2,12 @@ from typing import Literal, TypeVar
 from enum import Enum
 
 
-class AutoExpVal:
+class SentinelMeta(type):
+    def __repr__(self):
+        return self.__name__
+
+
+class AutoExpVal(metaclass=SentinelMeta):
     """
     Flag for auto-exponent calculation mode. Set ``exp_val=AutoExpVal`` or an
     integer.
@@ -23,7 +28,7 @@ class AutoExpVal:
     pass
 
 
-class AutoDigits:
+class AutoDigits(metaclass=SentinelMeta):
     """
     Flag for auto ndigits calculation mode. Set ``ndigits=AutoDigits``
     or an integer.

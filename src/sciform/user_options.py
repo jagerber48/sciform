@@ -156,5 +156,5 @@ class UserOptions:
         self.validate(rendered_options)
         return rendered_options
 
-    def __repr__(self):
+    def __str__(self):
         return pformat(asdict(self), sort_dicts=False)
