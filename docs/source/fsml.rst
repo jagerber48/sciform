@@ -9,10 +9,9 @@ Format Specification Mini-Language
 Specification
 =============
 
-Instead of explicitly constructing :class:`Formatter` instances
-configured using :class:`FormatOptions` instances, users can construct
-:class:`SciNum` or :class:`SciNumUnc` instances and format them using
-string formatting with format specification strings from the
+Instead of explicitly constructing :class:`Formatter` instances, users
+can construct :class:`SciNum` or :class:`SciNumUnc` instances and format
+them using string formatting with format specification strings from the
 :mod:`sciform` format specification mini-language (FSML).
 This is analogous to how python :class:`int`, :class:`float`, and
 :class:`Decimal` instances can be formatted using the built-in
@@ -51,12 +50,11 @@ Further details about the options can be found at
      - Description
    * - | fill
        | (``'0='``, ``' ='``)
-     - Configure ``fill_mode`` to be :class:`FillMode.ZERO` or
-       :class:`FillMode.SPACE`. See :ref:`left_filling`.
+     - Configure ``fill_mode`` to be ``'0'`` or ``' '``. See
+       :ref:`left_filling`.
    * - | sign
        | (``'-'``, ``'+'``, ``' '``)
-     - Configure ``sign_mode`` to be :class:`SignMode.NEGATIVE`,
-       :class:`SignMode.ALWAYS` or :class:`SignMode.SPACE`. See
+     - Configure ``sign_mode`` to be ``'-'``, ``'+'``, or ``' '``. See
        :ref:`sign_mode`.
    * - | alternate mode
        | (``'#'``)
@@ -70,27 +68,19 @@ Further details about the options can be found at
        See :ref:`left_filling`.
    * - | upper_separator
        | (``'n'``, ``','``, ``'.'``, ``'s'``, ``'_'``)
-     - Sets ``upper_separator`` to :class:`GroupingSeparator.NONE`,
-       :class:`GroupingSeparator.COMMA`,
-       :class:`GroupingSeparator.POINT`,
-       :class:`GroupingSeparator.SPACE`, or
-       :class:`GroupingSeparator.UNDERSCORE`.
-       See :ref:`separators`.
+     - Sets ``upper_separator`` to ``''``, ``','``, ``'.'``, ``' '``,
+       or ``'_'``. See :ref:`separators`.
    * - | decimal_separator
        | (``'.'``, ``','``)
-     - Sets ``decimal_separator`` to :class:`GroupingSeparator.POINT` or
-       :class:`GroupingSeparator.COMMA`.
+     - Sets ``decimal_separator`` to ``'.'`` or ``','``.
        See :ref:`separators`.
    * - | lower_separator
        | (``'n'``, ``'s'``, ``'_'``)
-     - Sets ``lower_separator`` to :class:`GroupingSeparator.NONE`,
-       :class:`GroupingSeparator.SPACE`, or
-       :class:`GroupingSeparator.UNDERSCORE`.
+     - Sets ``lower_separator`` to ``''``, ``' '``, or ``'_'``.
        See :ref:`separators`.
    * - | round_mode
        | (``'!'``, ``'.'``)
-     - Sets ``round_mode`` to :class:`RoundMode.SIG_FIG` or
-       :class:`RoundMode.DEC_PLACE`.
+     - Sets ``round_mode`` to ``'sig_fig'`` or ``'dec_place'``.
        See :ref:`rounding`.
    * - | ndigits
        | (``[+-]?\d+``)
@@ -118,7 +108,7 @@ Further details about the options can be found at
        See :ref:`fixed_exp`.
    * - | prefix mode
        | (``'p'``)
-     - Sets ``exp_format`` to :class:`ExpFormat.PREFIX`.
+     - Sets ``exp_format`` to :class:`'prefix'`.
        See :ref:`exp_str_replacement`.
    * - | bracket uncertainty
        | (``'()'``)

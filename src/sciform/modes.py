@@ -1,8 +1,13 @@
-from typing import Literal
+from typing import Literal, TypeVar
 from enum import Enum
 
 
-class AutoExpVal:
+class SentinelMeta(type):
+    def __repr__(self):
+        return self.__name__
+
+
+class AutoExpVal(metaclass=SentinelMeta):
     """
     Flag for auto-exponent calculation mode. Set ``exp_val=AutoExpVal`` or an
     integer.
@@ -23,7 +28,7 @@ class AutoExpVal:
     pass
 
 
-class AutoDigits:
+class AutoDigits(metaclass=SentinelMeta):
     """
     Flag for auto ndigits calculation mode. Set ``ndigits=AutoDigits``
     or an integer.
@@ -43,110 +48,84 @@ class AutoDigits:
     pass
 
 
-class FillMode(Enum):
-    #: Fill with white space
-    SPACE = 'space'
-
-    #: Fill with zeros
-    ZERO = 'zero'
-
-    def to_char(self) -> str:
-        char_dict = {
-            FillMode.SPACE: ' ',
-            FillMode.ZERO: '0'
-        }
-        return char_dict[self]
+UserFillMode = Literal[' ', '0']
 
 
-class SignMode(Enum):
-    #: Only include sign symbol on negative numbers
-    NEGATIVE = 'negative'
-
-    #: Always include sign symbol
-    ALWAYS = 'always'
-
-    #: Include extra white space in front of positive numbers
-    SPACE = 'space'
+class FillMode(str, Enum):
+    SPACE = ' '
+    ZERO = '0'
 
 
-class GroupingSeparator(Enum):
-    #: No separator
-    NONE = 'no_grouping'
-
-    #: Comma separator (not valid as lower separator)
-    COMMA = 'comma'
-
-    #: Point separator (not valid as lower separator)
-    POINT = 'point'
-
-    #: Underscore separator
-    UNDERSCORE = 'underscore'
-
-    #: White space separator
-    SPACE = 'space'
-
-    def to_char(self) -> str:
-        char_dict = {
-            GroupingSeparator.NONE: '',
-            GroupingSeparator.COMMA: ',',
-            GroupingSeparator.POINT: '.',
-            GroupingSeparator.UNDERSCORE: '_',
-            GroupingSeparator.SPACE: ' '
-        }
-        return char_dict[self]
+UserSignMode = Literal['-', '+', ' ']
 
 
-UpperGroupingSeparators = Literal[GroupingSeparator.NONE,
-                                  GroupingSeparator.COMMA,
-                                  GroupingSeparator.POINT,
-                                  GroupingSeparator.UNDERSCORE,
-                                  GroupingSeparator.SPACE]
-
-DecimalGroupingSeparators = Literal[GroupingSeparator.POINT,
-                                    GroupingSeparator.COMMA]
-
-LowerGroupingSeparators = Literal[GroupingSeparator.NONE,
-                                  GroupingSeparator.UNDERSCORE,
-                                  GroupingSeparator.SPACE]
+class SignMode(str, Enum):
+    NEGATIVE = '-'
+    ALWAYS = '+'
+    SPACE = ' '
 
 
-class RoundMode(Enum):
-    #: Significant figure rounding
+UserUpperSeparators = Literal['', ',', '.', ' ', '_']
+UserDecimalSeparators = Literal['.', ',']
+UserLowerSeparators = Literal['', ' ', '_']
+
+
+class Separator(str, Enum):
+    NONE = ''
+    COMMA = ','
+    POINT = '.'
+    UNDERSCORE = '_'
+    SPACE = ' '
+
+
+UpperSeparators = Literal[Separator.NONE,
+                          Separator.COMMA,
+                          Separator.POINT,
+                          Separator.UNDERSCORE,
+                          Separator.SPACE]
+DecimalSeparators = Literal[Separator.POINT,
+                            Separator.COMMA]
+LowerSeparators = Literal[Separator.NONE,
+                          Separator.UNDERSCORE,
+                          Separator.SPACE]
+
+
+UserRoundMode = Literal['sig_fig', 'dec_place']
+
+
+class RoundMode(str, Enum):
     SIG_FIG = 'sig_fig'
-
-    #: Decimal place rounding
     DEC_PLACE = 'dec_place'
 
 
-class ExpMode(Enum):
-    #: Fixed point
+UserExpMode = Literal['fixed_point', 'percent', 'scientific', 'engineering',
+                      'engineering_shifted', 'binary', 'binary_iec']
+
+
+class ExpMode(str, Enum):
     FIXEDPOINT = 'fixed_point'
-
-    #: Percent
     PERCENT = 'percent'
-
-    #: Scientific
     SCIENTIFIC = 'scientific'
-
-    #: Engineering
     ENGINEERING = 'engineering'
-
-    #: Shifted Engineering
     ENGINEERING_SHIFTED = 'engineering_shifted'
-
-    #: Binary
     BINARY = 'binary'
-
-    #: Binary IEC
     BINARY_IEC = 'binary_iec'
 
 
-class ExpFormat(Enum):
-    #: Standard Format
+UserExpFormat = Literal['standard', 'prefix', 'parts_per']
+
+
+class ExpFormat(str, Enum):
     STANDARD = 'standard'
-
-    #: Prefix Format
     PREFIX = 'prefix'
-
-    #: Parts-Per Format
     PARTS_PER = 'parts_per'
+
+
+T = TypeVar('T', bound=Enum)
+
+
+def mode_str_to_enum(mode_str: str, enum: type[T]) -> T:
+    for member in enum:
+        if mode_str == member.value:
+            return member
+    raise ValueError(f'String \'{mode_str}\' not found in {enum} values.')

@@ -5,6 +5,25 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Changed
+^^^^^^^
+
+* **[BREAKING]** Remove the ``FormatOptions`` class from the user
+  interface. Now users configure ``Formatter`` instances by passing the
+  formatting keyword arguments into the ``Formatter`` constructor
+  directly. Global configuration via ``set_global_defaults()`` or the
+  ``GlobalDefaultsContext`` is also done by passing formatting keywords
+  directly. This change reduces the amount of boilerplate code and
+  keystrokes needed to use ``sciform``.
+* **[BREAKING]** Options such as ``exp_mode`` and ``exp_format`` were
+  previously configured using ``Enum`` objects such as ``ExpMode`` or
+  ``ExpFormat``. Now these options are configured using string literals.
+  This change also reduces the amount of boilerplate code and keystrokes
+  needed to use ``sciform``.
+* Clean up ``print_global_defaults`` output. This is the start of an
+  effort to improve interface for getting and printing current format
+  options.
+
 Added
 ^^^^^
 

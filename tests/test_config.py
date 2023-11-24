@@ -1,21 +1,18 @@
 import unittest
 
-from sciform import (FormatOptions, SciNum, GlobalDefaultsContext, ExpMode,
-                     ExpFormat,
-                     Formatter, GroupingSeparator, RoundMode, SignMode,
-                     set_global_defaults, reset_global_defaults,
-                     global_add_c_prefix, global_add_small_si_prefixes,
-                     global_add_ppth_form, global_reset_si_prefixes,
-                     global_reset_parts_per_forms, global_reset_iec_prefixes)
+from sciform import (
+    SciNum, GlobalDefaultsContext, Formatter, set_global_defaults,
+    reset_global_defaults, global_add_c_prefix, global_add_small_si_prefixes,
+    global_add_ppth_form, global_reset_si_prefixes,
+    global_reset_parts_per_forms, global_reset_iec_prefixes)
 
 
 class TestConfig(unittest.TestCase):
     def test_set_reset_global_defaults(self):
         num = SciNum(0.0005632)
         self.assertEqual(f'{num}', '0.0005632')
-        set_global_defaults(FormatOptions(
-            exp_mode=ExpMode.ENGINEERING_SHIFTED,
-            capitalize=True))
+        set_global_defaults(exp_mode='engineering_shifted',
+                            capitalize=True)
         self.assertEqual(f'{num}', '0.5632E-03')
         reset_global_defaults()
         self.assertEqual(f'{num}', '0.0005632')
@@ -23,12 +20,12 @@ class TestConfig(unittest.TestCase):
     def test_global_defaults_context(self):
         num = SciNum(123.456)
         self.assertEqual(f'{num}', '123.456')
-        with GlobalDefaultsContext(FormatOptions(
-                sign_mode=SignMode.ALWAYS,
-                exp_mode=ExpMode.SCIENTIFIC,
-                round_mode=RoundMode.SIG_FIG,
+        with GlobalDefaultsContext(
+                sign_mode='+',
+                exp_mode='scientific',
+                round_mode='sig_fig',
                 ndigits=2,
-                decimal_separator=GroupingSeparator.COMMA)):
+                decimal_separator=','):
             self.assertEqual(f'{num}', '+1,2e+02')
         self.assertEqual(f'{num}', '123.456')
 
@@ -59,17 +56,17 @@ class TestConfig(unittest.TestCase):
         num = SciNum(1024)
         fmt_spec = 'bp'
         self.assertEqual(f'{num:{fmt_spec}}', '1 Ki')
-        set_global_defaults(FormatOptions(extra_iec_prefixes={10: 'KiB'}))
+        set_global_defaults(extra_iec_prefixes={10: 'KiB'})
         self.assertEqual(f'{num:{fmt_spec}}', '1 KiB')
         global_reset_iec_prefixes()
         self.assertEqual(f'{num:{fmt_spec}}', '1 Ki')
 
     def test_ppth_form(self):
         num = 0.0024
-        formatter = Formatter(FormatOptions(
-            exp_mode=ExpMode.ENGINEERING,
-            exp_format=ExpFormat.PARTS_PER
-        ))
+        formatter = Formatter(
+            exp_mode='engineering',
+            exp_format='parts_per'
+        )
         self.assertEqual(formatter(num), '2.4e-03')
         global_add_ppth_form()
         self.assertEqual(formatter(num), '2.4 ppth')

@@ -7,35 +7,11 @@ API
 Formatting
 ==========
 
-.. autoclass:: FormatOptions()
-   :members: merge
-
 .. autoclass:: Formatter()
 
 .. autoclass:: SciNum()
 
 .. autoclass:: SciNumUnc()
-
-Mode Enums
-==========
-
-.. autoclass:: FillMode()
-   :members:
-
-.. autoclass:: SignMode()
-   :members:
-
-.. autoclass:: GroupingSeparator()
-   :members:
-
-.. autoclass:: RoundMode()
-   :members:
-
-.. autoclass:: ExpMode()
-   :members:
-
-.. autoclass:: ExpFormat()
-   :members:
 
 Auto Options
 ============
@@ -47,14 +23,13 @@ Auto Options
 Global Configuration
 ====================
 
-.. autoclass:: GlobalDefaultsContext()
-   :members: __init__
-
 .. autofunction:: print_global_defaults()
 
 .. autofunction:: set_global_defaults()
 
 .. autofunction:: reset_global_defaults()
+
+.. autoclass:: GlobalDefaultsContext()
 
 .. autofunction:: global_add_c_prefix()
 

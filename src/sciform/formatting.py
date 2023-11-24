@@ -1,9 +1,10 @@
+from dataclasses import replace
 from warnings import warn
 import re
 from decimal import Decimal
 
 from sciform.modes import ExpMode, SignMode, AutoExpVal, RoundMode, ExpFormat
-from sciform.format_options import FormatOptions, RenderedFormatOptions, render_options
+from sciform.rendered_options import RenderedOptions
 from sciform.format_utils import (
     get_mantissa_exp_base, get_exp_str, get_top_digit, get_round_digit,
     format_num_by_top_bottom_dig, latex_translate, parse_standard_exp_str
@@ -11,7 +12,7 @@ from sciform.format_utils import (
 from sciform.grouping import add_separators
 
 
-def format_non_finite(num: Decimal, options: RenderedFormatOptions) -> str:
+def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
     if num.is_nan():
         num_str = 'nan'
     elif num == Decimal('inf'):
@@ -59,9 +60,7 @@ def format_non_finite(num: Decimal, options: RenderedFormatOptions) -> str:
     return result
 
 
-def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
-    options = render_options(unrendered_options)
-
+def format_num(num: Decimal, options: RenderedOptions) -> str:
     if not num.is_finite():
         return format_non_finite(num, options)
 
@@ -97,16 +96,16 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
         '''
         exp_val = 0
 
-    fill_char = options.fill_mode.to_char()
+    fill_char = options.fill_mode.value
     mantissa_str = format_num_by_top_bottom_dig(mantissa_rounded.normalize(),
                                                 options.top_dig_place,
                                                 round_digit,
                                                 options.sign_mode,
                                                 fill_char)
 
-    upper_separator = options.upper_separator.to_char()
-    decimal_separator = options.decimal_separator.to_char()
-    lower_separator = options.lower_separator.to_char()
+    upper_separator = options.upper_separator.value
+    decimal_separator = options.decimal_separator.value
+    lower_separator = options.lower_separator.value
     mantissa_str = add_separators(mantissa_str,
                                   upper_separator,
                                   decimal_separator,
@@ -134,9 +133,7 @@ def format_num(num: Decimal, unrendered_options: FormatOptions) -> str:
     return result
 
 
-def format_val_unc(val: Decimal, unc: Decimal,
-                   unrendered_options: FormatOptions):
-    options = render_options(unrendered_options)
+def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions):
     if (options.exp_mode is ExpMode.BINARY
             or options.exp_mode is ExpMode.BINARY_IEC):
         raise NotImplementedError('Binary exponent modes are not supported '
@@ -251,19 +248,23 @@ def format_val_unc(val: Decimal, unc: Decimal,
          'e+03' or similar. Such translations are handled within the
          scope of this function.
     '''
-    val_format_options = unrendered_options.merge(
-        FormatOptions(top_dig_place=new_top_digit,
-                      round_mode=RoundMode.DEC_PLACE,
-                      ndigits=ndigits,
-                      exp_mode=exp_mode,
-                      exp_val=exp_val,
-                      superscript_exp=False,
-                      latex=False,
-                      exp_format=ExpFormat.STANDARD,
-                      pdg_sig_figs=False))
+    val_format_options = replace(
+        options,
+        top_dig_place=new_top_digit,
+        round_mode=RoundMode.DEC_PLACE,
+        ndigits=ndigits,
+        exp_mode=exp_mode,
+        exp_val=exp_val,
+        superscript_exp=False,
+        latex=False,
+        exp_format=ExpFormat.STANDARD,
+        pdg_sig_figs=False
+    )
 
-    unc_format_options = val_format_options.merge(
-        FormatOptions(sign_mode=SignMode.NEGATIVE))
+    unc_format_options = replace(
+        val_format_options,
+        sign_mode=SignMode.NEGATIVE
+    )
 
     # Optional parentheses needed to handle (nan)e+00 case
     mantissa_exp_pattern = re.compile(
@@ -300,13 +301,13 @@ def format_val_unc(val: Decimal, unc: Decimal,
                 unc_str = unc_str.lstrip('0.,_ ')
         if options.bracket_unc_remove_seps:
             unc_str = unc_str.replace(
-                options.upper_separator.to_char(), '')
+                options.upper_separator.value, '')
             unc_str = unc_str.replace(
-                options.lower_separator.to_char(), '')
+                options.lower_separator.value, '')
             if unc < val:
                 # Only removed "embedded" decimal symbol for unc < val
                 unc_str = unc_str.replace(
-                    options.decimal_separator.to_char(), '')
+                    options.decimal_separator.value, '')
 
         val_unc_str = f'{val_str}({unc_str})'
 

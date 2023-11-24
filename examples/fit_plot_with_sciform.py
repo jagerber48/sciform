@@ -7,8 +7,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from tabulate import tabulate
 
-from sciform import (Formatter, ExpMode, RoundMode, SignMode, FormatOptions,
-                     ExpFormat)
+from sciform import Formatter
 
 
 def get_scale_and_offset_from_offset_str(
@@ -50,16 +49,16 @@ def prefix_exp_ticks(ax: plt.Axes, axis: Literal['x', 'y'],
     offset text into SI prefix format as well.
     """
     if not shifted:
-        exp_mode = ExpMode.ENGINEERING
+        exp_mode = 'engineering'
     else:
-        exp_mode = ExpMode.ENGINEERING_SHIFTED
-    tick_formatter = Formatter(FormatOptions(
+        exp_mode = 'engineering_shifted'
+    tick_formatter = Formatter(
         exp_mode=exp_mode,
-        exp_format=ExpFormat.PREFIX))
-    offset_formatter = Formatter(FormatOptions(
-        sign_mode=SignMode.ALWAYS,
+        exp_format='prefix')
+    offset_formatter = Formatter(
+        sign_mode='+',
         exp_mode=exp_mode,
-        exp_format=ExpFormat.PREFIX))
+        exp_format='prefix')
 
     ax.ticklabel_format(axis=axis, style='sci')
 
@@ -105,11 +104,11 @@ def quadratic(x, c, x0, y0):
 
 
 def main():
-    fit_results_formatter = Formatter(FormatOptions(
-        exp_mode=ExpMode.ENGINEERING,
-        round_mode=RoundMode.SIG_FIG,
+    fit_results_formatter = Formatter(
+        exp_mode='engineering',
+        round_mode='sig_fig',
         bracket_unc=True,
-        ndigits=2))
+        ndigits=2)
 
     with open('data/fit_data.json', 'r') as f:
         data_dict = json.load(f)

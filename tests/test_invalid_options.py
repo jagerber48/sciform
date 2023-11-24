@@ -1,10 +1,11 @@
 import unittest
 from decimal import Decimal
 
-from sciform import (Formatter, FormatOptions, RoundMode, ExpMode,
-                     GroupingSeparator, ExpFormat)
-from sciform.formatting import format_non_finite, render_options
+from sciform import Formatter
+from sciform.formatting import format_non_finite
 from sciform.grouping import add_group_chars_between_numbers, add_separators
+from sciform.user_options import UserOptions
+from sciform import modes
 from sciform.format_utils import (
     get_top_digit, get_mantissa_exp_base, get_exp_str, get_sign_str,
     get_round_digit, get_prefix_dict, parse_standard_exp_str
@@ -14,123 +15,120 @@ from sciform.format_utils import (
 class TestInvalidOptions(unittest.TestCase):
     def test_sig_fig_ndigits(self):
         self.assertRaises(
-            ValueError, FormatOptions, round_mode=RoundMode.SIG_FIG,
+            ValueError, Formatter, round_mode='sig_fig',
             ndigits=0
         )
 
     def test_pdg_sig_figs_ndigits(self):
         self.assertRaises(
-            ValueError, FormatOptions, pdg_sig_figs=True, ndigits=3
+            ValueError, Formatter, pdg_sig_figs=True, ndigits=3
         )
 
     def test_fixed_point(self):
         self.assertRaises(
-            ValueError, FormatOptions, exp_mode=ExpMode.FIXEDPOINT,
+            ValueError, Formatter, exp_mode='fixed_point',
             exp_val=1
         )
 
     def test_percent(self):
         self.assertRaises(
-            ValueError, FormatOptions, exp_mode=ExpMode.PERCENT,
+            ValueError, Formatter, exp_mode='percent',
             exp_val=1
         )
 
     def test_engineering(self):
         self.assertRaises(
-            ValueError, FormatOptions, exp_mode=ExpMode.ENGINEERING,
+            ValueError, Formatter, exp_mode='engineering',
             exp_val=1
         )
 
     def test_engineering_shifted(self):
         self.assertRaises(
-            ValueError, FormatOptions, exp_mode=ExpMode.ENGINEERING_SHIFTED,
+            ValueError, Formatter, exp_mode='engineering',
             exp_val=1
         )
 
     def test_binary_iec(self):
         self.assertRaises(
-            ValueError, FormatOptions, exp_mode=ExpMode.BINARY_IEC,
+            ValueError, Formatter, exp_mode='binary_iec',
             exp_val=5
         )
 
-    def test_invalid_upper_separator(self):
+    def test_upper_separator_non_option(self):
         self.assertRaises(
-            ValueError, FormatOptions, upper_separator='_'
+            ValueError, Formatter, upper_separator='-'
         )
 
     def test_decimal_separator_non_option(self):
         self.assertRaises(
-            ValueError, FormatOptions, decimal_separator='_'
+            ValueError, Formatter, decimal_separator='-'
         )
 
     def test_decimal_separator_underscore(self):
         self.assertRaises(
-            ValueError, FormatOptions,
-            decimal_separator=GroupingSeparator.UNDERSCORE
+            ValueError, Formatter,
+            decimal_separator='_'
         )
 
     def test_decimal_separator_space(self):
         self.assertRaises(
-            ValueError, FormatOptions,
-            decimal_separator=GroupingSeparator.SPACE
+            ValueError, Formatter,
+            decimal_separator=' '
         )
 
     def test_decimal_separator_none(self):
         self.assertRaises(
-            ValueError, FormatOptions,
-            decimal_separator=GroupingSeparator.NONE
+            ValueError, Formatter,
+            decimal_separator=''
         )
 
     def test_lower_separator_non_option(self):
         self.assertRaises(
-            ValueError, FormatOptions, lower_separator='_'
+            ValueError, Formatter, lower_separator='-'
         )
 
     def test_lower_separator_comma(self):
         self.assertRaises(
-            ValueError, FormatOptions,
-            lower_separator=GroupingSeparator.COMMA
+            ValueError, Formatter,
+            lower_separator=','
         )
 
     def test_lower_separator_point(self):
         self.assertRaises(
-            ValueError, FormatOptions,
-            lower_separator=GroupingSeparator.POINT
+            ValueError, Formatter,
+            lower_separator='.'
         )
 
     def test_upper_separator_point_default_merge(self):
         """
         This test raises a ValueError because the upper_separator is
         requested to be POINT. But the package defaults set
-        decimal_separator to also be POINT. So when the FormatOptions
-        is rendered into RenderedFormatOptions, at format time, the
-        resulting RenderedFormatOptions have both
-        upper_separator=GroupingSeparator.POINT
-        and
-        decimal_separator=GroupingSeparator.POINT
-        This options combination is not allowed.
+        decimal_separator to also be POINT. So when the Formatter
+        UserOptions are rendered into RenderedOptions, at format time,
+        the result is that both upper_separator=GroupingSeparator.POINT
+        and decimal_separator=GroupingSeparator.POINT This options
+        combination is not allowed.
         """
-        sform = Formatter(
-            FormatOptions(upper_separator=GroupingSeparator.POINT))
+        sform = Formatter(upper_separator='.')
         self.assertRaises(ValueError, sform, 42)
 
     def test_upper_decimal_separator_point(self):
         self.assertRaises(
-            ValueError, FormatOptions,
-            upper_separator=GroupingSeparator.POINT,
-            decimal_separator=GroupingSeparator.POINT
+            ValueError, Formatter,
+            upper_separator='.',
+            decimal_separator='.'
         )
 
     def test_upper_decimal_separator_comma(self):
         self.assertRaises(
-            ValueError, FormatOptions,
-            upper_separator=GroupingSeparator.COMMA,
-            decimal_separator=GroupingSeparator.COMMA
+            ValueError, Formatter,
+            upper_separator=',',
+            decimal_separator=','
         )
 
     def test_format_non_finite(self):
         self.assertRaises(ValueError, format_non_finite, Decimal(1.0),
-                          render_options(FormatOptions()))
+                          UserOptions().render())
 
     def test_add_group_chars(self):
         self.assertRaises(ValueError, add_group_chars_between_numbers,
@@ -151,19 +149,19 @@ class TestInvalidOptions(unittest.TestCase):
     def test_get_mantissa_exp_base_fixed_point_set_exp(self):
         self.assertRaises(ValueError, get_mantissa_exp_base,
                           num=Decimal(3),
-                          exp_mode=ExpMode.FIXEDPOINT,
+                          exp_mode=modes.ExpMode.FIXEDPOINT,
                           input_exp_val=1)
 
     def test_get_mantissa_exp_base_engineering_set_exp(self):
         self.assertRaises(ValueError, get_mantissa_exp_base,
                           num=Decimal(3),
-                          exp_mode=ExpMode.ENGINEERING,
+                          exp_mode=modes.ExpMode.ENGINEERING,
                           input_exp_val=1)
 
     def test_get_mantissa_exp_base_binary_iec_set_exp(self):
         self.assertRaises(ValueError, get_mantissa_exp_base,
                           num=Decimal(3),
-                          exp_mode=ExpMode.BINARY_IEC,
+                          exp_mode=modes.ExpMode.BINARY_IEC,
                           input_exp_val=3)
 
     def test_get_mantissa_exp_base_bad_exp_mode(self):
@@ -176,7 +174,7 @@ class TestInvalidOptions(unittest.TestCase):
         self.assertRaises(ValueError, get_exp_str,
                           exp_val=2,
                           exp_mode='sci',
-                          exp_format=ExpFormat.STANDARD,
+                          exp_format=modes.ExpFormat.STANDARD,
                           capitalize=False,
                           latex=False,
                           latex_trim_whitespace=False,
@@ -198,7 +196,7 @@ class TestInvalidOptions(unittest.TestCase):
 
     def test_get_prefix_dict_bad_base(self):
         self.assertRaises(ValueError, get_prefix_dict,
-                          exp_format=ExpFormat.PREFIX,
+                          exp_format=modes.ExpFormat.PREFIX,
                           base=3,
                           extra_si_prefixes={},
                           extra_iec_prefixes={},
@@ -218,3 +216,11 @@ class TestInvalidOptions(unittest.TestCase):
         value/uncertainty is not implemented.
         """
         self.assertEqual(parse_standard_exp_str('b+10'), (2, 10))
+
+    def test_mode_str_to_enum_fail(self):
+        self.assertRaises(
+            ValueError,
+            modes.mode_str_to_enum,
+            'eng',
+            modes.ExpMode
+        )
