@@ -20,6 +20,9 @@ Fixed
   string containing information about the global format options rather
   than about the specific ``FormatOptions`` instance.
   [`#75 <https://github.com/jagerber48/sciform/issues/75>`_]
+* Fixed an issue that was causing Github actions code coverage report to
+  not actually check code coverage.
+  [`#84 <https://github.com/jagerber48/sciform/issues/84>`_]
 
 Removed
 ^^^^^^^
