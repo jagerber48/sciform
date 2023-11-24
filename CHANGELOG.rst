@@ -20,6 +20,9 @@ Changed
   ``ExpFormat``. Now these options are configured using string literals.
   This change also reduces the amount of boilerplate code and keystrokes
   needed to use ``sciform``.
+* Clean up ``print_global_defaults`` output. This is the start of an
+  effort to improve interface for getting and printing current format
+  options.
 
 Added
 ^^^^^
