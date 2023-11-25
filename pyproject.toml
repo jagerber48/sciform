@@ -28,3 +28,9 @@ documentation = "https://sciform.readthedocs.io"
 readme = {file = "README.rst"}
 
 [tool.setuptools_scm]
+
+[tool.ruff.lint]
+select = ['ALL']
+
+[tool.ruff.format]
+quote-style = "single"
