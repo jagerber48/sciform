@@ -164,7 +164,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions):
         use_pdg_sig_figs = False
 
     round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
-                                  options.ndigits, use_pdg_sig_figs)
+                                  options.ndigits, pdg_sig_figs=use_pdg_sig_figs)
     if unc.is_finite():
         unc_rounded = round(unc, -round_digit)
     else:
@@ -183,7 +183,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions):
         directly in the first call to get_round_digit.
         '''
         round_digit = get_round_digit(round_driver, RoundMode.SIG_FIG,
-                                      options.ndigits, use_pdg_sig_figs)
+                                      options.ndigits, pdg_sig_figs=use_pdg_sig_figs)
         if unc_rounded.is_finite():
             unc_rounded = round(unc_rounded, -round_digit)
         if val_rounded.is_finite():
@@ -215,15 +215,15 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions):
     _, exp_val, _ = get_mantissa_exp_base(
         exp_driver,
         exp_mode=options.exp_mode,
-        input_exp_val=options.exp_val)
+        input_exp=options.exp_val)
     val_mantissa, _, _ = get_mantissa_exp_base(
         val_rounded,
         exp_mode=exp_mode,
-        input_exp_val=exp_val)
+        input_exp=exp_val)
     unc_mantissa, _, _ = get_mantissa_exp_base(
         unc_rounded,
         exp_mode=exp_mode,
-        input_exp_val=exp_val)
+        input_exp=exp_val)
 
     ndigits = -round_digit + exp_val
 
