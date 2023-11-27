@@ -31,7 +31,11 @@ readme = {file = "README.rst"}
 
 [tool.ruff.lint]
 select = ['ALL']
-ignore = ['PLR2004']
+ignore = [
+    'D212',
+    'D211',
+    'PLR2004',
+]
 
 [tool.ruff.format]
 quote-style = "single"
