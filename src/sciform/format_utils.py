@@ -1,3 +1,5 @@
+"""Various formatting utilities."""
+
 from __future__ import annotations
 
 import re
@@ -148,7 +150,7 @@ def get_standard_exp_str(base: int, exp_val: int, *, capitalize: bool = False) -
 
 
 def get_superscript_exp_str(base: int, exp_val: int) -> str:
-    """Get superscript (e.g. '×10⁺²') exponent string."""
+    """Get superscript (e.g. '×10⁺²') exponent string."""  # noqa: RUF002
     sup_trans = str.maketrans('+-0123456789', '⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹')
     exp_val_str = f'{exp_val}'.translate(sup_trans)
     return f'×{base}{exp_val_str}'  # noqa: RUF001
@@ -269,7 +271,8 @@ def get_sign_str(num: Decimal, sign_mode: SignMode) -> str:
 
 
 def get_pdg_round_digit(num: Decimal) -> int:
-    """Determine the PDG rounding digit place to which to round.
+    """
+    Determine the PDG rounding digit place to which to round.
 
     Calculate the appropriate digit place to round to according to the
     particle data group 3-5-4 rounding rules.
