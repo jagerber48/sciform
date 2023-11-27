@@ -35,4 +35,10 @@ ignore = [
     'D212',
     'D211',
     'PLR2004',
+    'TD002',
+    'TD003',
+    'FIX002',
 ]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"

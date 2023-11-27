@@ -8,6 +8,10 @@ Formatting
 ==========
 
 .. autoclass:: Formatter()
+   :members:
+
+   .. automethod:: __init__(...)
+   .. automethod:: __call__
 
 .. autoclass:: SciNum()
 
