@@ -185,17 +185,17 @@ def get_prefix_dict(
 
 
 def get_exp_str(  # noqa: PLR0913
-        *,
-        exp_val: int,
-        exp_mode: ExpMode,
-        exp_format: ExpFormat,
-        extra_si_prefixes: dict[int, str],
-        extra_iec_prefixes: dict[int, str],
-        extra_parts_per_forms: dict[int, str],
-        capitalize: bool,
-        latex: bool,
-        latex_trim_whitespace: bool,
-        superscript: bool,
+    *,
+    exp_val: int,
+    exp_mode: ExpMode,
+    exp_format: ExpFormat,
+    extra_si_prefixes: dict[int, str],
+    extra_iec_prefixes: dict[int, str],
+    extra_parts_per_forms: dict[int, str],
+    capitalize: bool,
+    latex: bool,
+    latex_trim_whitespace: bool,
+    superscript: bool,
 ) -> str:
     """Get formatting exponent string."""
     if exp_mode is ExpMode.FIXEDPOINT:
@@ -342,11 +342,11 @@ def get_fill_str(fill_char: str, top_digit: int, top_padded_digit: int) -> str:
 
 
 def format_num_by_top_bottom_dig(
-        num: Decimal,
-        target_top_digit: int,
-        target_bottom_digit: int,
-        sign_mode: SignMode,
-        fill_char: str,
+    num: Decimal,
+    target_top_digit: int,
+    target_bottom_digit: int,
+    sign_mode: SignMode,
+    fill_char: str,
 ) -> str:
     """Format a number according to specified top and bottom digit places."""
     print_prec = max(0, -target_bottom_digit)
