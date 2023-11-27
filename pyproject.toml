@@ -36,10 +36,3 @@ ignore = [
     'D211',
     'PLR2004',
 ]
-
-[tool.ruff.format]
-quote-style = "single"
-
-[tool.ruff.lint.flake8-quotes]
-inline-quotes = "single"
-multiline-quotes = "single"
