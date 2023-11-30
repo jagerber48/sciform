@@ -121,6 +121,11 @@ class ExpFormat(str, Enum):
     PARTS_PER = 'parts_per'
 
 
+class ExpDriver(Enum):
+    VAL = 'val'
+    UNC = 'unc'
+
+
 T = TypeVar('T', bound=Enum)
 
 

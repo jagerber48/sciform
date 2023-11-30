@@ -10,9 +10,11 @@ from typing import Literal, Union, cast
 from sciform.modes import (
     AutoDigits,
     AutoExpVal,
+    ExpDriver,
     ExpFormat,
     ExpMode,
     RoundMode,
+    Separator,
     SignMode,
 )
 from sciform.prefix import (
@@ -375,3 +377,195 @@ def latex_translate(input_str: str) -> str:
     for old_chars, new_chars in replacements:
         result_str = result_str.replace(old_chars, new_chars)
     return result_str
+
+
+def round_val_unc(
+        val: Decimal,
+        unc: Decimal,
+        ndigits: int | type[AutoDigits],
+        *,
+        use_pdg_sig_figs: bool = False,
+) -> tuple[Decimal, Decimal, int]:
+    """Simultaneously round the value and uncertainty."""
+    if unc.is_finite() and unc != 0:
+        round_digit = get_round_digit(
+            unc,
+            RoundMode.SIG_FIG,
+            ndigits,
+            pdg_sig_figs=use_pdg_sig_figs,
+        )
+        unc_rounded = round(unc, -round_digit)
+    else:
+        round_digit = get_round_digit(
+            val,
+            RoundMode.SIG_FIG,
+            ndigits,
+            pdg_sig_figs=False,
+        )
+        unc_rounded = unc
+    if val.is_finite():
+        val_rounded = round(val, -round_digit)
+    else:
+        val_rounded = val
+    return val_rounded, unc_rounded, round_digit
+
+
+def get_val_unc_exp(
+        val: Decimal,
+        unc: Decimal,
+        exp_mode: ExpMode,
+        input_exp: int,
+) -> tuple[int, ExpDriver]:
+    """Get exponent for value/uncertainty formatting."""
+    if val.is_finite() and unc.is_finite():
+        if abs(val) >= unc:
+            exp_driver_type = ExpDriver.VAL
+        else:
+            exp_driver_type = ExpDriver.UNC
+    elif val.is_finite():
+        exp_driver_type = ExpDriver.VAL
+    else:
+        exp_driver_type = ExpDriver.UNC
+
+    if exp_driver_type is ExpDriver.VAL:
+        exp_driver_val = val
+    elif exp_driver_type is ExpDriver.UNC:
+        exp_driver_val = unc
+    else:
+        raise ValueError
+
+    _, exp_val, _ = get_mantissa_exp_base(
+        exp_driver_val,
+        exp_mode=exp_mode,
+        input_exp=input_exp,
+    )
+
+    return exp_val, exp_driver_type
+
+
+def get_val_unc_top_digit(
+        val_mantissa: Decimal,
+        unc_mantissa: Decimal,
+        input_top_digit: int | AutoDigits,
+        *,
+        val_unc_match_widths: bool,
+) -> int | AutoDigits:
+    """Get top digit place for value/uncertainty formatting."""
+    if val_unc_match_widths:
+        val_top_digit = get_top_digit(val_mantissa)
+        unc_top_digit = get_top_digit(unc_mantissa)
+        new_top_digit = max(
+            input_top_digit,
+            val_top_digit,
+            unc_top_digit,
+        )
+    else:
+        new_top_digit = input_top_digit
+    return new_top_digit
+
+
+def get_val_unc_mantissa_exp_strs(
+        val_mantissa_exp_str: str,
+        unc_mantissa_exp_str: str,
+        exp_driver_type: ExpDriver,
+) -> tuple[str, str, str]:
+    """Break val/unc mantissa/exp strings into mantissa strings and an exp string."""
+    # Optional parentheses needed to handle (nan)e+00 case
+    mantissa_exp_pattern = re.compile(
+        r"^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$")
+    val_match = mantissa_exp_pattern.match(val_mantissa_exp_str)
+    val_mantissa_str = val_match.group("mantissa_str")
+
+    unc_match = mantissa_exp_pattern.match(unc_mantissa_exp_str)
+    unc_mantissa_str = unc_match.group("mantissa_str")
+
+    if exp_driver_type is ExpDriver.VAL:
+        exp_str = val_match.group("exp_str")
+    elif exp_driver_type is ExpDriver.UNC:
+        exp_str = unc_match.group("exp_str")
+    else:
+        msg = f"Invalid exp_driver_type: {exp_driver_type}."
+        raise ValueError(msg)
+
+    return val_mantissa_str, unc_mantissa_str, exp_str
+
+
+def construct_val_unc_str(  # noqa: PLR0913
+        val_mantissa_str: str,
+        unc_mantissa_str: str,
+        val_mantissa: Decimal,
+        unc_mantissa: Decimal,
+        decimal_separator: Separator,
+        *,
+        bracket_unc: bool,
+        latex: bool,
+        pm_whitespace: bool,
+        bracket_unc_remove_seps: bool,
+) -> str:
+    """Construct the value/uncertainty part of the formatted string."""
+    if not bracket_unc:
+        pm_symb = r"\pm" if latex else "±"
+        if pm_whitespace:
+            pm_symb = f" {pm_symb} "
+        val_unc_str = f"{val_mantissa_str}{pm_symb}{unc_mantissa_str}"
+    else:
+        if unc_mantissa.is_finite() and val_mantissa.is_finite():
+            if unc_mantissa == 0:
+                unc_mantissa_str = "0"
+            elif unc_mantissa < abs(val_mantissa):
+                unc_mantissa_str = unc_mantissa_str.lstrip("0.,_ ")
+        if bracket_unc_remove_seps:
+            for separator in Separator:
+                if separator == decimal_separator:
+                    continue
+                unc_mantissa_str.replace(separator, "")
+            if unc_mantissa < abs(val_mantissa):
+                # Only removed "embedded" decimal symbol for unc < val
+                unc_mantissa_str = unc_mantissa_str.replace(
+                    decimal_separator, "",
+                )
+        val_unc_str = f"{val_mantissa_str}({unc_mantissa_str})"
+    return val_unc_str
+
+
+def construct_val_unc_exp_str(  # noqa: PLR0913
+        *,
+        val_unc_str: str,
+        exp_val: int,
+        exp_mode: ExpMode,
+        exp_format: ExpFormat,
+        extra_si_prefixes: dict[int, str | None],
+        extra_iec_prefixes: dict[int, str | None],
+        extra_parts_per_forms: dict[int, str | None],
+        capitalize: bool,
+        latex: bool,
+        superscript_exp: bool,
+        bracket_unc: bool,
+) -> str:
+    """Combine the val_unc_str into the final val_unc_exp_str."""
+    exp_str = get_exp_str(
+        exp_val=exp_val,
+        exp_mode=exp_mode,
+        exp_format=exp_format,
+        capitalize=capitalize,
+        latex=latex,
+        latex_trim_whitespace=True,
+        superscript=superscript_exp,
+        extra_si_prefixes=extra_si_prefixes,
+        extra_iec_prefixes=extra_iec_prefixes,
+        extra_parts_per_forms=extra_parts_per_forms,
+    )
+
+    """
+    "1234(12)" val_unc_str along with exp_str "k" will be formatted as
+    "1234(12) k whereas 1234(12) with exp_str "e+03" will be
+    formatted as (1234(12))e+03.
+    "1234 ± 12" will be formatted with parentheses as "(1234 ± 12) k" or
+    "(1234 ± 12)e+03"
+    """
+    if bracket_unc and not re.match(r"^[eEbB][+-]\d+$", exp_str):
+        val_unc_exp_str = f"{val_unc_str}{exp_str}"
+    else:
+        val_unc_exp_str = f"({val_unc_str}){exp_str}"
+
+    return val_unc_exp_str
