@@ -86,8 +86,7 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
     round_mode = options.round_mode
     exp_mode = options.exp_mode
     ndigits = options.ndigits
-    mantissa, temp_exp_val, base = get_mantissa_exp_base(num, exp_mode,
-                                                         exp_val)
+    mantissa, temp_exp_val, base = get_mantissa_exp_base(num, exp_mode, exp_val)
     round_digit = get_round_digit(mantissa, round_mode, ndigits)
     mantissa_rounded = round(mantissa, -round_digit)
 
@@ -95,9 +94,8 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
     Repeat mantissa + exponent discovery after rounding in case rounding
     altered the required exponent.
     """
-    rounded_num = mantissa_rounded * Decimal(base)**Decimal(temp_exp_val)
-    mantissa, exp_val, base = get_mantissa_exp_base(rounded_num, exp_mode,
-                                                    exp_val)
+    rounded_num = mantissa_rounded * Decimal(base) ** Decimal(temp_exp_val)
+    mantissa, exp_val, base = get_mantissa_exp_base(rounded_num, exp_mode, exp_val)
     round_digit = get_round_digit(mantissa, round_mode, ndigits)
     mantissa_rounded = round(mantissa, -int(round_digit))
     mantissa_rounded = cast(Decimal, mantissa_rounded)
@@ -112,20 +110,20 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
         exp_val = 0
 
     fill_char = options.fill_mode.value
-    mantissa_str = format_num_by_top_bottom_dig(mantissa_rounded.normalize(),
-                                                options.top_dig_place,
-                                                round_digit,
-                                                options.sign_mode,
-                                                fill_char)
+    mantissa_str = format_num_by_top_bottom_dig(
+        mantissa_rounded.normalize(),
+        options.top_dig_place,
+        round_digit,
+        options.sign_mode,
+        fill_char,
+    )
 
     upper_separator = options.upper_separator.value
     decimal_separator = options.decimal_separator.value
     lower_separator = options.lower_separator.value
-    mantissa_str = add_separators(mantissa_str,
-                                  upper_separator,
-                                  decimal_separator,
-                                  lower_separator,
-                                  group_size=3)
+    mantissa_str = add_separators(
+        mantissa_str, upper_separator, decimal_separator, lower_separator, group_size=3
+    )
 
     exp_str = get_exp_str(
         exp_val=exp_val,
@@ -205,13 +203,11 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     )
 
     val_mantissa, _, _ = get_mantissa_exp_base(
-        val_rounded,
-        exp_mode=exp_mode,
-        input_exp=exp_val)
+        val_rounded, exp_mode=exp_mode, input_exp=exp_val
+    )
     unc_mantissa, _, _ = get_mantissa_exp_base(
-        unc_rounded,
-        exp_mode=exp_mode,
-        input_exp=exp_val)
+        unc_rounded, exp_mode=exp_mode, input_exp=exp_val
+    )
 
     new_top_digit = get_val_unc_top_digit(
         val_mantissa,
@@ -255,9 +251,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     val_mantissa_exp_str = format_num(val_rounded, val_format_options)
     unc_mantissa_exp_str = format_num(unc_rounded, unc_format_options)
 
-    (val_mantissa_str,
-     unc_mantissa_str,
-     exp_str) = get_val_unc_mantissa_exp_strs(
+    (val_mantissa_str, unc_mantissa_str, exp_str) = get_val_unc_mantissa_exp_strs(
         val_mantissa_exp_str,
         unc_mantissa_exp_str,
         exp_driver_type,

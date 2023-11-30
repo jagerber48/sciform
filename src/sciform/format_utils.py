@@ -380,11 +380,11 @@ def latex_translate(input_str: str) -> str:
 
 
 def round_val_unc(
-        val: Decimal,
-        unc: Decimal,
-        ndigits: int | type[AutoDigits],
-        *,
-        use_pdg_sig_figs: bool = False,
+    val: Decimal,
+    unc: Decimal,
+    ndigits: int | type[AutoDigits],
+    *,
+    use_pdg_sig_figs: bool = False,
 ) -> tuple[Decimal, Decimal, int]:
     """Simultaneously round the value and uncertainty."""
     if unc.is_finite() and unc != 0:
@@ -411,10 +411,10 @@ def round_val_unc(
 
 
 def get_val_unc_exp(
-        val: Decimal,
-        unc: Decimal,
-        exp_mode: ExpMode,
-        input_exp: int,
+    val: Decimal,
+    unc: Decimal,
+    exp_mode: ExpMode,
+    input_exp: int,
 ) -> tuple[int, ExpDriver]:
     """Get exponent for value/uncertainty formatting."""
     if val.is_finite() and unc.is_finite():
@@ -444,11 +444,11 @@ def get_val_unc_exp(
 
 
 def get_val_unc_top_digit(
-        val_mantissa: Decimal,
-        unc_mantissa: Decimal,
-        input_top_digit: int | AutoDigits,
-        *,
-        val_unc_match_widths: bool,
+    val_mantissa: Decimal,
+    unc_mantissa: Decimal,
+    input_top_digit: int | AutoDigits,
+    *,
+    val_unc_match_widths: bool,
 ) -> int | AutoDigits:
     """Get top digit place for value/uncertainty formatting."""
     if val_unc_match_widths:
@@ -465,14 +465,15 @@ def get_val_unc_top_digit(
 
 
 def get_val_unc_mantissa_exp_strs(
-        val_mantissa_exp_str: str,
-        unc_mantissa_exp_str: str,
-        exp_driver_type: ExpDriver,
+    val_mantissa_exp_str: str,
+    unc_mantissa_exp_str: str,
+    exp_driver_type: ExpDriver,
 ) -> tuple[str, str, str]:
     """Break val/unc mantissa/exp strings into mantissa strings and an exp string."""
     # Optional parentheses needed to handle (nan)e+00 case
     mantissa_exp_pattern = re.compile(
-        r"^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$")
+        r"^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$"
+    )
     val_match = mantissa_exp_pattern.match(val_mantissa_exp_str)
     val_mantissa_str = val_match.group("mantissa_str")
 
@@ -491,16 +492,16 @@ def get_val_unc_mantissa_exp_strs(
 
 
 def construct_val_unc_str(  # noqa: PLR0913
-        val_mantissa_str: str,
-        unc_mantissa_str: str,
-        val_mantissa: Decimal,
-        unc_mantissa: Decimal,
-        decimal_separator: Separator,
-        *,
-        bracket_unc: bool,
-        latex: bool,
-        pm_whitespace: bool,
-        bracket_unc_remove_seps: bool,
+    val_mantissa_str: str,
+    unc_mantissa_str: str,
+    val_mantissa: Decimal,
+    unc_mantissa: Decimal,
+    decimal_separator: Separator,
+    *,
+    bracket_unc: bool,
+    latex: bool,
+    pm_whitespace: bool,
+    bracket_unc_remove_seps: bool,
 ) -> str:
     """Construct the value/uncertainty part of the formatted string."""
     if not bracket_unc:
@@ -522,25 +523,26 @@ def construct_val_unc_str(  # noqa: PLR0913
             if unc_mantissa < abs(val_mantissa):
                 # Only removed "embedded" decimal symbol for unc < val
                 unc_mantissa_str = unc_mantissa_str.replace(
-                    decimal_separator, "",
+                    decimal_separator,
+                    "",
                 )
         val_unc_str = f"{val_mantissa_str}({unc_mantissa_str})"
     return val_unc_str
 
 
 def construct_val_unc_exp_str(  # noqa: PLR0913
-        *,
-        val_unc_str: str,
-        exp_val: int,
-        exp_mode: ExpMode,
-        exp_format: ExpFormat,
-        extra_si_prefixes: dict[int, str | None],
-        extra_iec_prefixes: dict[int, str | None],
-        extra_parts_per_forms: dict[int, str | None],
-        capitalize: bool,
-        latex: bool,
-        superscript_exp: bool,
-        bracket_unc: bool,
+    *,
+    val_unc_str: str,
+    exp_val: int,
+    exp_mode: ExpMode,
+    exp_format: ExpFormat,
+    extra_si_prefixes: dict[int, str | None],
+    extra_iec_prefixes: dict[int, str | None],
+    extra_parts_per_forms: dict[int, str | None],
+    capitalize: bool,
+    latex: bool,
+    superscript_exp: bool,
+    bracket_unc: bool,
 ) -> str:
     """Combine the val_unc_str into the final val_unc_exp_str."""
     exp_str = get_exp_str(
