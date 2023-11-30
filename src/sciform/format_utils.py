@@ -520,6 +520,7 @@ def construct_val_unc_str(  # noqa: PLR0913
                 if separator == decimal_separator:
                     continue
                 unc_mantissa_str = unc_mantissa_str.replace(separator, "")
+                # TODO: bracket_unc_remove_seps unit test in tests, not just doctest.
             if unc_mantissa < abs(val_mantissa):
                 # TODO: I think this raises an error if bracket_unc=True but either
                 #   unc_mantissa or val_mantissa is non-finite.
