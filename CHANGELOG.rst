@@ -5,7 +5,12 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* There are no unreleased changes.
+Changed
+^^^^^^^
+
+* Refactored code for adding separators.
+* Refactored formatting and formatting utilities to simplify functions
+  and make the algorithm easier to follow.
 
 ----
 

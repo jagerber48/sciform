@@ -3,7 +3,6 @@ from decimal import Decimal
 
 from sciform import Formatter
 from sciform.formatting import format_non_finite
-from sciform.grouping import add_group_chars_between_numbers, add_separators
 from sciform.user_options import UserOptions
 from sciform import modes
 from sciform.format_utils import (
@@ -129,19 +128,6 @@ class TestInvalidOptions(unittest.TestCase):
     def test_format_non_finite(self):
         self.assertRaises(ValueError, format_non_finite, Decimal(1.0),
                           UserOptions().render())
-
-    def test_add_group_chars(self):
-        self.assertRaises(ValueError, add_group_chars_between_numbers,
-                          string='123456.654321', group_char='_',
-                          direction='forwards', group_size=3)
-
-    def test_add_separators(self):
-        self.assertRaises(ValueError, add_separators,
-                          num_str='123.456.789',
-                          upper_separator=',',
-                          decimal_separator='.',
-                          lower_separator='_',
-                          group_size=3)
 
     def test_get_top_digit_infinite(self):
         self.assertEqual(get_top_digit(Decimal('nan')), 0)
