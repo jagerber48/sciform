@@ -9,7 +9,7 @@ from typing import Literal, TypeVar
 class SentinelMeta(type):
     """Sentinel metaclass, __repr__ returns class name."""
 
-    def __repr__(cls: SentinelMeta) -> str:  # noqa: D105
+    def __repr__(cls: SentinelMeta) -> str:
         return cls.__name__
 
 

@@ -32,6 +32,7 @@ readme = {file = "README.rst"}
 [tool.ruff.lint]
 select = ['ALL']
 ignore = [
+    'D105',
     'D212',
     'D211',
     'PLR2004',

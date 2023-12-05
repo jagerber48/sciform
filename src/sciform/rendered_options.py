@@ -44,7 +44,7 @@ class RenderedOptions:
     bracket_unc_remove_seps: bool
     unc_pm_whitespace: bool
 
-    def __str__(self: RenderedOptions) -> str:  # noqa: D105
+    def __str__(self: RenderedOptions) -> str:
         options_dict = asdict(self)
         for key, value in options_dict.items():
             if isinstance(value, Enum):
