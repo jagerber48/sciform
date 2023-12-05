@@ -9,7 +9,6 @@ from sciform.user_options import UserOptions
 
 if TYPE_CHECKING:
     from types import TracebackType
-
     from sciform.rendered_options import RenderedOptions
 
 

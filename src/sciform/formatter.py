@@ -141,7 +141,7 @@ class Formatter:
           values to si prefixes. Entries overwrite default values. A
           value of ``None`` means that exponent will not be converted.
         :type extra_si_prefixes: ``dict[int, Union[str, None]] | None``
-        :param extra_iec_prefixes: Dicitonary mapping additional
+        :param extra_iec_prefixes: Dictionary mapping additional
           exponent values to iec prefixes. Entries overwrite default
           values. A value of ``None`` means that exponent will not be
           converted.
