@@ -86,16 +86,15 @@ class Separator(str, Enum):
     SPACE = " "
 
 
-UpperSeparators = Literal[Separator.NONE,
-                          Separator.COMMA,
-                          Separator.POINT,
-                          Separator.UNDERSCORE,
-                          Separator.SPACE]
-DecimalSeparators = Literal[Separator.POINT,
-                            Separator.COMMA]
-LowerSeparators = Literal[Separator.NONE,
-                          Separator.UNDERSCORE,
-                          Separator.SPACE]
+UpperSeparators = Literal[
+    Separator.NONE,
+    Separator.COMMA,
+    Separator.POINT,
+    Separator.UNDERSCORE,
+    Separator.SPACE,
+]
+DecimalSeparators = Literal[Separator.POINT, Separator.COMMA]
+LowerSeparators = Literal[Separator.NONE, Separator.UNDERSCORE, Separator.SPACE]
 
 
 UserRoundMode = Literal["sig_fig", "dec_place"]
@@ -108,8 +107,15 @@ class RoundMode(str, Enum):
     DEC_PLACE = "dec_place"
 
 
-UserExpMode = Literal["fixed_point", "percent", "scientific", "engineering",
-                      "engineering_shifted", "binary", "binary_iec"]
+UserExpMode = Literal[
+    "fixed_point",
+    "percent",
+    "scientific",
+    "engineering",
+    "engineering_shifted",
+    "binary",
+    "binary_iec",
+]
 
 
 class ExpMode(str, Enum):
@@ -150,5 +156,5 @@ def mode_str_to_enum(mode_str: str, enum: type[T]) -> T:
     for member in enum:
         if mode_str == member.value:
             return member
-    msg = f"String \'{mode_str}\' not found in {enum} values."
+    msg = f"String '{mode_str}' not found in {enum} values."
     raise ValueError(msg)
