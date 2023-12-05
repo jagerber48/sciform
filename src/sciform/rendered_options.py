@@ -1,17 +1,29 @@
-from typing import Union
-from dataclasses import dataclass, asdict
-from pprint import pformat
-from enum import Enum
+"""
+Rendered format options used in sciform backend formatting algorithm.
 
-from sciform import modes
+:class:`UserOptions` are converted into :class:`RenderedOptions`
+internally at format time.
+"""
+
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+from enum import Enum
+from pprint import pformat
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from sciform import modes
 
 
 @dataclass(frozen=True)
 class RenderedOptions:
+    """Rendered options: All options populated and using Enum instead of Literal."""
+
     exp_mode: modes.ExpMode
-    exp_val: Union[int, type(modes.AutoExpVal)]
+    exp_val: int | type(modes.AutoExpVal)
     round_mode: modes.RoundMode
-    ndigits: Union[int, type(modes.AutoDigits)]
+    ndigits: int | type(modes.AutoDigits)
     upper_separator: modes.UpperSeparators
     decimal_separator: modes.DecimalSeparators
     lower_separator: modes.LowerSeparators
@@ -32,7 +44,7 @@ class RenderedOptions:
     bracket_unc_remove_seps: bool
     unc_pm_whitespace: bool
 
-    def __str__(self):
+    def __str__(self: RenderedOptions) -> str:  # noqa: D105
         options_dict = asdict(self)
         for key, value in options_dict.items():
             if isinstance(value, Enum):
