@@ -43,11 +43,11 @@ class UserOptions:
     add_ppth_form: InitVar[bool] = False
 
     def __post_init__(
-            self: UserOptions,
-            add_c_prefix: bool,   # noqa: FBT001
-            add_small_si_prefixes: bool,  # noqa: FBT001
-            add_ppth_form: bool,  # noqa: FBT001
-) -> None:
+        self: UserOptions,
+        add_c_prefix: bool,  # noqa: FBT001
+        add_small_si_prefixes: bool,  # noqa: FBT001
+        add_ppth_form: bool,  # noqa: FBT001
+    ) -> None:
         self.populate_dicts(
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,
@@ -56,11 +56,11 @@ class UserOptions:
         self.validate(self)
 
     def populate_dicts(  # noqa: C901
-            self: UserOptions,
-            *,
-            add_c_prefix: bool,
-            add_small_si_prefixes: bool,
-            add_ppth_form: bool,
+        self: UserOptions,
+        *,
+        add_c_prefix: bool,
+        add_small_si_prefixes: bool,
+        add_ppth_form: bool,
     ) -> None:
         """Populate extra prefix translations from user input flags."""
         # TODO: Test that things do and don't get added appropriately
@@ -92,17 +92,17 @@ class UserOptions:
     def validate(options: UserOptions | RenderedOptions) -> None:
         """Validate user inputs."""
         if (
-                options.round_mode == "sig_fig"
-                and isinstance(options.ndigits, int)
-                and options.ndigits < 1
+            options.round_mode == "sig_fig"
+            and isinstance(options.ndigits, int)
+            and options.ndigits < 1
         ):
             msg = f"ndigits must be >= 1 for sig fig rounding, not {options.ndigits}."
             raise ValueError(msg)
 
         if (
-                options.pdg_sig_figs
-                and options.ndigits is not None
-                and options.ndigits is not modes.AutoDigits
+            options.pdg_sig_figs
+            and options.ndigits is not None
+            and options.ndigits is not modes.AutoDigits
         ):
             msg = (
                 f"pdg_sig_figs=True can only be used with ndigits=AutoDigits, not "
@@ -118,13 +118,13 @@ class UserOptions:
                 )
                 raise ValueError(msg)
             if (
-                    options.exp_mode in ["engineering", "engineering_shifted"]
-                    and options.exp_val % 3 != 0
+                options.exp_mode in ["engineering", "engineering_shifted"]
+                and options.exp_val % 3 != 0
             ):
                 msg = (
                     f"Exponent must be a multiple of 3, not exp_val={options.exp_val}, "
                     f"for engineering exponent modes."
-                       )
+                )
                 raise ValueError(msg)
             if options.exp_mode == "binary_iec" and options.exp_val % 10 != 0:
                 msg = (
@@ -153,10 +153,8 @@ class UserOptions:
                 )
                 raise ValueError(msg)
 
-        if (
-                options.decimal_separator is not None
-                and (options.decimal_separator
-                     not in get_args(modes.UserDecimalSeparators))
+        if options.decimal_separator is not None and (
+            options.decimal_separator not in get_args(modes.UserDecimalSeparators)
         ):
             msg = (
                 f"decimal_separator must be in "
@@ -165,10 +163,8 @@ class UserOptions:
             )
             raise ValueError(msg)
 
-        if (
-                options.lower_separator is not None
-                and (options.lower_separator not in
-                     get_args(modes.UserLowerSeparators))
+        if options.lower_separator is not None and (
+            options.lower_separator not in get_args(modes.UserLowerSeparators)
         ):
             msg = (
                 f"lower_separator must be in {get_args(modes.UserLowerSeparators)}, "
