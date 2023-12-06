@@ -122,7 +122,11 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
     decimal_separator = options.decimal_separator.value
     lower_separator = options.lower_separator.value
     mantissa_str = add_separators(
-        mantissa_str, upper_separator, decimal_separator, lower_separator, group_size=3,
+        mantissa_str,
+        upper_separator,
+        decimal_separator,
+        lower_separator,
+        group_size=3,
     )
 
     exp_str = get_exp_str(
@@ -203,10 +207,14 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     )
 
     val_mantissa, _, _ = get_mantissa_exp_base(
-        val_rounded, exp_mode=exp_mode, input_exp=exp_val,
+        val_rounded,
+        exp_mode=exp_mode,
+        input_exp=exp_val,
     )
     unc_mantissa, _, _ = get_mantissa_exp_base(
-        unc_rounded, exp_mode=exp_mode, input_exp=exp_val,
+        unc_rounded,
+        exp_mode=exp_mode,
+        input_exp=exp_val,
     )
 
     new_top_digit = get_val_unc_top_digit(

@@ -34,8 +34,7 @@ class SciNum:
     def __format__(self: SciNum, fmt: str) -> str:
         user_options = format_options_from_fmt_spec(fmt)
         rendered_options = user_options.render()
-        return format_num(self.value,
-                          rendered_options)
+        return format_num(self.value, rendered_options)
 
     def __repr__(self: SciNum) -> str:
         return f"{self.__class__.__name__}({self.value})"
@@ -58,17 +57,14 @@ class SciNumUnc:
     123,456.654_321(2)
     """
 
-    def __init__(self: SciNumUnc, value: Number,
-                 uncertainty: Number, /) -> None:
+    def __init__(self: SciNumUnc, value: Number, uncertainty: Number, /) -> None:
         self.value = Decimal(str(value))
         self.uncertainty = Decimal(str(uncertainty))
 
     def __format__(self: SciNumUnc, fmt: str) -> str:
         user_options = format_options_from_fmt_spec(fmt)
         rendered_options = user_options.render()
-        return format_val_unc(self.value,
-                              self.uncertainty,
-                              rendered_options)
+        return format_val_unc(self.value, self.uncertainty, rendered_options)
 
     def __repr__(self: SciNumUnc) -> str:
         return f"{self.__class__.__name__}({self.value}, {self.uncertainty})"

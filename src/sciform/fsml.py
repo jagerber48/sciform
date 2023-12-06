@@ -6,7 +6,8 @@ import re
 
 from sciform.user_options import UserOptions
 
-pattern = re.compile(r"""^
+pattern = re.compile(
+    r"""^
                          (?:(?P<fill_mode>[ 0])=)?
                          (?P<sign_mode>[-+ ])?
                          (?P<alternate_mode>\#)?
@@ -19,13 +20,15 @@ pattern = re.compile(r"""^
                          (?:x(?P<exp_val>[+-]?\d+))?
                          (?P<prefix_mode>p)?
                          (?P<bracket_unc>\(\))?
-                         $""", re.VERBOSE)
+                         $""",
+    re.VERBOSE,
+)
 
 
 def parse_exp_mode(
-        exp_mode: str | None,
-        *,
-        alternate_mode: bool,
+    exp_mode: str | None,
+    *,
+    alternate_mode: bool,
 ) -> tuple[str | None, bool]:
     """Pase the exp_mode."""
     if exp_mode is not None:
@@ -55,7 +58,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
     """Resolve UserOptions form format specification string."""
     match = pattern.match(fmt_spec)
     if match is None:
-        msg = f"Invalid format specifier: \'{fmt_spec}\'"
+        msg = f"Invalid format specifier: '{fmt_spec}'"
         raise ValueError(msg)
 
     fill_mode = match.group("fill_mode")
@@ -84,9 +87,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
         lower_separator = lower_separator.replace("n", "")
         lower_separator = lower_separator.replace("s", " ")
 
-    round_mode_mapping = {"!": "sig_fig",
-                          ".": "dec_place",
-                          None: None}
+    round_mode_mapping = {"!": "sig_fig", ".": "dec_place", None: None}
 
     round_mode_flag = match.group("round_mode")
     round_mode = round_mode_mapping[round_mode_flag]
@@ -99,7 +100,8 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
 
     exp_mode = match.group("exp_mode")
     exp_mode, capitalize = parse_exp_mode(
-        exp_mode, alternate_mode=alternate_mode,
+        exp_mode,
+        alternate_mode=alternate_mode,
     )
 
     exp_val = match.group("exp_val")
