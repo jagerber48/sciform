@@ -1,3 +1,5 @@
+"""``sciform`` is used to convert python numbers into scientific formatted strings."""
+
 from sciform.formatter import Formatter
 from sciform.global_configuration import (
     GlobalDefaultsContext,

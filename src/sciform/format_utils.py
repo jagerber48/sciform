@@ -472,7 +472,7 @@ def get_val_unc_mantissa_exp_strs(
     """Break val/unc mantissa/exp strings into mantissa strings and an exp string."""
     # Optional parentheses needed to handle (nan)e+00 case
     mantissa_exp_pattern = re.compile(
-        r"^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$"
+        r"^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$",
     )
     val_match = mantissa_exp_pattern.match(val_mantissa_exp_str)
     val_mantissa_str = val_match.group("mantissa_str")
