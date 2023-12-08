@@ -42,5 +42,9 @@ ignore = [
     'FIX002',
 ]
 
+[tool.ruff.per-file-ignores]
+# Also ignore `E402` in all `__init__.py` files.
+"tests/*.py" = ["D", "ANN", "PT"]
+
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
