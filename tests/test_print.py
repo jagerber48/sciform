@@ -1,9 +1,8 @@
-from io import StringIO
-from contextlib import redirect_stdout
-
 import unittest
+from contextlib import redirect_stdout
+from io import StringIO
 
-from sciform import print_global_defaults, GlobalDefaultsContext
+from sciform import GlobalDefaultsContext, print_global_defaults
 
 
 class TestPrint(unittest.TestCase):
