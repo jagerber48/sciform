@@ -183,7 +183,7 @@ class TestFormatting(unittest.TestCase):
                     ),
                     (
                         Formatter(
-                            exp_mode="percent", bracket_unc=True, lower_separator="_"
+                            exp_mode="percent", bracket_unc=True, lower_separator="_",
                         ),
                         "(12.345_678(255))%",
                     ),

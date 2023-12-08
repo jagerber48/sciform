@@ -159,7 +159,7 @@ class TestInvalidOptions(unittest.TestCase):
 
     def test_format_non_finite(self):
         self.assertRaises(
-            ValueError, format_non_finite, Decimal(1.0), UserOptions().render()
+            ValueError, format_non_finite, Decimal(1.0), UserOptions().render(),
         )
 
     def test_get_top_digit_infinite(self):

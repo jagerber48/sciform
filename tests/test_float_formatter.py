@@ -11,7 +11,7 @@ class TestFormatting(unittest.TestCase):
             for formatter, expected_num_str in formats_list:
                 snum_str = formatter(num)
                 with self.subTest(
-                    num=num, expected_num_str=expected_num_str, actual_num_str=snum_str
+                    num=num, expected_num_str=expected_num_str, actual_num_str=snum_str,
                 ):
                     self.assertEqual(snum_str, expected_num_str)
 
@@ -114,7 +114,7 @@ class TestFormatting(unittest.TestCase):
                     # Latex mode takes precedence over superscript_exp
                     (
                         Formatter(
-                            exp_mode="scientific", latex=True, superscript_exp=True
+                            exp_mode="scientific", latex=True, superscript_exp=True,
                         ),
                         r"7.89\times 10^{+2}",
                     ),
@@ -190,13 +190,13 @@ class TestFormatting(unittest.TestCase):
                     ),
                     (
                         Formatter(
-                            exp_mode="scientific", exp_val=-6, exp_format="parts_per"
+                            exp_mode="scientific", exp_val=-6, exp_format="parts_per",
                         ),
                         "123000 ppm",
                     ),
                     (
                         Formatter(
-                            exp_mode="scientific", exp_val=-2, exp_format="parts_per"
+                            exp_mode="scientific", exp_val=-2, exp_format="parts_per",
                         ),
                         "12.3e-02",
                     ),
