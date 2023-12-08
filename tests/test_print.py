@@ -38,7 +38,7 @@ class TestPrint(unittest.TestCase):
         self.assertEqual(actual_printout, expected_printout)
 
     def test_unrendered_options_repr(self):
-        with redirect_stdout(StringIO()) as sout:
+        with redirect_stdout(StringIO()) as sout:  # noqa: SIM117
             with GlobalDefaultsContext(top_dig_place=3, capitalize=True):
                 print_global_defaults()
 

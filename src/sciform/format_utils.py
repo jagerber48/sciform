@@ -155,7 +155,7 @@ def get_superscript_exp_str(base: int, exp_val: int) -> str:
     """Get superscript (e.g. '×10⁺²') exponent string."""  # noqa: RUF002
     sup_trans = str.maketrans("+-0123456789", "⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹")
     exp_val_str = f"{exp_val}".translate(sup_trans)
-    return f"×{base}{exp_val_str}"  # noqa: RUF001
+    return f"×{base}{exp_val_str}"
 
 
 def get_prefix_dict(

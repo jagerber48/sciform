@@ -353,6 +353,6 @@ class TestFormatting(unittest.TestCase):
             ((123.456, 0.789), [
                 ("ex+3p", "(0.123456 ± 0.000789) k"),
                 ("ex-3p", "(123456 ± 789) m"),
-            ],),
+            ]),
         ]
         self.run_val_unc_fsml_cases(cases_list)
