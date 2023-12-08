@@ -19,8 +19,7 @@ class TestConfig(unittest.TestCase):
     def test_set_reset_global_defaults(self):
         num = SciNum(0.0005632)
         self.assertEqual(f"{num}", "0.0005632")
-        set_global_defaults(exp_mode="engineering_shifted",
-                            capitalize=True)
+        set_global_defaults(exp_mode="engineering_shifted", capitalize=True)
         self.assertEqual(f"{num}", "0.5632E-03")
         reset_global_defaults()
         self.assertEqual(f"{num}", "0.0005632")
@@ -29,11 +28,12 @@ class TestConfig(unittest.TestCase):
         num = SciNum(123.456)
         self.assertEqual(f"{num}", "123.456")
         with GlobalDefaultsContext(
-                sign_mode="+",
-                exp_mode="scientific",
-                round_mode="sig_fig",
-                ndigits=2,
-                decimal_separator=","):
+            sign_mode="+",
+            exp_mode="scientific",
+            round_mode="sig_fig",
+            ndigits=2,
+            decimal_separator=",",
+        ):
             self.assertEqual(f"{num}", "+1,2e+02")
         self.assertEqual(f"{num}", "123.456")
 
@@ -49,10 +49,12 @@ class TestConfig(unittest.TestCase):
     def test_small_si_prefixes(self):
         num = SciNum(123.456)
 
-        cases_dict = {-2: "12345.6 c",
-                      -1: "1234.56 d",
-                      +1: "12.3456 da",
-                      +2: "1.23456 h"}
+        cases_dict = {
+            -2: "12345.6 c",
+            -1: "1234.56 d",
+            +1: "12.3456 da",
+            +2: "1.23456 h",
+        }
 
         global_add_small_si_prefixes()
         for exp, expected_num_str in cases_dict.items():
