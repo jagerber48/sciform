@@ -16,7 +16,8 @@ if TYPE_CHECKING:
 
 
 def get_scale_and_offset_from_offset_str(
-        ax: plt.Axes, axis: Literal["x", "y"]) -> tuple[float, float]:
+    ax: plt.Axes, axis: Literal["x", "y"]
+) -> tuple[float, float]:
     """Get the scale and offset for an axis formatted in scientific mode."""
     plt.draw()
     if axis == "x":
@@ -43,9 +44,10 @@ def get_scale_and_offset_from_offset_str(
 
 
 def prefix_exp_ticks(
-        ax: plt.Axes, axis: Literal["x", "y"],
-        *,
-        shifted: bool = False,
+    ax: plt.Axes,
+    axis: Literal["x", "y"],
+    *,
+    shifted: bool = False,
 ) -> None:
     """
     Use prefix notation for axis tick labels. Scale the tick labels by
@@ -58,14 +60,9 @@ def prefix_exp_ticks(
     else:
         exp_mode = "engineering_shifted"
     # noinspection PyTypeChecker
-    tick_formatter = Formatter(
-        exp_mode=exp_mode,
-        exp_format="prefix")
+    tick_formatter = Formatter(exp_mode=exp_mode, exp_format="prefix")
     # noinspection PyTypeChecker
-    offset_formatter = Formatter(
-        sign_mode="+",
-        exp_mode=exp_mode,
-        exp_format="prefix")
+    offset_formatter = Formatter(sign_mode="+", exp_mode=exp_mode, exp_format="prefix")
 
     ax.ticklabel_format(axis=axis, style="sci")
 
@@ -113,10 +110,8 @@ def quadratic(x: NDArray, c: float, x0: float, y0: float) -> NDArray:
 
 def main() -> None:
     fit_results_formatter = Formatter(
-        exp_mode="engineering",
-        round_mode="sig_fig",
-        bracket_unc=True,
-        ndigits=2)
+        exp_mode="engineering", round_mode="sig_fig", bracket_unc=True, ndigits=2
+    )
 
     data_path = Path("data", "fit_data.json")
     with data_path.open() as f:
@@ -135,8 +130,7 @@ def main() -> None:
         fit_results_dict = {}
 
         color = color_list[idx]
-        ax.errorbar(x, y, y_err, marker="o", linestyle="none", color=color,
-                    label=color)
+        ax.errorbar(x, y, y_err, marker="o", linestyle="none", color=color, label=color)
 
         # noinspection PyTupleAssignmentBalance
         popt, pcov = curve_fit(quadratic, x, y, sigma=y_err, p0=(2e13, 0, 1e9))
@@ -147,11 +141,10 @@ def main() -> None:
 
         fit_results_dict["color"] = color
         fit_results_dict["curvature"] = fit_results_formatter(
-            popt[0], np.sqrt(pcov[0, 0]))
-        fit_results_dict["x0"] = fit_results_formatter(
-            popt[1], np.sqrt(pcov[1, 1]))
-        fit_results_dict["y0"] = fit_results_formatter(
-            popt[2], np.sqrt(pcov[2, 2]))
+            popt[0], np.sqrt(pcov[0, 0])
+        )
+        fit_results_dict["x0"] = fit_results_formatter(popt[1], np.sqrt(pcov[1, 1]))
+        fit_results_dict["y0"] = fit_results_formatter(popt[2], np.sqrt(pcov[2, 2]))
 
         fit_results_list.append(fit_results_dict)
 

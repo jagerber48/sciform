@@ -9,5 +9,6 @@ class TestSciNumAndSciNumUnc(unittest.TestCase):
 
     def test_sci_num_unc_repr(self):
         self.assertEqual(
-            repr(SciNumUnc(123.456, 0.0000023)), "SciNumUnc(123.456, 0.0000023)",
+            repr(SciNumUnc(123.456, 0.0000023)),
+            "SciNumUnc(123.456, 0.0000023)",
         )
