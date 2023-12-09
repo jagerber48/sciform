@@ -16,7 +16,8 @@ if TYPE_CHECKING:
 
 
 def get_scale_and_offset_from_offset_str(
-    ax: plt.Axes, axis: Literal["x", "y"],
+    ax: plt.Axes,
+    axis: Literal["x", "y"],
 ) -> tuple[float, float]:
     """Get the scale and offset for an axis formatted in scientific mode."""
     plt.draw()
@@ -110,7 +111,10 @@ def quadratic(x: NDArray, c: float, x0: float, y0: float) -> NDArray:
 
 def main() -> None:
     fit_results_formatter = Formatter(
-        exp_mode="engineering", round_mode="sig_fig", bracket_unc=True, ndigits=2,
+        exp_mode="engineering",
+        round_mode="sig_fig",
+        bracket_unc=True,
+        ndigits=2,
     )
 
     data_path = Path("data", "fit_data.json")
@@ -141,7 +145,8 @@ def main() -> None:
 
         fit_results_dict["color"] = color
         fit_results_dict["curvature"] = fit_results_formatter(
-            popt[0], np.sqrt(pcov[0, 0]),
+            popt[0],
+            np.sqrt(pcov[0, 0]),
         )
         fit_results_dict["x0"] = fit_results_formatter(popt[1], np.sqrt(pcov[1, 1]))
         fit_results_dict["y0"] = fit_results_formatter(popt[2], np.sqrt(pcov[2, 2]))
