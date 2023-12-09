@@ -2,6 +2,7 @@
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+# ruff: noqa
 
 from importlib import metadata
 
@@ -22,7 +23,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
     "sphinx.ext.todo",
-    "sphinx_toolbox.collapse"
+    "sphinx_toolbox.collapse",
 ]
 
 templates_path = ["_templates"]
