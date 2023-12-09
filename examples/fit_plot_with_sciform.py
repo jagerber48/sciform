@@ -1,29 +1,31 @@
-import json
-from typing import Literal
-import re
+from __future__ import annotations
 
-import numpy as np
+import json
+import re
+from pathlib import Path
+from typing import TYPE_CHECKING, Literal
+
 import matplotlib.pyplot as plt
+import numpy as np
+from sciform import Formatter
 from scipy.optimize import curve_fit
 from tabulate import tabulate
 
-from sciform import Formatter
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
 
 
 def get_scale_and_offset_from_offset_str(
         ax: plt.Axes, axis: Literal["x", "y"]) -> tuple[float, float]:
-    """
-    Extract the scale and offset for a particular axis from the existing
-    offset text when the axis is formatted in scientific mode.
-    """
+    """Get the scale and offset for an axis formatted in scientific mode."""
     plt.draw()
     if axis == "x":
         offset_text_obj = ax.xaxis.get_offset_text()
     elif axis == "y":
         offset_text_obj = ax.yaxis.get_offset_text()
     else:
-        raise ValueError(f"axis must be \'x\' or \'y\', not "
-                         f"\'{axis}\'.")
+        msg = f"axis must be 'x' or 'y', not '{axis}'."
+        raise ValueError(msg)
 
     ax.ticklabel_format(axis=axis, style="sci")
     ax.get_figure().canvas.draw()  # Redraw canvas to update offset text
@@ -40,8 +42,11 @@ def get_scale_and_offset_from_offset_str(
     return scale, offset
 
 
-def prefix_exp_ticks(ax: plt.Axes, axis: Literal["x", "y"],
-                     shifted: bool = False) -> None:
+def prefix_exp_ticks(
+        ax: plt.Axes, axis: Literal["x", "y"],
+        *,
+        shifted: bool = False,
+) -> None:
     """
     Use prefix notation for axis tick labels. Scale the tick labels by
     the multiplier that appears in the offset text and format the labels
@@ -52,9 +57,11 @@ def prefix_exp_ticks(ax: plt.Axes, axis: Literal["x", "y"],
         exp_mode = "engineering"
     else:
         exp_mode = "engineering_shifted"
+    # noinspection PyTypeChecker
     tick_formatter = Formatter(
         exp_mode=exp_mode,
         exp_format="prefix")
+    # noinspection PyTypeChecker
     offset_formatter = Formatter(
         sign_mode="+",
         exp_mode=exp_mode,
@@ -67,12 +74,13 @@ def prefix_exp_ticks(ax: plt.Axes, axis: Literal["x", "y"],
     elif axis == "y":
         old_ticklabels = ax.get_yticklabels()
     else:
-        raise ValueError(f"axis must be \'x\' or \'y\', not \'{axis}\'.")
+        msg = f"axis must be 'x' or 'y', not '{axis}'."
+        raise ValueError(msg)
 
     scale, offset = get_scale_and_offset_from_offset_str(ax, axis)
 
-    new_tick_locations = list()
-    new_tick_labels = list()
+    new_tick_locations = []
+    new_tick_labels = []
     for old_ticklabel in old_ticklabels:
         x, y = old_ticklabel.get_position()
         if axis == "x":
@@ -99,22 +107,23 @@ def prefix_exp_ticks(ax: plt.Axes, axis: Literal["x", "y"],
         ax.text(x=0, y=1.01, s=offset_str, transform=ax.transAxes)
 
 
-def quadratic(x, c, x0, y0):
+def quadratic(x: NDArray, c: float, x0: float, y0: float) -> NDArray:
     return (c / 2) * (x - x0) ** 2 + y0
 
 
-def main():
+def main() -> None:
     fit_results_formatter = Formatter(
         exp_mode="engineering",
         round_mode="sig_fig",
         bracket_unc=True,
         ndigits=2)
 
-    with open("data/fit_data.json", "r") as f:
+    data_path = Path("data", "fit_data.json")
+    with data_path.open() as f:
         data_dict = json.load(f)
 
     color_list = ["red", "blue", "purple"]
-    fit_results_list = list()
+    fit_results_list = []
 
     fig, ax = plt.subplots(1, 1)
 
@@ -123,12 +132,13 @@ def main():
         y = single_data_dict["y"]
         y_err = single_data_dict["y_err"]
 
-        fit_results_dict = dict()
+        fit_results_dict = {}
 
         color = color_list[idx]
         ax.errorbar(x, y, y_err, marker="o", linestyle="none", color=color,
                     label=color)
 
+        # noinspection PyTupleAssignmentBalance
         popt, pcov = curve_fit(quadratic, x, y, sigma=y_err, p0=(2e13, 0, 1e9))
 
         model_x = np.linspace(min(x), max(x), 100)
@@ -145,7 +155,7 @@ def main():
 
         fit_results_list.append(fit_results_dict)
 
-    ax.grid(True)
+    ax.grid(True)  # noqa: FBT003
     ax.legend()
 
     prefix_exp_ticks(ax, "x")
@@ -155,9 +165,10 @@ def main():
     plt.show()
 
     table_str = tabulate(fit_results_list, headers="keys", tablefmt="grid")
-    with open("outputs/fit_plot_with_sciform_table.txt", "w") as f:
+    table_path = Path("outputs", "fit_plot_with_sciform_table.txt")
+    with table_path.open("w") as f:
         f.write(table_str)
-    print(table_str)
+    print(table_str)  # noqa: T201
 
 
 if __name__ == "__main__":
