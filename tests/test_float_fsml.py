@@ -318,6 +318,18 @@ class TestFormatting(unittest.TestCase):
                     ("#b", "1b+10"),
                 ],
             ),
+            (
+                float("nan"),
+                [
+                    ("b", "nan"),
+                ],
+            ),
+            (
+                0,
+                [
+                    ("b", "0b+00"),
+                ],
+            ),
         ]
 
         self.run_float_fsml_cases(cases_list)

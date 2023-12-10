@@ -431,7 +431,7 @@ def get_val_unc_exp(
         exp_driver_val = val
     elif exp_driver_type is ExpDriver.UNC:
         exp_driver_val = unc
-    else:
+    else:  # pragma: no cover
         raise ValueError
 
     _, exp_val, _ = get_mantissa_exp_base(

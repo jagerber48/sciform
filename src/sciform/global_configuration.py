@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from sciform import global_options, modes
 from sciform.user_options import UserOptions
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from types import TracebackType
 
     from sciform.rendered_options import RenderedOptions

@@ -9,6 +9,8 @@ from sciform.format_utils import (
     get_round_digit,
     get_sign_str,
     get_top_digit,
+    get_top_digit_binary,
+    get_val_unc_mantissa_exp_strs,
     parse_standard_exp_str,
 )
 from sciform.formatting import format_non_finite
@@ -168,6 +170,9 @@ class TestInvalidOptions(unittest.TestCase):
     def test_get_top_digit_infinite(self):
         self.assertEqual(get_top_digit(Decimal("nan")), 0)
 
+    def test_get_top_digit_binary_infinite(self):
+        self.assertEqual(get_top_digit_binary(Decimal("nan")), 0)
+
     def test_get_mantissa_exp_base_fixed_point_set_exp(self):
         self.assertRaises(
             ValueError,
@@ -268,4 +273,13 @@ class TestInvalidOptions(unittest.TestCase):
             modes.mode_str_to_enum,
             "eng",
             modes.ExpMode,
+        )
+
+    def test_get_val_unc_mantissa_exp_str_invalid_driver(self):
+        self.assertRaises(
+            ValueError,
+            get_val_unc_mantissa_exp_strs,
+            "e+00",
+            "e+00",
+            "val",
         )

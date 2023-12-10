@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from sciform.formatting import format_num, format_val_unc
 from sciform.user_options import UserOptions
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
     from sciform.format_utils import Number
 
