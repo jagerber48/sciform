@@ -161,7 +161,7 @@ def get_superscript_exp_str(base: int, exp_val: int) -> str:
 def get_prefix_dict(
     exp_format: ExpFormat,
     base: Literal[10, 2],
-    extra_si_prefixes:dict[int, str],
+    extra_si_prefixes: dict[int, str],
     extra_iec_prefixes: dict[int, str],
     extra_parts_per_forms: dict[int, str],
 ) -> dict[int, str]:

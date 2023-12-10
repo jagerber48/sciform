@@ -8,6 +8,8 @@ Unreleased
 Changed
 ^^^^^^^
 
+* Implemented `ruff <https://docs.astral.sh/ruff/>`_ linting and
+  formatting in codebase and integration automation.
 * Refactored code for adding separators.
 * Refactored formatting and formatting utilities to simplify functions
   and make the algorithm easier to follow.
