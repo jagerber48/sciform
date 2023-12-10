@@ -76,16 +76,11 @@ to format numbers into strings according to the selected options.
 
 >>> from sciform import Formatter
 >>> sform = Formatter(
-...             round_mode='dec_place',
-...             ndigits=6,
-...             upper_separator=' ',
-...             lower_separator=' ')
+...     round_mode="dec_place", ndigits=6, upper_separator=" ", lower_separator=" "
+... )
 >>> print(sform(51413.14159265359))
 51 413.141 593
->>> sform = Formatter(
-...             round_mode='sig_fig',
-...             ndigits=4,
-...             exp_mode='engineering')
+>>> sform = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
 >>> print(sform(123456.78))
 123.5e+03
 
@@ -95,7 +90,7 @@ to a custom FSML.
 
 >>> from sciform import SciNum
 >>> num = SciNum(123456)
->>> print(f'{num:_!2f}')
+>>> print(f"{num:_!2f}")
 120_000
 
 In addition to formatting individual numbers, ``sciform`` can be used
@@ -103,23 +98,18 @@ to format pairs of numbers as value/uncertainty pairs.
 This can be done by passing two numbers into a ``Formatter`` call or by
 using the ``SciNumUnc`` object.
 
->>> sform = Formatter(
-...             ndigits=2,
-...             upper_separator=' ',
-...             lower_separator=' ')
+>>> sform = Formatter(ndigits=2, upper_separator=" ", lower_separator=" ")
 >>> print(sform(123456.654321, 0.0034))
 123 456.654 3 ± 0.003 4
->>> sform = Formatter(
-...             ndigits=4,
-...             exp_mode='engineering')
+>>> sform = Formatter(ndigits=4, exp_mode="engineering")
 >>> print(sform(123456.654321, 0.0034))
 (123.456654321 ± 0.000003400)e+03
 
 >>> from sciform import SciNumUnc
 >>> num = SciNumUnc(123456.654321, 0.0034)
->>> print(f'{num:_!2f}')
+>>> print(f"{num:_!2f}")
 123_456.6543 ± 0.0034
->>> print(f'{num:_!2f()}')
+>>> print(f"{num:_!2f()}")
 123_456.6543(34)
 
 

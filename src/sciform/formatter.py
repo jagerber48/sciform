@@ -28,18 +28,14 @@ class Formatter:
     details about how to view and modify the global default options.
 
     >>> from sciform import Formatter
-    >>> sform = Formatter(exp_mode='engineering',
-    ...                   round_mode='sig_fig',
-    ...                   ndigits=4)
+    >>> sform = Formatter(exp_mode="engineering", round_mode="sig_fig", ndigits=4)
     >>> print(sform(12345.678))
     12.35e+03
 
     The Formatter can be called with two aguments for value/uncertainty
     formatting
 
-    >>> sform = Formatter(exp_mode='engineering',
-    ...                   round_mode='sig_fig',
-    ...             ndigits=2)
+    >>> sform = Formatter(exp_mode="engineering", round_mode="sig_fig", ndigits=2)
     >>> print(sform(12345.678, 3.4))
     (12.3457 ± 0.0034)e+03
     """

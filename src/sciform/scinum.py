@@ -24,7 +24,7 @@ class SciNum:
 
     >>> from sciform import SciNum
     >>> snum = SciNum(123456.654321)
-    >>> print(f'{snum:,._.7f}')
+    >>> print(f"{snum:,._.7f}")
     123,456.654_321_0
     """
 
@@ -53,7 +53,7 @@ class SciNumUnc:
 
     >>> from sciform import SciNumUnc
     >>> snumunc = SciNumUnc(123456.654321, 0.000002)
-    >>> print(f'{snumunc:,._!1f()}')
+    >>> print(f"{snumunc:,._!1f()}")
     123,456.654_321(2)
     """
 

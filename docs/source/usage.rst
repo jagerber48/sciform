@@ -24,16 +24,11 @@ a corresponding formatted string.
 
 >>> from sciform import Formatter
 >>> sform = Formatter(
-...             round_mode='dec_place',
-...             ndigits=6,
-...             upper_separator=' ',
-...             lower_separator=' ')
+...     round_mode="dec_place", ndigits=6, upper_separator=" ", lower_separator=" "
+... )
 >>> print(sform(51413.14159265359))
 51 413.141 593
->>> sform = Formatter(
-...             round_mode='sig_fig',
-...             ndigits=4,
-...             exp_mode='engineering')
+>>> sform = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
 >>> print(sform(123456.78))
 123.5e+03
 
@@ -54,7 +49,7 @@ be formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
 
 >>> from sciform import SciNum
 >>> num = SciNum(123456)
->>> print(f'{num:_!2f}')
+>>> print(f"{num:_!2f}")
 120_000
 
 Value/Uncertainty Formatting
@@ -82,14 +77,14 @@ using the :class:`SciNumUnc` object.
 84.30 ± 0.20
 >>> from sciform import SciNumUnc
 >>> val_unc = SciNumUnc(val, unc)
->>> print(f'{val_unc:!2}')
+>>> print(f"{val_unc:!2}")
 84.30 ± 0.20
 
 Value/uncertainty pairs can also be formatted using a parentheses
 notation in which the uncertainty is displayed in parentheses following
 the value.
 
->>> print(f'{val_unc:!2()}')
+>>> print(f"{val_unc:!2()}")
 84.30(20)
 
 Value/uncertainty pairs are formatted according to the following
@@ -159,10 +154,8 @@ unchanged.
 
 >>> from sciform import set_global_defaults
 >>> set_global_defaults(
-...     fill_mode='0',
-...     exp_mode='engineering_shifted',
-...     ndigits=4,
-...     decimal_separator=',')
+...     fill_mode="0", exp_mode="engineering_shifted", ndigits=4, decimal_separator=","
+... )
 >>> print_global_defaults()
 {'exp_mode': 'engineering_shifted',
  'exp_val': AutoExpVal,
@@ -224,12 +217,13 @@ values.
 
 >>> from sciform import GlobalDefaultsContext, SciNum
 >>> snum = SciNum(0.0123)
->>> print(f'{snum:.2ep}')
+>>> print(f"{snum:.2ep}")
 1.23e-02
 >>> with GlobalDefaultsContext(add_c_prefix=True):
-...     print(f'{snum:.2ep}')
+...     print(f"{snum:.2ep}")
+...
 1.23 c
->>> print(f'{snum:.2ep}')
+>>> print(f"{snum:.2ep}")
 1.23e-02
 
 Note that the :ref:`FSML <fsml>` does not provide complete control over

@@ -27,12 +27,15 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install ruff pytest pytest-cov
+        python -m pip install ruff blackdoc pytest pytest-cov
         python -m pip install -e .
-    - name: Lint with ruff
+    - name: Lint/format with ruff
       run: |
         ruff check .
         ruff format . --check
+    - name: Lint/format docs
+      run: |
+        blackdoc .
     - name: Test with pytest
       run: |
         pytest --cov --doctest-glob="*.rst"
