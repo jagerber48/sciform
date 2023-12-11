@@ -36,7 +36,7 @@ Fixed point notation is standard notation in which a number is displayed
 directly with no extra exponent.
 
 >>> from sciform import Formatter
->>> sform = Formatter(exp_mode='fixed_point')
+>>> sform = Formatter(exp_mode="fixed_point")
 >>> print(sform(123.456))
 123.456
 >>> print(sform(123.456, 0.001))
@@ -51,7 +51,7 @@ Percent mode is similar to fixed point mode.
 For percent mode, the number is multiplied by 100 and a ``%`` symbol is
 appended to the end of the formatted string.
 
->>> sform = Formatter(exp_mode='percent')
+>>> sform = Formatter(exp_mode="percent")
 >>> print(sform(0.12345))
 12.345%
 >>> print(sform(0.12345, 0.001))
@@ -66,7 +66,7 @@ Scientific notation is used to display base-10 decimal numbers.
 In scientific notation, the exponent is uniquely chosen so that the
 mantissa ``m`` satisfies ``1 <= m < 10``.
 
->>> sform = Formatter(exp_mode='scientific')
+>>> sform = Formatter(exp_mode="scientific")
 >>> print(sform(123.456))
 1.23456e+02
 >>> print(sform(123.456, 0.001))
@@ -99,7 +99,7 @@ Here it may be more convenient to display the number with an exponent of
 to an exponent of 8 which would be chosen for standard scientific
 notation.
 
->>> sform = Formatter(exp_mode='engineering')
+>>> sform = Formatter(exp_mode="engineering")
 >>> print(sform(123.456))
 123.456e+00
 >>> print(sform(123.456, 0.001))
@@ -114,7 +114,7 @@ Shifted engineering notation is the same as engineering notation except
 the exponent is chosen so that the mantissa ``m`` satisfies
 ``0.1 <= m < 100``.
 
->>> sform = Formatter(exp_mode='engineering_shifted')
+>>> sform = Formatter(exp_mode="engineering_shifted")
 >>> print(sform(123.456))
 0.123456e+03
 >>> print(sform(123.456, 0.001))
@@ -128,7 +128,7 @@ Binary
 Binary formatting can be chosen to display a number in scientific
 notation in base-2.
 
->>> sform = Formatter(exp_mode='binary')
+>>> sform = Formatter(exp_mode="binary")
 >>> print(sform(256))
 1b+08
 
@@ -146,7 +146,7 @@ exponent is constrained to be a multiple of 10, consistent with the
 IEC binary prefixes.
 The mantissa ``m`` satisfies ``1 <= m < 1024``.
 
->>> sform = Formatter(exp_mode='binary_iec')
+>>> sform = Formatter(exp_mode="binary_iec")
 >>> print(sform(2048))
 2b+10
 
@@ -157,9 +157,7 @@ Fixed Exponent
 
 The user can coerce the exponent for the formatting to a fixed value.
 
->>> sform = Formatter(
-...             exp_mode='scientific',
-...             exp_val=3)
+>>> sform = Formatter(exp_mode="scientific", exp_val=3)
 >>> print(sform(123.456))
 0.123456e+03
 
@@ -197,21 +195,15 @@ Furthermore, it is possible to customize :class:`Formatter`
 objects or the global configuration settings to map additional
 translations, in addition to those provided by default.
 
->>> sform = Formatter(
-...             exp_mode='engineering',
-...             exp_format='prefix')
+>>> sform = Formatter(exp_mode="engineering", exp_format="prefix")
 >>> print(sform(4242.13))
 4.24213 k
 >>> sform = Formatter(
-...             exp_mode='binary_iec',
-...             round_mode='sig_fig',
-...             ndigits=4,
-...             exp_format='prefix')
+...     exp_mode="binary_iec", round_mode="sig_fig", ndigits=4, exp_format="prefix"
+... )
 >>> print(sform(1300))
 1.270 Ki
->>> sform = Formatter(
-...             exp_mode='engineering',
-...             exp_format='parts_per')
+>>> sform = Formatter(exp_mode="engineering", exp_format="parts_per")
 >>> print(sform(12.3e-6))
 12.3 ppm
 
@@ -232,24 +224,20 @@ The entries in these dictionaries overwrite any default translation
 mappings.
 
 >>> sform = Formatter(
-...             exp_mode='scientific',
-...             exp_format='prefix',
-...             extra_si_prefixes={-2: 'c'})
+...     exp_mode="scientific", exp_format="prefix", extra_si_prefixes={-2: "c"}
+... )
 >>> print(sform(3e-2))
 3 c
 
 Passing ``None`` for the value for a corresponding exponent value will
 force that exponent to not be translated.
 
->>> sform = Formatter(
-...             exp_mode='engineering',
-...             exp_format='parts_per')
+>>> sform = Formatter(exp_mode="engineering", exp_format="parts_per")
 >>> print(sform(3e-9))
 3 ppb
 >>> sform = Formatter(
-...             exp_mode='engineering',
-...             exp_format='parts_per',
-...             extra_parts_per_forms={-9: None})
+...     exp_mode="engineering", exp_format="parts_per", extra_parts_per_forms={-9: None}
+... )
 >>> print(sform(3e-9))
 3e-09
 
@@ -264,16 +252,12 @@ engineering notation.
 However, they can be easily be included using the ``add_c_prefix`` and
 ``add_small_si_prefixes`` options.
 
->>> sform = Formatter(
-...             exp_mode='scientific',
-...             exp_format='prefix',
-...             add_c_prefix=True)
+>>> sform = Formatter(exp_mode="scientific", exp_format="prefix", add_c_prefix=True)
 >>> print(sform(0.025))
 2.5 c
 >>> sform = Formatter(
-...             exp_mode='scientific',
-...             exp_format='prefix',
-...             add_small_si_prefixes=True)
+...     exp_mode="scientific", exp_format="prefix", add_small_si_prefixes=True
+... )
 >>> print(sform(25))
 2.5 da
 
@@ -283,9 +267,8 @@ Note that ``ppth`` is not a standard notation for "parts-per-thousand",
 but it is one that the author has found useful.
 
 >>> sform = Formatter(
-...             exp_mode='engineering',
-...             exp_format='parts_per',
-...             add_ppth_form=True)
+...     exp_mode="engineering", exp_format="parts_per", add_ppth_form=True
+... )
 >>> print(sform(12.3e-3))
 12.3 ppth
 
@@ -339,10 +322,7 @@ This demonstrates that we can't determine how many significant figures
 a number was rounded to (or "how many significant figures a number has")
 just by looking at the resulting string.
 
->>> sform = Formatter(
-...             exp_mode='engineering',
-...             round_mode='sig_fig',
-...             ndigits=4)
+>>> sform = Formatter(exp_mode="engineering", round_mode="sig_fig", ndigits=4)
 >>> print(sform(12345.678))
 12.35e+03
 
@@ -362,19 +342,13 @@ E.g. ``ndigits=2`` means to round to two digits past the decimal place,
 the hundredths or 10\ :sup:`-2` place, so that ``12.987`` would be
 rounded to ``12.99``.
 
->>> sform = Formatter(
-...             exp_mode='engineering',
-...             round_mode='dec_place',
-...             ndigits=4)
+>>> sform = Formatter(exp_mode="engineering", round_mode="dec_place", ndigits=4)
 >>> print(sform(12345.678))
 12.3457e+03
 
 It is possible for ``ndigits <= 0``:
 
->>> sform = Formatter(
-...             exp_mode='fixed_point',
-...             round_mode='dec_place',
-...             ndigits=-2)
+>>> sform = Formatter(exp_mode="fixed_point", round_mode="dec_place", ndigits=-2)
 >>> print(sform(12345.678))
 12300
 
@@ -429,14 +403,11 @@ all be used as "lower" separator characters.
 Note that the upper separator character must be different than the
 decimal separator.
 
->>> sform = Formatter(upper_separator=',')
+>>> sform = Formatter(upper_separator=",")
 >>> print(sform(12345678.987))
 12,345,678.987
 
->>> sform = Formatter(
-...             upper_separator=' ',
-...             decimal_separator=',',
-...             lower_separator='_')
+>>> sform = Formatter(upper_separator=" ", decimal_separator=",", lower_separator="_")
 >>> print(sform(1234567.7654321))
 1 234 567,765_432_1
 
@@ -463,13 +434,13 @@ negatives numbers are being presented together, but without explicitly
 including a ``'+'`` symbol.
 Note that ``0`` is always considered positive.
 
->>> sform = Formatter(sign_mode='-')
+>>> sform = Formatter(sign_mode="-")
 >>> print(sform(42))
 42
->>> sform = Formatter(sign_mode='+')
+>>> sform = Formatter(sign_mode="+")
 >>> print(sform(42))
 +42
->>> sform = Formatter(sign_mode=' ')
+>>> sform = Formatter(sign_mode=" ")
 >>> print(sform(42))
  42
 
@@ -478,23 +449,19 @@ Capitalization
 
 The capitalization of the exponent character can be controlled
 
->>> sform = Formatter(
-...             exp_mode='scientific',
-...             capitalize=True)
+>>> sform = Formatter(exp_mode="scientific", capitalize=True)
 >>> print(sform(42))
 4.2E+01
->>> sform = Formatter(
-...             exp_mode='binary',
-...             capitalize=True)
+>>> sform = Formatter(exp_mode="binary", capitalize=True)
 >>> print(sform(1024))
 1B+10
 
 The ``capitalize`` flag also controls the capitalization of ``nan`` and
 ``inf`` formatting:
 
->>> print(sform(float('nan')))
+>>> print(sform(float("nan")))
 NAN
->>> print(sform(float('-inf')))
+>>> print(sform(float("-inf")))
 -INF
 
 .. _left_filling:
@@ -514,9 +481,7 @@ characters should be added.
 E.g. ``top_dig_place=4`` indicates fill characters should be added up
 to the 10\ :sup:`4` (ten-thousands) place.
 
->>> sform = Formatter(
-...             fill_mode='0',
-...             top_dig_place=4)
+>>> sform = Formatter(fill_mode="0", top_dig_place=4)
 >>> print(sform(42))
 00042
 
@@ -528,9 +493,7 @@ Superscript Exponent Format
 The ``superscript_exp`` option can be chosen to present exponents in
 superscript notation as opposed to e.g. ``e+02`` notation.
 
->>> sform = Formatter(
-...             exp_mode='scientific',
-...             superscript_exp=True)
+>>> sform = Formatter(exp_mode="scientific", superscript_exp=True)
 >>> print(sform(789))
 7.89×10²
 
@@ -543,16 +506,11 @@ The ``latex`` option can be chosen to convert strings into latex
 parseable codes.
 
 >>> sform = Formatter(
-...             exp_mode='scientific',
-...             exp_val=-1,
-...             upper_separator='_',
-...             latex=True)
+...     exp_mode="scientific", exp_val=-1, upper_separator="_", latex=True
+... )
 >>> print(sform(12345))
 123\_450\times 10^{-1}
->>> sform = Formatter(
-...             exp_mode='percent',
-...             lower_separator='_',
-...             latex=True)
+>>> sform = Formatter(exp_mode="percent", lower_separator="_", latex=True)
 >>> print(sform(0.12345678, 0.00000255))
 \left(12.345\_678 \pm 0.000\_255\right)\%
 
@@ -583,29 +541,17 @@ However, if ``nan_inf_exp=True`` (default ``False``), then, for
 scientific, percent, engineering, and binary exponent modes, these will
 instead be formatted as, e.g. ``'(nan)e+00'``.
 
->>> sform = Formatter(
-...             exp_mode='scientific',
-...             nan_inf_exp=False,
-...             capitalize=True)
->>> print(sform(float('-inf')))
+>>> sform = Formatter(exp_mode="scientific", nan_inf_exp=False, capitalize=True)
+>>> print(sform(float("-inf")))
 -INF
->>> sform = Formatter(
-...             exp_mode='scientific',
-...             nan_inf_exp=True,
-...             capitalize=True)
->>> print(sform(float('-inf')))
+>>> sform = Formatter(exp_mode="scientific", nan_inf_exp=True, capitalize=True)
+>>> print(sform(float("-inf")))
 (-INF)E+00
->>> sform = Formatter(
-...             exp_mode='percent',
-...             nan_inf_exp=False,
-...             capitalize=True)
->>> print(sform(float('-inf')))
+>>> sform = Formatter(exp_mode="percent", nan_inf_exp=False, capitalize=True)
+>>> print(sform(float("-inf")))
 -INF
->>> sform = Formatter(
-...             exp_mode='percent',
-...             nan_inf_exp=True,
-...             capitalize=True)
->>> print(sform(float('-inf')))
+>>> sform = Formatter(exp_mode="percent", nan_inf_exp=True, capitalize=True)
+>>> print(sform(float("-inf")))
 (-INF)%
 
 .. _val_unc_formatting_options:
@@ -665,10 +611,7 @@ formatting value/uncertainty pairs by using significant figure rounding
 mode with :class:`AutoDigits` precision and the ``pdg_sig_figs`` flag.
 
 >>> from sciform import AutoDigits
->>> sform = Formatter(
-...             round_mode='sig_fig',
-...             ndigits=AutoDigits,
-...             pdg_sig_figs=True)
+>>> sform = Formatter(round_mode="sig_fig", ndigits=AutoDigits, pdg_sig_figs=True)
 >>> print(sform(1, 0.0123))
 1.000 ± 0.012
 >>> print(sform(1, 0.0483))
@@ -703,15 +646,10 @@ option:
 
 Or with other options:
 
->>> sform = Formatter(
-...             ndigits=2,
-...             bracket_unc=True)
+>>> sform = Formatter(ndigits=2, bracket_unc=True)
 >>> print(sform(123.456, 0.789))
 123.46(79)
->>> sform = Formatter(
-...             ndigits=2,
-...             exp_mode='scientific',
-...             bracket_unc=True)
+>>> sform = Formatter(ndigits=2, exp_mode="scientific", bracket_unc=True)
 >>> print(sform(123.456, 0.789))
 (1.2346(79))e+02
 
@@ -721,11 +659,8 @@ around the value/uncertainty pair are omitted.
 This is consistent with
 `BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
 
->>> sform = Formatter(
-...             exp_mode='engineering',
-...             exp_format='prefix',
-...             bracket_unc=True)
->>> print(sform(523.4e-3,  1.2e-3))
+>>> sform = Formatter(exp_mode="engineering", exp_format="prefix", bracket_unc=True)
+>>> print(sform(523.4e-3, 1.2e-3))
 523.4(1.2) m
 
 Remove Separators for Bracket Uncertainty
@@ -747,14 +682,10 @@ parentheses.
 
 :mod:`sciform` allows the user to optionally remove the decimal symbol
 
->>> sform = Formatter(
-...             bracket_unc=True,
-...             bracket_unc_remove_seps=False)
+>>> sform = Formatter(bracket_unc=True, bracket_unc_remove_seps=False)
 >>> print(sform(18.4, 2.1))
 18.4(2.1)
->>> sform = Formatter(
-...             bracket_unc=True,
-...             bracket_unc_remove_seps=True)
+>>> sform = Formatter(bracket_unc=True, bracket_unc_remove_seps=True)
 >>> print(sform(18.4, 2.1))
 18.4(21)
 
@@ -762,19 +693,21 @@ Note that the ``bracket_unc_remove_seps`` removes *all* separator
 symbols from the uncertainty in the brackets.
 
 >>> sform = Formatter(
-...             upper_separator='.',
-...             decimal_separator=',',
-...             lower_separator='_',
-...             bracket_unc=True,
-...             bracket_unc_remove_seps=False)
+...     upper_separator=".",
+...     decimal_separator=",",
+...     lower_separator="_",
+...     bracket_unc=True,
+...     bracket_unc_remove_seps=False,
+... )
 >>> print(sform(987654, 1234.4321))
 987.654,000_0(1.234,432_1)
 >>> sform = Formatter(
-...             upper_separator='.',
-...             decimal_separator=',',
-...             lower_separator='_',
-...             bracket_unc=True,
-...             bracket_unc_remove_seps=True)
+...     upper_separator=".",
+...     decimal_separator=",",
+...     lower_separator="_",
+...     bracket_unc=True,
+...     bracket_unc_remove_seps=True,
+... )
 >>> print(sform(987654, 1234.4321))
 987.654,000_0(12344321)
 
@@ -797,15 +730,9 @@ digit of the value, and (3) the most significant digit of the
 uncertainty.
 This feature is accessed with the ``val_unc_match_widths`` option.
 
->>> sform = Formatter(
-...             fill_mode='0',
-...             top_dig_place=2,
-...             val_unc_match_widths=False)
+>>> sform = Formatter(fill_mode="0", top_dig_place=2, val_unc_match_widths=False)
 >>> print(sform(12345, 1.23))
 12345.00 ± 001.23
->>> sform = Formatter(
-...             fill_mode='0',
-...             top_dig_place=2,
-...             val_unc_match_widths=True)
+>>> sform = Formatter(fill_mode="0", top_dig_place=2, val_unc_match_widths=True)
 >>> print(sform(12345, 1.23))
 12345.00 ± 00001.23

@@ -34,7 +34,7 @@ The :mod:`sciform` format specification mini-language is given by::
 Example:
 
 >>> from sciform import SciNum
->>> print(f'{SciNum(123456.654321):_,_.4}')
+>>> print(f"{SciNum(123456.654321):_,_.4}")
 123_456,654_3
 
 See below for details about how the terms in the FSML correspond to

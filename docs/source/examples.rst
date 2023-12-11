@@ -20,52 +20,43 @@ available formatting options.
 
 >>> from sciform import Formatter
 >>> num = 12345.54321
->>> sform = Formatter(
-...             exp_mode='scientific',
-...             round_mode='sig_fig',
-...             ndigits=4)
+>>> sform = Formatter(exp_mode="scientific", round_mode="sig_fig", ndigits=4)
 >>> print(sform(num))
 1.235e+04
 >>> sform = Formatter(
-...             exp_mode='engineering',
-...             round_mode='dec_place',
-...             ndigits=10,
-...             sign_mode=' ',
-...             superscript_exp=True)
+...     exp_mode="engineering",
+...     round_mode="dec_place",
+...     ndigits=10,
+...     sign_mode=" ",
+...     superscript_exp=True,
+... )
 >>> print(sform(num))
  12.3455432100×10³
 >>> sform = Formatter(
-...             exp_mode='fixed_point',
-...             upper_separator=' ',
-...             decimal_separator=',',
-...             lower_separator='_',
-...             sign_mode='+')
+...     exp_mode="fixed_point",
+...     upper_separator=" ",
+...     decimal_separator=",",
+...     lower_separator="_",
+...     sign_mode="+",
+... )
 >>> print(sform(num))
 +12 345,543_21
 
 >>> num = 0.076543
 >>> sform = Formatter(
-...             exp_mode='scientific',
-...             exp_val=-3,
-...             exp_format='parts_per',
-...             add_ppth_form=True)
+...     exp_mode="scientific", exp_val=-3, exp_format="parts_per", add_ppth_form=True
+... )
 >>> print(sform(num))
 76.543 ppth
 >>> sform = Formatter(
-...             exp_mode='scientific',
-...             exp_val=-2,
-...             exp_format='prefix',
-...             add_c_prefix=True)
+...     exp_mode="scientific", exp_val=-2, exp_format="prefix", add_c_prefix=True
+... )
 >>> print(sform(num))
 7.6543 c
->>> sform = Formatter(
-...             exp_mode='scientific',
-...             exp_val=-6,
-...             exp_format='prefix')
+>>> sform = Formatter(exp_mode="scientific", exp_val=-6, exp_format="prefix")
 >>> print(sform(num))
 76543 μ
->>> sform = Formatter(
-...             exp_mode='percent')
+>>> sform = Formatter(exp_mode="percent")
 >>> print(sform(num))
 7.6543%
 
@@ -75,19 +66,19 @@ available formatting options.
 >>> print(sform(num, unc))
 3141593 ± 1618
 >>> sform = Formatter(
-...             exp_mode='engineering',
-...             exp_format='prefix',
-...             pdg_sig_figs=True,
-...             unc_pm_whitespace=False)
+...     exp_mode="engineering",
+...     exp_format="prefix",
+...     pdg_sig_figs=True,
+...     unc_pm_whitespace=False,
+... )
 >>> print(sform(num, unc))
 (3.1416±0.0016) M
 
 >>> num = 314159.27
 >>> unc = 1618
 >>> sform = Formatter(
-...             exp_mode='engineering_shifted',
-...             pdg_sig_figs=True,
-...             bracket_unc=True)
+...     exp_mode="engineering_shifted", pdg_sig_figs=True, bracket_unc=True
+... )
 >>> print(sform(num, unc))
 (0.3142(16))e+06
 
@@ -105,46 +96,41 @@ instead.
 
 >>> from sciform import SciNum, SciNumUnc, GlobalDefaultsContext
 >>> snum = SciNum(12345.54321)
->>> print(f'{snum:!4e}')
+>>> print(f"{snum:!4e}")
 1.235e+04
->>> print(f'{snum: .10r}')
+>>> print(f"{snum: .10r}")
  12.3455432100e+03
->>> print(f'{snum:+s,_}')
+>>> print(f"{snum:+s,_}")
 +12 345,543_21
 
 >>> snum = SciNum(0.076543)
->>> with GlobalDefaultsContext(
-...         exp_format='parts_per',
-...         add_ppth_form=True):
-...     print(f'{snum:ex-3}')
+>>> with GlobalDefaultsContext(exp_format="parts_per", add_ppth_form=True):
+...     print(f"{snum:ex-3}")
+...
 76.543 ppth
->>> with GlobalDefaultsContext(
-...             exp_format='prefix',
-...             add_c_prefix=True):
-...     print(f'{snum:ex-2}')
+>>> with GlobalDefaultsContext(exp_format="prefix", add_c_prefix=True):
+...     print(f"{snum:ex-2}")
+...
 7.6543 c
->>> with GlobalDefaultsContext(
-...             exp_mode='scientific',
-...             exp_val=-6,
-...             exp_format='prefix'):
-...     print(f'{snum:ex-6}')
+>>> with GlobalDefaultsContext(exp_mode="scientific", exp_val=-6, exp_format="prefix"):
+...     print(f"{snum:ex-6}")
+...
 76543 μ
->>> print(f'{snum:%}')
+>>> print(f"{snum:%}")
 7.6543%
 
 >>> num_unc = SciNumUnc(3141592.7, 1618)
->>> print(f'{num_unc}')
+>>> print(f"{num_unc}")
 3141593 ± 1618
->>> with GlobalDefaultsContext(
-...             pdg_sig_figs=True,
-...             unc_pm_whitespace=False):
-...     print(f'{num_unc:rp}')
+>>> with GlobalDefaultsContext(pdg_sig_figs=True, unc_pm_whitespace=False):
+...     print(f"{num_unc:rp}")
+...
 (3.1416±0.0016) M
 
 >>> num_unc = SciNumUnc(314159.27, 1618)
->>> with GlobalDefaultsContext(
-...             pdg_sig_figs=True):
-...     print(f'{num_unc:#r()}')
+>>> with GlobalDefaultsContext(pdg_sig_figs=True):
+...     print(f"{num_unc:#r()}")
+...
 (0.3142(16))e+06
 
 Plotting and Tabulating Fit Data

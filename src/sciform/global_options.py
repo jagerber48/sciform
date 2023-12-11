@@ -1,5 +1,7 @@
-from sciform.rendered_options import RenderedOptions
+"""Global Options."""
+
 from sciform import modes
+from sciform.rendered_options import RenderedOptions
 
 PKG_DEFAULT_OPTIONS = RenderedOptions(
     exp_mode=modes.ExpMode.FIXEDPOINT,
@@ -13,9 +15,9 @@ PKG_DEFAULT_OPTIONS = RenderedOptions(
     fill_mode=modes.FillMode.SPACE,
     top_dig_place=0,
     exp_format=modes.ExpFormat.STANDARD,
-    extra_si_prefixes=dict(),
-    extra_iec_prefixes=dict(),
-    extra_parts_per_forms=dict(),
+    extra_si_prefixes={},
+    extra_iec_prefixes={},
+    extra_parts_per_forms={},
     capitalize=False,
     superscript_exp=False,
     latex=False,
@@ -24,7 +26,7 @@ PKG_DEFAULT_OPTIONS = RenderedOptions(
     pdg_sig_figs=False,
     val_unc_match_widths=False,
     bracket_unc_remove_seps=False,
-    unc_pm_whitespace=True
+    unc_pm_whitespace=True,
 )
 
 

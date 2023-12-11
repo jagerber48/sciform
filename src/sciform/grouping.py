@@ -1,71 +1,70 @@
-from enum import Enum
+"""Add separators to numerical strings."""
+
+import re
 
 
-class GroupingDirection(Enum):
-    FORWARD = 'forward'
-    BACKWARD = 'backward'
+def add_group_chars(
+    num_str: str,
+    group_char: str,
+    *,
+    reverse: bool = False,
+    group_size: int = 3,
+) -> str:
+    """Add grouping characters to a string of numbers."""
+    # TODO: This function would be easier if it doesn't need to handle  leading
+    #   whitespaces. This could be accomplished by left stripping leading whitespaces
+    #   in add_separators() and adding them back in at the end of add_separators().
+    if reverse:
+        num_str = num_str[::-1]
 
-
-def add_group_chars_between_numbers(string, group_char='_',
-                                    direction=GroupingDirection.FORWARD,
-                                    group_size=3):
-    num_chars = len(string)
-    result_str = ''
-
+    result_str = ""
     group_counter = 0
+    for digit in num_str:
+        result_str += digit
+        group_counter += 1
+        if group_counter == group_size:
+            result_str += group_char
+            group_counter = 0
+    result_str = result_str.rstrip(group_char)
 
-    if direction is GroupingDirection.FORWARD:
-        for num in range(num_chars):
-            char = string[num]
-            result_str = result_str + char
-
-            group_counter += 1
-            if group_counter == group_size and char.isnumeric():
-                if num + 1 < num_chars:
-                    if string[num+1].isnumeric():
-                        result_str = result_str + group_char
-                        group_counter = 0
-    elif direction == GroupingDirection.BACKWARD:
-        for num in range(num_chars):
-            char = string[-(num+1)]
-            result_str = char + result_str
-
-            group_counter += 1
-            if group_counter == group_size and char.isnumeric():
-                if num + 2 <= num_chars:
-                    if string[-(num+2)].isnumeric():
-                        result_str = group_char + result_str
-                        group_counter = 0
-    else:
-        raise ValueError(f'Invalid grouping direction: {direction}')
+    if reverse:
+        result_str = result_str[::-1]
 
     return result_str
 
 
-def add_separators(num_str,
-                   upper_separator='',
-                   decimal_separator='.',
-                   lower_separator='',
-                   group_size=3):
-    dec_split = num_str.split('.')
-    upper_string = dec_split[0]
-    if len(dec_split) == 1:
-        lower_string = ''
-    elif len(dec_split) == 2:
-        lower_string = dec_split[1]
-    else:
-        raise ValueError
+def add_separators(
+    num_str: str,
+    upper_separator: str = "",
+    decimal_separator: str = ".",
+    lower_separator: str = "",
+    group_size: int = 3,
+) -> str:
+    """Add separators to a string of numbers."""
+    match = re.match(
+        r"(?P<sign>[+-])?(?P<spaces>\s*)(?P<integer>\d+)(\.(?P<fraction>\d+))?",
+        num_str,
+    )
+    sign = match.group("sign") or ""
+    spaces = match.group("spaces")
+    integer_str = match.group("integer")
+    fraction_str = match.group("fraction")
 
-    upper_grouped_string = add_group_chars_between_numbers(
-        upper_string, upper_separator, GroupingDirection.BACKWARD,
-        group_size)
-    lower_grouped_string = add_group_chars_between_numbers(
-        lower_string, lower_separator, GroupingDirection.FORWARD,
-        group_size)
-    if len(lower_string) > 0:
-        grouped_str = (f'{upper_grouped_string}'
-                       f'{decimal_separator}'
-                       f'{lower_grouped_string}')
-    else:
-        grouped_str = upper_grouped_string
-    return grouped_str
+    integer_seps_str = add_group_chars(
+        integer_str,
+        upper_separator,
+        reverse=True,
+        group_size=group_size,
+    )
+    result_str = f"{sign}{spaces}{integer_seps_str}"
+
+    if fraction_str is not None:
+        fraction_seps_str = add_group_chars(
+            fraction_str,
+            lower_separator,
+            reverse=False,
+            group_size=group_size,
+        )
+        result_str += f"{decimal_separator}{fraction_seps_str}"
+
+    return result_str
