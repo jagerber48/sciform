@@ -33,22 +33,22 @@ def parse_exp_mode(
     """Pase the exp_mode."""
     if exp_mode is not None:
         capitalize = exp_mode.isupper()
-        if exp_mode in ['f', 'F']:
-            exp_mode = 'fixed_point'
-        elif exp_mode == '%':
-            exp_mode = 'percent'
-        elif exp_mode in ['e', 'E']:
-            exp_mode = 'scientific'
-        elif exp_mode in ['r', 'R']:
+        if exp_mode in ["f", "F"]:
+            exp_mode = "fixed_point"
+        elif exp_mode == "%":
+            exp_mode = "percent"
+        elif exp_mode in ["e", "E"]:
+            exp_mode = "scientific"
+        elif exp_mode in ["r", "R"]:
             if alternate_mode:
-                exp_mode = 'engineering_shifted'
+                exp_mode = "engineering_shifted"
             else:
-                exp_mode = 'engineering'
-        elif exp_mode in ['b', 'B']:
+                exp_mode = "engineering"
+        elif exp_mode in ["b", "B"]:
             if alternate_mode:
-                exp_mode = 'binary_iec'
+                exp_mode = "binary_iec"
             else:
-                exp_mode = 'binary'
+                exp_mode = "binary"
     else:
         capitalize = None
     return exp_mode, capitalize
@@ -61,13 +61,13 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
         msg = f"Invalid format specifier: '{fmt_spec}'"
         raise ValueError(msg)
 
-    fill_mode = match.group('fill_mode')
-    sign_mode = match.group('sign_mode')
+    fill_mode = match.group("fill_mode")
+    sign_mode = match.group("sign_mode")
 
-    alternate_mode = match.group('alternate_mode')
+    alternate_mode = match.group("alternate_mode")
     alternate_mode = alternate_mode is not None
 
-    top_dig_place = match.group('top_dig_place')
+    top_dig_place = match.group("top_dig_place")
     if top_dig_place is not None:
         top_dig_place = int(top_dig_place)
         val_unc_match_widths = True
@@ -75,46 +75,46 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
         top_dig_place = None
         val_unc_match_widths = None
 
-    upper_separator = match.group('upper_separator')
+    upper_separator = match.group("upper_separator")
     if upper_separator is not None:
-        upper_separator = upper_separator.replace('n', '')
-        upper_separator = upper_separator.replace('s', ' ')
+        upper_separator = upper_separator.replace("n", "")
+        upper_separator = upper_separator.replace("s", " ")
 
-    decimal_separator = match.group('decimal_separator')
+    decimal_separator = match.group("decimal_separator")
 
-    lower_separator = match.group('lower_separator')
+    lower_separator = match.group("lower_separator")
     if lower_separator is not None:
-        lower_separator = lower_separator.replace('n', '')
-        lower_separator = lower_separator.replace('s', ' ')
+        lower_separator = lower_separator.replace("n", "")
+        lower_separator = lower_separator.replace("s", " ")
 
-    round_mode_mapping = {'!': 'sig_fig', '.': 'dec_place', None: None}
+    round_mode_mapping = {"!": "sig_fig", ".": "dec_place", None: None}
 
-    round_mode_flag = match.group('round_mode')
+    round_mode_flag = match.group("round_mode")
     round_mode = round_mode_mapping[round_mode_flag]
 
-    ndigits = match.group('ndigits')
+    ndigits = match.group("ndigits")
     if ndigits is not None:
         ndigits = int(ndigits)
     else:
         ndigits = None
 
-    exp_mode = match.group('exp_mode')
+    exp_mode = match.group("exp_mode")
     exp_mode, capitalize = parse_exp_mode(
         exp_mode,
         alternate_mode=alternate_mode,
     )
 
-    exp_val = match.group('exp_val')
+    exp_val = match.group("exp_val")
     if exp_val is not None:
         exp_val = int(exp_val)
 
-    prefix_exp = match.group('prefix_mode')
+    prefix_exp = match.group("prefix_mode")
     if prefix_exp is not None:
-        exp_format = 'prefix'
+        exp_format = "prefix"
     else:
         exp_format = None
 
-    bracket_unc = match.group('bracket_unc')
+    bracket_unc = match.group("bracket_unc")
     if bracket_unc is not None:
         bracket_unc = True
     else:

@@ -50,40 +50,40 @@ class AutoDigits(metaclass=SentinelMeta):
     """
 
 
-UserFillMode = Literal[' ', '0']
+UserFillMode = Literal[" ", "0"]
 
 
 class FillMode(str, Enum):
     """Fill mode Enum."""
 
-    SPACE = ' '
-    ZERO = '0'
+    SPACE = " "
+    ZERO = "0"
 
 
-UserSignMode = Literal['-', '+', ' ']
+UserSignMode = Literal["-", "+", " "]
 
 
 class SignMode(str, Enum):
     """Sign mode Enum."""
 
-    NEGATIVE = '-'
-    ALWAYS = '+'
-    SPACE = ' '
+    NEGATIVE = "-"
+    ALWAYS = "+"
+    SPACE = " "
 
 
-UserUpperSeparators = Literal['', ',', '.', ' ', '_']
-UserDecimalSeparators = Literal['.', ',']
-UserLowerSeparators = Literal['', ' ', '_']
+UserUpperSeparators = Literal["", ",", ".", " ", "_"]
+UserDecimalSeparators = Literal[".", ","]
+UserLowerSeparators = Literal["", " ", "_"]
 
 
 class Separator(str, Enum):
     """Separator type Enum."""
 
-    NONE = ''
-    COMMA = ','
-    POINT = '.'
-    UNDERSCORE = '_'
-    SPACE = ' '
+    NONE = ""
+    COMMA = ","
+    POINT = "."
+    UNDERSCORE = "_"
+    SPACE = " "
 
 
 UpperSeparators = Literal[
@@ -97,58 +97,58 @@ DecimalSeparators = Literal[Separator.POINT, Separator.COMMA]
 LowerSeparators = Literal[Separator.NONE, Separator.UNDERSCORE, Separator.SPACE]
 
 
-UserRoundMode = Literal['sig_fig', 'dec_place']
+UserRoundMode = Literal["sig_fig", "dec_place"]
 
 
 class RoundMode(str, Enum):
     """Round mode Enum."""
 
-    SIG_FIG = 'sig_fig'
-    DEC_PLACE = 'dec_place'
+    SIG_FIG = "sig_fig"
+    DEC_PLACE = "dec_place"
 
 
 UserExpMode = Literal[
-    'fixed_point',
-    'percent',
-    'scientific',
-    'engineering',
-    'engineering_shifted',
-    'binary',
-    'binary_iec',
+    "fixed_point",
+    "percent",
+    "scientific",
+    "engineering",
+    "engineering_shifted",
+    "binary",
+    "binary_iec",
 ]
 
 
 class ExpMode(str, Enum):
     """Exponent mode Enum."""
 
-    FIXEDPOINT = 'fixed_point'
-    PERCENT = 'percent'
-    SCIENTIFIC = 'scientific'
-    ENGINEERING = 'engineering'
-    ENGINEERING_SHIFTED = 'engineering_shifted'
-    BINARY = 'binary'
-    BINARY_IEC = 'binary_iec'
+    FIXEDPOINT = "fixed_point"
+    PERCENT = "percent"
+    SCIENTIFIC = "scientific"
+    ENGINEERING = "engineering"
+    ENGINEERING_SHIFTED = "engineering_shifted"
+    BINARY = "binary"
+    BINARY_IEC = "binary_iec"
 
 
-UserExpFormat = Literal['standard', 'prefix', 'parts_per']
+UserExpFormat = Literal["standard", "prefix", "parts_per"]
 
 
 class ExpFormat(str, Enum):
     """Exponent format Enum."""
 
-    STANDARD = 'standard'
-    PREFIX = 'prefix'
-    PARTS_PER = 'parts_per'
+    STANDARD = "standard"
+    PREFIX = "prefix"
+    PARTS_PER = "parts_per"
 
 
 class ExpDriver(Enum):
     """Exponent drive Enum. Used for value/uncertainty formatting."""
 
-    VAL = 'val'
-    UNC = 'unc'
+    VAL = "val"
+    UNC = "unc"
 
 
-T = TypeVar('T', bound=Enum)
+T = TypeVar("T", bound=Enum)
 
 
 def mode_str_to_enum(mode_str: str, enum: type[T]) -> T:

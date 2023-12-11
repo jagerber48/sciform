@@ -54,7 +54,7 @@ def get_fixed_exp(
 ) -> Literal[0]:
     """Get the exponent for fixed or percent format modes."""
     if input_exp is not AutoExpVal and input_exp != 0:
-        msg = 'Cannot set non-zero exponent in fixed point or percent exponent mode.'
+        msg = "Cannot set non-zero exponent in fixed point or percent exponent mode."
         raise ValueError(msg)
     return 0
 
@@ -80,8 +80,8 @@ def get_engineering_exp(
     else:
         if input_exp % 3 != 0:
             msg = (
-                f'Exponent must be an integer multiple of 3 in engineering modes, not '
-                f'{input_exp}.'
+                f"Exponent must be an integer multiple of 3 in engineering modes, not "
+                f"{input_exp}."
             )
             raise ValueError(msg)
         exp_val = input_exp
@@ -102,8 +102,8 @@ def get_binary_exp(
     else:
         if iec and input_exp % 10 != 0:
             msg = (
-                f'Exponent must be an integer multiple of 10 in binary IEC mode, not '
-                f'{input_exp}.'
+                f"Exponent must be an integer multiple of 10 in binary IEC mode, not "
+                f"{input_exp}."
             )
             raise ValueError(msg)
         exp_val = input_exp
@@ -135,7 +135,7 @@ def get_mantissa_exp_base(
         elif exp_mode is ExpMode.BINARY_IEC:
             exp = get_binary_exp(num, input_exp, iec=True)
         else:
-            msg = f'Unhandled exponent mode {exp_mode}.'
+            msg = f"Unhandled exponent mode {exp_mode}."
             raise ValueError(msg)
         mantissa = num * Decimal(base) ** Decimal(-exp)
     mantissa = mantissa.normalize()
@@ -144,18 +144,18 @@ def get_mantissa_exp_base(
 
 def get_standard_exp_str(base: int, exp_val: int, *, capitalize: bool = False) -> str:
     """Get standard (eg. 'e+02') exponent string."""
-    base_exp_symbol_dict = {10: 'e', 2: 'b'}
+    base_exp_symbol_dict = {10: "e", 2: "b"}
     exp_symbol = base_exp_symbol_dict[base]
     if capitalize:
         exp_symbol = exp_symbol.capitalize()
-    return f'{exp_symbol}{exp_val:+03d}'
+    return f"{exp_symbol}{exp_val:+03d}"
 
 
 def get_superscript_exp_str(base: int, exp_val: int) -> str:
     """Get superscript (e.g. '×10⁺²') exponent string."""  # noqa: RUF002
-    sup_trans = str.maketrans('+-0123456789', '⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹')
-    exp_val_str = f'{exp_val}'.translate(sup_trans)
-    return f'×{base}{exp_val_str}'
+    sup_trans = str.maketrans("+-0123456789", "⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹")
+    exp_val_str = f"{exp_val}".translate(sup_trans)
+    return f"×{base}{exp_val_str}"
 
 
 def get_prefix_dict(
@@ -174,13 +174,13 @@ def get_prefix_dict(
             prefix_dict = iec_val_to_prefix_dict.copy()
             prefix_dict.update(extra_iec_prefixes)
         else:
-            msg = f'Unhandled base {base}'
+            msg = f"Unhandled base {base}"
             raise ValueError(msg)
     elif exp_format is ExpFormat.PARTS_PER:
         prefix_dict = pp_val_to_prefix_dict.copy()
         prefix_dict.update(extra_parts_per_forms)
     else:
-        msg = f'Unhandled ExpFormat, {exp_format}.'
+        msg = f"Unhandled ExpFormat, {exp_format}."
         raise ValueError(msg)
 
     return prefix_dict
@@ -201,9 +201,9 @@ def get_exp_str(  # noqa: PLR0913
 ) -> str:
     """Get formatting exponent string."""
     if exp_mode is ExpMode.FIXEDPOINT:
-        return ''
+        return ""
     if exp_mode is ExpMode.PERCENT:
-        return '%'
+        return "%"
 
     base = 2 if exp_mode is ExpMode.BINARY or exp_mode is ExpMode.BINARY_IEC else 10
     base = cast(Literal[10, 2], base)
@@ -217,16 +217,16 @@ def get_exp_str(  # noqa: PLR0913
             extra_parts_per_forms,
         )
         if exp_val in text_exp_dict and text_exp_dict[exp_val] is not None:
-            exp_str = f' {text_exp_dict[exp_val]}'
-            exp_str = exp_str.rstrip(' ')
+            exp_str = f" {text_exp_dict[exp_val]}"
+            exp_str = exp_str.rstrip(" ")
             if latex:
                 if latex_trim_whitespace:
-                    exp_str = exp_str.lstrip(' ')
-                exp_str = rf'\text{{{exp_str}}}'
+                    exp_str = exp_str.lstrip(" ")
+                exp_str = rf"\text{{{exp_str}}}"
             return exp_str
 
     if latex:
-        return rf'\times {base}^{{{exp_val:+}}}'
+        return rf"\times {base}^{{{exp_val:+}}}"
     if superscript:
         return get_superscript_exp_str(base, exp_val)
 
@@ -246,11 +246,11 @@ def parse_standard_exp_str(exp_str: str) -> tuple[int, int]:
         re.VERBOSE,
     )
 
-    exp_symbol = match.group('exp_symbol')
-    symbol_to_base_dict = {'e': 10, 'b': 2}
+    exp_symbol = match.group("exp_symbol")
+    symbol_to_base_dict = {"e": 10, "b": 2}
     base = symbol_to_base_dict[exp_symbol.lower()]
 
-    exp_val_str = match.group('exp_val')
+    exp_val_str = match.group("exp_val")
     exp_val = int(exp_val_str)
 
     return base, exp_val
@@ -259,15 +259,15 @@ def parse_standard_exp_str(exp_str: str) -> tuple[int, int]:
 def get_sign_str(num: Decimal, sign_mode: SignMode) -> str:
     """Get the format sign string."""
     if num < 0:
-        sign_str = '-'
+        sign_str = "-"
     elif sign_mode is SignMode.ALWAYS:
-        sign_str = '+'
+        sign_str = "+"
     elif sign_mode is SignMode.SPACE:
-        sign_str = ' '
+        sign_str = " "
     elif sign_mode is SignMode.NEGATIVE:
-        sign_str = ''
+        sign_str = ""
     else:
-        msg = f'Invalid sign mode {sign_mode}.'
+        msg = f"Invalid sign mode {sign_mode}."
         raise ValueError(msg)
     return sign_str
 
@@ -328,7 +328,7 @@ def get_round_digit(
     elif round_mode is RoundMode.DEC_PLACE:
         round_digit = get_bottom_digit(num) if ndigits is AutoDigits else -ndigits
     else:
-        msg = f'Unhandled round mode: {round_mode}.'
+        msg = f"Unhandled round mode: {round_mode}."
         raise ValueError(msg)
     return round_digit
 
@@ -339,7 +339,7 @@ def get_fill_str(fill_char: str, top_digit: int, top_padded_digit: int) -> str:
         pad_len = top_padded_digit - max(top_digit, 0)
         pad_str = fill_char * pad_len
     else:
-        pad_str = ''
+        pad_str = ""
     return pad_str
 
 
@@ -352,27 +352,27 @@ def format_num_by_top_bottom_dig(
 ) -> str:
     """Format a number according to specified top and bottom digit places."""
     print_prec = max(0, -target_bottom_digit)
-    abs_mantissa_str = f'{abs(num):.{print_prec}f}'
+    abs_mantissa_str = f"{abs(num):.{print_prec}f}"
 
     sign_str = get_sign_str(num, sign_mode)
 
     num_top_digit = get_top_digit(num)
     fill_str = get_fill_str(fill_char, num_top_digit, target_top_digit)
-    return f'{sign_str}{fill_str}{abs_mantissa_str}'
+    return f"{sign_str}{fill_str}{abs_mantissa_str}"
 
 
 def latex_translate(input_str: str) -> str:
     """Translate elements of a string for Latex compatibility."""
     result_str = input_str
     replacements = (
-        ('(', r'\left('),
-        (')', r'\right)'),
-        ('%', r'\%'),
-        ('_', r'\_'),
-        ('nan', r'\text{nan}'),
-        ('NAN', r'\text{NAN}'),
-        ('inf', r'\text{inf}'),
-        ('INF', r'\text{INF}'),
+        ("(", r"\left("),
+        (")", r"\right)"),
+        ("%", r"\%"),
+        ("_", r"\_"),
+        ("nan", r"\text{nan}"),
+        ("NAN", r"\text{NAN}"),
+        ("inf", r"\text{inf}"),
+        ("INF", r"\text{INF}"),
     )
     for old_chars, new_chars in replacements:
         result_str = result_str.replace(old_chars, new_chars)
@@ -472,20 +472,20 @@ def get_val_unc_mantissa_exp_strs(
     """Break val/unc mantissa/exp strings into mantissa strings and an exp string."""
     # Optional parentheses needed to handle (nan)e+00 case
     mantissa_exp_pattern = re.compile(
-        r'^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$',
+        r"^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$",
     )
     val_match = mantissa_exp_pattern.match(val_mantissa_exp_str)
-    val_mantissa_str = val_match.group('mantissa_str')
+    val_mantissa_str = val_match.group("mantissa_str")
 
     unc_match = mantissa_exp_pattern.match(unc_mantissa_exp_str)
-    unc_mantissa_str = unc_match.group('mantissa_str')
+    unc_mantissa_str = unc_match.group("mantissa_str")
 
     if exp_driver_type is ExpDriver.VAL:
-        exp_str = val_match.group('exp_str')
+        exp_str = val_match.group("exp_str")
     elif exp_driver_type is ExpDriver.UNC:
-        exp_str = unc_match.group('exp_str')
+        exp_str = unc_match.group("exp_str")
     else:
-        msg = f'Invalid exp_driver_type: {exp_driver_type}.'
+        msg = f"Invalid exp_driver_type: {exp_driver_type}."
         raise ValueError(msg)
 
     return val_mantissa_str, unc_mantissa_str, exp_str
@@ -505,21 +505,21 @@ def construct_val_unc_str(  # noqa: PLR0913
 ) -> str:
     """Construct the value/uncertainty part of the formatted string."""
     if not bracket_unc:
-        pm_symb = r'\pm' if latex else '±'
+        pm_symb = r"\pm" if latex else "±"
         if pm_whitespace:
-            pm_symb = f' {pm_symb} '
-        val_unc_str = f'{val_mantissa_str}{pm_symb}{unc_mantissa_str}'
+            pm_symb = f" {pm_symb} "
+        val_unc_str = f"{val_mantissa_str}{pm_symb}{unc_mantissa_str}"
     else:
         if unc_mantissa.is_finite() and val_mantissa.is_finite():
             if unc_mantissa == 0:
-                unc_mantissa_str = '0'
+                unc_mantissa_str = "0"
             elif unc_mantissa < abs(val_mantissa):
-                unc_mantissa_str = unc_mantissa_str.lstrip('0.,_ ')
+                unc_mantissa_str = unc_mantissa_str.lstrip("0.,_ ")
         if bracket_unc_remove_seps:
             for separator in Separator:
                 if separator == decimal_separator:
                     continue
-                unc_mantissa_str = unc_mantissa_str.replace(separator, '')
+                unc_mantissa_str = unc_mantissa_str.replace(separator, "")
                 # TODO: bracket_unc_remove_seps unit test in tests, not just doctest.
             if unc_mantissa < abs(val_mantissa):
                 # TODO: I think this raises an error if bracket_unc=True but either
@@ -527,9 +527,9 @@ def construct_val_unc_str(  # noqa: PLR0913
                 # Only removed "embedded" decimal symbol for unc < val
                 unc_mantissa_str = unc_mantissa_str.replace(
                     decimal_separator,
-                    '',
+                    "",
                 )
-        val_unc_str = f'{val_mantissa_str}({unc_mantissa_str})'
+        val_unc_str = f"{val_mantissa_str}({unc_mantissa_str})"
     return val_unc_str
 
 
@@ -568,9 +568,9 @@ def construct_val_unc_exp_str(  # noqa: PLR0913
     "1234 ± 12" will be formatted with parentheses as "(1234 ± 12) k" or
     "(1234 ± 12)e+03"
     """
-    if bracket_unc and not re.match(r'^[eEbB][+-]\d+$', exp_str):
-        val_unc_exp_str = f'{val_unc_str}{exp_str}'
+    if bracket_unc and not re.match(r"^[eEbB][+-]\d+$", exp_str):
+        val_unc_exp_str = f"{val_unc_str}{exp_str}"
     else:
-        val_unc_exp_str = f'({val_unc_str}){exp_str}'
+        val_unc_exp_str = f"({val_unc_str}){exp_str}"
 
     return val_unc_exp_str

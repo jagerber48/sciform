@@ -37,7 +37,7 @@ class SciNum:
         return format_num(self.value, rendered_options)
 
     def __repr__(self: SciNum) -> str:
-        return f'{self.__class__.__name__}({self.value})'
+        return f"{self.__class__.__name__}({self.value})"
 
 
 class SciNumUnc:
@@ -67,4 +67,4 @@ class SciNumUnc:
         return format_val_unc(self.value, self.uncertainty, rendered_options)
 
     def __repr__(self: SciNumUnc) -> str:
-        return f'{self.__class__.__name__}({self.value}, {self.uncertainty})'
+        return f"{self.__class__.__name__}({self.value}, {self.uncertainty})"

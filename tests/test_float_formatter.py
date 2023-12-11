@@ -23,8 +23,8 @@ class TestFormatting(unittest.TestCase):
                 789,
                 [
                     (
-                        Formatter(exp_mode='scientific', superscript_exp=True),
-                        '7.89×10²',
+                        Formatter(exp_mode="scientific", superscript_exp=True),
+                        "7.89×10²",
                     ),
                 ],
             ),
@@ -34,18 +34,18 @@ class TestFormatting(unittest.TestCase):
                 [
                     (
                         Formatter(
-                            exp_mode='scientific',
-                            exp_format='prefix',
+                            exp_mode="scientific",
+                            exp_format="prefix",
                             superscript_exp=True,
                         ),
-                        '7.89×10²',
+                        "7.89×10²",
                     ),
                 ],
             ),
             (
                 1024,
                 [
-                    (Formatter(exp_mode='binary', superscript_exp=True), '1×2¹⁰'),
+                    (Formatter(exp_mode="binary", superscript_exp=True), "1×2¹⁰"),
                 ],
             ),
         ]
@@ -59,21 +59,21 @@ class TestFormatting(unittest.TestCase):
                 [
                     (
                         Formatter(
-                            upper_separator='_',
-                            lower_separator='_',
-                            fill_mode='0',
+                            upper_separator="_",
+                            lower_separator="_",
+                            fill_mode="0",
                             top_dig_place=14,
                         ),
-                        '000_000_123_456_789.654_321',
+                        "000_000_123_456_789.654_321",
                     ),
                     (
                         Formatter(
-                            upper_separator='_',
-                            lower_separator='_',
-                            fill_mode=' ',
+                            upper_separator="_",
+                            lower_separator="_",
+                            fill_mode=" ",
                             top_dig_place=14,
                         ),
-                        '      123_456_789.654_321',
+                        "      123_456_789.654_321",
                     ),
                 ],
             ),
@@ -82,21 +82,21 @@ class TestFormatting(unittest.TestCase):
                 [
                     (
                         Formatter(
-                            upper_separator='_',
-                            lower_separator='_',
-                            fill_mode='0',
+                            upper_separator="_",
+                            lower_separator="_",
+                            fill_mode="0",
                             top_dig_place=14,
                         ),
-                        '000_000_004_567_899.765_432_1',
+                        "000_000_004_567_899.765_432_1",
                     ),
                     (
                         Formatter(
-                            upper_separator='_',
-                            lower_separator='_',
-                            fill_mode=' ',
+                            upper_separator="_",
+                            lower_separator="_",
+                            fill_mode=" ",
                             top_dig_place=14,
                         ),
-                        '        4_567_899.765_432_1',
+                        "        4_567_899.765_432_1",
                     ),
                 ],
             ),
@@ -110,17 +110,17 @@ class TestFormatting(unittest.TestCase):
                 789,
                 [
                     (
-                        Formatter(exp_mode='scientific', latex=True),
-                        r'7.89\times 10^{+2}',
+                        Formatter(exp_mode="scientific", latex=True),
+                        r"7.89\times 10^{+2}",
                     ),
                     # Latex mode takes precedence over superscript_exp
                     (
                         Formatter(
-                            exp_mode='scientific',
+                            exp_mode="scientific",
                             latex=True,
                             superscript_exp=True,
                         ),
-                        r'7.89\times 10^{+2}',
+                        r"7.89\times 10^{+2}",
                     ),
                 ],
             ),
@@ -129,21 +129,21 @@ class TestFormatting(unittest.TestCase):
                 [
                     (
                         Formatter(
-                            exp_mode='scientific',
+                            exp_mode="scientific",
                             exp_val=-1,
-                            upper_separator='_',
+                            upper_separator="_",
                             latex=True,
                         ),
-                        r'123\_450\times 10^{-1}',
+                        r"123\_450\times 10^{-1}",
                     ),
                     (
                         Formatter(
-                            exp_mode='scientific',
+                            exp_mode="scientific",
                             exp_val=3,
-                            exp_format='prefix',
+                            exp_format="prefix",
                             latex=True,
                         ),
-                        r'12.345\text{ k}',
+                        r"12.345\text{ k}",
                     ),
                 ],
             ),
@@ -151,8 +151,8 @@ class TestFormatting(unittest.TestCase):
                 1024,
                 [
                     (
-                        Formatter(exp_mode='binary', exp_val=8, latex=True),
-                        r'4\times 2^{+8}',
+                        Formatter(exp_mode="binary", exp_val=8, latex=True),
+                        r"4\times 2^{+8}",
                     ),
                 ],
             ),
@@ -163,14 +163,14 @@ class TestFormatting(unittest.TestCase):
     def test_nan(self):
         cases_list = [
             (
-                float('nan'),
+                float("nan"),
                 [
-                    (Formatter(exp_mode='percent'), 'nan'),
-                    (Formatter(exp_mode='percent', nan_inf_exp=True), '(nan)%'),
-                    (Formatter(exp_mode='percent', latex=True), r'\text{nan}'),
+                    (Formatter(exp_mode="percent"), "nan"),
+                    (Formatter(exp_mode="percent", nan_inf_exp=True), "(nan)%"),
+                    (Formatter(exp_mode="percent", latex=True), r"\text{nan}"),
                     (
-                        Formatter(exp_mode='percent', latex=True, nan_inf_exp=True),
-                        r'\left(\text{nan}\right)\%',
+                        Formatter(exp_mode="percent", latex=True, nan_inf_exp=True),
+                        r"\left(\text{nan}\right)\%",
                     ),
                 ],
             ),
@@ -185,28 +185,28 @@ class TestFormatting(unittest.TestCase):
                 [
                     (
                         Formatter(
-                            exp_mode='scientific',
+                            exp_mode="scientific",
                             exp_val=-3,
-                            exp_format='parts_per',
+                            exp_format="parts_per",
                             add_ppth_form=True,
                         ),
-                        '123 ppth',
+                        "123 ppth",
                     ),
                     (
                         Formatter(
-                            exp_mode='scientific',
+                            exp_mode="scientific",
                             exp_val=-6,
-                            exp_format='parts_per',
+                            exp_format="parts_per",
                         ),
-                        '123000 ppm',
+                        "123000 ppm",
                     ),
                     (
                         Formatter(
-                            exp_mode='scientific',
+                            exp_mode="scientific",
                             exp_val=-2,
-                            exp_format='parts_per',
+                            exp_format="parts_per",
                         ),
-                        '12.3e-02',
+                        "12.3e-02",
                     ),
                 ],
             ),
@@ -214,16 +214,16 @@ class TestFormatting(unittest.TestCase):
                 123e-9,
                 [
                     (
-                        Formatter(exp_mode='engineering', exp_format='parts_per'),
-                        '123 ppb',
+                        Formatter(exp_mode="engineering", exp_format="parts_per"),
+                        "123 ppb",
                     ),
                     (
                         Formatter(
-                            exp_mode='engineering',
-                            exp_format='parts_per',
-                            extra_parts_per_forms={-9: None, -12: 'ppb'},
+                            exp_mode="engineering",
+                            exp_format="parts_per",
+                            extra_parts_per_forms={-9: None, -12: "ppb"},
                         ),
-                        '123e-09',
+                        "123e-09",
                     ),
                 ],
             ),
@@ -231,16 +231,16 @@ class TestFormatting(unittest.TestCase):
                 123e-12,
                 [
                     (
-                        Formatter(exp_mode='engineering', exp_format='parts_per'),
-                        '123 ppt',
+                        Formatter(exp_mode="engineering", exp_format="parts_per"),
+                        "123 ppt",
                     ),
                     (
                         Formatter(
-                            exp_mode='engineering',
-                            exp_format='parts_per',
-                            extra_parts_per_forms={-9: None, -12: 'ppb'},
+                            exp_mode="engineering",
+                            exp_format="parts_per",
+                            extra_parts_per_forms={-9: None, -12: "ppb"},
                         ),
-                        '123 ppb',
+                        "123 ppb",
                     ),
                 ],
             ),
@@ -250,8 +250,8 @@ class TestFormatting(unittest.TestCase):
 
     def test_no_options(self):
         sform = Formatter()
-        self.assertEqual(sform(42), '42')
+        self.assertEqual(sform(42), "42")
 
     def test_dec_place_auto_round(self):
-        sform = Formatter(round_mode='dec_place', ndigits=AutoDigits)
-        self.assertEqual(sform(123.456), '123.456')
+        sform = Formatter(round_mode="dec_place", ndigits=AutoDigits)
+        self.assertEqual(sform(123.456), "123.456")

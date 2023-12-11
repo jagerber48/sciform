@@ -26,13 +26,13 @@ from sciform.rendered_options import RenderedOptions
 def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
     """Format non-finite numbers."""
     if num.is_nan():
-        num_str = 'nan'
-    elif num == Decimal('inf'):
-        num_str = 'inf'
-    elif num == Decimal('-inf'):
-        num_str = '-inf'
+        num_str = "nan"
+    elif num == Decimal("inf"):
+        num_str = "inf"
+    elif num == Decimal("-inf"):
+        num_str = "-inf"
     else:
-        msg = f'format_non_finite() cannot format {num}.'
+        msg = f"format_non_finite() cannot format {num}."
         raise ValueError(msg)
 
     if options.nan_inf_exp:
@@ -55,12 +55,12 @@ def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
             extra_parts_per_forms=options.extra_parts_per_forms,
         )
     else:
-        exp_str = ''
+        exp_str = ""
 
-    if exp_str != '':
-        result = f'({num_str}){exp_str}'
+    if exp_str != "":
+        result = f"({num_str}){exp_str}"
     else:
-        result = f'{num_str}'
+        result = f"{num_str}"
 
     if options.capitalize:
         result = result.upper()
@@ -142,7 +142,7 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
         extra_parts_per_forms=options.extra_parts_per_forms,
     )
 
-    result = f'{mantissa_str}{exp_str}'
+    result = f"{mantissa_str}{exp_str}"
 
     if options.latex:
         result = latex_translate(result)
@@ -156,14 +156,14 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
 
     if exp_mode is ExpMode.BINARY or exp_mode is ExpMode.BINARY_IEC:
         msg = (
-            'Binary exponent modes are not supported for value/uncertainty formatting.'
+            "Binary exponent modes are not supported for value/uncertainty formatting."
         )
         raise NotImplementedError(msg)
 
     if options.round_mode is RoundMode.DEC_PLACE:
         msg = (
-            'Precision round mode not available for value/uncertainty formatting. '
-            'Rounding is always applied as significant figures for the uncertainty.'
+            "Precision round mode not available for value/uncertainty formatting. "
+            "Rounding is always applied as significant figures for the uncertainty."
         )
         warn(msg, stacklevel=2)
 
@@ -295,7 +295,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         val_unc_exp_str = val_unc_str
 
     if options.exp_mode is ExpMode.PERCENT:
-        val_unc_exp_str = f'({val_unc_exp_str})%'
+        val_unc_exp_str = f"({val_unc_exp_str})%"
 
     if options.latex:
         val_unc_exp_str = latex_translate(val_unc_exp_str)

@@ -66,37 +66,37 @@ class UserOptions:
         # TODO: Test that things do and don't get added appropriately
         if add_c_prefix:
             if self.extra_si_prefixes is None:
-                super().__setattr__('extra_si_prefixes', {})
+                super().__setattr__("extra_si_prefixes", {})
             if -2 not in self.extra_si_prefixes:
-                self.extra_si_prefixes[-2] = 'c'
+                self.extra_si_prefixes[-2] = "c"
 
         if add_small_si_prefixes:
             if self.extra_si_prefixes is None:
-                super().__setattr__('extra_si_prefixes', {})
+                super().__setattr__("extra_si_prefixes", {})
             if -2 not in self.extra_si_prefixes:
-                self.extra_si_prefixes[-2] = 'c'
+                self.extra_si_prefixes[-2] = "c"
             if -1 not in self.extra_si_prefixes:
-                self.extra_si_prefixes[-1] = 'd'
+                self.extra_si_prefixes[-1] = "d"
             if +1 not in self.extra_si_prefixes:
-                self.extra_si_prefixes[+1] = 'da'
+                self.extra_si_prefixes[+1] = "da"
             if +2 not in self.extra_si_prefixes:
-                self.extra_si_prefixes[+2] = 'h'
+                self.extra_si_prefixes[+2] = "h"
 
         if add_ppth_form:
             if self.extra_parts_per_forms is None:
-                super().__setattr__('extra_parts_per_forms', {})
+                super().__setattr__("extra_parts_per_forms", {})
             if -3 not in self.extra_parts_per_forms:
-                self.extra_parts_per_forms[-3] = 'ppth'
+                self.extra_parts_per_forms[-3] = "ppth"
 
     @staticmethod
     def validate(options: UserOptions | RenderedOptions) -> None:
         """Validate user inputs."""
         if (
-            options.round_mode == 'sig_fig'
+            options.round_mode == "sig_fig"
             and isinstance(options.ndigits, int)
             and options.ndigits < 1
         ):
-            msg = f'ndigits must be >= 1 for sig fig rounding, not {options.ndigits}.'
+            msg = f"ndigits must be >= 1 for sig fig rounding, not {options.ndigits}."
             raise ValueError(msg)
 
         if (
@@ -105,31 +105,31 @@ class UserOptions:
             and options.ndigits is not modes.AutoDigits
         ):
             msg = (
-                f'pdg_sig_figs=True can only be used with ndigits=AutoDigits, not '
-                f'ndigits={options.ndigits}.'
+                f"pdg_sig_figs=True can only be used with ndigits=AutoDigits, not "
+                f"ndigits={options.ndigits}."
             )
             raise ValueError(msg)
 
         if options.exp_val is not modes.AutoExpVal and options.exp_val is not None:
-            if options.exp_mode in ['fixed_point', 'percent'] and options.exp_val != 0:
+            if options.exp_mode in ["fixed_point", "percent"] and options.exp_val != 0:
                 msg = (
-                    f'Exponent must must be 0, not exp_val={options.exp_val}, for '
-                    f'fixed point and percent exponent modes.'
+                    f"Exponent must must be 0, not exp_val={options.exp_val}, for "
+                    f"fixed point and percent exponent modes."
                 )
                 raise ValueError(msg)
             if (
-                options.exp_mode in ['engineering', 'engineering_shifted']
+                options.exp_mode in ["engineering", "engineering_shifted"]
                 and options.exp_val % 3 != 0
             ):
                 msg = (
-                    f'Exponent must be a multiple of 3, not exp_val={options.exp_val}, '
-                    f'for engineering exponent modes.'
+                    f"Exponent must be a multiple of 3, not exp_val={options.exp_val}, "
+                    f"for engineering exponent modes."
                 )
                 raise ValueError(msg)
-            if options.exp_mode == 'binary_iec' and options.exp_val % 10 != 0:
+            if options.exp_mode == "binary_iec" and options.exp_val % 10 != 0:
                 msg = (
-                    f'Exponent must be a multiple of 10, not '
-                    f'exp_val={options.exp_val}, for binary IEC exponent mode.'
+                    f"Exponent must be a multiple of 10, not "
+                    f"exp_val={options.exp_val}, for binary IEC exponent mode."
                 )
                 raise ValueError(msg)
 
@@ -141,15 +141,15 @@ class UserOptions:
         if options.upper_separator is not None:
             if options.upper_separator not in get_args(modes.UserUpperSeparators):
                 msg = (
-                    f'upper_separator must be in '
-                    f'{get_args(modes.UserUpperSeparators)}, not '
-                    f'{options.upper_separator}.'
+                    f"upper_separator must be in "
+                    f"{get_args(modes.UserUpperSeparators)}, not "
+                    f"{options.upper_separator}."
                 )
                 raise ValueError(msg)
             if options.upper_separator == options.decimal_separator:
                 msg = (
-                    f'upper_separator and decimal_separator '
-                    f'({options.upper_separator}) cannot be equal.'
+                    f"upper_separator and decimal_separator "
+                    f"({options.upper_separator}) cannot be equal."
                 )
                 raise ValueError(msg)
 
@@ -157,9 +157,9 @@ class UserOptions:
             options.decimal_separator not in get_args(modes.UserDecimalSeparators)
         ):
             msg = (
-                f'decimal_separator must be in '
-                f'{get_args(modes.UserDecimalSeparators)}, not '
-                f'{options.decimal_separator}.'
+                f"decimal_separator must be in "
+                f"{get_args(modes.UserDecimalSeparators)}, not "
+                f"{options.decimal_separator}."
             )
             raise ValueError(msg)
 
@@ -167,22 +167,22 @@ class UserOptions:
             options.lower_separator not in get_args(modes.UserLowerSeparators)
         ):
             msg = (
-                f'lower_separator must be in {get_args(modes.UserLowerSeparators)}, '
-                f'not {options.lower_separator}.'
+                f"lower_separator must be in {get_args(modes.UserLowerSeparators)}, "
+                f"not {options.lower_separator}."
             )
             raise ValueError(msg)
 
     def render(self: UserOptions) -> RenderedOptions:
         """Render UserOptions into RenderedOptions."""
         key_to_enum_dict = {
-            'exp_mode': modes.ExpMode,
-            'round_mode': modes.RoundMode,
-            'upper_separator': modes.Separator,
-            'decimal_separator': modes.Separator,
-            'lower_separator': modes.Separator,
-            'sign_mode': modes.SignMode,
-            'fill_mode': modes.FillMode,
-            'exp_format': modes.ExpFormat,
+            "exp_mode": modes.ExpMode,
+            "round_mode": modes.RoundMode,
+            "upper_separator": modes.Separator,
+            "decimal_separator": modes.Separator,
+            "lower_separator": modes.Separator,
+            "sign_mode": modes.SignMode,
+            "fill_mode": modes.FillMode,
+            "exp_format": modes.ExpFormat,
         }
 
         global_defaults_dict = asdict(global_options.GLOBAL_DEFAULT_OPTIONS)
