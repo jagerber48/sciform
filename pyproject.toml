@@ -24,6 +24,18 @@ dynamic = ["version", "readme"]
 homepage = "https://github.com/jagerber48/sciform"
 documentation = "https://sciform.readthedocs.io"
 
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "sphinx-toolbox",
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "tabulate",
+]
+
 [tool.setuptools.dynamic]
 readme = {file = "README.rst"}
 
