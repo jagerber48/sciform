@@ -77,7 +77,7 @@ displayed with a sign symbol (+ or -) and is left padded with a zero so
 that it is at least two digits wide.
 There are no options to modify this behavior for standard exponent
 display.
-The :ref:`superscript_exp` or :ref:`latex_format` can be used as
+The :ref:`superscript` or :ref:`latex_format` can be used as
 alternatives.
 
 .. _engineering:
@@ -485,15 +485,15 @@ to the 10\ :sup:`4` (ten-thousands) place.
 >>> print(sform(42))
 00042
 
-.. _superscript_exp:
+.. _superscript:
 
 Superscript Exponent Format
 ===========================
 
-The ``superscript_exp`` option can be chosen to present exponents in
+The ``superscript`` option can be chosen to present exponents in
 superscript notation as opposed to e.g. ``e+02`` notation.
 
->>> sform = Formatter(exp_mode="scientific", superscript_exp=True)
+>>> sform = Formatter(exp_mode="scientific", superscript=True)
 >>> print(sform(789))
 7.89×10²
 
@@ -527,7 +527,7 @@ The latex format makes the following changes:
   non-finite numbers such as ``'nan'``, ``'NAN'``, ``'inf'``, and
   ``'INF'`` are wrapped in ``'\text{}'``.
 
-Note that use of ``latex`` renders the use of the ``superscript_exp``
+Note that use of ``latex`` renders the use of the ``superscript``
 option meaningless.
 
 Include Exponent on nan and inf

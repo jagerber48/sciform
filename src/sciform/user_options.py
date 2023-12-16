@@ -29,7 +29,7 @@ class UserOptions:
     extra_iec_prefixes: dict[int, str] | None = None
     extra_parts_per_forms: dict[int, str] | None = None
     capitalize: bool | None = None
-    superscript_exp: bool | None = None
+    superscript: bool | None = None
     latex: bool | None = None
     nan_inf_exp: bool | None = None
     bracket_unc: bool | None = None

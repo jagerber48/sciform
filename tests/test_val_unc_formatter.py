@@ -251,13 +251,13 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
-    def test_superscript_exp(self):
+    def test_superscript(self):
         cases_list = [
             (
                 (789, 0.01),
                 [
                     (
-                        Formatter(exp_mode="scientific", superscript_exp=True),
+                        Formatter(exp_mode="scientific", superscript=True),
                         "(7.8900 ± 0.0001)×10²",
                     ),
                 ],

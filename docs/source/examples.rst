@@ -28,7 +28,7 @@ available formatting options.
 ...     round_mode="dec_place",
 ...     ndigits=10,
 ...     sign_mode=" ",
-...     superscript_exp=True,
+...     superscript=True,
 ... )
 >>> print(sform(num))
  12.3455432100×10³

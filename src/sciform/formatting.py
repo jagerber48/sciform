@@ -49,7 +49,7 @@ def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
             capitalize=options.capitalize,
             latex=options.latex,
             latex_trim_whitespace=True,
-            superscript=options.superscript_exp,
+            superscript=options.superscript,
             extra_si_prefixes=options.extra_si_prefixes,
             extra_iec_prefixes=options.extra_iec_prefixes,
             extra_parts_per_forms=options.extra_parts_per_forms,
@@ -136,7 +136,7 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
         capitalize=options.capitalize,
         latex=options.latex,
         latex_trim_whitespace=False,
-        superscript=options.superscript_exp,
+        superscript=options.superscript,
         extra_si_prefixes=options.extra_si_prefixes,
         extra_iec_prefixes=options.extra_iec_prefixes,
         extra_parts_per_forms=options.extra_parts_per_forms,
@@ -246,7 +246,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         ndigits=ndigits,
         exp_mode=exp_mode,
         exp_val=exp_val,
-        superscript_exp=False,
+        superscript=False,
         latex=False,
         exp_format=ExpFormat.STANDARD,
     )
@@ -288,7 +288,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
             extra_parts_per_forms=options.extra_parts_per_forms,
             capitalize=options.capitalize,
             latex=options.latex,
-            superscript_exp=options.superscript_exp,
+            superscript=options.superscript,
             bracket_unc=options.bracket_unc,
         )
     else:

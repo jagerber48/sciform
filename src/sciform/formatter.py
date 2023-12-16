@@ -58,7 +58,7 @@ class Formatter:
         extra_iec_prefixes: dict[int, str] | None = None,
         extra_parts_per_forms: dict[int, str] | None = None,
         capitalize: bool | None = None,
-        superscript_exp: bool | None = None,
+        superscript: bool | None = None,
         latex: bool | None = None,
         nan_inf_exp: bool | None = None,
         bracket_unc: bool | None = None,
@@ -150,10 +150,10 @@ class Formatter:
         :param capitalize: Flag indicating whether the exponentiation
           symbol should be upper- or lower-case.
         :type capitalize: ``bool | None``
-        :param superscript_exp: Flag indicating if the exponent string
+        :param superscript: Flag indicating if the exponent string
           should be converted into superscript notation. E.g.
           ``'1.23e+02'`` is converted to ``'1.23×10²'``
-        :type superscript_exp: ``bool | None``
+        :type superscript: ``bool | None``
         :param latex: Flag indicating if the resulting string should be
           converted into a latex parseable code, e.g.
           ``'\\left(1.23 \\pm 0.01\\right)\\times 10^{2}'``.
@@ -212,7 +212,7 @@ class Formatter:
             extra_iec_prefixes=extra_iec_prefixes,
             extra_parts_per_forms=extra_parts_per_forms,
             capitalize=capitalize,
-            superscript_exp=superscript_exp,
+            superscript=superscript,
             latex=latex,
             nan_inf_exp=nan_inf_exp,
             bracket_unc=bracket_unc,

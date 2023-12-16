@@ -35,7 +35,7 @@ class RenderedOptions:
     extra_iec_prefixes: dict[int, str]
     extra_parts_per_forms: dict[int, str]
     capitalize: bool
-    superscript_exp: bool
+    superscript: bool
     latex: bool
     nan_inf_exp: bool
     bracket_unc: bool
