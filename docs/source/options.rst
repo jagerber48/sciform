@@ -476,12 +476,12 @@ It is also possible, using "fill" options, to add digits to the left of
 the most-significant digit.
 The ``fill_mode`` can be used to select either whitespaces ``' '`` or
 zeros ``'0'`` as fill characters.
-The ``top_dig_place`` option is used to indicate to which digit fill
-characters should be added.
-E.g. ``top_dig_place=4`` indicates fill characters should be added up
-to the 10\ :sup:`4` (ten-thousands) place.
+The ``left_pad_dec_place`` option is used to indicate to which decimal
+place fill characters should be added.
+E.g. ``left_pad_dec_place=4`` indicates fill characters should be
+added up to the 10\ :sup:`4` (ten-thousands) decimal place.
 
->>> sform = Formatter(fill_mode="0", top_dig_place=4)
+>>> sform = Formatter(fill_mode="0", left_pad_dec_place=4)
 >>> print(sform(42))
 00042
 
@@ -720,19 +720,19 @@ is displayed with a small number (e.g. 1 or 2) of significant digits.
 Match Value/Uncertainty Width
 -----------------------------
 
-If the user passes ``top_dig_place`` into a :class:`Formatter` then that
-top digit place will be used to left pad both the value and the
-uncertainty.
+If the user passes ``left_pad_dec_place`` into a :class:`Formatter`,
+then that decimal place will be used for left padding both the value and
+the uncertainty.
 :mod:`sciform` provides additional control over the left padding of the
 value and the uncertainty by allowing the user to left pad to the
-maximum of (1) the specified ``top_dig_place``, (2) the most significant
-digit of the value, and (3) the most significant digit of the
-uncertainty.
+maximum of (1) the specified ``left_pad_dec_place``, (2) the most
+significant digit of the value, and (3) the most significant digit of
+the uncertainty.
 This feature is accessed with the ``val_unc_match_widths`` option.
 
->>> sform = Formatter(fill_mode="0", top_dig_place=2, val_unc_match_widths=False)
+>>> sform = Formatter(fill_mode="0", left_pad_dec_place=2, val_unc_match_widths=False)
 >>> print(sform(12345, 1.23))
 12345.00 ± 001.23
->>> sform = Formatter(fill_mode="0", top_dig_place=2, val_unc_match_widths=True)
+>>> sform = Formatter(fill_mode="0", left_pad_dec_place=2, val_unc_match_widths=True)
 >>> print(sform(12345, 1.23))
 12345.00 ± 00001.23

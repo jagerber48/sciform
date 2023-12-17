@@ -11,7 +11,7 @@ pattern = re.compile(
                          (?:(?P<fill_mode>[ 0])=)?
                          (?P<sign_mode>[-+ ])?
                          (?P<alternate_mode>\#)?
-                         (?P<top_dig_place>\d+)?
+                         (?P<left_pad_dec_place>\d+)?
                          (?P<upper_separator>[n,.s_])?
                          (?P<decimal_separator>[.,])?
                          (?P<lower_separator>[ns_])?
@@ -67,12 +67,11 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
     alternate_mode = match.group("alternate_mode")
     alternate_mode = alternate_mode is not None
 
-    top_dig_place = match.group("top_dig_place")
-    if top_dig_place is not None:
-        top_dig_place = int(top_dig_place)
+    left_pad_dec_place = match.group("left_pad_dec_place")
+    if left_pad_dec_place is not None:
+        left_pad_dec_place = int(left_pad_dec_place)
         val_unc_match_widths = True
     else:
-        top_dig_place = None
         val_unc_match_widths = None
 
     upper_separator = match.group("upper_separator")
@@ -123,7 +122,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
     return UserOptions(
         fill_mode=fill_mode,
         sign_mode=sign_mode,
-        top_dig_place=top_dig_place,
+        left_pad_dec_place=left_pad_dec_place,
         upper_separator=upper_separator,
         decimal_separator=decimal_separator,
         lower_separator=lower_separator,

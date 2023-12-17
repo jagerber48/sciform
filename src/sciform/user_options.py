@@ -23,7 +23,7 @@ class UserOptions:
     lower_separator: modes.UserLowerSeparators | None = None
     sign_mode: modes.UserSignMode | None = None
     fill_mode: modes.UserFillMode | None = None
-    top_dig_place: int | None = None
+    left_pad_dec_place: int | None = None
     exp_format: modes.UserExpFormat | None = None
     extra_si_prefixes: dict[int, str] | None = None
     extra_iec_prefixes: dict[int, str] | None = None

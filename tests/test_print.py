@@ -20,7 +20,7 @@ class TestPrint(unittest.TestCase):
             " 'lower_separator': '',\n"
             " 'sign_mode': '-',\n"
             " 'fill_mode': ' ',\n"
-            " 'top_dig_place': 0,\n"
+            " 'left_pad_dec_place': 0,\n"
             " 'exp_format': 'standard',\n"
             " 'extra_si_prefixes': {},\n"
             " 'extra_iec_prefixes': {},\n"
@@ -39,7 +39,7 @@ class TestPrint(unittest.TestCase):
 
     def test_unrendered_options_repr(self):
         with redirect_stdout(StringIO()) as sout:  # noqa: SIM117
-            with GlobalDefaultsContext(top_dig_place=3, capitalize=True):
+            with GlobalDefaultsContext(left_pad_dec_place=3, capitalize=True):
                 print_global_defaults()
 
         actual_printout = sout.getvalue()
@@ -53,7 +53,7 @@ class TestPrint(unittest.TestCase):
             " 'lower_separator': '',\n"
             " 'sign_mode': '-',\n"
             " 'fill_mode': ' ',\n"
-            " 'top_dig_place': 3,\n"
+            " 'left_pad_dec_place': 3,\n"
             " 'exp_format': 'standard',\n"
             " 'extra_si_prefixes': {},\n"
             " 'extra_iec_prefixes': {},\n"

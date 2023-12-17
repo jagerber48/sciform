@@ -29,7 +29,7 @@ class RenderedOptions:
     lower_separator: modes.LowerSeparators
     sign_mode: modes.SignMode
     fill_mode: modes.FillMode
-    top_dig_place: int
+    left_pad_dec_place: int
     exp_format: modes.ExpFormat
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]

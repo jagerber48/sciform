@@ -64,7 +64,7 @@ Further details about the options can be found at
        exponent mode flag is ``'b'`` or ``'B'``.
    * - | fill_top_digit
        | (``\d+``)
-     - Sets ``top_dig_place`` to any non-negative integer.
+     - Sets ``left_pad_dec_place`` to any non-negative integer.
        See :ref:`left_filling`.
    * - | upper_separator
        | (``'n'``, ``','``, ``'.'``, ``'s'``, ``'_'``)

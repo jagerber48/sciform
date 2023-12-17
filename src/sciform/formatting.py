@@ -112,7 +112,7 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
     fill_char = options.fill_mode.value
     mantissa_str = format_num_by_top_bottom_dig(
         mantissa_rounded.normalize(),
-        options.top_dig_place,
+        options.left_pad_dec_place,
         round_digit,
         options.sign_mode,
         fill_char,
@@ -220,7 +220,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     new_top_digit = get_val_unc_top_digit(
         val_mantissa,
         unc_mantissa,
-        options.top_dig_place,
+        options.left_pad_dec_place,
         val_unc_match_widths=options.val_unc_match_widths,
     )
 
@@ -230,7 +230,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     We will format the val and unc mantissas
        * using decimal place rounding mode with the ndigits calculated
          above
-       * With the optionally shared top digit calculated above
+       * With the optionally shared left_pad_dec_place calculated above
        * With the calculated shared exponent
        * Without percent mode (percent mode for val/unc pairs is
          handled below in the scope of this function)
@@ -241,7 +241,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     """
     val_format_options = replace(
         options,
-        top_dig_place=new_top_digit,
+        left_pad_dec_place=new_top_digit,
         round_mode=RoundMode.DEC_PLACE,
         ndigits=ndigits,
         exp_mode=exp_mode,

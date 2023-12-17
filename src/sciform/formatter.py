@@ -52,7 +52,7 @@ class Formatter:
         lower_separator: modes.UserLowerSeparators | None = None,
         sign_mode: modes.UserSignMode | None = None,
         fill_mode: modes.UserFillMode | None = None,
-        top_dig_place: int | None = None,
+        left_pad_dec_place: int | None = None,
         exp_format: modes.UserExpFormat | None = None,
         extra_si_prefixes: dict[int, str] | None = None,
         extra_iec_prefixes: dict[int, str] | None = None,
@@ -125,12 +125,13 @@ class Formatter:
         :type sign_mode: ``Literal['-', '+', ' '] | None``
         :param fill_mode: Indicate whether to fill with zeros or spaces.
         :type fill_mode: ``Literal[' ', '0'] | None``
-        :param top_dig_place: Positive ``int`` indicating the digits
-          place to which the string will be left padded before the sign
-          symbol. 0 corresponds to the ones place, 1 corresponds to the
-          tens place etc. E.g. ``top_dig_place=4`` will convert ``12``
-          into ``00012``.
-        :type top_dig_place: ``int | None``
+        :param left_pad_dec_place: Positive ``int`` indicating the 
+          decimal place to which the string will be left padded before 
+          the sign symbol. 0 corresponds to the ones place, 1 
+          corresponds to the tens place etc. E.g. 
+          ``left_pad_dec_place=4`` will convert ``12`` into 
+          ``00012``.
+        :type left_pad_dec_place: ``int | None``
         :param exp_format: Indicate how exponents should be presented.
         :type exp_format: ``Literal['standard', 'prefix', 'parts_per'] | None``
         :param extra_si_prefixes: Dictionary mapping additional exponent
@@ -206,7 +207,7 @@ class Formatter:
             lower_separator=lower_separator,
             sign_mode=sign_mode,
             fill_mode=fill_mode,
-            top_dig_place=top_dig_place,
+            left_pad_dec_place=left_pad_dec_place,
             exp_format=exp_format,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
