@@ -77,7 +77,7 @@ displayed with a sign symbol (+ or -) and is left padded with a zero so
 that it is at least two digits wide.
 There are no options to modify this behavior for standard exponent
 display.
-The :ref:`superscript` or :ref:`latex_format` can be used as
+The :ref:`superscript` or :ref:`latex_format` options can be used as
 alternatives.
 
 .. _engineering:

@@ -151,7 +151,7 @@ def get_standard_exp_str(base: int, exp_val: int, *, capitalize: bool = False) -
     return f"{exp_symbol}{exp_val:+03d}"
 
 
-def get_superscript_str(base: int, exp_val: int) -> str:
+def get_superscript_exp_str(base: int, exp_val: int) -> str:
     """Get superscript (e.g. '×10⁺²') exponent string."""  # noqa: RUF002
     sup_trans = str.maketrans("+-0123456789", "⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹")
     exp_val_str = f"{exp_val}".translate(sup_trans)
@@ -228,7 +228,7 @@ def get_exp_str(  # noqa: PLR0913
     if latex:
         return rf"\times {base}^{{{exp_val:+}}}"
     if superscript:
-        return get_superscript_str(base, exp_val)
+        return get_superscript_exp_str(base, exp_val)
 
     return get_standard_exp_str(base, exp_val, capitalize=capitalize)
 
