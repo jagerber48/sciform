@@ -26,7 +26,7 @@ PKG_DEFAULT_OPTIONS = RenderedOptions(
     pdg_sig_figs=False,
     val_unc_match_widths=False,
     bracket_unc_remove_seps=False,
-    unc_pm_whitespace=True,
+    pm_whitespace=True,
 )
 
 

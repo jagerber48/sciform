@@ -273,7 +273,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         decimal_separator=options.decimal_separator,
         bracket_unc=options.bracket_unc,
         latex=options.latex,
-        pm_whitespace=options.unc_pm_whitespace,
+        pm_whitespace=options.pm_whitespace,
         bracket_unc_remove_seps=options.bracket_unc_remove_seps,
     )
 

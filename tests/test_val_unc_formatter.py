@@ -238,13 +238,13 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
-    def test_unc_pm_whitespace(self):
+    def test_pm_whitespace(self):
         cases_list = [
             (
                 (123.456, 0.789),
                 [
-                    (Formatter(unc_pm_whitespace=True), "123.456 ± 0.789"),
-                    (Formatter(unc_pm_whitespace=False), "123.456±0.789"),
+                    (Formatter(pm_whitespace=True), "123.456 ± 0.789"),
+                    (Formatter(pm_whitespace=False), "123.456±0.789"),
                 ],
             ),
         ]

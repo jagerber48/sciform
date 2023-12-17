@@ -42,7 +42,7 @@ class RenderedOptions:
     pdg_sig_figs: bool
     val_unc_match_widths: bool
     bracket_unc_remove_seps: bool
-    unc_pm_whitespace: bool
+    pm_whitespace: bool
 
     def __str__(self: RenderedOptions) -> str:
         options_dict = asdict(self)

@@ -65,7 +65,7 @@ class Formatter:
         pdg_sig_figs: bool | None = None,
         val_unc_match_widths: bool | None = None,
         bracket_unc_remove_seps: bool | None = None,
-        unc_pm_whitespace: bool | None = None,
+        pm_whitespace: bool | None = None,
         add_c_prefix: bool = False,
         add_small_si_prefixes: bool = False,
         add_ppth_form: bool = False,
@@ -182,10 +182,10 @@ class Formatter:
           bracket uncertainty mode. E.g. expressing ``123.4 ± 2.3`` as
           ``123.4(23)`` instead of ``123.4(2.3)``.
         :type bracket_unc_remove_seps: ``bool | None``
-        :param unc_pm_whitespace: Flag indicating if there should be
+        :param pm_whitespace: Flag indicating if there should be
           whitespace surrounding the ``'±'`` symbols when formatting.
           E.g. ``123.4±2.3`` compared to ``123.4 ± 2.3``.
-        :type unc_pm_whitespace: ``bool | None``
+        :type pm_whitespace: ``bool | None``
         :param add_c_prefix: (default ``False``) If ``True``, adds
           ``{-2: 'c'}`` to ``extra_si_prefixes``.
         :type add_c_prefix: ``bool``
@@ -220,7 +220,7 @@ class Formatter:
             pdg_sig_figs=pdg_sig_figs,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,
-            unc_pm_whitespace=unc_pm_whitespace,
+            pm_whitespace=pm_whitespace,
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,
             add_ppth_form=add_ppth_form,

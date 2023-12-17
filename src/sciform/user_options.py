@@ -36,7 +36,7 @@ class UserOptions:
     pdg_sig_figs: bool | None = None
     val_unc_match_widths: bool | None = None
     bracket_unc_remove_seps: bool | None = None
-    unc_pm_whitespace: bool | None = None
+    pm_whitespace: bool | None = None
 
     add_c_prefix: InitVar[bool] = False
     add_small_si_prefixes: InitVar[bool] = False

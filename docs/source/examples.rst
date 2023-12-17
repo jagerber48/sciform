@@ -69,7 +69,7 @@ available formatting options.
 ...     exp_mode="engineering",
 ...     exp_format="prefix",
 ...     pdg_sig_figs=True,
-...     unc_pm_whitespace=False,
+...     pm_whitespace=False,
 ... )
 >>> print(sform(num, unc))
 (3.1416±0.0016) M
@@ -122,7 +122,7 @@ instead.
 >>> num_unc = SciNumUnc(3141592.7, 1618)
 >>> print(f"{num_unc}")
 3141593 ± 1618
->>> with GlobalDefaultsContext(pdg_sig_figs=True, unc_pm_whitespace=False):
+>>> with GlobalDefaultsContext(pdg_sig_figs=True, pm_whitespace=False):
 ...     print(f"{num_unc:rp}")
 ...
 (3.1416±0.0016) M

@@ -144,7 +144,7 @@ package default settings):
  'pdg_sig_figs': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
- 'unc_pm_whitespace': True}
+ 'pm_whitespace': True}
 
 The global default settings can be modified using the
 :func:`set_global_defaults()` function.
@@ -179,7 +179,7 @@ unchanged.
  'pdg_sig_figs': False,
  'val_unc_match_widths': False,
  'bracket_unc_remove_seps': False,
- 'unc_pm_whitespace': True}
+ 'pm_whitespace': True}
 
 The global default settings can be reset to the :mod:`sciform` defaults
 using :func:`reset_global_defaults`.
