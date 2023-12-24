@@ -125,11 +125,11 @@ class Formatter:
         :type sign_mode: ``Literal['-', '+', ' '] | None``
         :param fill_mode: Indicate whether to fill with zeros or spaces.
         :type fill_mode: ``Literal[' ', '0'] | None``
-        :param left_pad_dec_place: Positive ``int`` indicating the 
-          decimal place to which the string will be left padded before 
-          the sign symbol. 0 corresponds to the ones place, 1 
-          corresponds to the tens place etc. E.g. 
-          ``left_pad_dec_place=4`` will convert ``12`` into 
+        :param left_pad_dec_place: Positive ``int`` indicating the
+          decimal place to which the string will be left padded before
+          the sign symbol. 0 corresponds to the ones place, 1
+          corresponds to the tens place etc. E.g.
+          ``left_pad_dec_place=4`` will convert ``12`` into
           ``00012``.
         :type left_pad_dec_place: ``int | None``
         :param exp_format: Indicate how exponents should be presented.
