@@ -29,7 +29,7 @@ Development Details
   `git repository <https://github.com/jagerber48/sciform>`_ and
   installing the development dependencies in editable mode with::
 
-     python -m pip install -e .[dev]
+     python -m pip install -e ".[dev]"
 * Tests can be run using::
 
      python -m unittest
