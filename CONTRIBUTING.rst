@@ -59,5 +59,6 @@ Development Details
   An alternative is to install ``pre-commit`` directly into your base
   python installation using ``pip``.
   Another alternative is to install ``pre-commit`` into the local
-  virtual environment, but in this case you will always need to activate
-  the virtual environment before running ``git`` commands.
+  virtual environment.
+  In this last case you will always need to activate the virtual
+  environment before running ``git`` commands.
