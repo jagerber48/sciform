@@ -23,9 +23,11 @@ class SciNum:
     format time.
 
     >>> from sciform import SciNum
-    >>> snum = SciNum(123456.654321)
-    >>> print(f"{snum:,._.7f}")
-    123,456.654_321_0
+    >>> snum = SciNum(12345.54321)
+    >>> print(f"{snum:!3f}")
+    12300
+    >>> print(f"{snum:+2.3R}")
+    + 12.346E+03
     """
 
     def __init__(self: SciNum, value: Number, /) -> None:
@@ -52,9 +54,9 @@ class SciNumUnc:
     populated with global default settings at format time.
 
     >>> from sciform import SciNumUnc
-    >>> snumunc = SciNumUnc(123456.654321, 0.000002)
-    >>> print(f"{snumunc:,._!1f()}")
-    123,456.654_321(2)
+    >>> snumunc = SciNumUnc(123456.654321, 0.00000234)
+    >>> print(f"{snumunc:!2f()}")
+    123456.6543210(23)
     """
 
     def __init__(self: SciNumUnc, value: Number, uncertainty: Number, /) -> None:
