@@ -5,6 +5,11 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Added
+^^^^^
+
+* Added more documentation for contributing developers.
+
 Changed
 ^^^^^^^
 
@@ -13,6 +18,7 @@ Changed
 * Refactored code for adding separators.
 * Refactored formatting and formatting utilities to simplify functions
   and make the algorithm easier to follow.
+* More aggressively filter JetBrains .idea folder from version control.
 
 ----
 

@@ -45,9 +45,15 @@ which are not provided by the python built-in
 Installation
 ============
 
-Install with pip::
+Install the latest stable version from
+`PyPi <https://pypi.org/project/sciform/>`_ with::
 
-   pip install sciform
+   python -m pip install sciform
+
+or install the latest development version from
+`GitHub <https://github.com/jagerber48/sciform>`_ with::
+
+   python -m pip install git+https://github.com/jagerber48/sciform.git
 
 ``sciform`` is compatible with Python versions >=3.9.
 
