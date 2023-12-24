@@ -9,6 +9,7 @@ Added
 ^^^^^
 
 * Added more documentation for contributing developers.
+* Added `pre-commit <https://pre-commit.com/>`_ configuration.
 
 Changed
 ^^^^^^^
