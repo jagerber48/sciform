@@ -5,6 +5,11 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Added
+^^^^^
+
+* Added more documentation for contributing developers.
+
 Changed
 ^^^^^^^
 
