@@ -82,7 +82,7 @@ available formatting options.
 >>> print(sform(num, unc))
 (0.3142(16))e+06
 
-SciNum, SciNumUnc, and Global Options
+SciNum, and Global Options
 =====================================
 
 Here are a small selection of examples which demonstrate some of the
@@ -94,7 +94,7 @@ Here this is done using the :class:`GlobalDefaultsContext` context
 manager, but this could have been done using :func:`set_global_defaults`
 instead.
 
->>> from sciform import SciNum, SciNumUnc, GlobalDefaultsContext
+>>> from sciform import SciNum, GlobalDefaultsContext
 >>> snum = SciNum(12345.54321)
 >>> print(f"{snum:!4e}")
 1.235e+04
@@ -119,7 +119,7 @@ instead.
 >>> print(f"{snum:%}")
 7.6543%
 
->>> num_unc = SciNumUnc(3141592.7, 1618)
+>>> num_unc = SciNum(3141592.7, 1618)
 >>> print(f"{num_unc}")
 3141593 ± 1618
 >>> with GlobalDefaultsContext(pdg_sig_figs=True, unc_pm_whitespace=False):
@@ -127,7 +127,7 @@ instead.
 ...
 (3.1416±0.0016) M
 
->>> num_unc = SciNumUnc(314159.27, 1618)
+>>> num_unc = SciNum(314159.27, 1618)
 >>> with GlobalDefaultsContext(pdg_sig_figs=True):
 ...     print(f"{num_unc:#r()}")
 ...

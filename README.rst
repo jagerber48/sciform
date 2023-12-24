@@ -96,7 +96,7 @@ to a custom FSML.
 In addition to formatting individual numbers, ``sciform`` can be used
 to format pairs of numbers as value/uncertainty pairs.
 This can be done by passing two numbers into a ``Formatter`` call or by
-using the ``SciNumUnc`` object.
+using the ``SciNum`` object.
 
 >>> sform = Formatter(ndigits=2, upper_separator=" ", lower_separator=" ")
 >>> print(sform(123456.654321, 0.0034))
@@ -105,8 +105,7 @@ using the ``SciNumUnc`` object.
 >>> print(sform(123456.654321, 0.0034))
 (123.456654321 ± 0.000003400)e+03
 
->>> from sciform import SciNumUnc
->>> num = SciNumUnc(123456.654321, 0.0034)
+>>> num = SciNum(123456.654321, 0.0034)
 >>> print(f"{num:_!2f}")
 123_456.6543 ± 0.0034
 >>> print(f"{num:_!2f()}")

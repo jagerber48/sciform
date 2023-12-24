@@ -5,6 +5,13 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Removed
+^^^^^^^
+
+* **[BREAKING]** Removed the ``SciNumUnc`` class. Now the ``SciNum``
+  class can be used with an optional second positional argument to
+  specify the uncertainty associated with a number.
+
 Changed
 ^^^^^^^
 

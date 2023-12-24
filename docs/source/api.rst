@@ -15,8 +15,6 @@ Formatting
 
 .. autoclass:: SciNum()
 
-.. autoclass:: SciNumUnc()
-
 Auto Options
 ============
 
