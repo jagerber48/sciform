@@ -39,3 +39,26 @@ Development Details
 
      ruff check .
      ruff format . --check
+
+* ``sciform`` is configured so that you can perform the linting and
+  formatting checks using ``git`` pre-commit hooks using
+  `pre-commit <https://pre-commit.com/>`_.
+  One way to set this up is to run the following commands in the package
+  base directory with no virtual environment activated::
+
+     python -m pip install --user pipx
+     pipx ensurepath
+     pipx install pre-commit
+     pre-commit install
+
+  This will install ``pre-commit`` into a globally available virtual
+  environment on your system using ``pipx`` so that it is globally
+  available anywhere you may run ``git`` commands.
+  The last command configures the ``sciform`` repo to utilize the
+  pre-configured pre-commit hooks.
+  An alternative is to install ``pre-commit`` directly into your base
+  python installation using ``pip``.
+  Another alternative is to install ``pre-commit`` into the local
+  virtual environment.
+  In this last case you will always need to activate the virtual
+  environment before running ``git`` commands.
