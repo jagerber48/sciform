@@ -12,6 +12,12 @@ Removed
   class can be used with an optional second positional argument to
   specify the uncertainty associated with a number.
 
+Added
+^^^^^
+
+* Added more documentation for contributing developers.
+* Added `pre-commit <https://pre-commit.com/>`_ configuration.
+
 Changed
 ^^^^^^^
 
@@ -20,6 +26,7 @@ Changed
 * Refactored code for adding separators.
 * Refactored formatting and formatting utilities to simplify functions
   and make the algorithm easier to follow.
+* More aggressively filter JetBrains .idea folder from version control.
 
 ----
 
