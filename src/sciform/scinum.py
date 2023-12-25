@@ -16,19 +16,21 @@ class SciNum:
     """
     Single number, or number and uncertainty, to be used with FSML.
 
-    :class:`SciNum` object represent single numbers, or
+    :class:`SciNum` objects represent single numbers, or
     number/uncertainty pairs to be formatted using the :mod:`sciform`
     format specification mini-language for scientific formatting of
     numbers. Any options not configured by the format specification will
     be populated with global default settings at format time.
 
     >>> from sciform import SciNum
-    >>> snum = SciNum(123456.654321)
-    >>> print(f"{snum:,._.7f}")
-    123,456.654_321_0
-    >>> snum = SciNum(123456.654321, 0.000002)
-    >>> print(f"{snum:,._!1f()}")
-    123,456.654_321(2)
+    >>> snum = SciNum(12345.54321)
+    >>> print(f"{snum:!3f}")
+    12300
+    >>> print(f"{snum:+2.3R}")
+    + 12.346E+03
+    >>> snum = SciNum(123456.654321, 0.0234)
+    >>> print(f"{snum:#!2r()}")
+    (0.1234566543(23))e+06
     """
 
     def __init__(

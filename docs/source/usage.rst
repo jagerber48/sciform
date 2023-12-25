@@ -49,8 +49,8 @@ be formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
 
 >>> from sciform import SciNum
 >>> num = SciNum(123456)
->>> print(f"{num:_!2f}")
-120_000
+>>> print(f"{num:!2f}")
+120000
 
 Value/Uncertainty Formatting
 ----------------------------

@@ -95,9 +95,11 @@ using string formatting to format the ``SciNum`` instances according
 to a custom FSML.
 
 >>> from sciform import SciNum
->>> num = SciNum(123456)
->>> print(f"{num:_!2f}")
-120_000
+>>> num = SciNum(12345)
+>>> print(f"{num:!2f}")
+12000
+>>> print(f"{num:!2r}")
+12e+03
 
 In addition to formatting individual numbers, ``sciform`` can be used
 to format pairs of numbers as value/uncertainty pairs.
@@ -105,18 +107,26 @@ This can be done by passing two numbers into a ``Formatter`` call or by
 using the ``SciNum`` object.
 
 >>> sform = Formatter(ndigits=2, upper_separator=" ", lower_separator=" ")
->>> print(sform(123456.654321, 0.0034))
+>>> print(sform(123456.654321, 0.00345))
 123 456.654 3 ± 0.003 4
 >>> sform = Formatter(ndigits=4, exp_mode="engineering")
->>> print(sform(123456.654321, 0.0034))
-(123.456654321 ± 0.000003400)e+03
+>>> print(sform(123456.654321, 0.00345))
+(123.456654321 ± 0.000003450)e+03
 
->>> num = SciNum(123456.654321, 0.0034)
->>> print(f"{num:_!2f}")
-123_456.6543 ± 0.0034
->>> print(f"{num:_!2f()}")
-123_456.6543(34)
+>>> num = SciNum(123456.654321, 0.00345)
+>>> print(f"{num:!2f}")
+123456.6543 ± 0.0034
+>>> print(f"{num:!2f()}")
+123456.6543(34)
 
+Note that the above examples demonstrate that :mod:`sciform` uses
+`"round-to-even" <https://en.wikipedia.org/wiki/Rounding#Rounding_half_to_even>`_
+rounding.
+
+>>> print(f"{SciNum(865):!2}")
+860
+>>> print(f"{SciNum(875):!2}")
+880
 
 ================
 Acknowledgements
