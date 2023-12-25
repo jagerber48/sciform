@@ -5,9 +5,21 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Removed
+^^^^^^^
+
+* **[BREAKING]** Remove separator configuration from the FSML.
+  These options made the FSML to cumbersome and led to confusing
+  (if not incorrect) conflicts with the round mode symbol.
+  Now all separator configuration needs to be done by setting the
+  global format options or using the global format options context
+  manager.
+  [`#29 <https://github.com/jagerber48/sciform/issues/29>`_]
+
 Added
 ^^^^^
 
+* Added annotated examples demonstrating the FSML.
 * Added more documentation for contributing developers.
 * Added `pre-commit <https://pre-commit.com/>`_ configuration.
 
