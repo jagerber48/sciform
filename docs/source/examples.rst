@@ -82,6 +82,55 @@ available formatting options.
 >>> print(sform(num, unc))
 (0.3142(16))e+06
 
+.. _fsml_examples:
+
+Format Specification Mini Language
+==================================
+
+>>> from sciform import SciNum, SciNumUnc
+>>> print(f"{SciNum(1234.432):0=+5.6f}")
++001234.432000
+
+In the preceding example ``0=`` indicates that left padding should be
+done using ``'0'`` characters.
+The ``+`` indicates that a sign symbol should always be displayed.
+The ``5`` preceding the round mode symbol (``.``) indicates that the
+number should be left padded to the 10\ :sup:`+5` (ten-thousands)
+decimal place.
+The ``.6`` indicates that the number will be rounded to six digits past
+the decimal points.
+The ``f`` indicates that the number will be displayed in fixed point
+exponent mode.
+
+>>> print(f"{SciNumUnc(123, 0.123):#!2R()}")
+(0.12300(12))E+03
+
+In the preceding example the ``#`` alternate flag combined with ``R``
+indicates that the number will be formatted in the shifted engineering
+exponent mode with a capitalized exponent symbol ``'E'``.
+``!2`` indicates that the number will be rounded so that the uncertainty
+has two significant figures.
+The ``()`` indicates that the value/uncertainty pair should be formatted
+using the bracket uncertainty format.
+
+>>> print(f'{SciNum(123):ex-3p}')
+123000 m
+
+In the preceding example the ``e`` indicates that scientific notation
+should be used.
+The ``x-3`` indicates that the exponent will be forced to equal ``-3``.
+Finally the ``p`` indicates that the SI prefix mode should be used.
+
+>>> print(f'{SciNum(123): .-1f}')
+ 120
+
+In this example the leading space indicates a leading space should be
+included for non-negative numbers so that positive and negative numbers
+have the same justification.
+The ``.-1`` indicates the number should be rounded to one
+digit *before* the decimal point and the ``f`` indicates that fixed
+point mode should be used.
+
 SciNum, SciNumUnc, and Global Options
 =====================================
 
@@ -100,7 +149,12 @@ instead.
 1.235e+04
 >>> print(f"{snum: .10r}")
  12.3455432100e+03
->>> print(f"{snum:+s,_}")
+>>> with GlobalDefaultsContext(
+...     upper_separator=" ",
+...     decimal_separator=",",
+...     lower_separator="_",
+... ):
+...     print(f"{snum:+}")
 +12 345,543_21
 
 >>> snum = SciNum(0.076543)

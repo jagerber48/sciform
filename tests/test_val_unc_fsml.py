@@ -280,12 +280,6 @@ class TestFormatting(unittest.TestCase):
                     ("ex-1()", "(-7.89(1234.56))e-01"),
                 ],
             ),
-            (
-                (123456.654321, 0.000002),
-                [
-                    (",._!1f()", "123,456.654_321(2)"),
-                ],
-            ),
         ]
 
         self.run_val_unc_fsml_cases(cases_list)
