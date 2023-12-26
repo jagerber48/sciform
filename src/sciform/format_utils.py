@@ -522,8 +522,8 @@ def construct_val_unc_str(  # noqa: PLR0913
                 unc_mantissa_str = unc_mantissa_str.replace(separator, "")
                 # TODO: bracket_unc_remove_seps unit test in tests, not just doctest.
             if unc_mantissa < abs(val_mantissa):
-                # TODO: I think this raises an error if paren_uncertainty=True but either
-                #   unc_mantissa or val_mantissa is non-finite.
+                # TODO: I think this raises an error if paren_uncertainty=True but
+                #  either unc_mantissa or val_mantissa is non-finite.
                 # Only removed "embedded" decimal symbol for unc < val
                 unc_mantissa_str = unc_mantissa_str.replace(
                     decimal_separator,

@@ -33,15 +33,26 @@ class TestFormatting(unittest.TestCase):
                         "(123.456(789))e+00",
                     ),
                     (
-                        Formatter(exp_mode="engineering_shifted", paren_uncertainty=True),
+                        Formatter(
+                            exp_mode="engineering_shifted",
+                            paren_uncertainty=True,
+                        ),
                         "(0.123456(789))e+03",
                     ),
                     (
-                        Formatter(exp_mode="scientific", exp_val=+1, paren_uncertainty=True),
+                        Formatter(
+                            exp_mode="scientific",
+                            exp_val=+1,
+                            paren_uncertainty=True,
+                        ),
                         "(12.3456(789))e+01",
                     ),
                     (
-                        Formatter(exp_mode="scientific", exp_val=-1, paren_uncertainty=True),
+                        Formatter(
+                            exp_mode="scientific",
+                            exp_val=-1,
+                            paren_uncertainty=True,
+                        ),
                         "(1234.56(7.89))e-01",
                     ),
                 ],
@@ -201,7 +212,11 @@ class TestFormatting(unittest.TestCase):
                 (123.456, 0.789),
                 [
                     (
-                        Formatter(exp_mode="scientific", exp_val=-1, paren_uncertainty=True),
+                        Formatter(
+                            exp_mode="scientific",
+                            exp_val=-1,
+                            paren_uncertainty=True,
+                        ),
                         "(1234.56(7.89))e-01",
                     ),
                     (
@@ -219,7 +234,11 @@ class TestFormatting(unittest.TestCase):
                 (0.789, 123.456),
                 [
                     (
-                        Formatter(exp_mode="scientific", exp_val=-1, paren_uncertainty=True),
+                        Formatter(
+                            exp_mode="scientific",
+                            exp_val=-1,
+                            paren_uncertainty=True,
+                        ),
                         "(7.89(1234.56))e-01",
                     ),
                     # Don't remove "embedded" decimal unless val > unc.
