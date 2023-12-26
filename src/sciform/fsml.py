@@ -12,9 +12,6 @@ pattern = re.compile(
                          (?P<sign_mode>[-+ ])?
                          (?P<alternate_mode>\#)?
                          (?P<left_pad_dec_place>\d+)?
-                         (?P<upper_separator>[n,.s_])?
-                         (?P<decimal_separator>[.,])?
-                         (?P<lower_separator>[ns_])?
                          (?:(?P<round_mode>[.!])(?P<ndigits>[+-]?\d+))?
                          (?P<exp_mode>[fF%eErRbB])?
                          (?:x(?P<exp_val>[+-]?\d+))?
@@ -74,18 +71,6 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
     else:
         val_unc_match_widths = None
 
-    upper_separator = match.group("upper_separator")
-    if upper_separator is not None:
-        upper_separator = upper_separator.replace("n", "")
-        upper_separator = upper_separator.replace("s", " ")
-
-    decimal_separator = match.group("decimal_separator")
-
-    lower_separator = match.group("lower_separator")
-    if lower_separator is not None:
-        lower_separator = lower_separator.replace("n", "")
-        lower_separator = lower_separator.replace("s", " ")
-
     round_mode_mapping = {"!": "sig_fig", ".": "dec_place", None: None}
 
     round_mode_flag = match.group("round_mode")
@@ -123,9 +108,6 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
         fill_mode=fill_mode,
         sign_mode=sign_mode,
         left_pad_dec_place=left_pad_dec_place,
-        upper_separator=upper_separator,
-        decimal_separator=decimal_separator,
-        lower_separator=lower_separator,
         round_mode=round_mode,
         ndigits=ndigits,
         exp_mode=exp_mode,

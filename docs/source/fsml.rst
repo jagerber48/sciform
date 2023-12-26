@@ -10,32 +10,45 @@ Specification
 =============
 
 Instead of explicitly constructing :class:`Formatter` instances, users
-can construct :class:`SciNum` or :class:`SciNumUnc` instances and format
-them using string formatting with format specification strings from the
-:mod:`sciform` format specification mini-language (FSML).
+can construct :class:`SciNum` instances and format them using string
+formatting with format specification strings from the :mod:`sciform`
+format specification mini-language (FSML).
 This is analogous to how python :class:`int`, :class:`float`, and
 :class:`Decimal` instances can be formatted using the built-in
 `format specification mini-language <https://docs.python.org/3/library/string.html#format-specification-mini-language>`_.
 The :mod:`sciform` format specification mini-language is given by::
 
-    format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][upper_separator][decimal_separator][lower_separator][round_mode ndigits][exp_mode]["x" exp_val]["p"]["()"]
+    format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][round_mode ndigits][exp_mode]["x" exp_val]["p"]["()"]
 
     fill               ::=  "0" | " "
     sign               ::=  "+" | "-" | " "
     fill_top_digit     ::=  digit+
-    upper_separator    ::=  "n" | "." | "," | "s" | "_"
-    decimal_separator  ::=  "." | ","
-    lower_separator    ::=  "n" | "s" | "_"
     round_mode         ::=  "!" | "."
     ndigits            ::=  [+-]?digit+
     exp_mode           ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" | "b" | "B" |
     exp_val            ::=  [+-]?digit+
 
-Example:
+Below is are two simple FSML usage examples.
+See :ref:`FSML examples <fsml_examples>` for more complicated FSML
+usage examples.
+
 
 >>> from sciform import SciNum
->>> print(f"{SciNum(123456.654321):_,_.4}")
-123_456,654_3
+>>> print(f'{SciNum(123456):!4f}')
+123500
+
+In this example ``!4`` indicates the number should be formatted with
+four significant figures and ``f`` indicates the number should be
+formatted in fixed point mode.
+
+>>> print(f'{SciNum(12345, 789):!1r}')
+(12.3 ± 0.8)e+03
+
+In this example ``!1`` indicates the number will be formatted so that
+the uncertainty has one significant digit (and the value will be rounded
+and displayed accordingly).
+The ``r`` indicates that the number will be formatted using engineering
+notation.
 
 See below for details about how the terms in the FSML correspond to
 formatting options.
@@ -66,18 +79,6 @@ Further details about the options can be found at
        | (``\d+``)
      - Sets ``left_pad_dec_place`` to any non-negative integer.
        See :ref:`left_filling`.
-   * - | upper_separator
-       | (``'n'``, ``','``, ``'.'``, ``'s'``, ``'_'``)
-     - Sets ``upper_separator`` to ``''``, ``','``, ``'.'``, ``' '``,
-       or ``'_'``. See :ref:`separators`.
-   * - | decimal_separator
-       | (``'.'``, ``','``)
-     - Sets ``decimal_separator`` to ``'.'`` or ``','``.
-       See :ref:`separators`.
-   * - | lower_separator
-       | (``'n'``, ``'s'``, ``'_'``)
-     - Sets ``lower_separator`` to ``''``, ``' '``, or ``'_'``.
-       See :ref:`separators`.
    * - | round_mode
        | (``'!'``, ``'.'``)
      - Sets ``round_mode`` to ``'sig_fig'`` or ``'dec_place'``.
@@ -174,6 +175,15 @@ for scientific formatting.
   E.g. ``f'{float(12): =4}`` yields ``'  12'`` while
   ``f{SciNum(12): =4}`` yields ``'   12'``, fill characters are padded
   up to the 10\ :sup:`4` digits place.
+
+* The built-in FSML supports configuring a thousands separator (what
+  :mod:`sciform` calls the ``upper_separator``).
+  :mod:`sciform` has more numerous options for grouping separators such
+  that it would be cumbersome to include all grouping separator options
+  in the :mod:`sciform` FSML and awkward to only include a subset.
+  Therefore no grouping separators can be configured using the
+  :mod:`sciform` FSML, and these instead need to be configured as
+  global options.
 
 * The built-in FSML supports displaying negative zero, but also supports
   an option to coerce negative zero to be positive by including a

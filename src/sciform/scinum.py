@@ -1,4 +1,4 @@
-"""SciNum and SciNumUnc classes give users access to sciform FSML."""
+"""The SciNum class provides users access to sciform FSML."""
 
 from __future__ import annotations
 
@@ -14,57 +14,45 @@ if TYPE_CHECKING:  # pragma: no cover
 
 class SciNum:
     """
-    Single number to be used with FSML.
+    Single number, or number and uncertainty, to be used with FSML.
 
-    :class:`SciNum` objects are used in combination with the
-    :mod:`sciform` format specification mini-language for scientific
-    formatting of numbers. Any options not configured by the format
-    specification will be populated with global default settings at
-    format time.
+    :class:`SciNum` objects represent single numbers, or
+    number/uncertainty pairs to be formatted using the :mod:`sciform`
+    format specification mini-language for scientific formatting of
+    numbers. Any options not configured by the format specification will
+    be populated with global default settings at format time.
 
     >>> from sciform import SciNum
-    >>> snum = SciNum(123456.654321)
-    >>> print(f"{snum:,._.7f}")
-    123,456.654_321_0
+    >>> snum = SciNum(12345.54321)
+    >>> print(f"{snum:!3f}")
+    12300
+    >>> print(f"{snum:+2.3R}")
+    + 12.346E+03
+    >>> snum = SciNum(123456.654321, 0.0234)
+    >>> print(f"{snum:#!2r()}")
+    (0.123456654(23))e+06
     """
 
-    def __init__(self: SciNum, value: Number, /) -> None:
+    def __init__(
+        self: SciNum,
+        value: Number,
+        uncertainty: Number | None = None,
+        /,
+    ) -> None:
         self.value = Decimal(str(value))
+        if uncertainty is None:
+            self.uncertainty = uncertainty
+        else:
+            self.uncertainty = Decimal(str(uncertainty))
 
     def __format__(self: SciNum, fmt: str) -> str:
         user_options = format_options_from_fmt_spec(fmt)
         rendered_options = user_options.render()
+        if self.uncertainty is not None:
+            return format_val_unc(self.value, self.uncertainty, rendered_options)
         return format_num(self.value, rendered_options)
 
     def __repr__(self: SciNum) -> str:
+        if self.uncertainty is not None:
+            return f"{self.__class__.__name__}({self.value}, {self.uncertainty})"
         return f"{self.__class__.__name__}({self.value})"
-
-
-class SciNumUnc:
-    """
-    Value/uncertainty pair to be used with FSML.
-
-    A :class:`SciNumUnc` objects stores a pair of numbers, a value and
-    an uncertainty, for scientific formatting. This class is used in
-    combination with the :mod:`sciform` format specification mini
-    language to apply scientific formatting to the value/uncertainty
-    pair. Any options not configured by the format specification will be
-    populated with global default settings at format time.
-
-    >>> from sciform import SciNumUnc
-    >>> snumunc = SciNumUnc(123456.654321, 0.000002)
-    >>> print(f"{snumunc:,._!1f()}")
-    123,456.654_321(2)
-    """
-
-    def __init__(self: SciNumUnc, value: Number, uncertainty: Number, /) -> None:
-        self.value = Decimal(str(value))
-        self.uncertainty = Decimal(str(uncertainty))
-
-    def __format__(self: SciNumUnc, fmt: str) -> str:
-        user_options = format_options_from_fmt_spec(fmt)
-        rendered_options = user_options.render()
-        return format_val_unc(self.value, self.uncertainty, rendered_options)
-
-    def __repr__(self: SciNumUnc) -> str:
-        return f"{self.__class__.__name__}({self.value}, {self.uncertainty})"

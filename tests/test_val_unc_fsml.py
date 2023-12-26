@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import GlobalDefaultsContext, SciNumUnc
+from sciform import GlobalDefaultsContext, SciNum
 
 ValUncFSMLCases = list[tuple[tuple[float, float], list[tuple[str, str]]]]
 NAN = float("nan")
@@ -11,7 +11,7 @@ class TestFormatting(unittest.TestCase):
     def run_val_unc_fsml_cases(self, cases_list: ValUncFSMLCases):
         for (val, unc), formats_list in cases_list:
             for format_spec, expected_str in formats_list:
-                snum = SciNumUnc(val, unc)
+                snum = SciNum(val, unc)
                 snum_str = f"{snum:{format_spec}}"
                 with self.subTest(
                     val=val,
@@ -278,12 +278,6 @@ class TestFormatting(unittest.TestCase):
                     ("#r()", "(-0.000789(0.123456))e+03"),
                     ("ex+1()", "(-0.0789(12.3456))e+01"),
                     ("ex-1()", "(-7.89(1234.56))e-01"),
-                ],
-            ),
-            (
-                (123456.654321, 0.000002),
-                [
-                    (",._!1f()", "123,456.654_321(2)"),
                 ],
             ),
         ]

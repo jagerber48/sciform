@@ -12,7 +12,7 @@ scientific formatted strings.
 The first is via the :class:`Formatter` object and the second is
 using string formatting and the
 :ref:`Format Specification Mini-Language (FSML) <fsml>` with the
-:class:`SciNum` or :class:`SciNumUnc` objects.
+:class:`SciNum` object.
 
 Formatter
 ---------
@@ -49,8 +49,8 @@ be formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
 
 >>> from sciform import SciNum
 >>> num = SciNum(123456)
->>> print(f"{num:_!2f}")
-120_000
+>>> print(f"{num:!2f}")
+120000
 
 Value/Uncertainty Formatting
 ----------------------------
@@ -68,15 +68,15 @@ recommendations for conventions when possible.
 Value/uncertainty pairs can be formatted either by passing two numbers
 into a :class:`Formatter`, configured with the corresponding
 :ref:`formatting_options` and :ref:`val_unc_formatting_options`, or by
-using the :class:`SciNumUnc` object.
+using the :class:`SciNum` object.
 
 >>> val = 84.3
 >>> unc = 0.2
 >>> sform = Formatter(ndigits=2)
 >>> print(sform(val, unc))
 84.30 ± 0.20
->>> from sciform import SciNumUnc
->>> val_unc = SciNumUnc(val, unc)
+>>> from sciform import SciNum
+>>> val_unc = SciNum(val, unc)
 >>> print(f"{val_unc:!2}")
 84.30 ± 0.20
 
@@ -377,8 +377,7 @@ To support predictable rounding and the representation of high precision
 numbers, :mod:`sciform` casts the numbers it is presenting to
 :class:`Decimal` objects during its formatting algorithm.
 Numbers are input into :mod:`sciform` either as the input to a
-:class:`Formatter` or when instantiating a :class:`SciNum` or
-:class:`SciNumUnc` object.
+:class:`Formatter` or when instantiating a :class:`SciNum` object.
 In all cases the input will typically be a :class:`Decimal`,
 :class:`float`, :class:`str`, or :class:`int`.
 :class:`Decimal`, :class:`str` and :class:`int` are unambiguously
