@@ -87,7 +87,7 @@ available formatting options.
 Format Specification Mini Language
 ==================================
 
->>> from sciform import SciNum, SciNumUnc
+>>> from sciform import SciNum
 >>> print(f"{SciNum(1234.432):0=+5.6f}")
 +001234.432000
 
@@ -102,7 +102,7 @@ the decimal points.
 The ``f`` indicates that the number will be displayed in fixed point
 exponent mode.
 
->>> print(f"{SciNumUnc(123, 0.123):#!2R()}")
+>>> print(f"{SciNum(123, 0.123):#!2R()}")
 (0.12300(12))E+03
 
 In the preceding example the ``#`` alternate flag combined with ``R``
