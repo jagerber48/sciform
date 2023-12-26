@@ -234,7 +234,7 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_fsml_cases(cases_list)
 
-    def test_bracket_unc(self):
+    def test_paren_uncertainty(self):
         cases_list = [
             (
                 (123.456, 0.789),

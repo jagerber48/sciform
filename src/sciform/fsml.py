@@ -16,7 +16,7 @@ pattern = re.compile(
                          (?P<exp_mode>[fF%eErRbB])?
                          (?:x(?P<exp_val>[+-]?\d+))?
                          (?P<prefix_mode>p)?
-                         (?P<bracket_unc>\(\))?
+                         (?P<paren_uncertainty>\(\))?
                          $""",
     re.VERBOSE,
 )
@@ -98,11 +98,11 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
     else:
         exp_format = None
 
-    bracket_unc = match.group("bracket_unc")
-    if bracket_unc is not None:
-        bracket_unc = True
+    paren_uncertainty = match.group("paren_uncertainty")
+    if paren_uncertainty is not None:
+        paren_uncertainty = True
     else:
-        bracket_unc = None
+        paren_uncertainty = None
 
     return UserOptions(
         fill_mode=fill_mode,
@@ -114,6 +114,6 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
         exp_val=exp_val,
         exp_format=exp_format,
         capitalize=capitalize,
-        bracket_unc=bracket_unc,
+        paren_uncertainty=paren_uncertainty,
         val_unc_match_widths=val_unc_match_widths,
     )

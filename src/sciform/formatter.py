@@ -61,7 +61,7 @@ class Formatter:
         superscript: bool | None = None,
         latex: bool | None = None,
         nan_inf_exp: bool | None = None,
-        bracket_unc: bool | None = None,
+        paren_uncertainty: bool | None = None,
         pdg_sig_figs: bool | None = None,
         val_unc_match_widths: bool | None = None,
         bracket_unc_remove_seps: bool | None = None,
@@ -164,10 +164,10 @@ class Formatter:
           formatted with exponent symbols when exponent modes including
           exponent symbols are selected.
         :type nan_inf_exp: ``bool | None``
-        :param bracket_unc: Flag indicating if bracket uncertainty mode
+        :param paren_uncertainty: Flag indicating if bracket uncertainty mode
           (e.g. ``12.34(82)`` instead of ``12.34 ± 0.82``) should be
           used.
-        :type bracket_unc: ``bool | None``
+        :type paren_uncertainty: ``bool | None``
         :param pdg_sig_figs: Flag indicating whether the
           particle-data-group conventions should be used to
           automatically determine the number of significant figures to
@@ -216,7 +216,7 @@ class Formatter:
             superscript=superscript,
             latex=latex,
             nan_inf_exp=nan_inf_exp,
-            bracket_unc=bracket_unc,
+            paren_uncertainty=paren_uncertainty,
             pdg_sig_figs=pdg_sig_figs,
             val_unc_match_widths=val_unc_match_widths,
             bracket_unc_remove_seps=bracket_unc_remove_seps,

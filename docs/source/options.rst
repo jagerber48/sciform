@@ -623,10 +623,10 @@ If ``ndigits`` is specified (i.e. not ``None``) but
 ``ndigits!=AutoDigits`` with ``pdg_sig_figs=True`` then ``ValueError`` is
 raised.
 
-.. _bracket_uncertainty:
+.. _paren_uncertainty:
 
-Bracket Uncertainty
--------------------
+Parentheses Uncertainty
+-----------------------
 
 Instead of displaying ``123.456 ± 0.789``, there is a notation where
 the uncertainty is shown in brackets after the value as
@@ -636,38 +636,42 @@ final three digits of the value so that the 9 in the uncertainty is
 understood to appear in the thousandths place.
 This format is described in the
 `BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
-We call this format "bracket uncertainty" mode.
-:mod:`sciform` provides this functionality via the ``bracket_unc``
+We call this format "parentheses uncertainty" mode.
+:mod:`sciform` provides this functionality via the ``paren_uncertainty``
 option:
 
->>> sform = Formatter(bracket_unc=True)
+>>> sform = Formatter(paren_uncertainty=True)
 >>> print(sform(123.456, 0.789))
 123.456(789)
 
 Or with other options:
 
->>> sform = Formatter(ndigits=2, bracket_unc=True)
+>>> sform = Formatter(ndigits=2, paren_uncertainty=True)
 >>> print(sform(123.456, 0.789))
 123.46(79)
->>> sform = Formatter(ndigits=2, exp_mode="scientific", bracket_unc=True)
+>>> sform = Formatter(ndigits=2, exp_mode="scientific", paren_uncertainty=True)
 >>> print(sform(123.456, 0.789))
 (1.2346(79))e+02
 
-When ``bracket_unc=True`` is used with the prefix or parts-per exponent
-formats, if the exponent string is replaced, then the enclosing brackets
-around the value/uncertainty pair are omitted.
+When ``paren_uncertainty=True`` is used with the prefix or parts-per
+exponent formats, if the exponent string is replaced, then the enclosing
+parentheses around the value/uncertainty pair are omitted.
 This is consistent with
 `BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
 
->>> sform = Formatter(exp_mode="engineering", exp_format="prefix", bracket_unc=True)
+>>> sform = Formatter(
+...     exp_mode="engineering",
+...     exp_format="prefix",
+...     paren_uncertainty=True,
+... )
 >>> print(sform(523.4e-3, 1.2e-3))
 523.4(1.2) m
 
 Remove Separators for Bracket Uncertainty
 --------------------------------------------
 
-In some cases using bracket uncertainty results in digits such that the
-decimal point could appear in the uncertainty in the brackets.
+In some cases using parentheses uncertainty results in digits such that
+a decimal point could appear in the uncertainty in the parentheses.
 For example: ``18.4 ± 2.1 -> 18.4(2.1)``.
 In such cases, there is no official guidance on if the decimal symbol
 should be included in the bracket symbols or not.
@@ -682,10 +686,10 @@ parentheses.
 
 :mod:`sciform` allows the user to optionally remove the decimal symbol
 
->>> sform = Formatter(bracket_unc=True, bracket_unc_remove_seps=False)
+>>> sform = Formatter(paren_uncertainty=True, bracket_unc_remove_seps=False)
 >>> print(sform(18.4, 2.1))
 18.4(2.1)
->>> sform = Formatter(bracket_unc=True, bracket_unc_remove_seps=True)
+>>> sform = Formatter(paren_uncertainty=True, bracket_unc_remove_seps=True)
 >>> print(sform(18.4, 2.1))
 18.4(21)
 
@@ -696,7 +700,7 @@ symbols from the uncertainty in the brackets.
 ...     upper_separator=".",
 ...     decimal_separator=",",
 ...     lower_separator="_",
-...     bracket_unc=True,
+...     paren_uncertainty=True,
 ...     bracket_unc_remove_seps=False,
 ... )
 >>> print(sform(987654, 1234.4321))
@@ -705,15 +709,15 @@ symbols from the uncertainty in the brackets.
 ...     upper_separator=".",
 ...     decimal_separator=",",
 ...     lower_separator="_",
-...     bracket_unc=True,
+...     paren_uncertainty=True,
 ...     bracket_unc_remove_seps=True,
 ... )
 >>> print(sform(987654, 1234.4321))
 987.654,000_0(12344321)
 
-This latest example demonstrates that the bracket uncertainty mode can
-become difficult to read in some cases.
-Bracket uncertainty is most useful when the value is at least a few
+This latest example demonstrates that the parentheses uncertainty mode
+can become difficult to read in some cases.
+Parentheses uncertainty is most useful when the value is at least a few
 orders of magnitude larger than the uncertainty and when the uncertainty
 is displayed with a small number (e.g. 1 or 2) of significant digits.
 

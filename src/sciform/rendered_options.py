@@ -38,7 +38,7 @@ class RenderedOptions:
     superscript: bool
     latex: bool
     nan_inf_exp: bool
-    bracket_unc: bool
+    paren_uncertainty: bool
     pdg_sig_figs: bool
     val_unc_match_widths: bool
     bracket_unc_remove_seps: bool

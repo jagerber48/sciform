@@ -111,10 +111,10 @@ Further details about the options can be found at
        | (``'p'``)
      - Sets ``exp_format`` to :class:`'prefix'`.
        See :ref:`exp_str_replacement`.
-   * - | bracket uncertainty
+   * - | parentheses uncertainty
        | (``'()'``)
-     - Sets ``bracket_unc=True``.
-       See :ref:`bracket_uncertainty`.
+     - Sets ``paren_uncertainty=True``.
+       See :ref:`paren_uncertainty`.
 
 
 Incompatibilities With Built-in Format Specification Mini-Language

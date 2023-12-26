@@ -113,7 +113,7 @@ def main() -> None:
     fit_results_formatter = Formatter(
         exp_mode="engineering",
         round_mode="sig_fig",
-        bracket_unc=True,
+        paren_uncertainty=True,
         ndigits=2,
     )
 

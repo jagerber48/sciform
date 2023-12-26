@@ -327,7 +327,7 @@ class TestSeparators(unittest.TestCase):
                             upper_separator=",",
                             decimal_separator=".",
                             lower_separator="_",
-                            bracket_unc=True,
+                            paren_uncertainty=True,
                         ),
                         "123,456.654_321(2)",
                     ),

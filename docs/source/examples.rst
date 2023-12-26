@@ -77,7 +77,9 @@ available formatting options.
 >>> num = 314159.27
 >>> unc = 1618
 >>> sform = Formatter(
-...     exp_mode="engineering_shifted", pdg_sig_figs=True, bracket_unc=True
+...     exp_mode="engineering_shifted",
+...     pdg_sig_figs=True,
+...     paren_uncertainty=True
 ... )
 >>> print(sform(num, unc))
 (0.3142(16))e+06

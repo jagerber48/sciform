@@ -271,7 +271,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         val_mantissa,
         unc_mantissa,
         decimal_separator=options.decimal_separator,
-        bracket_unc=options.bracket_unc,
+        paren_uncertainty=options.paren_uncertainty,
         latex=options.latex,
         pm_whitespace=options.pm_whitespace,
         bracket_unc_remove_seps=options.bracket_unc_remove_seps,
@@ -289,7 +289,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
             capitalize=options.capitalize,
             latex=options.latex,
             superscript=options.superscript,
-            bracket_unc=options.bracket_unc,
+            paren_uncertainty=options.paren_uncertainty,
         )
     else:
         val_unc_exp_str = val_unc_str

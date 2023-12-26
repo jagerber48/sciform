@@ -32,7 +32,7 @@ class UserOptions:
     superscript: bool | None = None
     latex: bool | None = None
     nan_inf_exp: bool | None = None
-    bracket_unc: bool | None = None
+    paren_uncertainty: bool | None = None
     pdg_sig_figs: bool | None = None
     val_unc_match_widths: bool | None = None
     bracket_unc_remove_seps: bool | None = None
