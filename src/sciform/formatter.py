@@ -12,7 +12,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
     from sciform.format_utils import Number
 
-# TODO: Support SciNum/SciNumUnc input to formatter?
+# TODO: Support SciNum input to formatter?
 
 
 class Formatter:

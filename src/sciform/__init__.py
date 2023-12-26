@@ -14,7 +14,7 @@ from sciform.global_configuration import (
     set_global_defaults,
 )
 from sciform.modes import AutoDigits, AutoExpVal
-from sciform.scinum import SciNum, SciNumUnc
+from sciform.scinum import SciNum
 
 __all__ = [
     "Formatter",
@@ -31,5 +31,4 @@ __all__ = [
     "AutoDigits",
     "AutoExpVal",
     "SciNum",
-    "SciNumUnc",
 ]

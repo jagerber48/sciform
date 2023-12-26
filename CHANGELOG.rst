@@ -8,6 +8,10 @@ Unreleased
 Removed
 ^^^^^^^
 
+* **[BREAKING]** Removed the ``SciNumUnc`` class. Now the ``SciNum``
+  class can be used with an optional second positional argument to
+  specify the uncertainty associated with a number.
+
 * **[BREAKING]** Remove separator configuration from the FSML.
   These options made the FSML to cumbersome and led to confusing
   (if not incorrect) conflicts with the round mode symbol.

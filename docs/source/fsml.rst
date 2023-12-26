@@ -10,9 +10,9 @@ Specification
 =============
 
 Instead of explicitly constructing :class:`Formatter` instances, users
-can construct :class:`SciNum` or :class:`SciNumUnc` instances and format
-them using string formatting with format specification strings from the
-:mod:`sciform` format specification mini-language (FSML).
+can construct :class:`SciNum` instances and format them using string
+formatting with format specification strings from the :mod:`sciform`
+format specification mini-language (FSML).
 This is analogous to how python :class:`int`, :class:`float`, and
 :class:`Decimal` instances can be formatted using the built-in
 `format specification mini-language <https://docs.python.org/3/library/string.html#format-specification-mini-language>`_.
@@ -41,8 +41,7 @@ In this example ``!4`` indicates the number should be formatted with
 four significant figures and ``f`` indicates the number should be
 formatted in fixed point mode.
 
->>> from sciform import SciNumUnc
->>> print(f'{SciNumUnc(12345, 789):!1r}')
+>>> print(f'{SciNum(12345, 789):!1r}')
 (12.3 ± 0.8)e+03
 
 In this example ``!1`` indicates the number will be formatted so that

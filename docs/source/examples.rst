@@ -87,7 +87,7 @@ available formatting options.
 Format Specification Mini Language
 ==================================
 
->>> from sciform import SciNum, SciNumUnc
+>>> from sciform import SciNum
 >>> print(f"{SciNum(1234.432):0=+5.6f}")
 +001234.432000
 
@@ -102,7 +102,7 @@ the decimal points.
 The ``f`` indicates that the number will be displayed in fixed point
 exponent mode.
 
->>> print(f"{SciNumUnc(123, 0.123):#!2R()}")
+>>> print(f"{SciNum(123, 0.123):#!2R()}")
 (0.12300(12))E+03
 
 In the preceding example the ``#`` alternate flag combined with ``R``
@@ -131,7 +131,7 @@ The ``.-1`` indicates the number should be rounded to one
 digit *before* the decimal point and the ``f`` indicates that fixed
 point mode should be used.
 
-SciNum, SciNumUnc, and Global Options
+SciNum, and Global Options
 =====================================
 
 Here are a small selection of examples which demonstrate some of the
@@ -143,7 +143,7 @@ Here this is done using the :class:`GlobalDefaultsContext` context
 manager, but this could have been done using :func:`set_global_defaults`
 instead.
 
->>> from sciform import SciNum, SciNumUnc, GlobalDefaultsContext
+>>> from sciform import SciNum, GlobalDefaultsContext
 >>> snum = SciNum(12345.54321)
 >>> print(f"{snum:!4e}")
 1.235e+04
@@ -173,7 +173,7 @@ instead.
 >>> print(f"{snum:%}")
 7.6543%
 
->>> num_unc = SciNumUnc(3141592.7, 1618)
+>>> num_unc = SciNum(3141592.7, 1618)
 >>> print(f"{num_unc}")
 3141593 ± 1618
 >>> with GlobalDefaultsContext(pdg_sig_figs=True, unc_pm_whitespace=False):
@@ -181,7 +181,7 @@ instead.
 ...
 (3.1416±0.0016) M
 
->>> num_unc = SciNumUnc(314159.27, 1618)
+>>> num_unc = SciNum(314159.27, 1618)
 >>> with GlobalDefaultsContext(pdg_sig_figs=True):
 ...     print(f"{num_unc:#r()}")
 ...
