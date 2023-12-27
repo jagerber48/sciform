@@ -11,9 +11,6 @@ def add_group_chars(
     group_size: int = 3,
 ) -> str:
     """Add grouping characters to a string of numbers."""
-    # TODO: This function would be easier if it doesn't need to handle  leading
-    #   whitespaces. This could be accomplished by left stripping leading whitespaces
-    #   in add_separators() and adding them back in at the end of add_separators().
     if reverse:
         num_str = num_str[::-1]
 
