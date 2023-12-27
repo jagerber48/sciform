@@ -421,7 +421,7 @@ decimal symbol.
 
 Additionally, :mod:`sciform` also supports including separation
 characters between groups of three digits both above the decimal symbol
-and below the decimal symbols.
+and below the decimal symbol.
 ``''``, ``','``, ``'.'``, ``' '``, ``'_'`` can all be used as
 "upper" separator characters and ``''``, ``' '``, and ``'_'`` can
 all be used as "lower" separator characters.
@@ -503,7 +503,7 @@ many digits to the right of either the most-significant digit or the
 decimal point are displayed.
 It is also possible, using "fill" options, to add digits to the left of
 the most-significant digit.
-The ``fill_char`` options can be used to select either whitespaces
+The ``fill_char`` option can be used to select either whitespaces
 ``' '`` or zeros ``'0'`` as fill characters.
 The ``left_pad_dec_place`` option is used to indicate to which decimal
 place fill characters should be added.
