@@ -221,7 +221,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         val_mantissa,
         unc_mantissa,
         options.left_pad_dec_place,
-        val_unc_match_widths=options.val_unc_match_widths,
+        left_pad_matching=options.left_pad_matching,
     )
 
     ndigits = -round_digit + exp_val

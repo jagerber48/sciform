@@ -67,9 +67,6 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
     left_pad_dec_place = match.group("left_pad_dec_place")
     if left_pad_dec_place is not None:
         left_pad_dec_place = int(left_pad_dec_place)
-        val_unc_match_widths = True
-    else:
-        val_unc_match_widths = None
 
     round_mode_mapping = {"!": "sig_fig", ".": "dec_place", None: None}
 
@@ -115,5 +112,4 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
         exp_format=exp_format,
         capitalize=capitalize,
         paren_uncertainty=paren_uncertainty,
-        val_unc_match_widths=val_unc_match_widths,
     )

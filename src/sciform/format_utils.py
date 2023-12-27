@@ -448,10 +448,10 @@ def get_val_unc_top_digit(
     unc_mantissa: Decimal,
     input_top_digit: int | AutoDigits,
     *,
-    val_unc_match_widths: bool,
+    left_pad_matching: bool,
 ) -> int | AutoDigits:
     """Get top digit place for value/uncertainty formatting."""
-    if val_unc_match_widths:
+    if left_pad_matching:
         val_top_digit = get_top_digit(val_mantissa)
         unc_top_digit = get_top_digit(unc_mantissa)
         new_top_digit = max(

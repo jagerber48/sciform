@@ -63,7 +63,7 @@ class Formatter:
         nan_inf_exp: bool | None = None,
         paren_uncertainty: bool | None = None,
         pdg_sig_figs: bool | None = None,
-        val_unc_match_widths: bool | None = None,
+        left_pad_matching: bool | None = None,
         paren_uncertainty_separators: bool | None = None,
         pm_whitespace: bool | None = None,
         add_c_prefix: bool = False,
@@ -173,10 +173,10 @@ class Formatter:
           automatically determine the number of significant figures to
           use for uncertainty.
         :type pdg_sig_figs: ``bool | None``
-        :param val_unc_match_widths: Flag indicating if the value or
+        :param left_pad_matching: Flag indicating if the value or
           uncertainty should be left padded to ensure they are both left
           padded to the same digits place.
-        :type val_unc_match_widths: ``bool | None``
+        :type left_pad_matching: ``bool | None``
         :param paren_uncertainty_separators: Flag indicating if
           separator symbols should be included in the uncertainty when
           using parentheses uncertainty mode. E.g. expressing
@@ -218,7 +218,7 @@ class Formatter:
             nan_inf_exp=nan_inf_exp,
             paren_uncertainty=paren_uncertainty,
             pdg_sig_figs=pdg_sig_figs,
-            val_unc_match_widths=val_unc_match_widths,
+            left_pad_matching=left_pad_matching,
             paren_uncertainty_separators=paren_uncertainty_separators,
             pm_whitespace=pm_whitespace,
             add_c_prefix=add_c_prefix,

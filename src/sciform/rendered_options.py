@@ -40,7 +40,7 @@ class RenderedOptions:
     nan_inf_exp: bool
     paren_uncertainty: bool
     pdg_sig_figs: bool
-    val_unc_match_widths: bool
+    left_pad_matching: bool
     paren_uncertainty_separators: bool
     pm_whitespace: bool
 

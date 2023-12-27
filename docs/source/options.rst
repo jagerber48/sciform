@@ -800,19 +800,19 @@ value and the uncertainty by allowing the user to left pad to the
 maximum of (1) the specified ``left_pad_dec_place``, (2) the most
 significant digit of the value, and (3) the most significant digit of
 the uncertainty.
-This feature is accessed with the ``val_unc_match_widths`` option.
+This feature is accessed with the ``left_pad_matching`` option.
 
 >>> sform = Formatter(
 ...     fill_mode="0",
 ...     left_pad_dec_place=2,
-...     val_unc_match_widths=False,
+...     left_pad_matching=False,
 ... )
 >>> print(sform(12345, 1.23))
 12345.00 ± 001.23
 >>> sform = Formatter(
 ...     fill_mode="0",
 ...     left_pad_dec_place=2,
-...     val_unc_match_widths=True,
+...     left_pad_matching=True,
 ... )
 >>> print(sform(12345, 1.23))
 12345.00 ± 00001.23

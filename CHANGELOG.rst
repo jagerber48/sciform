@@ -38,8 +38,20 @@ Changed
     * ``bracket_unc_remove_seps`` renamed to
       ``paren_uncertainty_separators``. This change is associated with a
       a reversal of the Boolean logic on the option.
-    * ``unc_pm_whitespace`` renamed to `pm_whitespace``.
+    * ``val_unc_match_widths`` renamed to ``left_pad_matching``.
+    * ``unc_pm_whitespace`` renamed to ``pm_whitespace``.
 
+* **[BREAKING]** Previously specifying any left pad decimal place using
+  the ``sciform`` FSML resulted in setting ``left_pad_matching=True`` so
+  that ``print(f"{SciNum(123.456, 0.789):0}")`` resulted in
+  ``"123.456 ± 000.789"``.
+  Now the FSML has no impact on ``left_pad_matching``.
+  Now, similar to many other options, the global setting for
+  ``left_pad_matching`` will always be used when formatting using the
+  FSML.
+  Under the default global options (``left_pad_matching=False``)
+  ``print(f"{SciNum(123.456, 0.789):0}")`` results in
+  ``"123.456 ± 0.789"``.
 * Implemented `ruff <https://docs.astral.sh/ruff/>`_ linting and
   formatting in codebase and integration automation.
 * Refactored code for adding separators.

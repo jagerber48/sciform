@@ -31,7 +31,7 @@ class TestPrint(unittest.TestCase):
             " 'nan_inf_exp': False,\n"
             " 'paren_uncertainty': False,\n"
             " 'pdg_sig_figs': False,\n"
-            " 'val_unc_match_widths': False,\n"
+            " 'left_pad_matching': False,\n"
             " 'paren_uncertainty_separators': True,\n"
             " 'pm_whitespace': True}\n"
         )
@@ -64,7 +64,7 @@ class TestPrint(unittest.TestCase):
             " 'nan_inf_exp': False,\n"
             " 'paren_uncertainty': False,\n"
             " 'pdg_sig_figs': False,\n"
-            " 'val_unc_match_widths': False,\n"
+            " 'left_pad_matching': False,\n"
             " 'paren_uncertainty_separators': True,\n"
             " 'pm_whitespace': True}\n"
         )

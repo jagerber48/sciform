@@ -142,7 +142,7 @@ package default settings):
  'nan_inf_exp': False,
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
- 'val_unc_match_widths': False,
+ 'left_pad_matching': False,
  'paren_uncertainty_separators': True,
  'pm_whitespace': True}
 
@@ -177,7 +177,7 @@ unchanged.
  'nan_inf_exp': False,
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
- 'val_unc_match_widths': False,
+ 'left_pad_matching': False,
  'paren_uncertainty_separators': True,
  'pm_whitespace': True}
 

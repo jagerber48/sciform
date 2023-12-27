@@ -34,7 +34,7 @@ class UserOptions:
     nan_inf_exp: bool | None = None
     paren_uncertainty: bool | None = None
     pdg_sig_figs: bool | None = None
-    val_unc_match_widths: bool | None = None
+    left_pad_matching: bool | None = None
     paren_uncertainty_separators: bool | None = None
     pm_whitespace: bool | None = None
 
