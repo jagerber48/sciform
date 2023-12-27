@@ -5,7 +5,7 @@ from sciform import modes
 
 
 class TestInvalidOptions(unittest.TestCase):
-    def test_fill_mode_strings(self):
+    def test_fill_char_strings(self):
         self.assertEqual(set(get_args(modes.UserFillMode)), set(modes.FillMode))
 
     def test_sign_mode_strings(self):

@@ -28,7 +28,7 @@ class RenderedOptions:
     decimal_separator: modes.DecimalSeparators
     lower_separator: modes.LowerSeparators
     sign_mode: modes.SignMode
-    fill_mode: modes.FillMode
+    fill_char: modes.FillMode
     left_pad_dec_place: int
     exp_format: modes.ExpFormat
     extra_si_prefixes: dict[int, str]

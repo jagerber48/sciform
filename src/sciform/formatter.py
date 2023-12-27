@@ -51,7 +51,7 @@ class Formatter:
         decimal_separator: modes.UserDecimalSeparators | None = None,
         lower_separator: modes.UserLowerSeparators | None = None,
         sign_mode: modes.UserSignMode | None = None,
-        fill_mode: modes.UserFillMode | None = None,
+        fill_char: modes.UserFillMode | None = None,
         left_pad_dec_place: int | None = None,
         exp_format: modes.UserExpFormat | None = None,
         extra_si_prefixes: dict[int, str] | None = None,
@@ -123,8 +123,8 @@ class Formatter:
         :type lower_separator: ``Literal['', ' ', '_'] | None``
         :param sign_mode: Indicate sign symbol behavior.
         :type sign_mode: ``Literal['-', '+', ' '] | None``
-        :param fill_mode: Indicate whether to fill with zeros or spaces.
-        :type fill_mode: ``Literal[' ', '0'] | None``
+        :param fill_char: Indicate whether to fill with zeros or spaces.
+        :type fill_char: ``Literal[' ', '0'] | None``
         :param left_pad_dec_place: Positive ``int`` indicating the
           decimal place to which the string will be left padded before
           the sign symbol. 0 corresponds to the ones place, 1
@@ -206,7 +206,7 @@ class Formatter:
             decimal_separator=decimal_separator,
             lower_separator=lower_separator,
             sign_mode=sign_mode,
-            fill_mode=fill_mode,
+            fill_char=fill_char,
             left_pad_dec_place=left_pad_dec_place,
             exp_format=exp_format,
             extra_si_prefixes=extra_si_prefixes,

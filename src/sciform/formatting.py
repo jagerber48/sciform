@@ -109,7 +109,7 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
         """
         exp_val = 0
 
-    fill_char = options.fill_mode.value
+    fill_char = options.fill_char.value
     mantissa_str = format_num_by_top_bottom_dig(
         mantissa_rounded.normalize(),
         options.left_pad_dec_place,

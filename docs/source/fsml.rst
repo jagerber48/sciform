@@ -63,7 +63,7 @@ Further details about the options can be found at
      - Description
    * - | fill
        | (``'0='``, ``' ='``)
-     - Configure ``fill_mode`` to be ``'0'`` or ``' '``. See
+     - Configure ``fill_char`` to be ``'0'`` or ``' '``. See
        :ref:`left_filling`.
    * - | sign
        | (``'-'``, ``'+'``, ``' '``)

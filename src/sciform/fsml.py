@@ -8,7 +8,7 @@ from sciform.user_options import UserOptions
 
 pattern = re.compile(
     r"""^
-                         (?:(?P<fill_mode>[ 0])=)?
+                         (?:(?P<fill_char>[ 0])=)?
                          (?P<sign_mode>[-+ ])?
                          (?P<alternate_mode>\#)?
                          (?P<left_pad_dec_place>\d+)?
@@ -58,7 +58,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
         msg = f"Invalid format specifier: '{fmt_spec}'"
         raise ValueError(msg)
 
-    fill_mode = match.group("fill_mode")
+    fill_char = match.group("fill_char")
     sign_mode = match.group("sign_mode")
 
     alternate_mode = match.group("alternate_mode")
@@ -102,7 +102,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
         paren_uncertainty = None
 
     return UserOptions(
-        fill_mode=fill_mode,
+        fill_char=fill_char,
         sign_mode=sign_mode,
         left_pad_dec_place=left_pad_dec_place,
         round_mode=round_mode,
