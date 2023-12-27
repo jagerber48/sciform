@@ -30,12 +30,28 @@ Added
 Changed
 ^^^^^^^
 
+* **[BREAKING]** Renamed multiple options.
+
+    * ``top_dig_place`` renamed to ``left_pad_dec_place``.
+    * ``superscript_exp`` renamed to ``superscript``.
+    * ``bracket_unc`` renamed to ``paren_uncertainty``.
+    * ``bracket_unc_remove_seps`` renamed to
+      ``paren_uncertainty_separators``. This change is associated with a
+      a reversal of the Boolean logic on the option.
+    * ``unc_pm_whitespace`` renamed to `pm_whitespace``.
+
 * Implemented `ruff <https://docs.astral.sh/ruff/>`_ linting and
   formatting in codebase and integration automation.
 * Refactored code for adding separators.
 * Refactored formatting and formatting utilities to simplify functions
   and make the algorithm easier to follow.
-* More aggressively filter JetBrains .idea folder from version control.
+* More aggressively filter JetBrains ``.idea/`` folder from version control.
+
+Fixed
+^^^^^
+
+* Fixed a bug involving removing separators in parentheses uncertainty
+  mode when at least one of the value and uncertainty were non-finite.
 
 ----
 
