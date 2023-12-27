@@ -50,10 +50,10 @@ class AutoDigits(metaclass=SentinelMeta):
     """
 
 
-UserFillMode = Literal[" ", "0"]
+UserFillChar = Literal[" ", "0"]
 
 
-class FillMode(str, Enum):
+class FillChar(str, Enum):
     """Fill mode Enum."""
 
     SPACE = " "
