@@ -25,7 +25,7 @@ PKG_DEFAULT_OPTIONS = RenderedOptions(
     paren_uncertainty=False,
     pdg_sig_figs=False,
     val_unc_match_widths=False,
-    bracket_unc_remove_seps=False,
+    paren_uncertainty_separators=True,
     pm_whitespace=True,
 )
 

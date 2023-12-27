@@ -32,7 +32,7 @@ class TestPrint(unittest.TestCase):
             " 'paren_uncertainty': False,\n"
             " 'pdg_sig_figs': False,\n"
             " 'val_unc_match_widths': False,\n"
-            " 'bracket_unc_remove_seps': False,\n"
+            " 'paren_uncertainty_separators': True,\n"
             " 'pm_whitespace': True}\n"
         )
         self.assertEqual(actual_printout, expected_printout)
@@ -65,7 +65,7 @@ class TestPrint(unittest.TestCase):
             " 'paren_uncertainty': False,\n"
             " 'pdg_sig_figs': False,\n"
             " 'val_unc_match_widths': False,\n"
-            " 'bracket_unc_remove_seps': False,\n"
+            " 'paren_uncertainty_separators': True,\n"
             " 'pm_whitespace': True}\n"
         )
         self.assertEqual(actual_printout, expected_printout)

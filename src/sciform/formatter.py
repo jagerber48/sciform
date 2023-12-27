@@ -64,7 +64,7 @@ class Formatter:
         paren_uncertainty: bool | None = None,
         pdg_sig_figs: bool | None = None,
         val_unc_match_widths: bool | None = None,
-        bracket_unc_remove_seps: bool | None = None,
+        paren_uncertainty_separators: bool | None = None,
         pm_whitespace: bool | None = None,
         add_c_prefix: bool = False,
         add_small_si_prefixes: bool = False,
@@ -164,9 +164,9 @@ class Formatter:
           formatted with exponent symbols when exponent modes including
           exponent symbols are selected.
         :type nan_inf_exp: ``bool | None``
-        :param paren_uncertainty: Flag indicating if bracket uncertainty mode
-          (e.g. ``12.34(82)`` instead of ``12.34 ± 0.82``) should be
-          used.
+        :param paren_uncertainty: Flag indicating if parentheses 
+          uncertainty mode (e.g. ``12.34(82)`` instead of 
+          ``12.34 ± 0.82``) should be used.
         :type paren_uncertainty: ``bool | None``
         :param pdg_sig_figs: Flag indicating whether the
           particle-data-group conventions should be used to
@@ -177,11 +177,11 @@ class Formatter:
           uncertainty should be left padded to ensure they are both left
           padded to the same digits place.
         :type val_unc_match_widths: ``bool | None``
-        :param bracket_unc_remove_seps: Flag indicating if separator
-          symbols should be removed from the uncertainty when using
-          bracket uncertainty mode. E.g. expressing ``123.4 ± 2.3`` as
-          ``123.4(23)`` instead of ``123.4(2.3)``.
-        :type bracket_unc_remove_seps: ``bool | None``
+        :param paren_uncertainty_separators: Flag indicating if 
+          separator symbols should be included in the uncertainty when 
+          using parentheses uncertainty mode. E.g. expressing 
+          ``123.4 ± 2.3`` either as ``123.4(2.3)`` or ``123.4(23)``.
+        :type paren_uncertainty_separators: ``bool | None``
         :param pm_whitespace: Flag indicating if there should be
           whitespace surrounding the ``'±'`` symbols when formatting.
           E.g. ``123.4±2.3`` compared to ``123.4 ± 2.3``.
@@ -219,7 +219,7 @@ class Formatter:
             paren_uncertainty=paren_uncertainty,
             pdg_sig_figs=pdg_sig_figs,
             val_unc_match_widths=val_unc_match_widths,
-            bracket_unc_remove_seps=bracket_unc_remove_seps,
+            paren_uncertainty_separators=paren_uncertainty_separators,
             pm_whitespace=pm_whitespace,
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,

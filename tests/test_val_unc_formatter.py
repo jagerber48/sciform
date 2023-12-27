@@ -61,7 +61,7 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
-    def test_bracket_unc_invalid_unc(self):
+    def test_paren_unc_invalid_unc(self):
         cases_list = [
             (
                 (123, 0),
@@ -206,7 +206,7 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
-    def test_bracket_unc_remove_dec_symb(self):
+    def test_paren_unc_separators(self):
         cases_list = [
             (
                 (123.456, 0.789),
@@ -223,7 +223,7 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             exp_mode="scientific",
                             exp_val=-1,
-                            bracket_unc_remove_seps=True,
+                            paren_uncertainty_separators=False,
                             paren_uncertainty=True,
                         ),
                         "(1234.56(789))e-01",
@@ -246,12 +246,69 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             exp_mode="scientific",
                             exp_val=-1,
-                            bracket_unc_remove_seps=True,
+                            paren_uncertainty_separators=False,
                             paren_uncertainty=True,
                         ),
                         "(7.89(1234.56))e-01",
                     ),
                 ],
+            ),
+            (
+                (1.2, float("nan")),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_separators=False,
+                        ),
+                        "1.2(nan)",
+                    ),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_separators=True,
+                        ),
+                        "1.2(nan)",
+                    ),
+                ]
+            ),
+            (
+                (float("nan"), 1.2),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_separators=False,
+                        ),
+                        "nan(1.2)"
+                    ),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_separators=True,
+                        ),
+                        "nan(1.2)"
+                    ),
+                ]
+            ),
+            (
+                (float("nan"), float("nan")),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_separators=True,
+                        ),
+                        "nan(nan)",
+                    ),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_separators=False,
+                        ),
+                        "nan(nan)",
+                    ),
+                ]
             ),
         ]
 

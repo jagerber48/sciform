@@ -274,7 +274,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         paren_uncertainty=options.paren_uncertainty,
         latex=options.latex,
         pm_whitespace=options.pm_whitespace,
-        bracket_unc_remove_seps=options.bracket_unc_remove_seps,
+        paren_uncertainty_separators=options.paren_uncertainty_separators,
     )
 
     if exp_str is not None:

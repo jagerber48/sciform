@@ -143,7 +143,7 @@ package default settings):
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
  'val_unc_match_widths': False,
- 'bracket_unc_remove_seps': False,
+ 'paren_uncertainty_separators': True,
  'pm_whitespace': True}
 
 The global default settings can be modified using the
@@ -178,7 +178,7 @@ unchanged.
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
  'val_unc_match_widths': False,
- 'bracket_unc_remove_seps': False,
+ 'paren_uncertainty_separators': True,
  'pm_whitespace': True}
 
 The global default settings can be reset to the :mod:`sciform` defaults

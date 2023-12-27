@@ -41,7 +41,7 @@ class RenderedOptions:
     paren_uncertainty: bool
     pdg_sig_figs: bool
     val_unc_match_widths: bool
-    bracket_unc_remove_seps: bool
+    paren_uncertainty_separators: bool
     pm_whitespace: bool
 
     def __str__(self: RenderedOptions) -> str:

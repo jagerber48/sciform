@@ -35,7 +35,7 @@ class UserOptions:
     paren_uncertainty: bool | None = None
     pdg_sig_figs: bool | None = None
     val_unc_match_widths: bool | None = None
-    bracket_unc_remove_seps: bool | None = None
+    paren_uncertainty_separators: bool | None = None
     pm_whitespace: bool | None = None
 
     add_c_prefix: InitVar[bool] = False
