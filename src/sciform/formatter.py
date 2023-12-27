@@ -164,8 +164,8 @@ class Formatter:
           formatted with exponent symbols when exponent modes including
           exponent symbols are selected.
         :type nan_inf_exp: ``bool | None``
-        :param paren_uncertainty: Flag indicating if parentheses 
-          uncertainty mode (e.g. ``12.34(82)`` instead of 
+        :param paren_uncertainty: Flag indicating if parentheses
+          uncertainty mode (e.g. ``12.34(82)`` instead of
           ``12.34 ± 0.82``) should be used.
         :type paren_uncertainty: ``bool | None``
         :param pdg_sig_figs: Flag indicating whether the
@@ -177,9 +177,9 @@ class Formatter:
           uncertainty should be left padded to ensure they are both left
           padded to the same digits place.
         :type val_unc_match_widths: ``bool | None``
-        :param paren_uncertainty_separators: Flag indicating if 
-          separator symbols should be included in the uncertainty when 
-          using parentheses uncertainty mode. E.g. expressing 
+        :param paren_uncertainty_separators: Flag indicating if
+          separator symbols should be included in the uncertainty when
+          using parentheses uncertainty mode. E.g. expressing
           ``123.4 ± 2.3`` either as ``123.4(2.3)`` or ``123.4(23)``.
         :type paren_uncertainty_separators: ``bool | None``
         :param pm_whitespace: Flag indicating if there should be

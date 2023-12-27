@@ -531,7 +531,7 @@ def construct_val_unc_str(  # noqa: PLR0913
                                 continue
                         else:
                             """
-                            Don't remove the decimal separator if the value is 
+                            Don't remove the decimal separator if the value is
                             non-finite.
                             """
                             continue

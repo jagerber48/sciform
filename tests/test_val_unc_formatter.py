@@ -270,7 +270,7 @@ class TestFormatting(unittest.TestCase):
                         ),
                         "1.2(nan)",
                     ),
-                ]
+                ],
             ),
             (
                 (float("nan"), 1.2),
@@ -280,16 +280,16 @@ class TestFormatting(unittest.TestCase):
                             paren_uncertainty=True,
                             paren_uncertainty_separators=False,
                         ),
-                        "nan(1.2)"
+                        "nan(1.2)",
                     ),
                     (
                         Formatter(
                             paren_uncertainty=True,
                             paren_uncertainty_separators=True,
                         ),
-                        "nan(1.2)"
+                        "nan(1.2)",
                     ),
-                ]
+                ],
             ),
             (
                 (float("nan"), float("nan")),
@@ -308,7 +308,7 @@ class TestFormatting(unittest.TestCase):
                         ),
                         "nan(nan)",
                     ),
-                ]
+                ],
             ),
         ]
 
