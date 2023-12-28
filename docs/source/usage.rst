@@ -130,21 +130,21 @@ package default settings):
  'decimal_separator': '.',
  'lower_separator': '',
  'sign_mode': '-',
- 'fill_mode': ' ',
- 'top_dig_place': 0,
+ 'fill_char': ' ',
+ 'left_pad_dec_place': 0,
  'exp_format': 'standard',
  'extra_si_prefixes': {},
  'extra_iec_prefixes': {},
  'extra_parts_per_forms': {},
  'capitalize': False,
- 'superscript_exp': False,
+ 'superscript': False,
  'latex': False,
  'nan_inf_exp': False,
- 'bracket_unc': False,
+ 'paren_uncertainty': False,
  'pdg_sig_figs': False,
- 'val_unc_match_widths': False,
- 'bracket_unc_remove_seps': False,
- 'unc_pm_whitespace': True}
+ 'left_pad_matching': False,
+ 'paren_uncertainty_separators': True,
+ 'pm_whitespace': True}
 
 The global default settings can be modified using the
 :func:`set_global_defaults()` function.
@@ -154,7 +154,10 @@ unchanged.
 
 >>> from sciform import set_global_defaults
 >>> set_global_defaults(
-...     fill_mode="0", exp_mode="engineering_shifted", ndigits=4, decimal_separator=","
+...     fill_char="0",
+...     exp_mode="engineering_shifted",
+...     ndigits=4,
+...     decimal_separator=",",
 ... )
 >>> print_global_defaults()
 {'exp_mode': 'engineering_shifted',
@@ -165,21 +168,21 @@ unchanged.
  'decimal_separator': ',',
  'lower_separator': '',
  'sign_mode': '-',
- 'fill_mode': '0',
- 'top_dig_place': 0,
+ 'fill_char': '0',
+ 'left_pad_dec_place': 0,
  'exp_format': 'standard',
  'extra_si_prefixes': {},
  'extra_iec_prefixes': {},
  'extra_parts_per_forms': {},
  'capitalize': False,
- 'superscript_exp': False,
+ 'superscript': False,
  'latex': False,
  'nan_inf_exp': False,
- 'bracket_unc': False,
+ 'paren_uncertainty': False,
  'pdg_sig_figs': False,
- 'val_unc_match_widths': False,
- 'bracket_unc_remove_seps': False,
- 'unc_pm_whitespace': True}
+ 'left_pad_matching': False,
+ 'paren_uncertainty_separators': True,
+ 'pm_whitespace': True}
 
 The global default settings can be reset to the :mod:`sciform` defaults
 using :func:`reset_global_defaults`.

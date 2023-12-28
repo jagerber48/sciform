@@ -22,21 +22,21 @@ class UserOptions:
     decimal_separator: modes.UserDecimalSeparators | None = None
     lower_separator: modes.UserLowerSeparators | None = None
     sign_mode: modes.UserSignMode | None = None
-    fill_mode: modes.UserFillMode | None = None
-    top_dig_place: int | None = None
+    fill_char: modes.UserFillChar | None = None
+    left_pad_dec_place: int | None = None
     exp_format: modes.UserExpFormat | None = None
     extra_si_prefixes: dict[int, str] | None = None
     extra_iec_prefixes: dict[int, str] | None = None
     extra_parts_per_forms: dict[int, str] | None = None
     capitalize: bool | None = None
-    superscript_exp: bool | None = None
+    superscript: bool | None = None
     latex: bool | None = None
     nan_inf_exp: bool | None = None
-    bracket_unc: bool | None = None
+    paren_uncertainty: bool | None = None
     pdg_sig_figs: bool | None = None
-    val_unc_match_widths: bool | None = None
-    bracket_unc_remove_seps: bool | None = None
-    unc_pm_whitespace: bool | None = None
+    left_pad_matching: bool | None = None
+    paren_uncertainty_separators: bool | None = None
+    pm_whitespace: bool | None = None
 
     add_c_prefix: InitVar[bool] = False
     add_small_si_prefixes: InitVar[bool] = False
@@ -181,7 +181,7 @@ class UserOptions:
             "decimal_separator": modes.Separator,
             "lower_separator": modes.Separator,
             "sign_mode": modes.SignMode,
-            "fill_mode": modes.FillMode,
+            "fill_char": modes.FillChar,
             "exp_format": modes.ExpFormat,
         }
 

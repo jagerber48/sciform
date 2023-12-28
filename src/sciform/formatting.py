@@ -49,7 +49,7 @@ def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
             capitalize=options.capitalize,
             latex=options.latex,
             latex_trim_whitespace=True,
-            superscript=options.superscript_exp,
+            superscript=options.superscript,
             extra_si_prefixes=options.extra_si_prefixes,
             extra_iec_prefixes=options.extra_iec_prefixes,
             extra_parts_per_forms=options.extra_parts_per_forms,
@@ -109,10 +109,10 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
         """
         exp_val = 0
 
-    fill_char = options.fill_mode.value
+    fill_char = options.fill_char.value
     mantissa_str = format_num_by_top_bottom_dig(
         mantissa_rounded.normalize(),
-        options.top_dig_place,
+        options.left_pad_dec_place,
         round_digit,
         options.sign_mode,
         fill_char,
@@ -136,7 +136,7 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
         capitalize=options.capitalize,
         latex=options.latex,
         latex_trim_whitespace=False,
-        superscript=options.superscript_exp,
+        superscript=options.superscript,
         extra_si_prefixes=options.extra_si_prefixes,
         extra_iec_prefixes=options.extra_iec_prefixes,
         extra_parts_per_forms=options.extra_parts_per_forms,
@@ -220,8 +220,8 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     new_top_digit = get_val_unc_top_digit(
         val_mantissa,
         unc_mantissa,
-        options.top_dig_place,
-        val_unc_match_widths=options.val_unc_match_widths,
+        options.left_pad_dec_place,
+        left_pad_matching=options.left_pad_matching,
     )
 
     ndigits = -round_digit + exp_val
@@ -230,7 +230,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     We will format the val and unc mantissas
        * using decimal place rounding mode with the ndigits calculated
          above
-       * With the optionally shared top digit calculated above
+       * With the optionally shared left_pad_dec_place calculated above
        * With the calculated shared exponent
        * Without percent mode (percent mode for val/unc pairs is
          handled below in the scope of this function)
@@ -241,12 +241,12 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     """
     val_format_options = replace(
         options,
-        top_dig_place=new_top_digit,
+        left_pad_dec_place=new_top_digit,
         round_mode=RoundMode.DEC_PLACE,
         ndigits=ndigits,
         exp_mode=exp_mode,
         exp_val=exp_val,
-        superscript_exp=False,
+        superscript=False,
         latex=False,
         exp_format=ExpFormat.STANDARD,
     )
@@ -271,10 +271,10 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         val_mantissa,
         unc_mantissa,
         decimal_separator=options.decimal_separator,
-        bracket_unc=options.bracket_unc,
+        paren_uncertainty=options.paren_uncertainty,
         latex=options.latex,
-        pm_whitespace=options.unc_pm_whitespace,
-        bracket_unc_remove_seps=options.bracket_unc_remove_seps,
+        pm_whitespace=options.pm_whitespace,
+        paren_uncertainty_separators=options.paren_uncertainty_separators,
     )
 
     if exp_str is not None:
@@ -288,8 +288,8 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
             extra_parts_per_forms=options.extra_parts_per_forms,
             capitalize=options.capitalize,
             latex=options.latex,
-            superscript_exp=options.superscript_exp,
-            bracket_unc=options.bracket_unc,
+            superscript=options.superscript,
+            paren_uncertainty=options.paren_uncertainty,
         )
     else:
         val_unc_exp_str = val_unc_str

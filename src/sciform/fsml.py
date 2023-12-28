@@ -8,15 +8,15 @@ from sciform.user_options import UserOptions
 
 pattern = re.compile(
     r"""^
-                         (?:(?P<fill_mode>[ 0])=)?
+                         (?:(?P<fill_char>[ 0])=)?
                          (?P<sign_mode>[-+ ])?
                          (?P<alternate_mode>\#)?
-                         (?P<top_dig_place>\d+)?
+                         (?P<left_pad_dec_place>\d+)?
                          (?:(?P<round_mode>[.!])(?P<ndigits>[+-]?\d+))?
                          (?P<exp_mode>[fF%eErRbB])?
                          (?:x(?P<exp_val>[+-]?\d+))?
                          (?P<prefix_mode>p)?
-                         (?P<bracket_unc>\(\))?
+                         (?P<paren_uncertainty>\(\))?
                          $""",
     re.VERBOSE,
 )
@@ -58,19 +58,15 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
         msg = f"Invalid format specifier: '{fmt_spec}'"
         raise ValueError(msg)
 
-    fill_mode = match.group("fill_mode")
+    fill_char = match.group("fill_char")
     sign_mode = match.group("sign_mode")
 
     alternate_mode = match.group("alternate_mode")
     alternate_mode = alternate_mode is not None
 
-    top_dig_place = match.group("top_dig_place")
-    if top_dig_place is not None:
-        top_dig_place = int(top_dig_place)
-        val_unc_match_widths = True
-    else:
-        top_dig_place = None
-        val_unc_match_widths = None
+    left_pad_dec_place = match.group("left_pad_dec_place")
+    if left_pad_dec_place is not None:
+        left_pad_dec_place = int(left_pad_dec_place)
 
     round_mode_mapping = {"!": "sig_fig", ".": "dec_place", None: None}
 
@@ -99,22 +95,21 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
     else:
         exp_format = None
 
-    bracket_unc = match.group("bracket_unc")
-    if bracket_unc is not None:
-        bracket_unc = True
+    paren_uncertainty = match.group("paren_uncertainty")
+    if paren_uncertainty is not None:
+        paren_uncertainty = True
     else:
-        bracket_unc = None
+        paren_uncertainty = None
 
     return UserOptions(
-        fill_mode=fill_mode,
+        fill_char=fill_char,
         sign_mode=sign_mode,
-        top_dig_place=top_dig_place,
+        left_pad_dec_place=left_pad_dec_place,
         round_mode=round_mode,
         ndigits=ndigits,
         exp_mode=exp_mode,
         exp_val=exp_val,
         exp_format=exp_format,
         capitalize=capitalize,
-        bracket_unc=bracket_unc,
-        val_unc_match_widths=val_unc_match_widths,
+        paren_uncertainty=paren_uncertainty,
     )

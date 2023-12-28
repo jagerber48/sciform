@@ -63,7 +63,7 @@ Further details about the options can be found at
      - Description
    * - | fill
        | (``'0='``, ``' ='``)
-     - Configure ``fill_mode`` to be ``'0'`` or ``' '``. See
+     - Configure ``fill_char`` to be ``'0'`` or ``' '``. See
        :ref:`left_filling`.
    * - | sign
        | (``'-'``, ``'+'``, ``' '``)
@@ -77,7 +77,7 @@ Further details about the options can be found at
        exponent mode flag is ``'b'`` or ``'B'``.
    * - | fill_top_digit
        | (``\d+``)
-     - Sets ``top_dig_place`` to any non-negative integer.
+     - Sets ``left_pad_dec_place`` to any non-negative integer.
        See :ref:`left_filling`.
    * - | round_mode
        | (``'!'``, ``'.'``)
@@ -111,10 +111,10 @@ Further details about the options can be found at
        | (``'p'``)
      - Sets ``exp_format`` to :class:`'prefix'`.
        See :ref:`exp_str_replacement`.
-   * - | bracket uncertainty
+   * - | parentheses uncertainty
        | (``'()'``)
-     - Sets ``bracket_unc=True``.
-       See :ref:`bracket_uncertainty`.
+     - Sets ``paren_uncertainty=True``.
+       See :ref:`paren_uncertainty`.
 
 
 Incompatibilities With Built-in Format Specification Mini-Language

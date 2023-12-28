@@ -28,21 +28,21 @@ class RenderedOptions:
     decimal_separator: modes.DecimalSeparators
     lower_separator: modes.LowerSeparators
     sign_mode: modes.SignMode
-    fill_mode: modes.FillMode
-    top_dig_place: int
+    fill_char: modes.FillChar
+    left_pad_dec_place: int
     exp_format: modes.ExpFormat
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
     extra_parts_per_forms: dict[int, str]
     capitalize: bool
-    superscript_exp: bool
+    superscript: bool
     latex: bool
     nan_inf_exp: bool
-    bracket_unc: bool
+    paren_uncertainty: bool
     pdg_sig_figs: bool
-    val_unc_match_widths: bool
-    bracket_unc_remove_seps: bool
-    unc_pm_whitespace: bool
+    left_pad_matching: bool
+    paren_uncertainty_separators: bool
+    pm_whitespace: bool
 
     def __str__(self: RenderedOptions) -> str:
         options_dict = asdict(self)

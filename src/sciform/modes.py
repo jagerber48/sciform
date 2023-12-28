@@ -50,10 +50,13 @@ class AutoDigits(metaclass=SentinelMeta):
     """
 
 
-UserFillMode = Literal[" ", "0"]
+# TODO: UserName and Name objects should be renamed to Name and NameEnum
 
 
-class FillMode(str, Enum):
+UserFillChar = Literal[" ", "0"]
+
+
+class FillChar(str, Enum):
     """Fill mode Enum."""
 
     SPACE = " "

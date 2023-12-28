@@ -28,7 +28,7 @@ available formatting options.
 ...     round_mode="dec_place",
 ...     ndigits=10,
 ...     sign_mode=" ",
-...     superscript_exp=True,
+...     superscript=True,
 ... )
 >>> print(sform(num))
  12.3455432100×10³
@@ -69,7 +69,7 @@ available formatting options.
 ...     exp_mode="engineering",
 ...     exp_format="prefix",
 ...     pdg_sig_figs=True,
-...     unc_pm_whitespace=False,
+...     pm_whitespace=False,
 ... )
 >>> print(sform(num, unc))
 (3.1416±0.0016) M
@@ -77,7 +77,9 @@ available formatting options.
 >>> num = 314159.27
 >>> unc = 1618
 >>> sform = Formatter(
-...     exp_mode="engineering_shifted", pdg_sig_figs=True, bracket_unc=True
+...     exp_mode="engineering_shifted",
+...     pdg_sig_figs=True,
+...     paren_uncertainty=True
 ... )
 >>> print(sform(num, unc))
 (0.3142(16))e+06
@@ -111,7 +113,7 @@ exponent mode with a capitalized exponent symbol ``'E'``.
 ``!2`` indicates that the number will be rounded so that the uncertainty
 has two significant figures.
 The ``()`` indicates that the value/uncertainty pair should be formatted
-using the bracket uncertainty format.
+using the parentheses uncertainty format.
 
 >>> print(f'{SciNum(123):ex-3p}')
 123000 m
@@ -176,7 +178,7 @@ instead.
 >>> num_unc = SciNum(3141592.7, 1618)
 >>> print(f"{num_unc}")
 3141593 ± 1618
->>> with GlobalDefaultsContext(pdg_sig_figs=True, unc_pm_whitespace=False):
+>>> with GlobalDefaultsContext(pdg_sig_figs=True, pm_whitespace=False):
 ...     print(f"{num_unc:rp}")
 ...
 (3.1416±0.0016) M
@@ -259,7 +261,7 @@ We can address these problems using :mod:`sciform` by:
    the value.
    Using ``sciform``, the significant digits displayed for the value
    will always match the precision of the uncertainty.
-   We will use bracket uncertainty format.
+   We will use the parentheses uncertainty format.
 #. Using engineering notation for the value/uncertainty in the table. This
    will make the relative scale between different rows obvious.
 

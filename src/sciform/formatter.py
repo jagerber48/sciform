@@ -51,21 +51,21 @@ class Formatter:
         decimal_separator: modes.UserDecimalSeparators | None = None,
         lower_separator: modes.UserLowerSeparators | None = None,
         sign_mode: modes.UserSignMode | None = None,
-        fill_mode: modes.UserFillMode | None = None,
-        top_dig_place: int | None = None,
+        fill_char: modes.UserFillChar | None = None,
+        left_pad_dec_place: int | None = None,
         exp_format: modes.UserExpFormat | None = None,
         extra_si_prefixes: dict[int, str] | None = None,
         extra_iec_prefixes: dict[int, str] | None = None,
         extra_parts_per_forms: dict[int, str] | None = None,
         capitalize: bool | None = None,
-        superscript_exp: bool | None = None,
+        superscript: bool | None = None,
         latex: bool | None = None,
         nan_inf_exp: bool | None = None,
-        bracket_unc: bool | None = None,
+        paren_uncertainty: bool | None = None,
         pdg_sig_figs: bool | None = None,
-        val_unc_match_widths: bool | None = None,
-        bracket_unc_remove_seps: bool | None = None,
-        unc_pm_whitespace: bool | None = None,
+        left_pad_matching: bool | None = None,
+        paren_uncertainty_separators: bool | None = None,
+        pm_whitespace: bool | None = None,
         add_c_prefix: bool = False,
         add_small_si_prefixes: bool = False,
         add_ppth_form: bool = False,
@@ -123,14 +123,15 @@ class Formatter:
         :type lower_separator: ``Literal['', ' ', '_'] | None``
         :param sign_mode: Indicate sign symbol behavior.
         :type sign_mode: ``Literal['-', '+', ' '] | None``
-        :param fill_mode: Indicate whether to fill with zeros or spaces.
-        :type fill_mode: ``Literal[' ', '0'] | None``
-        :param top_dig_place: Positive ``int`` indicating the digits
-          place to which the string will be left padded before the sign
-          symbol. 0 corresponds to the ones place, 1 corresponds to the
-          tens place etc. E.g. ``top_dig_place=4`` will convert ``12``
-          into ``00012``.
-        :type top_dig_place: ``int | None``
+        :param fill_char: Indicate whether to fill with zeros or spaces.
+        :type fill_char: ``Literal[' ', '0'] | None``
+        :param left_pad_dec_place: Positive ``int`` indicating the
+          decimal place to which the string will be left padded before
+          the sign symbol. 0 corresponds to the ones place, 1
+          corresponds to the tens place etc. E.g.
+          ``left_pad_dec_place=4`` will convert ``12`` into
+          ``00012``.
+        :type left_pad_dec_place: ``int | None``
         :param exp_format: Indicate how exponents should be presented.
         :type exp_format: ``Literal['standard', 'prefix', 'parts_per'] | None``
         :param extra_si_prefixes: Dictionary mapping additional exponent
@@ -150,10 +151,10 @@ class Formatter:
         :param capitalize: Flag indicating whether the exponentiation
           symbol should be upper- or lower-case.
         :type capitalize: ``bool | None``
-        :param superscript_exp: Flag indicating if the exponent string
+        :param superscript: Flag indicating if the exponent string
           should be converted into superscript notation. E.g.
           ``'1.23e+02'`` is converted to ``'1.23×10²'``
-        :type superscript_exp: ``bool | None``
+        :type superscript: ``bool | None``
         :param latex: Flag indicating if the resulting string should be
           converted into a latex parseable code, e.g.
           ``'\\left(1.23 \\pm 0.01\\right)\\times 10^{2}'``.
@@ -163,28 +164,28 @@ class Formatter:
           formatted with exponent symbols when exponent modes including
           exponent symbols are selected.
         :type nan_inf_exp: ``bool | None``
-        :param bracket_unc: Flag indicating if bracket uncertainty mode
-          (e.g. ``12.34(82)`` instead of ``12.34 ± 0.82``) should be
-          used.
-        :type bracket_unc: ``bool | None``
+        :param paren_uncertainty: Flag indicating if parentheses
+          uncertainty mode (e.g. ``12.34(82)`` instead of
+          ``12.34 ± 0.82``) should be used.
+        :type paren_uncertainty: ``bool | None``
         :param pdg_sig_figs: Flag indicating whether the
           particle-data-group conventions should be used to
           automatically determine the number of significant figures to
           use for uncertainty.
         :type pdg_sig_figs: ``bool | None``
-        :param val_unc_match_widths: Flag indicating if the value or
+        :param left_pad_matching: Flag indicating if the value or
           uncertainty should be left padded to ensure they are both left
           padded to the same digits place.
-        :type val_unc_match_widths: ``bool | None``
-        :param bracket_unc_remove_seps: Flag indicating if separator
-          symbols should be removed from the uncertainty when using
-          bracket uncertainty mode. E.g. expressing ``123.4 ± 2.3`` as
-          ``123.4(23)`` instead of ``123.4(2.3)``.
-        :type bracket_unc_remove_seps: ``bool | None``
-        :param unc_pm_whitespace: Flag indicating if there should be
+        :type left_pad_matching: ``bool | None``
+        :param paren_uncertainty_separators: Flag indicating if
+          separator symbols should be included in the uncertainty when
+          using parentheses uncertainty mode. E.g. expressing
+          ``123.4 ± 2.3`` either as ``123.4(2.3)`` or ``123.4(23)``.
+        :type paren_uncertainty_separators: ``bool | None``
+        :param pm_whitespace: Flag indicating if there should be
           whitespace surrounding the ``'±'`` symbols when formatting.
           E.g. ``123.4±2.3`` compared to ``123.4 ± 2.3``.
-        :type unc_pm_whitespace: ``bool | None``
+        :type pm_whitespace: ``bool | None``
         :param add_c_prefix: (default ``False``) If ``True``, adds
           ``{-2: 'c'}`` to ``extra_si_prefixes``.
         :type add_c_prefix: ``bool``
@@ -205,21 +206,21 @@ class Formatter:
             decimal_separator=decimal_separator,
             lower_separator=lower_separator,
             sign_mode=sign_mode,
-            fill_mode=fill_mode,
-            top_dig_place=top_dig_place,
+            fill_char=fill_char,
+            left_pad_dec_place=left_pad_dec_place,
             exp_format=exp_format,
             extra_si_prefixes=extra_si_prefixes,
             extra_iec_prefixes=extra_iec_prefixes,
             extra_parts_per_forms=extra_parts_per_forms,
             capitalize=capitalize,
-            superscript_exp=superscript_exp,
+            superscript=superscript,
             latex=latex,
             nan_inf_exp=nan_inf_exp,
-            bracket_unc=bracket_unc,
+            paren_uncertainty=paren_uncertainty,
             pdg_sig_figs=pdg_sig_figs,
-            val_unc_match_widths=val_unc_match_widths,
-            bracket_unc_remove_seps=bracket_unc_remove_seps,
-            unc_pm_whitespace=unc_pm_whitespace,
+            left_pad_matching=left_pad_matching,
+            paren_uncertainty_separators=paren_uncertainty_separators,
+            pm_whitespace=pm_whitespace,
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,
             add_ppth_form=add_ppth_form,

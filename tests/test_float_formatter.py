@@ -17,13 +17,13 @@ class TestFormatting(unittest.TestCase):
                 ):
                     self.assertEqual(snum_str, expected_num_str)
 
-    def test_superscript_exp(self):
+    def test_superscript(self):
         cases_list = [
             (
                 789,
                 [
                     (
-                        Formatter(exp_mode="scientific", superscript_exp=True),
+                        Formatter(exp_mode="scientific", superscript=True),
                         "7.89×10²",
                     ),
                 ],
@@ -36,7 +36,7 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             exp_mode="scientific",
                             exp_format="prefix",
-                            superscript_exp=True,
+                            superscript=True,
                         ),
                         "7.89×10²",
                     ),
@@ -45,7 +45,7 @@ class TestFormatting(unittest.TestCase):
             (
                 1024,
                 [
-                    (Formatter(exp_mode="binary", superscript_exp=True), "1×2¹⁰"),
+                    (Formatter(exp_mode="binary", superscript=True), "1×2¹⁰"),
                 ],
             ),
         ]
@@ -61,8 +61,8 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             upper_separator="_",
                             lower_separator="_",
-                            fill_mode="0",
-                            top_dig_place=14,
+                            fill_char="0",
+                            left_pad_dec_place=14,
                         ),
                         "000_000_123_456_789.654_321",
                     ),
@@ -70,8 +70,8 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             upper_separator="_",
                             lower_separator="_",
-                            fill_mode=" ",
-                            top_dig_place=14,
+                            fill_char=" ",
+                            left_pad_dec_place=14,
                         ),
                         "      123_456_789.654_321",
                     ),
@@ -84,8 +84,8 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             upper_separator="_",
                             lower_separator="_",
-                            fill_mode="0",
-                            top_dig_place=14,
+                            fill_char="0",
+                            left_pad_dec_place=14,
                         ),
                         "000_000_004_567_899.765_432_1",
                     ),
@@ -93,8 +93,8 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             upper_separator="_",
                             lower_separator="_",
-                            fill_mode=" ",
-                            top_dig_place=14,
+                            fill_char=" ",
+                            left_pad_dec_place=14,
                         ),
                         "        4_567_899.765_432_1",
                     ),
@@ -113,12 +113,12 @@ class TestFormatting(unittest.TestCase):
                         Formatter(exp_mode="scientific", latex=True),
                         r"7.89\times 10^{+2}",
                     ),
-                    # Latex mode takes precedence over superscript_exp
+                    # Latex mode takes precedence over superscript
                     (
                         Formatter(
                             exp_mode="scientific",
                             latex=True,
-                            superscript_exp=True,
+                            superscript=True,
                         ),
                         r"7.89\times 10^{+2}",
                     ),

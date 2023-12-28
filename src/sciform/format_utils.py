@@ -448,10 +448,10 @@ def get_val_unc_top_digit(
     unc_mantissa: Decimal,
     input_top_digit: int | AutoDigits,
     *,
-    val_unc_match_widths: bool,
+    left_pad_matching: bool,
 ) -> int | AutoDigits:
     """Get top digit place for value/uncertainty formatting."""
-    if val_unc_match_widths:
+    if left_pad_matching:
         val_top_digit = get_top_digit(val_mantissa)
         unc_top_digit = get_top_digit(unc_mantissa)
         new_top_digit = max(
@@ -498,37 +498,44 @@ def construct_val_unc_str(  # noqa: PLR0913
     unc_mantissa: Decimal,
     decimal_separator: Separator,
     *,
-    bracket_unc: bool,
+    paren_uncertainty: bool,
     latex: bool,
     pm_whitespace: bool,
-    bracket_unc_remove_seps: bool,
+    paren_uncertainty_separators: bool,
 ) -> str:
     """Construct the value/uncertainty part of the formatted string."""
-    if not bracket_unc:
+    if not paren_uncertainty:
         pm_symb = r"\pm" if latex else "±"
         if pm_whitespace:
             pm_symb = f" {pm_symb} "
         val_unc_str = f"{val_mantissa_str}{pm_symb}{unc_mantissa_str}"
     else:
-        if unc_mantissa.is_finite() and val_mantissa.is_finite():
-            if unc_mantissa == 0:
-                unc_mantissa_str = "0"
-            elif unc_mantissa < abs(val_mantissa):
+        if unc_mantissa.is_finite():
+            if val_mantissa.is_finite() and 0 < unc_mantissa < abs(val_mantissa):
+                """
+                Don't left strip the unc_mantissa_str if val_mantissa is non-finite.
+                Don't left strip the unc_mantissa_str if unc_mantissa == 0 (because then
+                the empty string would remain).
+                Don't left strip the unc_mantissa_str if unc_mantissa >= val_mantissa
+                """
                 unc_mantissa_str = unc_mantissa_str.lstrip("0.,_ ")
-        if bracket_unc_remove_seps:
-            for separator in Separator:
-                if separator == decimal_separator:
-                    continue
-                unc_mantissa_str = unc_mantissa_str.replace(separator, "")
-                # TODO: bracket_unc_remove_seps unit test in tests, not just doctest.
-            if unc_mantissa < abs(val_mantissa):
-                # TODO: I think this raises an error if bracket_unc=True but either
-                #   unc_mantissa or val_mantissa is non-finite.
-                # Only removed "embedded" decimal symbol for unc < val
-                unc_mantissa_str = unc_mantissa_str.replace(
-                    decimal_separator,
-                    "",
-                )
+            if not paren_uncertainty_separators:
+                for separator in Separator:
+                    if separator == decimal_separator:
+                        if val_mantissa.is_finite():
+                            if unc_mantissa >= abs(val_mantissa):
+                                """
+                                Don't remove the decimal separator if the uncertainty is
+                                larger than the value.
+                                """
+                                continue
+                        else:
+                            """
+                            Don't remove the decimal separator if the value is
+                            non-finite.
+                            """
+                            continue
+                    unc_mantissa_str = unc_mantissa_str.replace(separator, "")
         val_unc_str = f"{val_mantissa_str}({unc_mantissa_str})"
     return val_unc_str
 
@@ -544,8 +551,8 @@ def construct_val_unc_exp_str(  # noqa: PLR0913
     extra_parts_per_forms: dict[int, str | None],
     capitalize: bool,
     latex: bool,
-    superscript_exp: bool,
-    bracket_unc: bool,
+    superscript: bool,
+    paren_uncertainty: bool,
 ) -> str:
     """Combine the val_unc_str into the final val_unc_exp_str."""
     exp_str = get_exp_str(
@@ -555,7 +562,7 @@ def construct_val_unc_exp_str(  # noqa: PLR0913
         capitalize=capitalize,
         latex=latex,
         latex_trim_whitespace=True,
-        superscript=superscript_exp,
+        superscript=superscript,
         extra_si_prefixes=extra_si_prefixes,
         extra_iec_prefixes=extra_iec_prefixes,
         extra_parts_per_forms=extra_parts_per_forms,
@@ -568,7 +575,7 @@ def construct_val_unc_exp_str(  # noqa: PLR0913
     "1234 ± 12" will be formatted with parentheses as "(1234 ± 12) k" or
     "(1234 ± 12)e+03"
     """
-    if bracket_unc and not re.match(r"^[eEbB][+-]\d+$", exp_str):
+    if paren_uncertainty and not re.match(r"^[eEbB][+-]\d+$", exp_str):
         val_unc_exp_str = f"{val_unc_str}{exp_str}"
     else:
         val_unc_exp_str = f"({val_unc_str}){exp_str}"
