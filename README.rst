@@ -63,14 +63,19 @@ Under Construction
 
 The ``sciform`` package is still in early stages of development.
 The API is not stable.
-Class and function names and usages have undergone changes and may
-continue to change until version ``1.0.0`` is released.
+Class, function and parameter names and usages have undergone changes
+and may continue to change until version ``1.0.0`` is released.
 API changes will be announced after new releases in the
 `changelog <https://sciform.readthedocs.io/en/stable/project.html#changelog>`_.
 If you have an idea or opinion about how ``sciform`` should be designed,
 now is a great time to
 `post a discussion topic <https://github.com/jagerber48/sciform/discussions>`_
 about it!
+
+``sciform`` is currently undergoing review by the
+`PyOpenSci <https://www.pyopensci.org/>`_ community.
+You can view the on-going review
+`here <https://github.com/pyOpenSci/software-submission/issues/121>`_.
 
 =====
 Usage
