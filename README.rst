@@ -125,7 +125,7 @@ using the ``SciNum`` object.
 >>> print(f"{num:!2f()}")
 123456.6543(34)
 
-Note that the above examples demonstrate that :mod:`sciform` uses
+Note that the above examples demonstrate that ``sciform`` uses
 `"round-to-even" <https://en.wikipedia.org/wiki/Rounding#Rounding_half_to_even>`_
 rounding.
 
