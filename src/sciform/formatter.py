@@ -12,8 +12,6 @@ if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
     from sciform.format_utils import Number
 
-# TODO: Support SciNum input to formatter?
-
 
 class Formatter:
     """
@@ -250,5 +248,3 @@ class Formatter:
                 rendered_options,
             )
         return output
-
-    # TODO: print_options and print_resolved_options?

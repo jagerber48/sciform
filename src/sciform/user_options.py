@@ -63,7 +63,6 @@ class UserOptions:
         add_ppth_form: bool,
     ) -> None:
         """Populate extra prefix translations from user input flags."""
-        # TODO: Test that things do and don't get added appropriately
         if add_c_prefix:
             if self.extra_si_prefixes is None:
                 super().__setattr__("extra_si_prefixes", {})

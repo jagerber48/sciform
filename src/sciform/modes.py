@@ -50,9 +50,6 @@ class AutoDigits(metaclass=SentinelMeta):
     """
 
 
-# TODO: UserName and Name objects should be renamed to Name and NameEnum
-
-
 UserFillChar = Literal[" ", "0"]
 
 
