@@ -19,6 +19,17 @@ Added
   The behavior for ``pdg_sig_figs=False`` is unchanged.
   [`#73 <https://github.com/jagerber48/sciform/issues/73>`_]
 
+Removed
+^^^^^^^
+
+* **[BREAKING]** Removed ``global_add_c_prefix``,
+  ``global_add_small_si_prefixes``, ``global_add_ppth_form``,
+  ``global_reset_si_prefixes``, ``global_reset_iec_prefixes``, and
+  ``global_reset_parts_per_forms``.
+  These options are redundant with ``set_global_defaults`` and
+  ``GlobalDefaultsContext`` and make the extra translations dictionaries
+  more confusing to understand.
+
 ----
 
 0.31.1 (2024-01-06)
