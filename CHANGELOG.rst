@@ -29,6 +29,7 @@ Removed
   These options are redundant with ``set_global_defaults`` and
   ``GlobalDefaultsContext`` and make the extra translations dictionaries
   more confusing to understand.
+  [`#97 <https://github.com/jagerber48/sciform/issues/97>`_]
 
 ----
 
