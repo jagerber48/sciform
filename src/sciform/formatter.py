@@ -12,8 +12,6 @@ if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
     from sciform.format_utils import Number
 
-# TODO: Support SciNum input to formatter?
-
 
 class Formatter:
     """
@@ -90,8 +88,6 @@ class Formatter:
           but must be different from ``decimal_separator``
         * ``decimal_separator`` may be any of ``['.', ',']``
         * ``lower_separator`` may be any of ``['', ' ', '_']``
-        * if ``pdg_sig_figs=True`` then ``ndigits=None`` or
-          ``ndigits=AutoDigits``.
 
         :param exp_mode: Specify the formatting mode.
         :type exp_mode: ``Literal['fixed_point', 'percent',
@@ -171,7 +167,7 @@ class Formatter:
         :param pdg_sig_figs: Flag indicating whether the
           particle-data-group conventions should be used to
           automatically determine the number of significant figures to
-          use for uncertainty.
+          use for uncertainty. Ignored for single value formatting.
         :type pdg_sig_figs: ``bool | None``
         :param left_pad_matching: Flag indicating if the value or
           uncertainty should be left padded to ensure they are both left
@@ -250,5 +246,3 @@ class Formatter:
                 rendered_options,
             )
         return output
-
-    # TODO: print_options and print_resolved_options?

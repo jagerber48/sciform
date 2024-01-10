@@ -63,7 +63,6 @@ class UserOptions:
         add_ppth_form: bool,
     ) -> None:
         """Populate extra prefix translations from user input flags."""
-        # TODO: Test that things do and don't get added appropriately
         if add_c_prefix:
             if self.extra_si_prefixes is None:
                 super().__setattr__("extra_si_prefixes", {})
@@ -97,17 +96,6 @@ class UserOptions:
             and options.ndigits < 1
         ):
             msg = f"ndigits must be >= 1 for sig fig rounding, not {options.ndigits}."
-            raise ValueError(msg)
-
-        if (
-            options.pdg_sig_figs
-            and options.ndigits is not None
-            and options.ndigits is not modes.AutoDigits
-        ):
-            msg = (
-                f"pdg_sig_figs=True can only be used with ndigits=AutoDigits, not "
-                f"ndigits={options.ndigits}."
-            )
             raise ValueError(msg)
 
         if options.exp_val is not modes.AutoExpVal and options.exp_val is not None:

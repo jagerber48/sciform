@@ -93,11 +93,6 @@ def reset_global_defaults() -> None:
     global_options.GLOBAL_DEFAULT_OPTIONS = global_options.PKG_DEFAULT_OPTIONS
 
 
-# TODO: Need to clean up the semantics on add_c_prefix in both Formatter
-#  and these global configuration options. Does it truly just add the
-#  value to the dict if it's not present? Or does the whole dict get
-#  overwritten? Are these helpers even needed? They're redundant with
-#  set_global_defaults.
 def global_add_c_prefix() -> None:
     """
     Include ``c`` as a prefix for the exponent value -2.

@@ -318,11 +318,10 @@ def get_round_digit(
 ) -> int:
     """Get the digit place to which to round."""
     if round_mode is RoundMode.SIG_FIG:
-        if ndigits is AutoDigits:
-            if pdg_sig_figs:
-                round_digit = get_pdg_round_digit(num)
-            else:
-                round_digit = get_bottom_digit(num)
+        if pdg_sig_figs:
+            round_digit = get_pdg_round_digit(num)
+        elif ndigits is AutoDigits:
+            round_digit = get_bottom_digit(num)
         else:
             round_digit = get_top_digit(num) - (ndigits - 1)
     elif round_mode is RoundMode.DEC_PLACE:

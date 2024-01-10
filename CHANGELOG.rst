@@ -5,7 +5,19 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* There are no unreleased changes.
+Added
+^^^^^
+
+* Previously it was impossible to configure ``pdg_sig_figs=True``
+  together with ``ndigits!=AutoDigits``.
+  This combinations resulted in an exception.
+  Now behavior has been defined and implemented for this combination.
+  For single value formatting the value of ``pdg_sig_figs`` is always
+  ignored.
+  For value/uncertainty formatting ``ndigits`` is ignored if
+  ``pdg_sig_figs=True``.
+  The behavior for ``pdg_sig_figs=False`` is unchanged.
+  [`#73 <https://github.com/jagerber48/sciform/issues/73>`_]
 
 ----
 
