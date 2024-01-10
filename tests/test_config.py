@@ -4,12 +4,6 @@ from sciform import (
     Formatter,
     GlobalDefaultsContext,
     SciNum,
-    global_add_c_prefix,
-    global_add_ppth_form,
-    global_add_small_si_prefixes,
-    global_reset_iec_prefixes,
-    global_reset_parts_per_forms,
-    global_reset_si_prefixes,
     reset_global_defaults,
     set_global_defaults,
 )
@@ -41,9 +35,8 @@ class TestConfig(unittest.TestCase):
         num = SciNum(123.456)
         fmt_spec = "ex-2p"
         self.assertEqual(f"{num:{fmt_spec}}", "12345.6e-02")
-        global_add_c_prefix()
-        self.assertEqual(f"{num:{fmt_spec}}", "12345.6 c")
-        global_reset_si_prefixes()
+        with GlobalDefaultsContext(add_c_prefix=True):
+            self.assertEqual(f"{num:{fmt_spec}}", "12345.6 c")
         self.assertEqual(f"{num:{fmt_spec}}", "12345.6e-02")
 
     def test_small_si_prefixes(self):
@@ -56,19 +49,17 @@ class TestConfig(unittest.TestCase):
             +2: "1.23456 h",
         }
 
-        global_add_small_si_prefixes()
-        for exp, expected_num_str in cases_dict.items():
-            num_str = f"{num:ex{exp:+}p}"
-            self.assertEqual(num_str, expected_num_str)
-        global_reset_si_prefixes()
+        with GlobalDefaultsContext(add_small_si_prefixes=True):
+            for exp, expected_num_str in cases_dict.items():
+                num_str = f"{num:ex{exp:+}p}"
+                self.assertEqual(num_str, expected_num_str)
 
     def test_iec_prefix(self):
         num = SciNum(1024)
         fmt_spec = "bp"
         self.assertEqual(f"{num:{fmt_spec}}", "1 Ki")
-        set_global_defaults(extra_iec_prefixes={10: "KiB"})
-        self.assertEqual(f"{num:{fmt_spec}}", "1 KiB")
-        global_reset_iec_prefixes()
+        with GlobalDefaultsContext(extra_iec_prefixes={10: "KiB"}):
+            self.assertEqual(f"{num:{fmt_spec}}", "1 KiB")
         self.assertEqual(f"{num:{fmt_spec}}", "1 Ki")
 
     def test_ppth_form(self):
@@ -78,7 +69,24 @@ class TestConfig(unittest.TestCase):
             exp_format="parts_per",
         )
         self.assertEqual(formatter(num), "2.4e-03")
-        global_add_ppth_form()
-        self.assertEqual(formatter(num), "2.4 ppth")
-        global_reset_parts_per_forms()
+        with GlobalDefaultsContext(add_ppth_form=True):
+            self.assertEqual(formatter(num), "2.4 ppth")
         self.assertEqual(formatter(num), "2.4e-03")
+
+    def test_add_c_prefix_no_overwrite(self):
+        sform = Formatter(
+            exp_mode="scientific",
+            exp_format="prefix",
+            extra_si_prefixes={-2: "zzz"},
+            add_c_prefix=True,
+        )
+        self.assertEqual(sform(0.012), "1.2 zzz")
+
+    def test_global_add_c_prefix_no_overwrite(self):
+        sform = Formatter(
+            exp_mode="scientific",
+            exp_format="prefix",
+            extra_si_prefixes={-4: "zzz"},
+        )
+        with GlobalDefaultsContext(add_c_prefix=True):
+            self.assertEqual(sform(0.012), "1.2e-02")

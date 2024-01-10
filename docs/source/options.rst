@@ -287,6 +287,55 @@ but it is one that the author has found useful.
 >>> print(sform(12.3e-3))
 12.3 ppth
 
+Note that the helper flags will not overwrite value/string pairs already
+specified in the extra translations dictionary:
+
+>>> sform = Formatter(
+...     exp_mode="scientific",
+...     exp_format="prefix",
+...     add_c_prefix=True,
+... )
+>>> print(sform(0.012))
+1.2 c
+>>> sform = Formatter(
+...     exp_mode="scientific",
+...     exp_format="prefix",
+...     extra_si_prefixes={-2: 'zzz'},
+...     add_c_prefix=True,
+... )
+>>> print(sform(0.012))
+1.2 zzz
+
+Note that there is never *merging* of local and global extra
+translations.
+If any local extra translation settings are configured directly with
+e.g. ``extra_si_prefixes`` or with a helper like
+``add_small_si_prefixes`` then no global extra translations will be
+used.
+
+>>> from sciform import GlobalDefaultsContext
+>>> sform = Formatter(
+...     exp_mode="scientific",
+...     exp_format="prefix",
+...     extra_si_prefixes={-4: "zzz"},
+... )
+>>> with GlobalDefaultsContext(add_c_prefix=True):
+...     print(sform(0.012))
+1.2e-02
+>>> sform = Formatter(
+...     exp_mode="scientific",
+...     exp_format="prefix",
+...     add_c_prefix=True,
+... )
+>>> with GlobalDefaultsContext(extra_si_prefixes={1: 'zzz'}):
+...     print(sform(12.4))
+1.24e+01
+
+If all local extra translation settings are left unset then all global
+extra translation settings will be populated at format time.
+This behavior is the same as the behavior for all other options.
+
+
 .. _rounding:
 
 Rounding

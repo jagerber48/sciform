@@ -181,8 +181,6 @@ class UserOptions:
             elif isinstance(value, str):
                 enum = key_to_enum_dict[key]
                 rendered_value = modes.mode_str_to_enum(value, enum)
-            elif isinstance(value, dict):
-                rendered_value = value.copy()
             else:
                 rendered_value = value
             kwargs[key] = rendered_value

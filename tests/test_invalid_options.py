@@ -3,7 +3,6 @@ from decimal import Decimal
 
 from sciform import Formatter, modes
 from sciform.format_utils import (
-    get_exp_str,
     get_mantissa_exp_base,
     get_prefix_dict,
     get_round_digit,
@@ -199,23 +198,6 @@ class TestInvalidOptions(unittest.TestCase):
             num=Decimal(3),
             exp_mode="eng",
             input_exp=3,
-        )
-
-    @unittest.expectedFailure  # This test can be removed now
-    def test_get_exp_str_bad_exp_mode(self):
-        self.assertRaises(
-            ValueError,
-            get_exp_str,
-            exp_val=2,
-            exp_mode="sci",
-            exp_format=modes.ExpFormat.STANDARD,
-            capitalize=False,
-            latex=False,
-            latex_trim_whitespace=False,
-            superscript=False,
-            extra_si_prefixes={},
-            extra_iec_prefixes={},
-            extra_parts_per_forms={},
         )
 
     def test_get_sign_str_bad_sign_mode(self):
