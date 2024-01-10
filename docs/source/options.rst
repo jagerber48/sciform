@@ -310,8 +310,9 @@ Note that if any values are set for e.g. ``extra_si_prefixes`` either
 directly or through a helper flag like ``add_small_si_prefixes`` then,
 like all other options, no settings from the global options will be
 utilized.
-However, if all of the settings are left unpopulated then they will be
-populated at format time from the global options.
+However, if all of the settings are left unpopulated then, like all
+other options, they will be populated at format time from the global
+options.
 Likewise for ``extra_iec_prefixes`` and ``extra_parts_per_forms``.
 
 .. _rounding:
