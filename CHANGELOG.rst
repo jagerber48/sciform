@@ -7,6 +7,8 @@ Unreleased
 
 * There are no unreleased changes
 
+----
+
 0.32.0 (2024-01-10)
 -------------------
 
