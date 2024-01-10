@@ -287,6 +287,25 @@ but it is one that the author has found useful.
 >>> print(sform(12.3e-3))
 12.3 ppth
 
+Note that the helper flags will not overwrite value/string pairs already
+specified in the extra translations dictionary:
+
+>>> sform = Formatter(
+...     exp_mode="scientific",
+...     exp_format="prefix",
+...     add_c_prefix=True,
+... )
+>>> print(sform(0.012))
+1.2 c
+>>> sform = Formatter(
+...     exp_mode="scientific",
+...     exp_format="prefix",
+...     extra_si_prefixes={-2: 'zzz'},
+...     add_c_prefix=True,
+... )
+>>> print(sform(0.012))
+1.2 zzz
+
 .. _rounding:
 
 Rounding
