@@ -255,3 +255,30 @@ class TestFormatting(unittest.TestCase):
     def test_dec_place_auto_round(self):
         sform = Formatter(round_mode="dec_place", ndigits=AutoDigits)
         self.assertEqual(sform(123.456), "123.456")
+
+    def test_pdg_sig_figs(self):
+        cases_list = [
+            (
+                6789,
+                [
+                    (
+                        Formatter(pdg_sig_figs=True, ndigits=AutoDigits),
+                        "6789",
+                    ),
+                    (
+                        Formatter(pdg_sig_figs=True, ndigits=5),
+                        "6789.0",
+                    ),
+                    (
+                        Formatter(pdg_sig_figs=False, ndigits=AutoDigits),
+                        "6789",
+                    ),
+                    (
+                        Formatter(pdg_sig_figs=False, ndigits=5),
+                        "6789.0",
+                    ),
+                ],
+            ),
+        ]
+
+        self.run_float_formatter_cases(cases_list)

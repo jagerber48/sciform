@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import Formatter
+from sciform import AutoDigits, Formatter
 
 ValUncFormatterCases = list[tuple[tuple[float, float], list[tuple[Formatter, str]]]]
 
@@ -501,6 +501,33 @@ class TestFormatting(unittest.TestCase):
 
     def test_pdg_ndigits_error(self):
         self.assertRaises(ValueError, Formatter, pdg_sig_figs=True, ndigits=0)
+
+    def test_pdg_sig_figs(self):
+        cases_list = [
+            (
+                (7, 0.1234),
+                [
+                    (
+                        Formatter(pdg_sig_figs=True, ndigits=AutoDigits),
+                        "7.00 ± 0.12",
+                    ),
+                    (
+                        Formatter(pdg_sig_figs=True, ndigits=5),
+                        "7.00 ± 0.12",
+                    ),
+                    (
+                        Formatter(pdg_sig_figs=False, ndigits=AutoDigits),
+                        "7.0000 ± 0.1234",
+                    ),
+                    (
+                        Formatter(pdg_sig_figs=False, ndigits=5),
+                        "7.00000 ± 0.12340",
+                    ),
+                ],
+            ),
+        ]
+
+        self.run_val_unc_formatter_cases(cases_list)
 
     def test_dec_place_warn(self):
         sform = Formatter(round_mode="dec_place")
