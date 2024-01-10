@@ -31,6 +31,16 @@ Removed
   more confusing to understand.
   [`#97 <https://github.com/jagerber48/sciform/issues/97>`_]
 
+Changed
+^^^^^^^
+
+* **[BREAKING]** Previously ``12.3`` would format as ``"12.3e+00"``
+  when using parts per formatting mode.
+  Now, when using parts per formatting mode, the ``e+00`` exponent is
+  translated to be an empty string so that ``12.3`` would format as
+  ``"12.3"``.
+  [`#99 <https://github.com/jagerber48/sciform/issues/99>`_]
+
 ----
 
 0.31.1 (2024-01-06)

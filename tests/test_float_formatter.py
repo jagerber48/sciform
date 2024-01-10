@@ -186,6 +186,22 @@ class TestFormatting(unittest.TestCase):
                     (
                         Formatter(
                             exp_mode="scientific",
+                            exp_val=3,
+                            exp_format="parts_per",
+                        ),
+                        "0.000123e+03",
+                    ),
+                    (
+                        Formatter(
+                            exp_mode="scientific",
+                            exp_val=0,
+                            exp_format="parts_per",
+                        ),
+                        "0.123",
+                    ),
+                    (
+                        Formatter(
+                            exp_mode="scientific",
                             exp_val=-3,
                             exp_format="parts_per",
                             add_ppth_form=True,

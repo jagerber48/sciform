@@ -37,6 +37,7 @@ iec_val_to_prefix_dict = {
 }
 
 pp_val_to_prefix_dict = {
+    0: "",
     -6: "ppm",
     -9: "ppb",
     -12: "ppt",
