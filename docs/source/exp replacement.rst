@@ -122,6 +122,9 @@ Parts Per Forms
    * - Exponent Value
      - Prefix Name
      - Prefix
+   * - 10\ :sup:`0`
+     - unity
+     - ``no symbol``
    * - 10\ :sup:`-6`
      - parts-per-million
      - ppm
