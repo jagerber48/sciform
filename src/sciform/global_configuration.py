@@ -93,56 +93,6 @@ def reset_global_defaults() -> None:
     global_options.GLOBAL_DEFAULT_OPTIONS = global_options.PKG_DEFAULT_OPTIONS
 
 
-def global_add_c_prefix() -> None:
-    """
-    Include ``c`` as a prefix for the exponent value -2.
-
-    Has no effect if exponent value -2 is already mapped to a prefix
-    string. To modify this mapping, first use
-    :func:`global_reset_si_prefixes` or use :func:`set_global_defaults`.
-    """
-    set_global_defaults(add_c_prefix=True)
-
-
-def global_add_small_si_prefixes() -> None:
-    """
-    Include ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` as prefix substitutions.
-
-    Note, if any of these exponent values are mapped, then that mapping
-    will NOT be overwritten. To modify existing mappings either first
-    use :func:`global_reset_si_prefixes` or use
-    :func:`set_global_defaults`.
-    """
-    set_global_defaults(add_small_si_prefixes=True)
-
-
-def global_add_ppth_form() -> None:
-    """
-    Include ``ppth`` as a "parts-per" form for the exponent value -3.
-
-    Has no effect if exponent value -3 is already mapped to a
-    "parts-per" format string. To modify this mapping, first use
-    :func:`global_reset_parts_per_forms` or use
-    :func:`set_global_defaults`.
-    """
-    set_global_defaults(add_ppth_form=True)
-
-
-def global_reset_si_prefixes() -> None:
-    """Clear all extra SI prefix mappings."""
-    set_global_defaults(extra_si_prefixes={})
-
-
-def global_reset_iec_prefixes() -> None:
-    """Clear all extra IEC prefix mappings."""
-    set_global_defaults(extra_iec_prefixes={})
-
-
-def global_reset_parts_per_forms() -> None:
-    """Clear all extra "parts-per" forms."""
-    set_global_defaults(extra_parts_per_forms={})
-
-
 class GlobalDefaultsContext:
     """
     Temporarily update global default options.
