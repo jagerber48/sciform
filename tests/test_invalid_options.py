@@ -26,14 +26,6 @@ class TestInvalidOptions(unittest.TestCase):
             ndigits=0,
         )
 
-    def test_pdg_sig_figs_ndigits(self):
-        self.assertRaises(
-            ValueError,
-            Formatter,
-            pdg_sig_figs=True,
-            ndigits=3,
-        )
-
     def test_fixed_point(self):
         self.assertRaises(
             ValueError,

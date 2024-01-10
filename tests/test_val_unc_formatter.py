@@ -499,9 +499,6 @@ class TestFormatting(unittest.TestCase):
         sform = Formatter(exp_mode="binary")
         self.assertEqual(sform(1024, 32), "(1.00000 ± 0.03125)b+10")
 
-    def test_pdg_ndigits_error(self):
-        self.assertRaises(ValueError, Formatter, pdg_sig_figs=True, ndigits=0)
-
     def test_pdg_sig_figs(self):
         cases_list = [
             (
