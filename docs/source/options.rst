@@ -397,15 +397,7 @@ For value/uncertainty formatting, if ``ndigits=AutoDigits`` and
 ``pdg_sig_figs=False``, then the rounding strategy described in the
 previous paragraph is used to round the uncertainty and the value is
 rounded to the same decimal place as the uncertainty.
-If ``ndigits=AutoDigits`` and ``pdg_sig_figs=True``, then the
-uncertainty will be rounded according to the Particle Data Group
-rounding algorithm and the value will rounded to the same decimal place
-as the uncertainty.
 See :ref:`pdg_sig_figs` for more details.
-
-If ``ndigits`` is specified (i.e. not ``None``) but
-``ndigits!=AutoDigits`` and ``pdg_sig_figs=True`` then ``ValueError``
-is raised.
 
 .. _separators:
 
@@ -660,12 +652,11 @@ The algorithm is as follows.
 
 :mod:`sciform` provides the ability to use this algorithm when
 formatting value/uncertainty pairs by using significant figure rounding
-mode with :class:`AutoDigits` precision and the ``pdg_sig_figs`` flag.
+mode and the ``pdg_sig_figs`` flag.
 
 >>> from sciform import AutoDigits
 >>> sform = Formatter(
 ...     round_mode="sig_fig",
-...     ndigits=AutoDigits,
 ...     pdg_sig_figs=True,
 ... )
 >>> print(sform(1, 0.0123))
@@ -675,9 +666,10 @@ mode with :class:`AutoDigits` precision and the ``pdg_sig_figs`` flag.
 >>> print(sform(1, 0.0997))
 1.00 ± 0.10
 
-If ``ndigits`` is specified (i.e. not ``None``) but
-``ndigits!=AutoDigits`` with ``pdg_sig_figs=True`` then ``ValueError``
-is raised.
+If ``pdg_sig_figs=True`` then ``ndigits`` is ignored for
+value/uncertainty formatting.
+``pdg_sig_figs`` is always ignored in favor of ``ndigits`` for single
+value formatting.
 
 .. _paren_uncertainty:
 
