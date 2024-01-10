@@ -98,17 +98,6 @@ class UserOptions:
             msg = f"ndigits must be >= 1 for sig fig rounding, not {options.ndigits}."
             raise ValueError(msg)
 
-        if (
-            options.pdg_sig_figs
-            and options.ndigits is not None
-            and options.ndigits is not modes.AutoDigits
-        ):
-            msg = (
-                f"pdg_sig_figs=True can only be used with ndigits=AutoDigits, not "
-                f"ndigits={options.ndigits}."
-            )
-            raise ValueError(msg)
-
         if options.exp_val is not modes.AutoExpVal and options.exp_val is not None:
             if options.exp_mode in ["fixed_point", "percent"] and options.exp_val != 0:
                 msg = (
