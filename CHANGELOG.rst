@@ -17,6 +17,7 @@ Added
   For value/uncertainty formatting ``ndigits`` is ignored if
   ``pdg_sig_figs=True``.
   The behavior for ``pdg_sig_figs=False`` is unchanged.
+  [`#73 <https://github.com/jagerber48/sciform/issues/73>`_]
 
 ----
 
