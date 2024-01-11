@@ -5,7 +5,13 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* There are no unreleased changes
+Changed
+^^^^^^^
+
+* Refactor backend mode literal (used for typing) and enum (used
+  internally for tracking options) object names so that e.g.
+  ``SignMode`` -> ``SignModeEnum`` and ``UserSignMode`` -> ``SignMode``.
+  [`#111 <https://github.com/jagerber48/sciform/issues/111>`_]
 
 ----
 
