@@ -14,17 +14,17 @@ from sciform.rendered_options import RenderedOptions
 class UserOptions:
     """Dataclass storing user input."""
 
-    exp_mode: modes.UserExpMode | None = None
+    exp_mode: modes.ExpMode | None = None
     exp_val: int | type(modes.AutoExpVal) | None = None
-    round_mode: modes.UserRoundMode | None = None
+    round_mode: modes.RoundMode | None = None
     ndigits: int | type(modes.AutoDigits) | None = None
-    upper_separator: modes.UserUpperSeparators | None = None
-    decimal_separator: modes.UserDecimalSeparators | None = None
-    lower_separator: modes.UserLowerSeparators | None = None
-    sign_mode: modes.UserSignMode | None = None
-    fill_char: modes.UserFillChar | None = None
+    upper_separator: modes.UpperSeparators | None = None
+    decimal_separator: modes.DecimalSeparators | None = None
+    lower_separator: modes.LowerSeparators | None = None
+    sign_mode: modes.SignMode | None = None
+    fill_char: modes.FillChar | None = None
     left_pad_dec_place: int | None = None
-    exp_format: modes.UserExpFormat | None = None
+    exp_format: modes.ExpFormat | None = None
     extra_si_prefixes: dict[int, str] | None = None
     extra_iec_prefixes: dict[int, str] | None = None
     extra_parts_per_forms: dict[int, str] | None = None
@@ -127,10 +127,10 @@ class UserOptions:
     def validate_separators(options: UserOptions | RenderedOptions) -> None:
         """Validate separator user input."""
         if options.upper_separator is not None:
-            if options.upper_separator not in get_args(modes.UserUpperSeparators):
+            if options.upper_separator not in get_args(modes.UpperSeparators):
                 msg = (
                     f"upper_separator must be in "
-                    f"{get_args(modes.UserUpperSeparators)}, not "
+                    f"{get_args(modes.UpperSeparators)}, not "
                     f"{options.upper_separator}."
                 )
                 raise ValueError(msg)
@@ -142,20 +142,20 @@ class UserOptions:
                 raise ValueError(msg)
 
         if options.decimal_separator is not None and (
-            options.decimal_separator not in get_args(modes.UserDecimalSeparators)
+            options.decimal_separator not in get_args(modes.DecimalSeparators)
         ):
             msg = (
                 f"decimal_separator must be in "
-                f"{get_args(modes.UserDecimalSeparators)}, not "
+                f"{get_args(modes.DecimalSeparators)}, not "
                 f"{options.decimal_separator}."
             )
             raise ValueError(msg)
 
         if options.lower_separator is not None and (
-            options.lower_separator not in get_args(modes.UserLowerSeparators)
+            options.lower_separator not in get_args(modes.LowerSeparators)
         ):
             msg = (
-                f"lower_separator must be in {get_args(modes.UserLowerSeparators)}, "
+                f"lower_separator must be in {get_args(modes.LowerSeparators)}, "
                 f"not {options.lower_separator}."
             )
             raise ValueError(msg)
@@ -163,14 +163,14 @@ class UserOptions:
     def render(self: UserOptions) -> RenderedOptions:
         """Render UserOptions into RenderedOptions."""
         key_to_enum_dict = {
-            "exp_mode": modes.ExpMode,
-            "round_mode": modes.RoundMode,
-            "upper_separator": modes.Separator,
-            "decimal_separator": modes.Separator,
-            "lower_separator": modes.Separator,
-            "sign_mode": modes.SignMode,
-            "fill_char": modes.FillChar,
-            "exp_format": modes.ExpFormat,
+            "exp_mode": modes.ExpModeEnum,
+            "round_mode": modes.RoundModeEnum,
+            "upper_separator": modes.SeparatorEnum,
+            "decimal_separator": modes.SeparatorEnum,
+            "lower_separator": modes.SeparatorEnum,
+            "sign_mode": modes.SignModeEnum,
+            "fill_char": modes.FillCharEnum,
+            "exp_format": modes.ExpFormatEnum,
         }
 
         global_defaults_dict = asdict(global_options.GLOBAL_DEFAULT_OPTIONS)

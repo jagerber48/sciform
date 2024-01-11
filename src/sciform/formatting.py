@@ -19,7 +19,13 @@ from sciform.format_utils import (
     round_val_unc,
 )
 from sciform.grouping import add_separators
-from sciform.modes import AutoExpVal, ExpFormat, ExpMode, RoundMode, SignMode
+from sciform.modes import (
+    AutoExpVal,
+    ExpFormatEnum,
+    ExpModeEnum,
+    RoundModeEnum,
+    SignModeEnum,
+)
 from sciform.rendered_options import RenderedOptions
 
 
@@ -78,7 +84,7 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
     if not num.is_finite():
         return format_non_finite(num, options)
 
-    if options.exp_mode is ExpMode.PERCENT:
+    if options.exp_mode is ExpModeEnum.PERCENT:
         num *= 100
         num = num.normalize()
 
@@ -154,13 +160,13 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     """Format value/uncertainty pair according to input options."""
     exp_mode = options.exp_mode
 
-    if exp_mode is ExpMode.BINARY or exp_mode is ExpMode.BINARY_IEC:
+    if exp_mode is ExpModeEnum.BINARY or exp_mode is ExpModeEnum.BINARY_IEC:
         msg = (
             "Binary exponent modes are not supported for value/uncertainty formatting."
         )
         raise NotImplementedError(msg)
 
-    if options.round_mode is RoundMode.DEC_PLACE:
+    if options.round_mode is RoundModeEnum.DEC_PLACE:
         msg = (
             "Precision round mode not available for value/uncertainty formatting. "
             "Rounding is always applied as significant figures for the uncertainty."
@@ -168,7 +174,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         warn(msg, stacklevel=2)
 
     unc = abs(unc)
-    if exp_mode is ExpMode.PERCENT:
+    if exp_mode is ExpModeEnum.PERCENT:
         val *= 100
         unc *= 100
         val = val.normalize()
@@ -178,7 +184,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         In percent mode, value and uncertainty, having been multiplied
         by 100 above, will be individually formatted in fixed point mode
         """
-        exp_mode = ExpMode.FIXEDPOINT
+        exp_mode = ExpModeEnum.FIXEDPOINT
 
     """
     We round twice in case the first rounding changes the digits place
@@ -242,18 +248,18 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     val_format_options = replace(
         options,
         left_pad_dec_place=new_top_digit,
-        round_mode=RoundMode.DEC_PLACE,
+        round_mode=RoundModeEnum.DEC_PLACE,
         ndigits=ndigits,
         exp_mode=exp_mode,
         exp_val=exp_val,
         superscript=False,
         latex=False,
-        exp_format=ExpFormat.STANDARD,
+        exp_format=ExpFormatEnum.STANDARD,
     )
 
     unc_format_options = replace(
         val_format_options,
-        sign_mode=SignMode.NEGATIVE,
+        sign_mode=SignModeEnum.NEGATIVE,
     )
 
     val_mantissa_exp_str = format_num(val_rounded, val_format_options)
@@ -294,7 +300,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     else:
         val_unc_exp_str = val_unc_str
 
-    if options.exp_mode is ExpMode.PERCENT:
+    if options.exp_mode is ExpModeEnum.PERCENT:
         val_unc_exp_str = f"({val_unc_exp_str})%"
 
     if options.latex:

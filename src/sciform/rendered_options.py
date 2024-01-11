@@ -20,17 +20,17 @@ if TYPE_CHECKING:  # pragma: no cover
 class RenderedOptions:
     """Rendered options: All options populated and using Enum instead of Literal."""
 
-    exp_mode: modes.ExpMode
+    exp_mode: modes.ExpModeEnum
     exp_val: int | type(modes.AutoExpVal)
-    round_mode: modes.RoundMode
+    round_mode: modes.RoundModeEnum
     ndigits: int | type(modes.AutoDigits)
-    upper_separator: modes.UpperSeparators
-    decimal_separator: modes.DecimalSeparators
-    lower_separator: modes.LowerSeparators
-    sign_mode: modes.SignMode
-    fill_char: modes.FillChar
+    upper_separator: modes.UpperSeparatorEnums
+    decimal_separator: modes.DecimalSeparatorEnums
+    lower_separator: modes.LowerSeparatorEnums
+    sign_mode: modes.SignModeEnum
+    fill_char: modes.FillCharEnum
     left_pad_dec_place: int
-    exp_format: modes.ExpFormat
+    exp_format: modes.ExpFormatEnum
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
     extra_parts_per_forms: dict[int, str]
