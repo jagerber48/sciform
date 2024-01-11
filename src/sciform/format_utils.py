@@ -116,7 +116,10 @@ def get_mantissa_exp_base(
     input_exp: int | type(AutoExpVal),
 ) -> tuple[Decimal, int, int]:
     """Get mantissa, exponent, and base for formatting a decimal number."""
-    base = 2 if exp_mode is ExpModeEnum.BINARY or exp_mode is ExpModeEnum.BINARY_IEC else 10
+    if exp_mode is ExpModeEnum.BINARY or exp_mode is ExpModeEnum.BINARY_IEC:
+        base = 2
+    else:
+        base = 10
 
     if num == 0 or not num.is_finite():
         mantissa = Decimal(num)
@@ -205,7 +208,10 @@ def get_exp_str(  # noqa: PLR0913
     if exp_mode is ExpModeEnum.PERCENT:
         return "%"
 
-    base = 2 if exp_mode is ExpModeEnum.BINARY or exp_mode is ExpModeEnum.BINARY_IEC else 10
+    if exp_mode is ExpModeEnum.BINARY or exp_mode is ExpModeEnum.BINARY_IEC:
+        base = 2
+    else:
+        base = 10
     base = cast(Literal[10, 2], base)
 
     if exp_format is ExpFormatEnum.PREFIX or exp_format is ExpFormatEnum.PARTS_PER:

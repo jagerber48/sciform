@@ -19,7 +19,13 @@ from sciform.format_utils import (
     round_val_unc,
 )
 from sciform.grouping import add_separators
-from sciform.modes import AutoExpVal, ExpFormatEnum, ExpModeEnum, RoundModeEnum, SignModeEnum
+from sciform.modes import (
+    AutoExpVal,
+    ExpFormatEnum,
+    ExpModeEnum,
+    RoundModeEnum,
+    SignModeEnum,
+)
 from sciform.rendered_options import RenderedOptions
 
 
