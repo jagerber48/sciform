@@ -169,7 +169,7 @@ class TestInvalidOptions(unittest.TestCase):
             ValueError,
             get_mantissa_exp_base,
             num=Decimal(3),
-            exp_mode=modes.ExpMode.FIXEDPOINT,
+            exp_mode=modes.ExpModeEnum.FIXEDPOINT,
             input_exp=1,
         )
 
@@ -178,7 +178,7 @@ class TestInvalidOptions(unittest.TestCase):
             ValueError,
             get_mantissa_exp_base,
             num=Decimal(3),
-            exp_mode=modes.ExpMode.ENGINEERING,
+            exp_mode=modes.ExpModeEnum.ENGINEERING,
             input_exp=1,
         )
 
@@ -187,7 +187,7 @@ class TestInvalidOptions(unittest.TestCase):
             ValueError,
             get_mantissa_exp_base,
             num=Decimal(3),
-            exp_mode=modes.ExpMode.BINARY_IEC,
+            exp_mode=modes.ExpModeEnum.BINARY_IEC,
             input_exp=3,
         )
 
@@ -216,7 +216,7 @@ class TestInvalidOptions(unittest.TestCase):
         self.assertRaises(
             ValueError,
             get_prefix_dict,
-            exp_format=modes.ExpFormat.PREFIX,
+            exp_format=modes.ExpFormatEnum.PREFIX,
             base=3,
             extra_si_prefixes={},
             extra_iec_prefixes={},
@@ -246,7 +246,7 @@ class TestInvalidOptions(unittest.TestCase):
             ValueError,
             modes.mode_str_to_enum,
             "eng",
-            modes.ExpMode,
+            modes.ExpModeEnum,
         )
 
     def test_get_val_unc_mantissa_exp_str_invalid_driver(self):

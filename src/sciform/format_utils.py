@@ -11,11 +11,11 @@ from sciform.modes import (
     AutoDigits,
     AutoExpVal,
     ExpDriver,
-    ExpFormat,
-    ExpMode,
-    RoundMode,
-    Separator,
-    SignMode,
+    ExpFormatEnum,
+    ExpModeEnum,
+    RoundModeEnum,
+    SeparatorEnum,
+    SignModeEnum,
 )
 from sciform.prefix import (
     iec_val_to_prefix_dict,
@@ -112,27 +112,27 @@ def get_binary_exp(
 
 def get_mantissa_exp_base(
     num: Decimal,
-    exp_mode: ExpMode,
+    exp_mode: ExpModeEnum,
     input_exp: int | type(AutoExpVal),
 ) -> tuple[Decimal, int, int]:
     """Get mantissa, exponent, and base for formatting a decimal number."""
-    base = 2 if exp_mode is ExpMode.BINARY or exp_mode is ExpMode.BINARY_IEC else 10
+    base = 2 if exp_mode is ExpModeEnum.BINARY or exp_mode is ExpModeEnum.BINARY_IEC else 10
 
     if num == 0 or not num.is_finite():
         mantissa = Decimal(num)
         exp = 0 if input_exp is AutoExpVal else input_exp
     else:
-        if exp_mode is ExpMode.FIXEDPOINT or exp_mode is ExpMode.PERCENT:
+        if exp_mode is ExpModeEnum.FIXEDPOINT or exp_mode is ExpModeEnum.PERCENT:
             exp = get_fixed_exp(input_exp)
-        elif exp_mode is ExpMode.SCIENTIFIC:
+        elif exp_mode is ExpModeEnum.SCIENTIFIC:
             exp = get_scientific_exp(num, input_exp)
-        elif exp_mode is ExpMode.ENGINEERING:
+        elif exp_mode is ExpModeEnum.ENGINEERING:
             exp = get_engineering_exp(num, input_exp)
-        elif exp_mode is ExpMode.ENGINEERING_SHIFTED:
+        elif exp_mode is ExpModeEnum.ENGINEERING_SHIFTED:
             exp = get_engineering_exp(num, input_exp, shifted=True)
-        elif exp_mode is ExpMode.BINARY:
+        elif exp_mode is ExpModeEnum.BINARY:
             exp = get_binary_exp(num, input_exp)
-        elif exp_mode is ExpMode.BINARY_IEC:
+        elif exp_mode is ExpModeEnum.BINARY_IEC:
             exp = get_binary_exp(num, input_exp, iec=True)
         else:
             msg = f"Unhandled exponent mode {exp_mode}."
@@ -159,14 +159,14 @@ def get_superscript_exp_str(base: int, exp_val: int) -> str:
 
 
 def get_prefix_dict(
-    exp_format: ExpFormat,
+    exp_format: ExpFormatEnum,
     base: Literal[10, 2],
     extra_si_prefixes: dict[int, str],
     extra_iec_prefixes: dict[int, str],
     extra_parts_per_forms: dict[int, str],
 ) -> dict[int, str]:
     """Resolve dictionary of prefix translations."""
-    if exp_format is ExpFormat.PREFIX:
+    if exp_format is ExpFormatEnum.PREFIX:
         if base == 10:
             prefix_dict = si_val_to_prefix_dict.copy()
             prefix_dict.update(extra_si_prefixes)
@@ -176,7 +176,7 @@ def get_prefix_dict(
         else:
             msg = f"Unhandled base {base}"
             raise ValueError(msg)
-    elif exp_format is ExpFormat.PARTS_PER:
+    elif exp_format is ExpFormatEnum.PARTS_PER:
         prefix_dict = pp_val_to_prefix_dict.copy()
         prefix_dict.update(extra_parts_per_forms)
     else:
@@ -189,8 +189,8 @@ def get_prefix_dict(
 def get_exp_str(  # noqa: PLR0913
     *,
     exp_val: int,
-    exp_mode: ExpMode,
-    exp_format: ExpFormat,
+    exp_mode: ExpModeEnum,
+    exp_format: ExpFormatEnum,
     extra_si_prefixes: dict[int, str],
     extra_iec_prefixes: dict[int, str],
     extra_parts_per_forms: dict[int, str],
@@ -200,15 +200,15 @@ def get_exp_str(  # noqa: PLR0913
     superscript: bool,
 ) -> str:
     """Get formatting exponent string."""
-    if exp_mode is ExpMode.FIXEDPOINT:
+    if exp_mode is ExpModeEnum.FIXEDPOINT:
         return ""
-    if exp_mode is ExpMode.PERCENT:
+    if exp_mode is ExpModeEnum.PERCENT:
         return "%"
 
-    base = 2 if exp_mode is ExpMode.BINARY or exp_mode is ExpMode.BINARY_IEC else 10
+    base = 2 if exp_mode is ExpModeEnum.BINARY or exp_mode is ExpModeEnum.BINARY_IEC else 10
     base = cast(Literal[10, 2], base)
 
-    if exp_format is ExpFormat.PREFIX or exp_format is ExpFormat.PARTS_PER:
+    if exp_format is ExpFormatEnum.PREFIX or exp_format is ExpFormatEnum.PARTS_PER:
         text_exp_dict = get_prefix_dict(
             exp_format,
             base,
@@ -256,15 +256,15 @@ def parse_standard_exp_str(exp_str: str) -> tuple[int, int]:
     return base, exp_val
 
 
-def get_sign_str(num: Decimal, sign_mode: SignMode) -> str:
+def get_sign_str(num: Decimal, sign_mode: SignModeEnum) -> str:
     """Get the format sign string."""
     if num < 0:
         sign_str = "-"
-    elif sign_mode is SignMode.ALWAYS:
+    elif sign_mode is SignModeEnum.ALWAYS:
         sign_str = "+"
-    elif sign_mode is SignMode.SPACE:
+    elif sign_mode is SignModeEnum.SPACE:
         sign_str = " "
-    elif sign_mode is SignMode.NEGATIVE:
+    elif sign_mode is SignModeEnum.NEGATIVE:
         sign_str = ""
     else:
         msg = f"Invalid sign mode {sign_mode}."
@@ -311,20 +311,20 @@ def get_pdg_round_digit(num: Decimal) -> int:
 
 def get_round_digit(
     num: Decimal,
-    round_mode: RoundMode,
+    round_mode: RoundModeEnum,
     ndigits: int | type(AutoDigits),
     *,
     pdg_sig_figs: bool = False,
 ) -> int:
     """Get the digit place to which to round."""
-    if round_mode is RoundMode.SIG_FIG:
+    if round_mode is RoundModeEnum.SIG_FIG:
         if pdg_sig_figs:
             round_digit = get_pdg_round_digit(num)
         elif ndigits is AutoDigits:
             round_digit = get_bottom_digit(num)
         else:
             round_digit = get_top_digit(num) - (ndigits - 1)
-    elif round_mode is RoundMode.DEC_PLACE:
+    elif round_mode is RoundModeEnum.DEC_PLACE:
         round_digit = get_bottom_digit(num) if ndigits is AutoDigits else -ndigits
     else:
         msg = f"Unhandled round mode: {round_mode}."
@@ -346,7 +346,7 @@ def format_num_by_top_bottom_dig(
     num: Decimal,
     target_top_digit: int,
     target_bottom_digit: int,
-    sign_mode: SignMode,
+    sign_mode: SignModeEnum,
     fill_char: str,
 ) -> str:
     """Format a number according to specified top and bottom digit places."""
@@ -389,7 +389,7 @@ def round_val_unc(
     if unc.is_finite() and unc != 0:
         round_digit = get_round_digit(
             unc,
-            RoundMode.SIG_FIG,
+            RoundModeEnum.SIG_FIG,
             ndigits,
             pdg_sig_figs=use_pdg_sig_figs,
         )
@@ -397,7 +397,7 @@ def round_val_unc(
     else:
         round_digit = get_round_digit(
             val,
-            RoundMode.SIG_FIG,
+            RoundModeEnum.SIG_FIG,
             ndigits,
             pdg_sig_figs=False,
         )
@@ -412,7 +412,7 @@ def round_val_unc(
 def get_val_unc_exp(
     val: Decimal,
     unc: Decimal,
-    exp_mode: ExpMode,
+    exp_mode: ExpModeEnum,
     input_exp: int,
 ) -> tuple[int, ExpDriver]:
     """Get exponent for value/uncertainty formatting."""
@@ -495,7 +495,7 @@ def construct_val_unc_str(  # noqa: PLR0913
     unc_mantissa_str: str,
     val_mantissa: Decimal,
     unc_mantissa: Decimal,
-    decimal_separator: Separator,
+    decimal_separator: SeparatorEnum,
     *,
     paren_uncertainty: bool,
     latex: bool,
@@ -519,7 +519,7 @@ def construct_val_unc_str(  # noqa: PLR0913
                 """
                 unc_mantissa_str = unc_mantissa_str.lstrip("0.,_ ")
             if not paren_uncertainty_separators:
-                for separator in Separator:
+                for separator in SeparatorEnum:
                     if separator == decimal_separator:
                         if val_mantissa.is_finite():
                             if unc_mantissa >= abs(val_mantissa):
@@ -543,8 +543,8 @@ def construct_val_unc_exp_str(  # noqa: PLR0913
     *,
     val_unc_str: str,
     exp_val: int,
-    exp_mode: ExpMode,
-    exp_format: ExpFormat,
+    exp_mode: ExpModeEnum,
+    exp_format: ExpFormatEnum,
     extra_si_prefixes: dict[int, str | None],
     extra_iec_prefixes: dict[int, str | None],
     extra_parts_per_forms: dict[int, str | None],

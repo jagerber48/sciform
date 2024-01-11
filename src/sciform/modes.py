@@ -50,20 +50,20 @@ class AutoDigits(metaclass=SentinelMeta):
     """
 
 
-UserFillChar = Literal[" ", "0"]
+FillChar = Literal[" ", "0"]
 
 
-class FillChar(str, Enum):
+class FillCharEnum(str, Enum):
     """Fill mode Enum."""
 
     SPACE = " "
     ZERO = "0"
 
 
-UserSignMode = Literal["-", "+", " "]
+SignMode = Literal["-", "+", " "]
 
 
-class SignMode(str, Enum):
+class SignModeEnum(str, Enum):
     """Sign mode Enum."""
 
     NEGATIVE = "-"
@@ -71,12 +71,12 @@ class SignMode(str, Enum):
     SPACE = " "
 
 
-UserUpperSeparators = Literal["", ",", ".", " ", "_"]
-UserDecimalSeparators = Literal[".", ","]
-UserLowerSeparators = Literal["", " ", "_"]
+UpperSeparators = Literal["", ",", ".", " ", "_"]
+DecimalSeparators = Literal[".", ","]
+LowerSeparators = Literal["", " ", "_"]
 
 
-class Separator(str, Enum):
+class SeparatorEnum(str, Enum):
     """Separator type Enum."""
 
     NONE = ""
@@ -86,28 +86,32 @@ class Separator(str, Enum):
     SPACE = " "
 
 
-UpperSeparators = Literal[
-    Separator.NONE,
-    Separator.COMMA,
-    Separator.POINT,
-    Separator.UNDERSCORE,
-    Separator.SPACE,
+UpperSeparatorEnums = Literal[
+    SeparatorEnum.NONE,
+    SeparatorEnum.COMMA,
+    SeparatorEnum.POINT,
+    SeparatorEnum.UNDERSCORE,
+    SeparatorEnum.SPACE,
 ]
-DecimalSeparators = Literal[Separator.POINT, Separator.COMMA]
-LowerSeparators = Literal[Separator.NONE, Separator.UNDERSCORE, Separator.SPACE]
+DecimalSeparatorEnums = Literal[SeparatorEnum.POINT, SeparatorEnum.COMMA]
+LowerSeparatorEnums = Literal[
+    SeparatorEnum.NONE,
+    SeparatorEnum.UNDERSCORE,
+    SeparatorEnum.SPACE,
+]
 
 
-UserRoundMode = Literal["sig_fig", "dec_place"]
+RoundMode = Literal["sig_fig", "dec_place"]
 
 
-class RoundMode(str, Enum):
+class RoundModeEnum(str, Enum):
     """Round mode Enum."""
 
     SIG_FIG = "sig_fig"
     DEC_PLACE = "dec_place"
 
 
-UserExpMode = Literal[
+ExpMode = Literal[
     "fixed_point",
     "percent",
     "scientific",
@@ -118,7 +122,7 @@ UserExpMode = Literal[
 ]
 
 
-class ExpMode(str, Enum):
+class ExpModeEnum(str, Enum):
     """Exponent mode Enum."""
 
     FIXEDPOINT = "fixed_point"
@@ -130,10 +134,10 @@ class ExpMode(str, Enum):
     BINARY_IEC = "binary_iec"
 
 
-UserExpFormat = Literal["standard", "prefix", "parts_per"]
+ExpFormat = Literal["standard", "prefix", "parts_per"]
 
 
-class ExpFormat(str, Enum):
+class ExpFormatEnum(str, Enum):
     """Exponent format Enum."""
 
     STANDARD = "standard"
