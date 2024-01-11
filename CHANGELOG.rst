@@ -5,6 +5,12 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Added
+^^^^^
+
+* Added examples in the documentation demonstrating how ``sciform``
+  formatting can be mapped over collections of numbers.
+
 Changed
 ^^^^^^^
 
