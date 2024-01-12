@@ -8,6 +8,9 @@ Unreleased
 Added
 ^^^^^
 
+* Expanded the "Under Construction" section of the readme and the
+  "How to Contribute" section of the project page.
+  Changes included adding links to the ``sciform`` feedback survey.
 * Added examples in the documentation demonstrating how ``sciform``
   formatting can be mapped over collections of numbers.
 

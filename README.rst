@@ -26,6 +26,13 @@ sciform
 |  **Documentation:** `<https://sciform.readthedocs.io/en/stable/>`_
 |  **PyPi:** `<https://pypi.org/project/sciform/>`_
 
+We would greatly appreciate you taking the time to fill out the
+|UX Survey| to help improve ``sciform``.
+
+.. |UX Survey| raw:: html
+
+   <b><a href="https://forms.gle/TkkKgywYyEMKu9U37">User Experience Survey</a></b>
+
 ========
 Overview
 ========
@@ -61,20 +68,31 @@ or install the latest development version from
 Under Construction
 ==================
 
-The ``sciform`` package is still in early stages of development.
-The API is not stable.
-Class, function and parameter names and usages have undergone changes
-and may continue to change relatively freely until version ``1.0.0`` is
-released.
-API changes will be announced after new releases in the
+``sciform`` adheres to `semantic versioning <https://semver.org/>`_.
+The major version for ``sciform`` is still ``0`` indicating that
+``sciform`` is still in the development stage which means there may be
+backwards-incompatible changes to the interface (e.g. function or object
+behaviors and names) without a corresponding major version bump.
+All changes are announced after new releases in the
 `changelog <https://sciform.readthedocs.io/en/stable/project.html#changelog>`_.
-If you have an idea or opinion about how ``sciform`` should be designed,
-now is a great time to
-`post a discussion topic <https://github.com/jagerber48/sciform/discussions>`_
-about it!
+Backwards incompatible changes are indicated with the **[BREAKING]**
+flag.
 
-``sciform`` is currently undergoing review by the
-`PyOpenSci <https://www.pyopensci.org/>`_ community.
+We are very excited to get your feedback to help stabilize the interface
+and make ``sciform`` a more useful tool.
+You can provide your feedback on your experience with ``sciform`` by
+filling out
+`the user experience survey <https://forms.gle/TkkKgywYyEMKu9U37>`_.
+Now is a great time to share your ``sciform`` ideas or issues by
+opening a
+`discussion <https://github.com/jagerber48/sciform/discussions>`_ or
+`issue <https://github.com/jagerber48/sciform/issues>`_.
+If you would like to contribute to ``sciform`` then please see
+`How to Contribute <https://sciform.readthedocs.io/en/stable/project.html#how-to-contribute>`_.
+
+``sciform`` is currently undergoing
+`peer review <https://www.pyopensci.org/about-peer-review/index.html>`_
+by the `PyOpenSci <https://www.pyopensci.org/>`_ community.
 You can view the on-going review
 `here <https://github.com/pyOpenSci/software-submission/issues/121>`_.
 

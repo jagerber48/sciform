@@ -4,6 +4,7 @@ How to Contribute
 Contributions to ``sciform`` are welcome.
 Here are some ways you can contribute:
 
+* Fill out `the user experience survey <https://forms.gle/TkkKgywYyEMKu9U37>`_.
 * Create a
   `discussion topic <https://github.com/jagerber48/sciform/discussions>`_
   if you have an idea for a new feature or a general topic for
@@ -17,15 +18,14 @@ Here are some ways you can contribute:
 The current main goal for the development of ``sciform`` is
 stabilization of the public user interface.
 To this end, ``sciform`` is seeking feedback/suggestions about
-ease-of-use for the user interface as well as naming suggestions for the
-various objects and options that users interact with.
-While stabilizing the interface will take precedence for the time being,
-new feature requests are always welcome!
+ease-of-use for the user interface and suggested changes to code
+behaviors and naming choices.
+New feature requests are always welcome!
 
 Development Details
 -------------------
 
-* Begin development work on ``sciform`` by forking and installing the
+* Begin development work on ``sciform`` by forking and cloning the
   `git repository <https://github.com/jagerber48/sciform>`_ and
   installing the development dependencies in editable mode with::
 
@@ -62,3 +62,6 @@ Development Details
   virtual environment.
   In this last case you will always need to activate the virtual
   environment before running ``git`` commands.
+* After making code changes please document your changes in the
+  ``CHANGELOG.rst`` file and, if there are any changed or new behaviors,
+  include appropriate unit test and documentation updates.
