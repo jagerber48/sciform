@@ -1,3 +1,6 @@
+Changelog
+=========
+
 This project adheres to `Semantic Versioning <https://semver.org/>`_.
 
 ----
@@ -8,8 +11,12 @@ Unreleased
 Added
 ^^^^^
 
+* Expanded the "Under Construction" section of the readme and the
+  "How to Contribute" section of the project page.
+  Changes included adding links to the ``sciform`` feedback survey.
 * Added examples in the documentation demonstrating how ``sciform``
   formatting can be mapped over collections of numbers.
+  [`#120 <https://github.com/jagerber48/sciform/issues/120>`_]
 
 Changed
 ^^^^^^^
