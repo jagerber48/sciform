@@ -27,11 +27,8 @@ sciform
 |  **PyPi:** `<https://pypi.org/project/sciform/>`_
 
 We would greatly appreciate you taking the time to fill out the
-|UX Survey| to help improve ``sciform``.
-
-.. |UX Survey| raw:: html
-
-   <b><a href="https://forms.gle/TkkKgywYyEMKu9U37">User Experience Survey</a></b>
+`User Experience Survey <https://forms.gle/TkkKgywYyEMKu9U37>`_ to help
+improve ``sciform``.
 
 ========
 Overview
