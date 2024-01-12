@@ -152,6 +152,12 @@ rounding.
 >>> print(f"{SciNum(875):!2}")
 880
 
+See `Formatting Options <https://sciform.readthedocs.io/en/stable/options.html>`_,
+`Format Specification Mini-Language <https://sciform.readthedocs.io/en/stable/fsml.html>`_
+for more details and
+`Examples <https://sciform.readthedocs.io/en/stable/examples.html>`_ for
+more examples.
+
 ================
 Acknowledgements
 ================
