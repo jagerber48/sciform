@@ -28,7 +28,7 @@ class RenderedOptions:
     decimal_separator: modes.DecimalSeparatorEnums
     lower_separator: modes.LowerSeparatorEnums
     sign_mode: modes.SignModeEnum
-    fill_char: modes.FillCharEnum
+    left_pad_char: modes.LeftPadCharEnum
     left_pad_dec_place: int
     exp_format: modes.ExpFormatEnum
     extra_si_prefixes: dict[int, str]

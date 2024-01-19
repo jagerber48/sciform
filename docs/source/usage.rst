@@ -130,7 +130,7 @@ package default settings):
  'decimal_separator': '.',
  'lower_separator': '',
  'sign_mode': '-',
- 'fill_char': ' ',
+ 'left_pad_char': ' ',
  'left_pad_dec_place': 0,
  'exp_format': 'standard',
  'extra_si_prefixes': {},
@@ -154,7 +154,7 @@ unchanged.
 
 >>> from sciform import set_global_defaults
 >>> set_global_defaults(
-...     fill_char="0",
+...     left_pad_char="0",
 ...     exp_mode="engineering_shifted",
 ...     ndigits=4,
 ...     decimal_separator=",",
@@ -168,7 +168,7 @@ unchanged.
  'decimal_separator': ',',
  'lower_separator': '',
  'sign_mode': '-',
- 'fill_char': '0',
+ 'left_pad_char': '0',
  'left_pad_dec_place': 0,
  'exp_format': 'standard',
  'extra_si_prefixes': {},

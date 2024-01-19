@@ -8,7 +8,11 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* There are no unreleased changes.
+Changed
+^^^^^^^
+
+* **[BREAKING]** Renamed ``fill_char`` to ``left_pad_char``.
+  [`#126 <https://github.com/jagerber48/sciform/issues/126>`_]
 
 ----
 

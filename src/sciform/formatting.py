@@ -115,13 +115,13 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
         """
         exp_val = 0
 
-    fill_char = options.fill_char.value
+    left_pad_char = options.left_pad_char.value
     mantissa_str = format_num_by_top_bottom_dig(
         mantissa_rounded.normalize(),
         options.left_pad_dec_place,
         round_digit,
         options.sign_mode,
-        fill_char,
+        left_pad_char,
     )
 
     upper_separator = options.upper_separator.value

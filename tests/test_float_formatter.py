@@ -52,7 +52,7 @@ class TestFormatting(unittest.TestCase):
 
         self.run_float_formatter_cases(cases_list)
 
-    def test_fill_and_separators(self):
+    def test_left_pad_and_separators(self):
         cases_list = [
             (
                 123456789.654321,
@@ -61,7 +61,7 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             upper_separator="_",
                             lower_separator="_",
-                            fill_char="0",
+                            left_pad_char="0",
                             left_pad_dec_place=14,
                         ),
                         "000_000_123_456_789.654_321",
@@ -70,7 +70,7 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             upper_separator="_",
                             lower_separator="_",
-                            fill_char=" ",
+                            left_pad_char=" ",
                             left_pad_dec_place=14,
                         ),
                         "      123_456_789.654_321",
@@ -84,7 +84,7 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             upper_separator="_",
                             lower_separator="_",
-                            fill_char="0",
+                            left_pad_char="0",
                             left_pad_dec_place=14,
                         ),
                         "000_000_004_567_899.765_432_1",
@@ -93,7 +93,7 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             upper_separator="_",
                             lower_separator="_",
-                            fill_char=" ",
+                            left_pad_char=" ",
                             left_pad_dec_place=14,
                         ),
                         "        4_567_899.765_432_1",
