@@ -52,7 +52,7 @@ class TestFormatting(unittest.TestCase):
 
         self.run_float_formatter_cases(cases_list)
 
-    def test_fill_and_separators(self):
+    def test_left_pad_and_separators(self):
         cases_list = [
             (
                 123456789.654321,

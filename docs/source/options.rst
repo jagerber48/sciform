@@ -534,21 +534,21 @@ NAN
 >>> print(sform(float("-inf")))
 -INF
 
-.. _left_filling:
+.. _left_padding:
 
-Left Filling
+Left Padding
 ============
 
 The :ref:`rounding` options described above can be used to control how
 many digits to the right of either the most-significant digit or the
 decimal point are displayed.
-It is also possible, using "fill" options, to add digits to the left of
-the most-significant digit.
+It is also possible, using left padding options, to add digits to the
+left of the most-significant digit.
 The ``left_pad_char`` option can be used to select either whitespaces
-``' '`` or zeros ``'0'`` as fill characters.
+``' '`` or zeros ``'0'`` as pad characters.
 The ``left_pad_dec_place`` option is used to indicate to which decimal
-place fill characters should be added.
-E.g. ``left_pad_dec_place=4`` indicates fill characters should be
+place pad characters should be added.
+E.g. ``left_pad_dec_place=4`` indicates pad characters should be
 added up to the 10\ :sup:`4` (ten-thousands) decimal place.
 
 >>> sform = Formatter(left_pad_char="0", left_pad_dec_place=4)

@@ -18,11 +18,11 @@ This is analogous to how python :class:`int`, :class:`float`, and
 `format specification mini-language <https://docs.python.org/3/library/string.html#format-specification-mini-language>`_.
 The :mod:`sciform` format specification mini-language is given by::
 
-    format_spec        ::=  [fill "="][sign]["#"][fill_top_digit][round_mode ndigits][exp_mode]["x" exp_val]["p"]["()"]
+    format_spec        ::=  [left_pad_char "="][sign]["#"][left_pad_dec_place][round_mode ndigits][exp_mode]["x" exp_val]["p"]["()"]
 
-    fill               ::=  "0" | " "
+    left_pad_char      ::=  "0" | " "
     sign               ::=  "+" | "-" | " "
-    fill_top_digit     ::=  digit+
+    left_pad_dec_place ::=  digit+
     round_mode         ::=  "!" | "."
     ndigits            ::=  [+-]?digit+
     exp_mode           ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" | "b" | "B" |
@@ -61,10 +61,10 @@ Further details about the options can be found at
 
    * - Format Specification
      - Description
-   * - | fill
+   * - | left_pad_char
        | (``'0='``, ``' ='``)
      - Configure ``left_pad_char`` to be ``'0'`` or ``' '``. See
-       :ref:`left_filling`.
+       :ref:`left_padding`.
    * - | sign
        | (``'-'``, ``'+'``, ``' '``)
      - Configure ``sign_mode`` to be ``'-'``, ``'+'``, or ``' '``. See
@@ -75,10 +75,10 @@ Further details about the options can be found at
        :ref:`engineering_shifted` mode when the exponent mode flag is
        ``'r'`` or ``'R'`` or to use :ref:`binary_iec` mode when the
        exponent mode flag is ``'b'`` or ``'B'``.
-   * - | fill_top_digit
+   * - | left_pad_dec_place
        | (``\d+``)
      - Sets ``left_pad_dec_place`` to any non-negative integer.
-       See :ref:`left_filling`.
+       See :ref:`left_padding`.
    * - | round_mode
        | (``'!'``, ``'.'``)
      - Sets ``round_mode`` to ``'sig_fig'`` or ``'dec_place'``.
@@ -163,12 +163,12 @@ for scientific formatting.
   center-aligned, and sign-aware string padding by any character.
   In the built-in FSML, the width field indicates the minimum length to
   which the resulting string (including all punctuation such as ``+``,
-  ``-``, ``.``, ``e``, etc.) should be filled to.
+  ``-``, ``.``, ``e``, etc.) should be filled.
   :mod:`sciform` takes the stance that these padding features are tasks
   better suited for string, as opposed to number, formatters.
   For :mod:`sciform`, the user specifies the digits place to which the
   number should be padded.
-  The fill character may only be ``' '`` or ``'0'`` and must always be
+  The pad character may only be ``' '`` or ``'0'`` and must always be
   followed by the sign aware `=` flag.
   There is no ``0`` flag, as in the built-in FSML, that may be placed
   before the width field to indicate sign-aware zero padding.

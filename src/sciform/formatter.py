@@ -119,7 +119,8 @@ class Formatter:
         :type lower_separator: ``Literal['', ' ', '_'] | None``
         :param sign_mode: Indicate sign symbol behavior.
         :type sign_mode: ``Literal['-', '+', ' '] | None``
-        :param left_pad_char: Indicate whether to fill with zeros or spaces.
+        :param left_pad_char: Indicate whether to pad with zeros or
+          spaces.
         :type left_pad_char: ``Literal[' ', '0'] | None``
         :param left_pad_dec_place: Positive ``int`` indicating the
           decimal place to which the string will be left padded before

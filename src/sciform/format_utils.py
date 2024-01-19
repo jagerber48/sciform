@@ -338,8 +338,8 @@ def get_round_digit(
     return round_digit
 
 
-def get_fill_str(left_pad_char: str, top_digit: int, top_padded_digit: int) -> str:
-    """Get the string filling from top_digit place to top_padded_digit place."""
+def get_pad_str(left_pad_char: str, top_digit: int, top_padded_digit: int) -> str:
+    """Get the string padding from top_digit place to top_padded_digit place."""
     if top_padded_digit > top_digit:
         pad_len = top_padded_digit - max(top_digit, 0)
         pad_str = left_pad_char * pad_len
@@ -362,8 +362,8 @@ def format_num_by_top_bottom_dig(
     sign_str = get_sign_str(num, sign_mode)
 
     num_top_digit = get_top_digit(num)
-    fill_str = get_fill_str(left_pad_char, num_top_digit, target_top_digit)
-    return f"{sign_str}{fill_str}{abs_mantissa_str}"
+    pad_str = get_pad_str(left_pad_char, num_top_digit, target_top_digit)
+    return f"{sign_str}{pad_str}{abs_mantissa_str}"
 
 
 def latex_translate(input_str: str) -> str:
