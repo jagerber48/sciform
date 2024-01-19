@@ -22,7 +22,7 @@ class UserOptions:
     decimal_separator: modes.DecimalSeparators | None = None
     lower_separator: modes.LowerSeparators | None = None
     sign_mode: modes.SignMode | None = None
-    fill_char: modes.FillChar | None = None
+    left_pad_char: modes.LeftPadChar | None = None
     left_pad_dec_place: int | None = None
     exp_format: modes.ExpFormat | None = None
     extra_si_prefixes: dict[int, str] | None = None
@@ -169,7 +169,7 @@ class UserOptions:
             "decimal_separator": modes.SeparatorEnum,
             "lower_separator": modes.SeparatorEnum,
             "sign_mode": modes.SignModeEnum,
-            "fill_char": modes.FillCharEnum,
+            "left_pad_char": modes.LeftPadCharEnum,
             "exp_format": modes.ExpFormatEnum,
         }
 
