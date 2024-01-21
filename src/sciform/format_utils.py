@@ -10,7 +10,6 @@ from typing import Literal, Union, cast
 from sciform.modes import (
     AutoDigits,
     AutoExpVal,
-    ExpDriver,
     ExpFormatEnum,
     ExpModeEnum,
     RoundModeEnum,
@@ -424,20 +423,13 @@ def get_val_unc_exp(
     """Get exponent for value/uncertainty formatting."""
     if val.is_finite() and unc.is_finite():
         if abs(val) >= unc:
-            exp_driver_type = ExpDriver.VAL
+            exp_driver_val = val
         else:
-            exp_driver_type = ExpDriver.UNC
+            exp_driver_val = unc
     elif val.is_finite():
-        exp_driver_type = ExpDriver.VAL
-    else:
-        exp_driver_type = ExpDriver.UNC
-
-    if exp_driver_type is ExpDriver.VAL:
         exp_driver_val = val
-    elif exp_driver_type is ExpDriver.UNC:
+    else:
         exp_driver_val = unc
-    else:  # pragma: no cover
-        raise ValueError
 
     _, exp_val, _ = get_mantissa_exp_base(
         exp_driver_val,
