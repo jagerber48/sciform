@@ -183,11 +183,11 @@ class TestFormatting(unittest.TestCase):
                 (1.23, 0.1),
                 [
                     (
-                      Formatter(
-                          exp_mode="scientific",
-                          exp_format="parts_per",
-                      ),
-                      "1.2 ± 0.1"
+                        Formatter(
+                            exp_mode="scientific",
+                            exp_format="parts_per",
+                        ),
+                        "1.2 ± 0.1",
                     ),
                 ],
             ),
