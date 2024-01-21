@@ -13,7 +13,7 @@ from sciform.format_utils import (
     get_mantissa_exp_base,
     get_round_digit,
     get_val_unc_exp,
-    get_val_unc_mantissa_exp_strs,
+    get_val_unc_mantissa_strs,
     get_val_unc_top_digit,
     latex_translate,
     round_val_unc,
@@ -205,7 +205,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         use_pdg_sig_figs=options.pdg_sig_figs,
     )
 
-    exp_val, exp_driver_type = get_val_unc_exp(
+    exp_val = get_val_unc_exp(
         val_rounded,
         unc_rounded,
         options.exp_mode,
@@ -265,10 +265,9 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     val_mantissa_exp_str = format_num(val_rounded, val_format_options)
     unc_mantissa_exp_str = format_num(unc_rounded, unc_format_options)
 
-    (val_mantissa_str, unc_mantissa_str, exp_str) = get_val_unc_mantissa_exp_strs(
+    (val_mantissa_str, unc_mantissa_str) = get_val_unc_mantissa_strs(
         val_mantissa_exp_str,
         unc_mantissa_exp_str,
-        exp_driver_type,
     )
 
     val_unc_str = construct_val_unc_str(
@@ -283,7 +282,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         paren_uncertainty_separators=options.paren_uncertainty_separators,
     )
 
-    if exp_str is not None:
+    if val.is_finite() or unc.is_finite() or options.nan_inf_exp:
         val_unc_exp_str = construct_val_unc_exp_str(
             val_unc_str=val_unc_str,
             exp_val=exp_val,

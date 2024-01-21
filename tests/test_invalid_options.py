@@ -9,7 +9,6 @@ from sciform.format_utils import (
     get_sign_str,
     get_top_digit,
     get_top_digit_binary,
-    get_val_unc_mantissa_exp_strs,
     parse_standard_exp_str,
 )
 from sciform.formatting import format_non_finite
@@ -247,13 +246,4 @@ class TestInvalidOptions(unittest.TestCase):
             modes.mode_str_to_enum,
             "eng",
             modes.ExpModeEnum,
-        )
-
-    def test_get_val_unc_mantissa_exp_str_invalid_driver(self):
-        self.assertRaises(
-            ValueError,
-            get_val_unc_mantissa_exp_strs,
-            "e+00",
-            "e+00",
-            "val",
         )

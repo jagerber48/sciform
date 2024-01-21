@@ -179,6 +179,18 @@ class TestFormatting(unittest.TestCase):
                     ),
                 ],
             ),
+            (
+                (1.23, 0.1),
+                [
+                    (
+                      Formatter(
+                          exp_mode="scientific",
+                          exp_format="parts_per",
+                      ),
+                      "1.2 ± 0.1"
+                    ),
+                ],
+            ),
         ]
 
         self.run_val_unc_formatter_cases(cases_list)

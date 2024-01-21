@@ -420,7 +420,7 @@ def get_val_unc_exp(
     unc: Decimal,
     exp_mode: ExpModeEnum,
     input_exp: int,
-) -> tuple[int, ExpDriver]:
+) -> int:
     """Get exponent for value/uncertainty formatting."""
     if val.is_finite() and unc.is_finite():
         if abs(val) >= unc:
@@ -445,7 +445,7 @@ def get_val_unc_exp(
         input_exp=input_exp,
     )
 
-    return exp_val, exp_driver_type
+    return exp_val
 
 
 def get_val_unc_top_digit(
@@ -469,11 +469,10 @@ def get_val_unc_top_digit(
     return new_top_digit
 
 
-def get_val_unc_mantissa_exp_strs(
+def get_val_unc_mantissa_strs(
     val_mantissa_exp_str: str,
     unc_mantissa_exp_str: str,
-    exp_driver_type: ExpDriver,
-) -> tuple[str, str, str]:
+) -> tuple[str, str]:
     """Break val/unc mantissa/exp strings into mantissa strings and an exp string."""
     # Optional parentheses needed to handle (nan)e+00 case
     mantissa_exp_pattern = re.compile(
@@ -485,15 +484,7 @@ def get_val_unc_mantissa_exp_strs(
     unc_match = mantissa_exp_pattern.match(unc_mantissa_exp_str)
     unc_mantissa_str = unc_match.group("mantissa_str")
 
-    if exp_driver_type is ExpDriver.VAL:
-        exp_str = val_match.group("exp_str")
-    elif exp_driver_type is ExpDriver.UNC:
-        exp_str = unc_match.group("exp_str")
-    else:
-        msg = f"Invalid exp_driver_type: {exp_driver_type}."
-        raise ValueError(msg)
-
-    return val_mantissa_str, unc_mantissa_str, exp_str
+    return val_mantissa_str, unc_mantissa_str
 
 
 def construct_val_unc_str(  # noqa: PLR0913
@@ -573,14 +564,16 @@ def construct_val_unc_exp_str(  # noqa: PLR0913
         extra_parts_per_forms=extra_parts_per_forms,
     )
 
-    """
-    "1234(12)" val_unc_str along with exp_str "k" will be formatted as
-    "1234(12) k whereas 1234(12) with exp_str "e+03" will be
-    formatted as (1234(12))e+03.
-    "1234 ± 12" will be formatted with parentheses as "(1234 ± 12) k" or
-    "(1234 ± 12)e+03"
-    """
-    if paren_uncertainty and not re.match(r"^[eEbB][+-]\d+$", exp_str):
+    if exp_str == "":
+        val_unc_exp_str = f"{val_unc_str}{exp_str}"
+    elif paren_uncertainty and not re.match(r"^[eEbB][+-]\d+$", exp_str):
+        """
+        "1234(12)" val_unc_str along with exp_str "k" will be formatted as
+        "1234(12) k whereas 1234(12) with exp_str "e+03" will be
+        formatted as (1234(12))e+03.
+        "1234 ± 12" will be formatted with parentheses as "(1234 ± 12) k" or
+        "(1234 ± 12)e+03"
+        """
         val_unc_exp_str = f"{val_unc_str}{exp_str}"
     else:
         val_unc_exp_str = f"({val_unc_str}){exp_str}"
