@@ -8,11 +8,25 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Added
+^^^^^
+
+* Added separate flags for code coverage reports for each python
+  version.
+
 Changed
 ^^^^^^^
 
 * **[BREAKING]** Renamed ``fill_char`` to ``left_pad_char``.
   [`#126 <https://github.com/jagerber48/sciform/issues/126>`_]
+
+Fixed
+^^^^^
+
+* Fixed a bug where value/uncertainty pairs formatted in the
+  ``"parts_per"`` format with zero exponent would appear with redundant
+  parentheses, e.g. ``"(1.2 ± 0.1)"``.
+  [`#130 <https://github.com/jagerber48/sciform/issues/130>`_]
 
 ----
 
