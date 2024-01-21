@@ -145,13 +145,6 @@ class ExpFormatEnum(str, Enum):
     PARTS_PER = "parts_per"
 
 
-class ExpDriver(Enum):
-    """Exponent drive Enum. Used for value/uncertainty formatting."""
-
-    VAL = "val"
-    UNC = "unc"
-
-
 T = TypeVar("T", bound=Enum)
 
 
