@@ -20,7 +20,7 @@ def standard_exp_str_to_superscript_exp_str(match: re.Match) -> str:
 def make_latex_superscript(match: re.Match) -> str:
     sup_trans = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-0123456789")
     exp_val_non_sup = match.group(0).translate(sup_trans)
-    return fr"^{{{exp_val_non_sup}}}"
+    return rf"^{{{exp_val_non_sup}}}"
 
 
 def sciform_to_latex(formatted_str: str) -> str:
@@ -44,7 +44,7 @@ def sciform_to_latex(formatted_str: str) -> str:
         (" ", r"\:"),
         ("±", r"\pm"),
         ("×", r"\times"),
-        ("μ", r"\textmu")
+        ("μ", r"\textmu"),
     )
     for old_chars, new_chars in replacements:
         result_str = result_str.replace(old_chars, new_chars)
