@@ -265,7 +265,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
     val_mantissa_exp_str = format_num(val_rounded, val_format_options)
     unc_mantissa_exp_str = format_num(unc_rounded, unc_format_options)
 
-    (val_mantissa_str, unc_mantissa_str) = get_val_unc_mantissa_strs(
+    val_mantissa_str, unc_mantissa_str = get_val_unc_mantissa_strs(
         val_mantissa_exp_str,
         unc_mantissa_exp_str,
     )
