@@ -238,29 +238,6 @@ def get_exp_str(  # noqa: PLR0913
     return get_standard_exp_str(base, exp_val, capitalize=capitalize)
 
 
-def parse_standard_exp_str(exp_str: str) -> tuple[int, int]:
-    """Extract base and exponent value from standard exponent string."""
-    match = re.match(
-        r"""
-         ^
-         (?P<exp_symbol>[eEbB])
-         (?P<exp_val>[+-]\d+)
-         $
-         """,
-        exp_str,
-        re.VERBOSE,
-    )
-
-    exp_symbol = match.group("exp_symbol")
-    symbol_to_base_dict = {"e": 10, "b": 2}
-    base = symbol_to_base_dict[exp_symbol.lower()]
-
-    exp_val_str = match.group("exp_val")
-    exp_val = int(exp_val_str)
-
-    return base, exp_val
-
-
 def get_sign_str(num: Decimal, sign_mode: SignModeEnum) -> str:
     """Get the format sign string."""
     if num < 0:

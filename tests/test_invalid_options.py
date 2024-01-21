@@ -9,7 +9,6 @@ from sciform.format_utils import (
     get_sign_str,
     get_top_digit,
     get_top_digit_binary,
-    parse_standard_exp_str,
 )
 from sciform.formatting import format_non_finite
 from sciform.user_options import UserOptions
@@ -232,13 +231,6 @@ class TestInvalidOptions(unittest.TestCase):
             extra_iec_prefixes={},
             extra_parts_per_forms={},
         )
-
-    def test_parse_standard_exp_str_binary(self):
-        """
-        This is the only place that this is tested while binary
-        value/uncertainty is not implemented.
-        """
-        self.assertEqual(parse_standard_exp_str("b+10"), (2, 10))
 
     def test_mode_str_to_enum_fail(self):
         self.assertRaises(
