@@ -104,62 +104,6 @@ class TestFormatting(unittest.TestCase):
 
         self.run_float_formatter_cases(cases_list)
 
-    def test_latex(self):
-        cases_list = [
-            (
-                789,
-                [
-                    (
-                        Formatter(exp_mode="scientific", latex=True),
-                        r"7.89\times 10^{+2}",
-                    ),
-                    # Latex mode takes precedence over superscript
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            latex=True,
-                            superscript=True,
-                        ),
-                        r"7.89\times 10^{+2}",
-                    ),
-                ],
-            ),
-            (
-                12345,
-                [
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_val=-1,
-                            upper_separator="_",
-                            latex=True,
-                        ),
-                        r"123\_450\times 10^{-1}",
-                    ),
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_val=3,
-                            exp_format="prefix",
-                            latex=True,
-                        ),
-                        r"12.345\text{ k}",
-                    ),
-                ],
-            ),
-            (
-                1024,
-                [
-                    (
-                        Formatter(exp_mode="binary", exp_val=8, latex=True),
-                        r"4\times 2^{+8}",
-                    ),
-                ],
-            ),
-        ]
-
-        self.run_float_formatter_cases(cases_list)
-
     def test_nan(self):
         cases_list = [
             (
@@ -167,11 +111,6 @@ class TestFormatting(unittest.TestCase):
                 [
                     (Formatter(exp_mode="percent"), "nan"),
                     (Formatter(exp_mode="percent", nan_inf_exp=True), "(nan)%"),
-                    (Formatter(exp_mode="percent", latex=True), r"\text{nan}"),
-                    (
-                        Formatter(exp_mode="percent", latex=True, nan_inf_exp=True),
-                        r"\left(\text{nan}\right)\%",
-                    ),
                 ],
             ),
         ]

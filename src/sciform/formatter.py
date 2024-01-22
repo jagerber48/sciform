@@ -57,7 +57,6 @@ class Formatter:
         extra_parts_per_forms: dict[int, str] | None = None,
         capitalize: bool | None = None,
         superscript: bool | None = None,
-        latex: bool | None = None,
         nan_inf_exp: bool | None = None,
         paren_uncertainty: bool | None = None,
         pdg_sig_figs: bool | None = None,
@@ -152,10 +151,6 @@ class Formatter:
           should be converted into superscript notation. E.g.
           ``'1.23e+02'`` is converted to ``'1.23×10²'``
         :type superscript: ``bool | None``
-        :param latex: Flag indicating if the resulting string should be
-          converted into a latex parseable code, e.g.
-          ``'\\left(1.23 \\pm 0.01\\right)\\times 10^{2}'``.
-        :type latex: ``bool | None``
         :param nan_inf_exp: Flag indicating whether non-finite numbers
           such as ``float('nan')`` or ``float('inf')`` should be
           formatted with exponent symbols when exponent modes including
@@ -211,7 +206,6 @@ class Formatter:
             extra_parts_per_forms=extra_parts_per_forms,
             capitalize=capitalize,
             superscript=superscript,
-            latex=latex,
             nan_inf_exp=nan_inf_exp,
             paren_uncertainty=paren_uncertainty,
             pdg_sig_figs=pdg_sig_figs,

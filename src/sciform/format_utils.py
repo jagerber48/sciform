@@ -197,8 +197,6 @@ def get_exp_str(  # noqa: PLR0913
     extra_iec_prefixes: dict[int, str],
     extra_parts_per_forms: dict[int, str],
     capitalize: bool,
-    latex: bool,
-    latex_trim_whitespace: bool,
     superscript: bool,
 ) -> str:
     """Get formatting exponent string."""
@@ -224,14 +222,8 @@ def get_exp_str(  # noqa: PLR0913
         if exp_val in text_exp_dict and text_exp_dict[exp_val] is not None:
             exp_str = f" {text_exp_dict[exp_val]}"
             exp_str = exp_str.rstrip(" ")
-            if latex:
-                if latex_trim_whitespace:
-                    exp_str = exp_str.lstrip(" ")
-                exp_str = rf"\text{{{exp_str}}}"
             return exp_str
 
-    if latex:
-        return rf"\times {base}^{{{exp_val:+}}}"
     if superscript:
         return get_superscript_exp_str(base, exp_val)
 
@@ -341,25 +333,6 @@ def format_num_by_top_bottom_dig(
     pad_str = get_pad_str(left_pad_char, num_top_digit, target_top_digit)
     return f"{sign_str}{pad_str}{abs_mantissa_str}"
 
-
-def latex_translate(input_str: str) -> str:
-    """Translate elements of a string for Latex compatibility."""
-    result_str = input_str
-    replacements = (
-        ("(", r"\left("),
-        (")", r"\right)"),
-        ("%", r"\%"),
-        ("_", r"\_"),
-        ("nan", r"\text{nan}"),
-        ("NAN", r"\text{NAN}"),
-        ("inf", r"\text{inf}"),
-        ("INF", r"\text{INF}"),
-    )
-    for old_chars, new_chars in replacements:
-        result_str = result_str.replace(old_chars, new_chars)
-    return result_str
-
-
 def round_val_unc(
     val: Decimal,
     unc: Decimal,
@@ -464,13 +437,12 @@ def construct_val_unc_str(  # noqa: PLR0913
     decimal_separator: SeparatorEnum,
     *,
     paren_uncertainty: bool,
-    latex: bool,
     pm_whitespace: bool,
     paren_uncertainty_separators: bool,
 ) -> str:
     """Construct the value/uncertainty part of the formatted string."""
     if not paren_uncertainty:
-        pm_symb = r"\pm" if latex else "±"
+        pm_symb = "±"
         if pm_whitespace:
             pm_symb = f" {pm_symb} "
         val_unc_str = f"{val_mantissa_str}{pm_symb}{unc_mantissa_str}"
@@ -515,7 +487,6 @@ def construct_val_unc_exp_str(  # noqa: PLR0913
     extra_iec_prefixes: dict[int, str | None],
     extra_parts_per_forms: dict[int, str | None],
     capitalize: bool,
-    latex: bool,
     superscript: bool,
     paren_uncertainty: bool,
 ) -> str:
@@ -525,8 +496,6 @@ def construct_val_unc_exp_str(  # noqa: PLR0913
         exp_mode=exp_mode,
         exp_format=exp_format,
         capitalize=capitalize,
-        latex=latex,
-        latex_trim_whitespace=True,
         superscript=superscript,
         extra_si_prefixes=extra_si_prefixes,
         extra_iec_prefixes=extra_iec_prefixes,

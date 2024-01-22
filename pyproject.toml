@@ -57,6 +57,7 @@ ignore = [
     'TD002',
     'TD003',
     'FIX002',
+    'RET504',
 ]
 
 [tool.ruff.per-file-ignores]

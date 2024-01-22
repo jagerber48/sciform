@@ -36,7 +36,6 @@ class RenderedOptions:
     extra_parts_per_forms: dict[int, str]
     capitalize: bool
     superscript: bool
-    latex: bool
     nan_inf_exp: bool
     paren_uncertainty: bool
     pdg_sig_figs: bool

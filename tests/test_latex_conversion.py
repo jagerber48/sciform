@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import unittest
 
-from sciform import sciform_to_latex
+from sciform import Formatter, sciform_to_latex
+
+ValFormatterCases = list[tuple[float, list[tuple[Formatter, str]]]]
+ValUncFormatterCases = list[tuple[tuple[float, float], list[tuple[Formatter, str]]]]
 
 
 class TestLatexConversion(unittest.TestCase):
-    def run_latex_conversion_cases(self, cases_list: list[tuple[str, str]]):
+    def run_direct_conversions(self, cases_list: list[tuple[str, str]]):
         for input_str, expected_str in cases_list:
             converted_str = sciform_to_latex(input_str)
             with self.subTest(
@@ -16,7 +19,31 @@ class TestLatexConversion(unittest.TestCase):
             ):
                 self.assertEqual(converted_str, expected_str)
 
-    def test_cases(self):
+    def run_val_formatter_conversions(self, cases_list: ValFormatterCases):
+        for val, format_list in cases_list:
+            for formatter, expected_output in format_list:
+                actual_str_output = formatter(val)
+                actual_latex_output = sciform_to_latex(actual_str_output)
+                with self.subTest(
+                    val=val,
+                    expected_output=expected_output,
+                    actual_output=actual_latex_output,
+                ):
+                    self.assertEqual(actual_latex_output, expected_output)
+
+    def run_val_unc_formatter_conversions(self, cases_list: ValUncFormatterCases):
+        for (val, unc), format_list in cases_list:
+            for formatter, expected_output in format_list:
+                actual_str_output = formatter(val, unc)
+                actual_latex_output = sciform_to_latex(actual_str_output)
+                with self.subTest(
+                    val=val,
+                    expected_output=expected_output,
+                    actual_output=actual_latex_output,
+                ):
+                    self.assertEqual(actual_latex_output, expected_output)
+
+    def test_direct_cases(self):
         cases_list = [
             ("6.26070e-04", r"6.26070\times10^{-4}"),
             (
@@ -39,4 +66,111 @@ class TestLatexConversion(unittest.TestCase):
             ("(0.123456 ± 0.000789) k", r"(0.123456\:\pm\:0.000789)\:\text{k}"),
         ]
 
-        self.run_latex_conversion_cases(cases_list)
+        self.run_direct_conversions(cases_list)
+
+    def test_val_formatter_cases(self):
+        cases_list = [
+            (
+                789,
+                [
+                    (
+                        Formatter(exp_mode="scientific"),
+                        r"7.89\times10^{2}",
+                    ),
+                    # Latex mode takes precedence over superscript
+                    (
+                        Formatter(
+                            exp_mode="scientific",
+                            superscript=True,
+                        ),
+                        r"7.89\times10^{2}",
+                    ),
+                ],
+            ),
+            (
+                12345,
+                [
+                    (
+                        Formatter(
+                            exp_mode="scientific",
+                            exp_val=-1,
+                            upper_separator="_",
+                        ),
+                        r"123\_450\times10^{-1}",
+                    ),
+                    (
+                        Formatter(
+                            exp_mode="scientific",
+                            exp_val=3,
+                            exp_format="prefix",
+                        ),
+                        r"12.345\:\text{k}",
+                    ),
+                ],
+            ),
+            (
+                1024,
+                [
+                    (
+                        Formatter(exp_mode="binary", exp_val=8),
+                        r"4\times2^{8}",
+                    ),
+                ],
+            ),
+            (
+                float("nan"),
+                [
+                    (Formatter(exp_mode="percent"), r"\text{nan}"),
+                    (
+                        Formatter(exp_mode="percent", nan_inf_exp=True),
+                        r"(\text{nan})\%",
+                    ),
+                ],
+            ),
+        ]
+
+        self.run_val_formatter_conversions(cases_list)
+
+    def test_val_unc_formatter_cases(self):
+        cases_list = [
+            (
+                (12345, 0.2),
+                [
+                    (
+                        Formatter(
+                            exp_mode="scientific",
+                            exp_val=-1,
+                            upper_separator="_",
+                        ),
+                        r"(123\_450\:\pm\:2)\times10^{-1}",
+                    ),
+                    (
+                        Formatter(
+                            exp_mode="scientific",
+                            exp_format="prefix",
+                            exp_val=3,
+                        ),
+                        r"(12.3450\:\pm\:0.0002)\:\text{k}",
+                    ),
+                ],
+            ),
+            (
+                (0.123_456_78, 0.000_002_55),
+                [
+                    (
+                        Formatter(lower_separator="_", exp_mode="percent"),
+                        r"(12.345\_678\:\pm\:0.000\_255)\%",
+                    ),
+                    (
+                        Formatter(
+                            lower_separator="_",
+                            exp_mode="percent",
+                            paren_uncertainty=True,
+                        ),
+                        r"(12.345\_678(255))\%",
+                    ),
+                ],
+            ),
+        ]
+
+        self.run_val_unc_formatter_conversions(cases_list)
