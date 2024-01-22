@@ -138,7 +138,6 @@ package default settings):
  'extra_parts_per_forms': {},
  'capitalize': False,
  'superscript': False,
- 'latex': False,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
@@ -176,7 +175,6 @@ unchanged.
  'extra_parts_per_forms': {},
  'capitalize': False,
  'superscript': False,
- 'latex': False,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
@@ -217,6 +215,59 @@ the ``pdg_sig_figs`` option.
 If the user wishes to configure these options, but also use the
 :ref:`FSML <fsml>`, then they must do so by modifying the global default
 settings.
+
+.. _latex_conversion:
+
+Latex Conversion
+================
+
+The :func:`sciform_to_latex` function can be used to convert ``sciform``
+output strings into latex commands.
+
+>>> from sciform import sciform_to_latex
+>>> sform = Formatter(
+...     exp_mode="scientific",
+...     exp_val=-1,
+...     upper_separator="_",
+... )
+>>> formatted_str = sform(12345)
+>>> latex_str = sciform_to_latex(formatted_str)
+>>> print(f"{formatted_str} -> {latex_str}")
+123_450e-01 -> 123\_450\times10^{-1}
+
+>>> sform = Formatter(
+...     exp_mode="percent",
+...     lower_separator="_",
+... )
+>>> formatted_str = sform(0.12345678, 0.00000255)
+>>> latex_str= sciform_to_latex(formatted_str)
+>>> print(f"{formatted_str} -> {latex_str}")
+(12.345_678 ± 0.000_255)% -> (12.345\_678\:\pm\:0.000\_255)\%
+
+>>> sform = Formatter(
+...     exp_mode="engineering",
+...     exp_format="prefix",
+...     ndigits=4
+... )
+>>> formatted_str = sform(314.159e-6, 2.71828e-6)
+>>> latex_str = sciform_to_latex(formatted_str)
+>>> print(f"{formatted_str} -> {latex_str}")
+(314.159 ± 2.718) μ -> (314.159\:\pm\:2.718)\:\text{\textmu}
+
+The latex format makes the following changes:
+
+* Convert all ASCII (``"e+02"``) and superscript (``"×10²"``) exponents
+  into latex superscript strings like ``"\times10^{2}"``.
+* Wrap all text like ``"nan"``, ``"INF"``, ``"M"``, ``"μ"``, ``"Ki"``,
+  or ``"ppb"`` in the latex math mode text environment ``"\text{}"``.
+* Make the following symbol replacements
+
+  * ``"%"`` -> ``r"\%"``
+  * ``"_"`` -> ``r"\_"``
+  * ``" "`` -> ``r"\:"``
+  * ``"±"`` -> ``r"\pm"``
+  * ``"×"`` -> ```r"\times"``
+  * ``"μ"`` -> ``r"\textmu"``
 
 .. _dec_and_float:
 

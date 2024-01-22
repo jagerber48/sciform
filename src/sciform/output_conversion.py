@@ -34,23 +34,22 @@ def sciform_to_latex(formatted_str: str) -> str:
     conversion proceeds by
 
     1. If an exponent string is present and in ascii format
-       (e.g. "e+03") then convert it to superscript notation
-       (e.g. "×10³").
+       (e.g. ``"e+03"``) then convert it to superscript notation
+       (e.g. ``"×10³"``).
     2. Bundle any unicode superscript substrings into latex
-       superscripts, e.g. "⁻²" -> r"^{-2}".
-    3. Wrap any strings of alphabetic characters (plus μ) in latex text
-       environment, e.g. "nan" -> r"\text{nan}" or "k" -> r"\text{k}".
+       superscripts, e.g. ``"⁻²"`` -> ``r"^{-2}"``.
+    3. Wrap any strings of alphabetic characters (plus ``"μ"``) in latex
+       text environment, e.g. ``"nan"`` -> ``r"\text{nan}"`` or
+       ``"k"`` -> ``r"\text{k}"``.
     4. Make the following character replacments:
 
-      * "%" -> r"\%"
-      * "_" -> r"\_"
-      * " " -> r"\:"
-      * "±" -> r"\pm"
-      * "×" -> r"\times"
-      * "μ" -> r"\textmu"
+      * ``"%"`` -> ``r"\%"``
+      * ``"_"`` -> ``r"\_"``
+      * ``" "`` -> ``r"\:"``
+      * ``"±"`` -> ``r"\pm"``
+      * ``"×"`` -> ```r"\times"``
+      * ``"μ"`` -> ``r"\textmu"``
 
-    Examples
-    --------
     >>> from sciform import sciform_to_latex
     >>> print(sciform_to_latex("(7.8900 ± 0.0001)×10²"))
     (7.8900\:\pm\:0.0001)\times10^{2}

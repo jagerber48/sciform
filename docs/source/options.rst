@@ -72,13 +72,13 @@ mantissa ``m`` satisfies ``1 <= m < 10``.
 >>> print(sform(123.456, 0.001))
 (1.23456 ± 0.00001)e+02
 
-Note that, for all exponent modes, the exponent integer is always
-displayed with a sign symbol (+ or -) and is left padded with a zero so
-that it is at least two digits wide.
-There are no options to modify this behavior for standard exponent
-display.
-The :ref:`superscript` or :ref:`latex_format` options can be used as
-alternatives.
+By default the exponent is expressed using ASCII characters, e.g.
+``e+02``.
+The sign symbol is always included and the exponent value is left padded
+so that it is at least two digits wide.
+These behaviors for ASCII exponents cannot be modified.
+However the :ref:`superscript` mode can be used to represent the
+exponent using unicode characters.
 
 .. _engineering:
 
@@ -566,46 +566,6 @@ superscript notation as opposed to e.g. ``e+02`` notation.
 >>> sform = Formatter(exp_mode="scientific", superscript=True)
 >>> print(sform(789))
 7.89×10²
-
-.. _latex_format:
-
-Latex Format
-============
-
-The ``latex`` option can be chosen to convert strings into latex
-parseable codes.
-
->>> sform = Formatter(
-...     exp_mode="scientific",
-...     exp_val=-1,
-...     upper_separator="_",
-...     latex=True,
-... )
->>> print(sform(12345))
-123\_450\times 10^{-1}
->>> sform = Formatter(
-...     exp_mode="percent",
-...     lower_separator="_",
-...     latex=True,
-... )
->>> print(sform(0.12345678, 0.00000255))
-\left(12.345\_678 \pm 0.000\_255\right)\%
-
-The latex format makes the following changes:
-
-* Convert standard exponent strings such as ``'e+02'`` into latex
-  superscript strings like ``'\times 10^{+2}``
-* Replace ``'('`` and ``')'`` by latex size-aware delimiters
-  ``'\left('`` and ``'\right)'``.
-* Replace ``'±'`` by ``'\pm'``
-* Replace ``'_'`` by ``'\_'``
-* Replace ``'%'`` by ``'\%'``
-* Exponent replacements such as ``'M'``, ``'Ki'``, or ``'ppb'`` and
-  non-finite numbers such as ``'nan'``, ``'NAN'``, ``'inf'``, and
-  ``'INF'`` are wrapped in ``'\text{}'``.
-
-Note that use of ``latex`` renders the use of the ``superscript``
-option meaningless.
 
 Include Exponent on nan and inf
 ===============================

@@ -171,6 +171,19 @@ class TestLatexConversion(unittest.TestCase):
                     ),
                 ],
             ),
+            (
+                (314.159e-6, 2.71828e-6),
+                [
+                    (
+                        Formatter(
+                            exp_mode="engineering",
+                            exp_format="prefix",
+                            ndigits=4
+                        ),
+                        r"(314.159\:\pm\:2.718)\:\text{\textmu}",
+                    ),
+                ],
+            ),
         ]
 
         self.run_val_unc_formatter_conversions(cases_list)

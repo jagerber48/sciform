@@ -32,3 +32,8 @@ Global Configuration
 .. autofunction:: reset_global_defaults()
 
 .. autoclass:: GlobalDefaultsContext()
+
+Output Conversion
+=================
+
+.. autofunction:: sciform_to_latex
