@@ -333,6 +333,7 @@ def format_num_by_top_bottom_dig(
     pad_str = get_pad_str(left_pad_char, num_top_digit, target_top_digit)
     return f"{sign_str}{pad_str}{abs_mantissa_str}"
 
+
 def round_val_unc(
     val: Decimal,
     unc: Decimal,
