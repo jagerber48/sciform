@@ -49,13 +49,10 @@ def sciform_to_latex(formatted_str: str) -> str:
       * "×" -> r"\times"
       * "μ" -> r"\textmu"
 
-      ("(7.8900 ± 0.0001)×10²", r"(7.8900\:\pm\:0.0001)\times10^{2}"),
-            ("(0.123456 ± 0.000789) k", r"(0.123456\:\pm\:0.000789)\:\text{k}"),
-
     Examples
     --------
     >>> from sciform import sciform_to_latex
-    >>> print(sciform_to_latex("(7.8900 ± 0.0001)×10²")
+    >>> print(sciform_to_latex("(7.8900 ± 0.0001)×10²"))
     (7.8900\:\pm\:0.0001)\times10^{2}
     >>> print(sciform_to_latex("16.18033E+03"))
     16.18033\times10^{3}
