@@ -1,3 +1,5 @@
+"""Convert sciform outputs into latex commands."""
+
 import re
 
 from sciform.format_utils import get_superscript_exp_str

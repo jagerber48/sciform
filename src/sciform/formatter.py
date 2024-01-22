@@ -188,7 +188,7 @@ class Formatter:
         :param add_ppth_form: (default ``False``) if ``True``, adds
           ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
         :type add_ppth_form: ``bool``
-        """  # noqa: RUF002
+        """
         self._user_options = UserOptions(
             exp_mode=exp_mode,
             exp_val=exp_val,

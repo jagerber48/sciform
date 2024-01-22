@@ -45,6 +45,9 @@ readme = {file = "README.rst"}
 
 [tool.setuptools_scm]
 
+[tool.ruff]
+allowed-confusables = ["×"]
+
 [tool.ruff.lint]
 select = ['ALL']
 ignore = [
