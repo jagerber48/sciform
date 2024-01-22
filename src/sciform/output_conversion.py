@@ -37,8 +37,6 @@ def sciform_to_latex(formatted_str: str) -> str:
     )
 
     replacements = (
-        ("(", r"\left("),
-        (")", r"\right)"),
         ("%", r"\%"),
         ("_", r"\_"),
         (" ", r"\:"),
