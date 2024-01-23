@@ -13,6 +13,7 @@ Added
 
 * Added separate flags for code coverage reports for each python
   version.
+* Added pip cache in github action.
 
 Changed
 ^^^^^^^
