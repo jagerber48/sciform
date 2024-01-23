@@ -178,7 +178,7 @@ class TestLatexConversion(unittest.TestCase):
                         Formatter(
                             exp_mode="engineering",
                             exp_format="prefix",
-                            ndigits=4
+                            ndigits=4,
                         ),
                         r"(314.159\:\pm\:2.718)\:\text{\textmu}",
                     ),
