@@ -23,7 +23,7 @@ class TestLatexConversion(unittest.TestCase):
         for val, format_list in cases_list:
             for formatter, expected_output in format_list:
                 sciform_output = formatter(val)
-                latex_output = sciform_output.as_latex()
+                latex_output = sciform_output.as_latex(strip_env_symbs=True)
                 with self.subTest(
                     val=val,
                     expected_output=expected_output,
@@ -35,7 +35,7 @@ class TestLatexConversion(unittest.TestCase):
         for (val, unc), format_list in cases_list:
             for formatter, expected_output in format_list:
                 sciform_output = formatter(val, unc)
-                latex_output = sciform_output.as_latex()
+                latex_output = sciform_output.as_latex(strip_env_symbs=True)
                 with self.subTest(
                     val=val,
                     expected_output=expected_output,
@@ -45,25 +45,25 @@ class TestLatexConversion(unittest.TestCase):
 
     def test_direct_cases(self):
         cases_list = [
-            ("6.26070e-04", r"6.26070\times10^{-4}"),
+            ("6.26070e-04", r"$6.26070\times10^{-4}$"),
             (
                 "(0.000000(1.234560))e+02",
-                r"(0.000000(1.234560))\times10^{2}",
+                r"$(0.000000(1.234560))\times10^{2}$",
             ),
-            ("000_000_004_567_899.765_432_1", r"000\_000\_004\_567\_899.765\_432\_1"),
-            ("(nan)%", r"(\text{nan})\%"),
-            ("123000 ppm", r"123000\:\text{ppm}"),
-            ("0b+00", r"0\times2^{0}"),
-            ("16.18033E+03", r"16.18033\times10^{3}"),
-            ("    1.20e+01", r"\:\:\:\:1.20\times10^{1}"),
-            ("(-INF)E+00", r"(-\text{INF})\times10^{0}"),
+            ("000_000_004_567_899.765_432_1", r"$000\_000\_004\_567\_899.765\_432\_1$"),
+            ("(nan)%", r"$(\text{nan})\%$"),
+            ("123000 ppm", r"$123000\:\text{ppm}$"),
+            ("0b+00", r"$0\times2^{0}$"),
+            ("16.18033E+03", r"$16.18033\times10^{3}$"),
+            ("    1.20e+01", r"$\:\:\:\:1.20\times10^{1}$"),
+            ("(-INF)E+00", r"$(-\text{INF})\times10^{0}$"),
             (
                 "(0.123456(789))e+03",
-                r"(0.123456(789))\times10^{3}",
+                r"$(0.123456(789))\times10^{3}$",
             ),
-            ("  123.46 ±     0.79", r"\:\:123.46\:\pm\:\:\:\:\:0.79"),
-            ("(7.8900 ± 0.0001)×10²", r"(7.8900\:\pm\:0.0001)\times10^{2}"),
-            ("(0.123456 ± 0.000789) k", r"(0.123456\:\pm\:0.000789)\:\text{k}"),
+            ("  123.46 ±     0.79", r"$\:\:123.46\:\pm\:\:\:\:\:0.79$"),
+            ("(7.8900 ± 0.0001)×10²", r"$(7.8900\:\pm\:0.0001)\times10^{2}$"),
+            ("(0.123456 ± 0.000789) k", r"$(0.123456\:\pm\:0.000789)\:\text{k}$"),
         ]
 
         self.run_direct_conversions(cases_list)
