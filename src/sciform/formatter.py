@@ -6,6 +6,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING
 
 from sciform.formatting import format_num, format_val_unc
+from sciform.output_conversion import sciform_to_html, sciform_to_latex
 from sciform.user_options import UserOptions
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -222,7 +223,7 @@ class Formatter:
         value: Number,
         uncertainty: Number | None = None,
         /,
-    ) -> str:
+    ) -> FormattedNumber:
         """
         Format a value or value/uncertainty pair.
 
@@ -240,4 +241,38 @@ class Formatter:
                 Decimal(str(uncertainty)),
                 rendered_options,
             )
-        return output
+        return FormattedNumber(output)
+
+
+class FormattedNumber(str):
+    """
+    Representation (typically string) of a formatted number.
+
+    The ``FormattedNumber`` class is returned by ``sciform`` formatting
+    methods. In most cases it behaves like a regular python string, but
+    it provides the possibility for post-converting the string to
+    various other formats such as latex or html. This allows the
+    formatted number to be displayed in a range of contexts other than
+    e.g. text terminals.
+
+    """
+
+    __slots__ = ()
+
+    def as_str(self: FormattedNumber) -> str:
+        """Return the string representation of the formatted number."""
+        return self.__str__()
+
+    def as_html(self: FormattedNumber) -> str:
+        """Return the html representation of the formatted number."""
+        return self._repr_html_()
+
+    def as_latex(self: FormattedNumber) -> str:
+        """Return the latex representation of the formatted number."""
+        return self._repr_latex_()
+
+    def _repr_html_(self: FormattedNumber) -> str:
+        return sciform_to_html(self)
+
+    def _repr_latex_(self: FormattedNumber) -> str:
+        return sciform_to_latex(self)

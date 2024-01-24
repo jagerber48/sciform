@@ -8,7 +8,7 @@ from sciform.global_configuration import (
     set_global_defaults,
 )
 from sciform.modes import AutoDigits, AutoExpVal
-from sciform.output_conversion import sciform_to_latex
+from sciform.output_conversion import sciform_to_html, sciform_to_latex
 from sciform.scinum import SciNum
 
 __all__ = [
@@ -19,6 +19,7 @@ __all__ = [
     "set_global_defaults",
     "AutoDigits",
     "AutoExpVal",
+    "sciform_to_html",
     "sciform_to_latex",
     "SciNum",
 ]

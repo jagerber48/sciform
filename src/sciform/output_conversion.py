@@ -27,6 +27,13 @@ def make_latex_superscript(match: re.Match) -> str:
     return rf"^{{{exp_val_non_sup}}}"
 
 
+def make_html_superscript(match: re.Match) -> str:
+    """Convert matched superscript exp_str to html exp_str."""
+    sup_trans = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-0123456789")
+    exp_val_non_sup = match.group(0).translate(sup_trans)
+    return rf"<sup>{exp_val_non_sup}</sup>"
+
+
 def sciform_to_latex(formatted_str: str) -> str:
     r"""
     Convert a sciform output string into a latex string.
@@ -84,5 +91,38 @@ def sciform_to_latex(formatted_str: str) -> str:
     )
     for old_chars, new_chars in replacements:
         result_str = result_str.replace(old_chars, new_chars)
+
+    return result_str
+
+
+def sciform_to_html(formatted_str: str) -> str:
+    r"""
+    Convert a sciform output string into a html string.
+
+    conversion proceeds by
+
+    1. If an exponent string is present and in ascii format
+       (e.g. ``"e+03"``) then convert it to superscript notation
+       (e.g. ``"×10³"``).
+    2. Bundle any unicode superscript substrings into latex
+       superscripts, e.g. ``"⁻²"`` -> ``r"<sup>-2</sup>"``.
+
+    >>> from sciform import sciform_to_html
+    >>> print(sciform_to_latex("(7.8900 ± 0.0001)×10²"))
+    (7.8900 ± 0.0001)×10<sup>2</sup>
+    >>> print(sciform_to_latex("16.18033E+03"))
+    16.18033×10<sup>3</sup>
+    """
+    result_str = re.sub(
+        r"((?P<exp_symbol>[eEbB])(?P<exp_val>[+-]\d+))$",
+        standard_exp_str_to_superscript_exp_str,
+        formatted_str,
+    )
+
+    result_str = re.sub(
+        r"([⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)",
+        make_html_superscript,
+        result_str,
+    )
 
     return result_str
