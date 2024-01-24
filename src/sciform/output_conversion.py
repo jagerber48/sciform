@@ -92,6 +92,8 @@ def sciform_to_latex(formatted_str: str) -> str:
     for old_chars, new_chars in replacements:
         result_str = result_str.replace(old_chars, new_chars)
 
+    result_str = rf"${result_str}$"
+
     return result_str
 
 
