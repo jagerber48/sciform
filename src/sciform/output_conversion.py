@@ -5,12 +5,12 @@ import re
 from typing import Literal, get_args
 
 ascii_exp_pattern = re.compile(
-    r"^(?P<mantissa>.*)(?P<ascii_base>[eEbB])(?P<exp>[+-]\d+)$"
+    r"^(?P<mantissa>.*)(?P<ascii_base>[eEbB])(?P<exp>[+-]\d+)$",
 )
 ascii_base_dict = {"e": 10, "E": 10, "b": 2, "B": 2}
 
 unicode_exp_pattern = re.compile(
-    r"^(?P<mantissa>.*)×(?P<base>10|2)(?P<super_exp>[⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹])$"
+    r"^(?P<mantissa>.*)×(?P<base>10|2)(?P<super_exp>[⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹])$",
 )
 superscript_translation = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-0123456789")
 
@@ -18,11 +18,11 @@ output_formats = Literal["latex", "html", "ascii"]
 
 
 def _make_exp_str(
-        base: int,
-        exp: int,
-        output_format: output_formats,
-        *,
-        capitalize: bool = False
+    base: int,
+    exp: int,
+    output_format: output_formats,
+    *,
+    capitalize: bool = False,
 ) -> str:
     if output_format == "latex":
         return rf"\times{base}^{{{exp}}}"
@@ -39,9 +39,7 @@ def _make_exp_str(
         if capitalize:
             exp_str = exp_str.upper()
         return exp_str
-    msg = (
-        f"output_format must be in {get_args(output_formats)}, not {output_format}"
-    )
+    msg = f"output_format must be in {get_args(output_formats)}, not {output_format}"
     raise ValueError(msg)
 
 
@@ -53,8 +51,8 @@ def _string_replacements(input_str: str, replacements: list[tuple[str, str]]) ->
 
 
 def convert_sciform_format(
-        formatted_str: str,
-        output_format: output_formats,
+    formatted_str: str,
+    output_format: output_formats,
 ) -> str:
     r"""
     Convert sciform output to new format for different output contexts.
@@ -166,7 +164,5 @@ def convert_sciform_format(
         ]
         main_str = _string_replacements(main_str, replacements)
         return f"{main_str}{suffix_str}"
-    msg = (
-        f"output_format must be in {get_args(output_formats)}, not {output_format}"
-    )
+    msg = f"output_format must be in {get_args(output_formats)}, not {output_format}"
     raise ValueError(msg)
