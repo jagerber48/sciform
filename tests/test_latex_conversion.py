@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import unittest
 
-from sciform import Formatter, sciform_to_latex
+from sciform import Formatter
+from sciform.output_conversion import convert_sciform_format
 
 ValFormatterCases = list[tuple[float, list[tuple[Formatter, str]]]]
 ValUncFormatterCases = list[tuple[tuple[float, float], list[tuple[Formatter, str]]]]
@@ -11,7 +12,7 @@ ValUncFormatterCases = list[tuple[tuple[float, float], list[tuple[Formatter, str
 class TestLatexConversion(unittest.TestCase):
     def run_direct_conversions(self, cases_list: list[tuple[str, str]]):
         for input_str, expected_str in cases_list:
-            converted_str = sciform_to_latex(input_str)
+            converted_str = convert_sciform_format(input_str, "latex")
             with self.subTest(
                 input_str=input_str,
                 expected_str=expected_str,

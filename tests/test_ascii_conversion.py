@@ -9,10 +9,10 @@ ValFormatterCases = list[tuple[float, list[tuple[Formatter, str]]]]
 ValUncFormatterCases = list[tuple[tuple[float, float], list[tuple[Formatter, str]]]]
 
 
-class TestHTMLConversion(unittest.TestCase):
+class TestASCIIConversion(unittest.TestCase):
     def run_direct_conversions(self, cases_list: list[tuple[str, str]]):
         for input_str, expected_str in cases_list:
-            converted_str = convert_sciform_format(input_str, "html")
+            converted_str = convert_sciform_format(input_str, "ascii")
             with self.subTest(
                 input_str=input_str,
                 expected_str=expected_str,
@@ -24,7 +24,7 @@ class TestHTMLConversion(unittest.TestCase):
         for val, format_list in cases_list:
             for formatter, expected_output in format_list:
                 sciform_output = formatter(val)
-                html_output = sciform_output.as_html()
+                html_output = sciform_output.as_ascii()
                 with self.subTest(
                     val=val,
                     expected_output=expected_output,
@@ -36,7 +36,7 @@ class TestHTMLConversion(unittest.TestCase):
         for (val, unc), format_list in cases_list:
             for formatter, expected_output in format_list:
                 sciform_output = formatter(val, unc)
-                html_output = sciform_output.as_html()
+                html_output = sciform_output.as_ascii()
                 with self.subTest(
                     val=val,
                     expected_output=expected_output,
@@ -46,25 +46,25 @@ class TestHTMLConversion(unittest.TestCase):
 
     def test_direct_cases(self):
         cases_list = [
-            ("6.26070e-04", r"6.26070×10<sup>-4</sup>"),
+            ("6.26070e-04", "6.26070e-04"),
             (
                 "(0.000000(1.234560))e+02",
-                r"(0.000000(1.234560))×10<sup>2</sup>",
+                "(0.000000(1.234560))e+02",
             ),
-            ("000_000_004_567_899.765_432_1", r"000_000_004_567_899.765_432_1"),
-            ("(nan)%", r"(nan)%"),
-            ("123000 ppm", r"123000 ppm"),
-            ("0b+00", r"0×2<sup>0</sup>"),
-            ("16.18033E+03", r"16.18033×10<sup>3</sup>"),
-            ("    1.20e+01", r"    1.20×10<sup>1</sup>"),
-            ("(-INF)E+00", r"(-INF)×10<sup>0</sup>"),
+            ("000_000_004_567_899.765_432_1", "000_000_004_567_899.765_432_1"),
+            ("(nan)%", "(nan)%"),
+            ("123000 ppm", "123000 ppm"),
+            ("0b+00", "0b+00"),
+            ("16.18033E+03", "16.18033E+03"),
+            ("    1.20e+01", "    1.20e+01"),
+            ("(-INF)E+00", "(-INF)E+00"),
             (
                 "(0.123456(789))e+03",
-                r"(0.123456(789))×10<sup>3</sup>",
+                "(0.123456(789))e+03",
             ),
-            ("  123.46 ±     0.79", r"  123.46 ±     0.79"),
-            ("(7.8900 ± 0.0001)×10²", r"(7.8900 ± 0.0001)×10<sup>2</sup>"),
-            ("(0.123456 ± 0.000789) k", r"(0.123456 ± 0.000789) k"),
+            ("  123.46 ±     0.79", "  123.46 +/-     0.79"),
+            ("(7.8900 ± 0.0001)×10²", "(7.8900 +/- 0.0001)e+02"),
+            ("(0.123456 ± 0.000789) k", "(0.123456 +/- 0.000789) k"),
         ]
 
         self.run_direct_conversions(cases_list)
@@ -76,14 +76,14 @@ class TestHTMLConversion(unittest.TestCase):
                 [
                     (
                         Formatter(exp_mode="scientific"),
-                        r"7.89×10<sup>2</sup>",
+                        "7.89e+02",
                     ),
                     (
                         Formatter(
                             exp_mode="scientific",
                             superscript=True,
                         ),
-                        r"7.89×10<sup>2</sup>",
+                        "7.89e+02",
                     ),
                 ],
             ),
@@ -96,7 +96,7 @@ class TestHTMLConversion(unittest.TestCase):
                             exp_val=-1,
                             upper_separator="_",
                         ),
-                        r"123_450×10<sup>-1</sup>",
+                        "123_450e-01",
                     ),
                     (
                         Formatter(
@@ -104,7 +104,7 @@ class TestHTMLConversion(unittest.TestCase):
                             exp_val=3,
                             exp_format="prefix",
                         ),
-                        r"12.345 k",
+                        "12.345 k",
                     ),
                 ],
             ),
@@ -113,17 +113,17 @@ class TestHTMLConversion(unittest.TestCase):
                 [
                     (
                         Formatter(exp_mode="binary", exp_val=8),
-                        r"4×2<sup>8</sup>",
+                        "4b+08",
                     ),
                 ],
             ),
             (
                 float("nan"),
                 [
-                    (Formatter(exp_mode="percent"), r"nan"),
+                    (Formatter(exp_mode="percent"), "nan"),
                     (
                         Formatter(exp_mode="percent", nan_inf_exp=True),
-                        r"(nan)%",
+                        "(nan)%",
                     ),
                 ],
             ),
@@ -142,7 +142,7 @@ class TestHTMLConversion(unittest.TestCase):
                             exp_val=-1,
                             upper_separator="_",
                         ),
-                        r"(123_450 ± 2)×10<sup>-1</sup>",
+                        "(123_450 +/- 2)e-01",
                     ),
                     (
                         Formatter(
@@ -150,7 +150,7 @@ class TestHTMLConversion(unittest.TestCase):
                             exp_format="prefix",
                             exp_val=3,
                         ),
-                        r"(12.3450 ± 0.0002) k",
+                        "(12.3450 +/- 0.0002) k",
                     ),
                 ],
             ),
@@ -159,7 +159,7 @@ class TestHTMLConversion(unittest.TestCase):
                 [
                     (
                         Formatter(lower_separator="_", exp_mode="percent"),
-                        r"(12.345_678 ± 0.000_255)%",
+                        "(12.345_678 +/- 0.000_255)%",
                     ),
                     (
                         Formatter(
@@ -167,7 +167,7 @@ class TestHTMLConversion(unittest.TestCase):
                             exp_mode="percent",
                             paren_uncertainty=True,
                         ),
-                        r"(12.345_678(255))%",
+                        "(12.345_678(255))%",
                     ),
                 ],
             ),
@@ -180,7 +180,7 @@ class TestHTMLConversion(unittest.TestCase):
                             exp_format="prefix",
                             ndigits=4,
                         ),
-                        r"(314.159 ± 2.718) μ",
+                        "(314.159 +/- 2.718) u",
                     ),
                 ],
             ),

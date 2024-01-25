@@ -1,54 +1,81 @@
 """Convert sciform outputs into latex commands."""
+from __future__ import annotations
 
 import re
+from typing import Literal, get_args
 
-from sciform.format_utils import get_superscript_exp_str
+ascii_exp_pattern = re.compile(
+    r"^(?P<mantissa>.*)(?P<ascii_base>[eEbB])(?P<exp>[+-]\d+)$"
+)
+ascii_base_dict = {"e": 10, "E": 10, "b": 2, "B": 2}
 
-times_str = "×"
+unicode_exp_pattern = re.compile(
+    r"^(?P<mantissa>.*)×(?P<base>10|2)(?P<super_exp>[⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹])$"
+)
+superscript_translation = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-0123456789")
 
-
-def standard_exp_str_to_superscript_exp_str(match: re.Match) -> str:
-    """Convert matched ascii exp_str to unicode superscript exp_str."""
-    exp_symbol = match.group("exp_symbol")
-    symbol_to_base_dict = {"e": 10, "b": 2}
-    base = symbol_to_base_dict[exp_symbol.lower()]
-
-    exp_val_str = match.group("exp_val")
-    exp_val = int(exp_val_str)
-
-    superscript_exp_str = get_superscript_exp_str(base, exp_val)
-    return superscript_exp_str
+output_formats = Literal["latex", "html", "ascii"]
 
 
-def make_latex_superscript(match: re.Match) -> str:
-    """Convert matched superscript exp_str to latex exp_str."""
-    sup_trans = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-0123456789")
-    exp_val_non_sup = match.group(0).translate(sup_trans)
-    return rf"^{{{exp_val_non_sup}}}"
+def _make_exp_str(
+        base: int,
+        exp: int,
+        output_format: output_formats,
+        *,
+        capitalize: bool = False
+) -> str:
+    if output_format == "latex":
+        return rf"\times{base}^{{{exp}}}"
+    if output_format == "html":
+        return f"×{base}<sup>{exp}</sup>"
+    if output_format == "ascii":
+        if base == 10:
+            exp_str = f"e{exp:+03d}"
+        elif base == 2:
+            exp_str = f"b{exp:+03d}"
+        else:
+            msg = f"base must be 10 or 2, not {base}"
+            raise ValueError(msg)
+        if capitalize:
+            exp_str = exp_str.upper()
+        return exp_str
+    msg = (
+        f"output_format must be in {get_args(output_formats)}, not {output_format}"
+    )
+    raise ValueError(msg)
 
 
-def make_html_superscript(match: re.Match) -> str:
-    """Convert matched superscript exp_str to html exp_str."""
-    sup_trans = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-0123456789")
-    exp_val_non_sup = match.group(0).translate(sup_trans)
-    return rf"<sup>{exp_val_non_sup}</sup>"
+def _string_replacements(input_str: str, replacements: list[tuple[str, str]]) -> str:
+    result_str = input_str
+    for old_chars, new_chars in replacements:
+        result_str = result_str.replace(old_chars, new_chars)
+    return result_str
 
 
-def sciform_to_latex(formatted_str: str) -> str:
+def convert_sciform_format(
+        formatted_str: str,
+        output_format: output_formats,
+) -> str:
     r"""
-    Convert a sciform output string into a latex string.
+    Convert sciform output to new format for different output contexts.
 
-    conversion proceeds by
+    convert_sciform_format() is used to convert a sciform output string
+    into different formats for presentation in different contexts.
+    Currently, LaTeX, HTML, and ASCII outputs are supported.
 
-    1. If an exponent string is present and in ascii format
-       (e.g. ``"e+03"``) then convert it to superscript notation
-       (e.g. ``"×10³"``).
-    2. Bundle any unicode superscript substrings into latex
-       superscripts, e.g. ``"⁻²"`` -> ``r"^{-2}"``.
-    3. Wrap any strings of alphabetic characters (plus ``"μ"``) in latex
-       text environment, e.g. ``"nan"`` -> ``r"\text{nan}"`` or
-       ``"k"`` -> ``r"\text{k}"``.
-    4. Make the following character replacments:
+    LaTeX
+    =====
+
+    For LaTeX conversion the resulting string is a valid LaTeX command
+    bracketed in "$" symbols to indicate it is in LaTeX math
+    environment. The following transformations are applied.
+
+    * The exponent is displayed using the LaTeX math superscript
+      construction, e.g. "10^{-3}"
+    * Any strings of alphabetic characters (plus ``"μ"``) are wrapped in
+      the LaTeX math-mode text environment, e.g.
+      ``"nan"`` -> ``r"\text{nan}"`` or ``"k"`` -> ``r"\text{k}"``.
+    * The following character replacments are made:
 
       * ``"%"`` -> ``r"\%"``
       * ``"_"`` -> ``r"\_"``
@@ -57,74 +84,89 @@ def sciform_to_latex(formatted_str: str) -> str:
       * ``"×"`` -> ```r"\times"``
       * ``"μ"`` -> ``r"\textmu"``
 
-    >>> from sciform import sciform_to_latex
-    >>> print(sciform_to_latex("(7.8900 ± 0.0001)×10²"))
+    >>> from sciform.output_conversion import convert_sciform_format
+    >>> print(convert_sciform_format("(7.8900 ± 0.0001)×10²", "latex"))
     (7.8900\:\pm\:0.0001)\times10^{2}
-    >>> print(sciform_to_latex("16.18033E+03"))
+    >>> print(convert_sciform_format("16.18033E+03", "latex"))
     16.18033\times10^{3}
-    """
-    result_str = re.sub(
-        r"((?P<exp_symbol>[eEbB])(?P<exp_val>[+-]\d+))$",
-        standard_exp_str_to_superscript_exp_str,
-        formatted_str,
-    )
 
-    result_str = re.sub(
-        r"([⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)",
-        make_latex_superscript,
-        result_str,
-    )
+    HTML
+    ====
 
-    result_str = re.sub(
-        r"([a-zA-Zμ]+)",
-        r"\\text{\1}",
-        result_str,
-    )
+    In HTML mode superscripts are representing using e.g.
+    "<sup>-3</sup>".
 
-    replacements = (
-        ("%", r"\%"),
-        ("_", r"\_"),
-        (" ", r"\:"),
-        ("±", r"\pm"),
-        ("×", r"\times"),
-        ("μ", r"\textmu"),
-    )
-    for old_chars, new_chars in replacements:
-        result_str = result_str.replace(old_chars, new_chars)
-
-    result_str = rf"${result_str}$"
-
-    return result_str
-
-
-def sciform_to_html(formatted_str: str) -> str:
-    r"""
-    Convert a sciform output string into a html string.
-
-    conversion proceeds by
-
-    1. If an exponent string is present and in ascii format
-       (e.g. ``"e+03"``) then convert it to superscript notation
-       (e.g. ``"×10³"``).
-    2. Bundle any unicode superscript substrings into latex
-       superscripts, e.g. ``"⁻²"`` -> ``r"<sup>-2</sup>"``.
-
-    >>> from sciform import sciform_to_html
-    >>> print(sciform_to_latex("(7.8900 ± 0.0001)×10²"))
+    >>> from sciform.output_conversion import convert_sciform_format
+    >>> print(convert_sciform_format("(7.8900 ± 0.0001)×10²", "html"))
     (7.8900 ± 0.0001)×10<sup>2</sup>
-    >>> print(sciform_to_latex("16.18033E+03"))
+    >>> print(convert_sciform_format("16.18033E+03", "html"))
     16.18033×10<sup>3</sup>
+
+    ASCII
+    =====
+
+    In the ASCII mode exponents are always represented as e.g. "e-03".
+    Also, "±" is replaced by "+/-" and "μ" is replaced by "u".
+
+    >>> from sciform.output_conversion import convert_sciform_format
+    >>> print(convert_sciform_format("(7.8900 ± 0.0001)×10²", "ascii"))
+    (7.8900 +/- 0.0001)e+02
+    >>> print(convert_sciform_format("16.18033E+03", "ascii"))
+    16.18033E+03
     """
-    result_str = re.sub(
-        r"((?P<exp_symbol>[eEbB])(?P<exp_val>[+-]\d+))$",
-        standard_exp_str_to_superscript_exp_str,
-        formatted_str,
-    )
+    if match := re.match(ascii_exp_pattern, formatted_str):
+        mantissa = match.group("mantissa")
+        ascii_base = match.group("ascii_base")
+        base = ascii_base_dict[ascii_base]
+        exp = int(match.group("exp"))
+        exp_str = _make_exp_str(
+            base,
+            exp,
+            output_format,
+            capitalize=ascii_base.isupper(),
+        )
+        main_str = mantissa
+        suffix_str = exp_str
+    elif match := re.match(unicode_exp_pattern, formatted_str):
+        mantissa = match.group("mantissa")
+        base = int(match.group("base"))
+        super_exp = match.group("super_exp")
+        exp = int(super_exp.translate(superscript_translation))
+        exp_str = _make_exp_str(base, exp, output_format)
+        main_str = mantissa
+        suffix_str = exp_str
+    else:
+        main_str = formatted_str
+        suffix_str = ""
 
-    result_str = re.sub(
-        r"([⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)",
-        make_html_superscript,
-        result_str,
-    )
+    if output_format == "latex":
+        main_str = re.sub(
+            r"([a-zA-Zμ]+)",
+            r"\\text{\1}",
+            main_str,
+        )
 
-    return result_str
+        replacements = [
+            ("%", r"\%"),
+            ("_", r"\_"),
+            (" ", r"\:"),
+            ("±", r"\pm"),
+            ("×", r"\times"),
+            ("μ", r"\textmu"),
+        ]
+        main_str = _string_replacements(main_str, replacements)
+        return f"${main_str}{suffix_str}$"
+
+    if output_format == "html":
+        return f"{main_str}{suffix_str}"
+    if output_format == "ascii":
+        replacements = [
+            ("±", "+/-"),
+            ("μ", "u"),
+        ]
+        main_str = _string_replacements(main_str, replacements)
+        return f"{main_str}{suffix_str}"
+    msg = (
+        f"output_format must be in {get_args(output_formats)}, not {output_format}"
+    )
+    raise ValueError(msg)

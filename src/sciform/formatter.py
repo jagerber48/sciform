@@ -6,7 +6,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING
 
 from sciform.formatting import format_num, format_val_unc
-from sciform.output_conversion import sciform_to_html, sciform_to_latex
+from sciform.output_conversion import convert_sciform_format
 from sciform.user_options import UserOptions
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -263,6 +263,10 @@ class FormattedNumber(str):
         """Return the string representation of the formatted number."""
         return self.__str__()
 
+    def as_ascii(self: FormattedNumber) -> str:
+        """Return the ascii representation of the formatted number."""
+        return self._repr_ascii_()
+
     def as_html(self: FormattedNumber) -> str:
         """Return the html representation of the formatted number."""
         return self._repr_html_()
@@ -274,8 +278,11 @@ class FormattedNumber(str):
             latex_repr = latex_repr.strip("$")
         return latex_repr
 
+    def _repr_ascii_(self: FormattedNumber) -> str:
+        return convert_sciform_format(self, "ascii")
+
     def _repr_html_(self: FormattedNumber) -> str:
-        return sciform_to_html(self)
+        return convert_sciform_format(self, "html")
 
     def _repr_latex_(self: FormattedNumber) -> str:
-        return sciform_to_latex(self)
+        return convert_sciform_format(self, "latex")
