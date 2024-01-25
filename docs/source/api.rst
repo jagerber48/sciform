@@ -36,4 +36,8 @@ Global Configuration
 Output Conversion
 =================
 
-.. autofunction:: sciform_to_latex
+.. module:: sciform.formatter
+   :noindex:
+
+.. autoclass:: FormattedNumber
+   :members:

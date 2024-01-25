@@ -265,7 +265,7 @@ class FormattedNumber(str):
 
     def as_ascii(self: FormattedNumber) -> str:
         """Return the ascii representation of the formatted number."""
-        return self._repr_ascii_()
+        return convert_sciform_format(self, "ascii")
 
     def as_html(self: FormattedNumber) -> str:
         """Return the html representation of the formatted number."""
@@ -277,9 +277,6 @@ class FormattedNumber(str):
         if strip_env_symbs:
             latex_repr = latex_repr.strip("$")
         return latex_repr
-
-    def _repr_ascii_(self: FormattedNumber) -> str:
-        return convert_sciform_format(self, "ascii")
 
     def _repr_html_(self: FormattedNumber) -> str:
         return convert_sciform_format(self, "html")
