@@ -38,3 +38,4 @@ Output Conversion
 
 .. autoclass:: sciform.formatter.FormattedNumber
    :members:
+   :private-members:

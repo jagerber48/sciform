@@ -279,7 +279,9 @@ class FormattedNumber(str):
         return latex_repr
 
     def _repr_html_(self: FormattedNumber) -> str:
+        """Hook for HTML display."""  # noqa: D401
         return self.as_html()
 
     def _repr_latex_(self: FormattedNumber) -> str:
+        """Hook for LaTeX display."""  # noqa: D401
         return self.as_latex()
