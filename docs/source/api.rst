@@ -36,8 +36,5 @@ Global Configuration
 Output Conversion
 =================
 
-.. module:: sciform.formatter
-   :noindex:
-
-.. autoclass:: FormattedNumber
+.. autoclass:: sciform.formatter.FormattedNumber
    :members:
