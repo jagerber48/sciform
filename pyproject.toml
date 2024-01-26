@@ -35,9 +35,13 @@ dev = [
     "sphinx-rtd-theme",
     "sphinx-toolbox",
     "numpy",
+]
+examples = [
+    "numpy",
     "scipy",
     "matplotlib",
     "tabulate",
+    "jupyter",
 ]
 
 [tool.setuptools.dynamic]
