@@ -78,7 +78,7 @@ The sign symbol is always included and the exponent value is left padded
 so that it is at least two digits wide.
 These behaviors for ASCII exponents cannot be modified.
 However the :ref:`superscript` mode can be used to represent the
-exponent using unicode characters.
+exponent using Unicode characters.
 
 .. _engineering:
 

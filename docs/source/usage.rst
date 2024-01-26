@@ -236,9 +236,9 @@ outputs are being used in contexts outside of e.g. text terminals such
 as `Matplotlib <https://matplotlib.org/>`_ plots,
 `Jupyter <https://jupyter.org/>`_ notebooks, or
 `Quarto <https://quarto.org/>`_ documents which support richer display
-functionality than unicode text.
+functionality than Unicode text.
 The ASCII representation may be useful if :mod:`sciform` outputs are
-being used in contexts in which only ASCII, and not unicode, text is
+being used in contexts in which only ASCII, and not Unicode, text is
 supported or preferred.
 
 These conversions can be accessed via the
@@ -309,8 +309,8 @@ the aliases
 :meth:`_repr_html_() <formatter.FormattedNumber._repr_html_>`.
 The
 `IPython display functions <https://ipython.readthedocs.io/en/stable/api/generated/IPython.display.html#functions>`_
-look for these methods, and if available, will use them to display
-prettier representations of the class than the unicode ``__repr__``
+looks for these methods, and, if available, will use them to display
+prettier representations of the class than the Unicode ``__repr__``
 representation.
 
 .. image:: ../../examples/outputs/jupyter_output.png
