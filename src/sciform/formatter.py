@@ -269,17 +269,17 @@ class FormattedNumber(str):
 
     def as_html(self: FormattedNumber) -> str:
         """Return the html representation of the formatted number."""
-        return self._repr_html_()
+        return convert_sciform_format(self, "html")
 
     def as_latex(self: FormattedNumber, *, strip_env_symbs: bool = False) -> str:
         """Return the latex representation of the formatted number."""
-        latex_repr = self._repr_latex_()
+        latex_repr = convert_sciform_format(self, "latex")
         if strip_env_symbs:
             latex_repr = latex_repr.strip("$")
         return latex_repr
 
     def _repr_html_(self: FormattedNumber) -> str:
-        return convert_sciform_format(self, "html")
+        return self.as_html()
 
     def _repr_latex_(self: FormattedNumber) -> str:
-        return convert_sciform_format(self, "latex")
+        return self.as_latex()
