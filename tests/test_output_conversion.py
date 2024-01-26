@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 
 from sciform import Formatter
+from sciform.formatter import FormattedNumber
 from sciform.output_conversion import convert_sciform_format
 
 ValFormatterCases = list[
@@ -432,3 +433,40 @@ class TestLatexConversion(unittest.TestCase):
         ]
 
         self.run_val_unc_formatter_conversions(cases_list)
+
+    def test_special_repr_output(self):
+        cases_list = [
+            "6.26070e-04",
+            "(0.000000(1.234560))e+02",
+            "000_000_004_567_899.765_432_1",
+            "(nan)%",
+            "123000 ppm",
+            "0b+00",
+            "16.18033E+03",
+            "    1.20e+01",
+            "(-INF)E+00",
+            "(0.123456(789))e+03",
+            "  123.46 ±     0.79",
+            "(7.8900 ± 0.0001)×10²",
+            "(7.8900 ± 0.0001)×10⁻²",
+            "(0.123456 ± 0.000789) k",
+        ]
+        for case in cases_list:
+            formatted_number = FormattedNumber(case)
+            with self.subTest(
+                name="check__repr_html_",
+                input_str=case,
+            ):
+                self.assertEqual(
+                    formatted_number._repr_html_(),  # noqa: SLF001
+                    formatted_number.as_html(),
+                )
+
+            with self.subTest(
+                name="check__repr_latex_",
+                input_str=case,
+            ):
+                self.assertEqual(
+                    formatted_number._repr_latex_(),  # noqa: SLF001
+                    formatted_number.as_latex(strip_env_symbs=False),
+                )
