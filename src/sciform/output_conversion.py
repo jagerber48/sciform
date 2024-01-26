@@ -10,7 +10,7 @@ ascii_exp_pattern = re.compile(
 ascii_base_dict = {"e": 10, "E": 10, "b": 2, "B": 2}
 
 unicode_exp_pattern = re.compile(
-    r"^(?P<mantissa>.*)×(?P<base>10|2)(?P<super_exp>[⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹])$",
+    r"^(?P<mantissa>.*)×(?P<base>10|2)(?P<super_exp>[⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]+)$",
 )
 superscript_translation = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-0123456789")
 
