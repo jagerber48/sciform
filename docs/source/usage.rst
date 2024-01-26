@@ -300,7 +300,21 @@ stripped:
 >>> print(f"{formatted_str} -> {formatted_str.as_latex(strip_math_mode=True)}")
 (314.159 ± 2.718) μ -> (314.159\:\pm\:2.718)\:\text{\textmu}
 
+In addition to exposing
+:meth:`as_latex() <formatter.FormattedNumber.as_latex>` and
+:meth:`as_html() <formatter.FormattedNumber.as_html>`,
+the :class:`FormattedNumber <formatter.FormattedNumber>` class defines
+the aliases
+:meth:`_repr_latex_() <formatter.FormattedNumber._repr_latex_>` and
+:meth:`_repr_html_() <formatter.FormattedNumber._repr_html_>`.
+The
+`IPython display functions <https://ipython.readthedocs.io/en/stable/api/generated/IPython.display.html#functions>`_
+look for these methods, and if available, will use them to display
+prettier representations of the class than the unicode ``__repr__``
+representation.
 
+.. image:: ../../examples/outputs/jupyter_output.png
+  :width: 400
 
 .. _dec_and_float:
 
