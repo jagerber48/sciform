@@ -79,7 +79,7 @@ class TestLatexConversion(unittest.TestCase):
                 ):
                     self.assertEqual(html_output, expected_html)
 
-                latex_output = sciform_output.as_latex(strip_env_symbs=True)
+                latex_output = sciform_output.as_latex(strip_math_mode=True)
                 with self.subTest(
                     val=val,
                     expected_output=expected_latex,
@@ -125,7 +125,7 @@ class TestLatexConversion(unittest.TestCase):
                 ):
                     self.assertEqual(html_output, expected_html)
 
-                latex_output = sciform_output.as_latex(strip_env_symbs=True)
+                latex_output = sciform_output.as_latex(strip_math_mode=True)
                 with self.subTest(
                     val=val,
                     unc=unc,
@@ -468,5 +468,5 @@ class TestLatexConversion(unittest.TestCase):
             ):
                 self.assertEqual(
                     formatted_number._repr_latex_(),  # noqa: SLF001
-                    formatted_number.as_latex(strip_env_symbs=False),
+                    formatted_number.as_latex(strip_math_mode=False),
                 )

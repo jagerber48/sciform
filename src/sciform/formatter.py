@@ -271,10 +271,10 @@ class FormattedNumber(str):
         """Return the html representation of the formatted number."""
         return convert_sciform_format(self, "html")
 
-    def as_latex(self: FormattedNumber, *, strip_env_symbs: bool = False) -> str:
+    def as_latex(self: FormattedNumber, *, strip_math_mode: bool = False) -> str:
         """Return the latex representation of the formatted number."""
         latex_repr = convert_sciform_format(self, "latex")
-        if strip_env_symbs:
+        if strip_math_mode:
             latex_repr = latex_repr.strip("$")
         return latex_repr
 

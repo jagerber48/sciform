@@ -286,6 +286,22 @@ These conversions can be accessed via the
 >>> print(f"{formatted_str} -> {formatted_str.as_ascii()}")
 (314.159 ± 2.718) μ -> (314.159 +/- 2.718) u
 
+The LaTeX enclosing ``"$"`` math environment symbols can be optionally
+stripped:
+
+>>> sform = Formatter(
+...     exp_mode="engineering",
+...     exp_format="prefix",
+...     ndigits=4
+... )
+>>> formatted_str = sform(314.159e-6, 2.71828e-6)
+>>> print(f"{formatted_str} -> {formatted_str.as_latex(strip_math_mode=False)}")
+(314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
+>>> print(f"{formatted_str} -> {formatted_str.as_latex(strip_math_mode=True)}")
+(314.159 ± 2.718) μ -> (314.159\:\pm\:2.718)\:\text{\textmu}
+
+
+
 .. _dec_and_float:
 
 Note on Decimals and Floats
