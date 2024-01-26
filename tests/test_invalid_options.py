@@ -11,6 +11,7 @@ from sciform.format_utils import (
     get_top_digit_binary,
 )
 from sciform.formatting import format_non_finite
+from sciform.output_conversion import _make_exp_str, convert_sciform_format
 from sciform.user_options import UserOptions
 
 
@@ -238,4 +239,30 @@ class TestInvalidOptions(unittest.TestCase):
             modes.mode_str_to_enum,
             "eng",
             modes.ExpModeEnum,
+        )
+
+    def test_convert_sciform_format_invalid_output_format(self):
+        self.assertRaises(
+            ValueError,
+            convert_sciform_format,
+            "123",
+            "md",
+        )
+
+    def test_make_exp_str_invalid_output_format(self):
+        self.assertRaises(
+            ValueError,
+            _make_exp_str,
+            10,
+            0,
+            "rst",
+        )
+
+    def test_make_exp_str_invalid_base(self):
+        self.assertRaises(
+            ValueError,
+            _make_exp_str,
+            16,
+            0,
+            "ascii",
         )
