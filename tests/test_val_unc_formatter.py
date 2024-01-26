@@ -494,3 +494,9 @@ class TestFormatting(unittest.TestCase):
     def test_dec_place_warn(self):
         sform = Formatter(round_mode="dec_place")
         self.assertWarns(Warning, sform, 42, 24)
+
+    def test_left_pad_matching(self):
+        sform = Formatter(left_pad_matching=True)
+        result = sform(123, 0.123)
+        expected_result = "123.000 ±   0.123"
+        self.assertEqual(result, expected_result)
