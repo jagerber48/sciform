@@ -40,6 +40,8 @@ html_theme_options = {
 todo_include_todos = True
 todo_emit_warnings = True
 
+autodoc_member_order = "bysource"
+
 # For wrapping of text in tables
 html_css_files = [
     "css/custom.css",
