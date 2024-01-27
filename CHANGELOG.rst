@@ -35,7 +35,7 @@ Changed
       inconsistently and occasionally required confusing extra handling.
       Now any spaces in the input string are directly and explicitly
       converted into math mode medium spaces: ``"\:"``.
-    * ``"μ"`` is now included in math mode ``\text{}`` environment
+    * ``"μ"`` is now included in the math mode ``\text{}`` environment
       and converted to ``"\textmu"``.
 
 * **[BREAKING]** Renamed ``fill_char`` to ``left_pad_char``.
