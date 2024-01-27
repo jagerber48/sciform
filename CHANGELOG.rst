@@ -37,6 +37,11 @@ Changed
   and converted to ``"\textmu"``.
 * **[BREAKING]** Renamed ``fill_char`` to ``left_pad_char``.
   [`#126 <https://github.com/jagerber48/sciform/issues/126>`_]
+* Slimmed down ``[dev]`` optional dependencies and created
+  ``[examples]`` optional dependencies.
+  The former includes development tools, while the latter includes
+  the heavy-weight requirements needed to run all the examples,
+  including, e.g. ``jupyter``, ``scipy``, etc.
 
 Fixed
 ^^^^^
