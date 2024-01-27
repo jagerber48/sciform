@@ -14,8 +14,8 @@ Added
 * Added the ``FormattedNumber`` class.
   This class is a subclass of ``str`` and is now returned by the
   ``Formatter`` instead of ``str``.
-  The ``FormattedNumber`` allows post-conversion to ASCII, HTML, and
-  LaTeX formats.
+  The ``FormattedNumber`` class allows post-conversion to ASCII, HTML,
+  and LaTeX formats.
   [`#114 <https://github.com/jagerber48/sciform/issues/114>`_]
 * Added separate flags for code coverage reports for each python
   version.
