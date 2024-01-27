@@ -11,12 +11,30 @@ Unreleased
 Added
 ^^^^^
 
+* Added the ``FormattedNumber`` class.
+  This class is a subclass of ``str`` and is now returned by the
+  ``Formatter`` instead of ``str``.
+  The ``FormattedNumber`` allows post-conversion to ASCII, HTML, and
+  LaTeX formats.
+  [`#114 <https://github.com/jagerber48/sciform/issues/114>`_]
 * Added separate flags for code coverage reports for each python
   version.
 
 Changed
 ^^^^^^^
 
+* In addition to removing the ``latex`` option from the ``Formatter`` in
+  favor of the introduction of the ``FormattedNumber`` class, the
+  LaTeX conversion algorithm has been slightly modified.
+  Left and right parentheses are no longer converted to ``"\left("``
+  and ``"\right)"`` due to introducing strange spacing issues.
+  See `Spacing around \\left and \\right <https://tex.stackexchange.com/questions/2607/spacing-around-left-and-right>`_.
+  Previously spaces within the ``sciform`` output were handled
+  inconsistently and occasionally required confusing extra handling.
+  Now any spaces in the input string are directly and explicitly
+  converted into math mode medium spaces: ``"\:"``.
+  Finally, ``"μ"`` is now included in math mode ``\text{}`` environment
+  and converted to ``"\textmu"``.
 * **[BREAKING]** Renamed ``fill_char`` to ``left_pad_char``.
   [`#126 <https://github.com/jagerber48/sciform/issues/126>`_]
 
@@ -27,6 +45,16 @@ Fixed
   ``"parts_per"`` format with zero exponent would appear with redundant
   parentheses, e.g. ``"(1.2 ± 0.1)"``.
   [`#130 <https://github.com/jagerber48/sciform/issues/130>`_]
+
+Removed
+^^^^^^^
+
+* **[BREAKING]** Removed the ``latex`` option in favor of the
+  introduction of the ``FormattedNumber.as_latex()`` method.
+  This removal simplies the formatted algorithm by separating LaTeX
+  formatting from other tasks like exponent string resolution.
+  The ``latex`` option also introduced a potential confusion with the
+  ``superscript`` option, which had no effect when ``latex=True``.
 
 ----
 
