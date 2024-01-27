@@ -59,7 +59,7 @@ Removed
 
 * **[BREAKING]** Removed the ``latex`` option in favor of the
   introduction of the ``FormattedNumber.as_latex()`` method.
-  This removal simplies the formatted algorithm by separating LaTeX
+  This removal simplifies the formatting algorithm by separating LaTeX
   formatting from other tasks like exponent string resolution.
   The ``latex`` option also introduced a potential confusion with the
   ``superscript`` option, which had no effect when ``latex=True``.
