@@ -32,3 +32,10 @@ Global Configuration
 .. autofunction:: reset_global_defaults()
 
 .. autoclass:: GlobalDefaultsContext()
+
+Output Conversion
+=================
+
+.. autoclass:: sciform.formatter.FormattedNumber
+   :members:
+   :private-members:

@@ -138,7 +138,6 @@ package default settings):
  'extra_parts_per_forms': {},
  'capitalize': False,
  'superscript': False,
- 'latex': False,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
@@ -176,7 +175,6 @@ unchanged.
  'extra_parts_per_forms': {},
  'capitalize': False,
  'superscript': False,
- 'latex': False,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
@@ -217,6 +215,106 @@ the ``pdg_sig_figs`` option.
 If the user wishes to configure these options, but also use the
 :ref:`FSML <fsml>`, then they must do so by modifying the global default
 settings.
+
+.. _output_conversion:
+
+Output Conversion
+=================
+
+Typically the output of the :class:`Formatter` is used as a regular
+python string.
+However, the :class:`Formatter` actually returns a
+:class:`FormattedNumber <formatter.FormattedNumber>` instance.
+The :class:`FormattedNumber <formatter.FormattedNumber>` class
+subclasses ``str`` and in many cases is used like a normal python
+string.
+However, the :class:`FormattedNumber <formatter.FormattedNumber>` class
+exposes methods to convert the standard string representation into
+LaTex, HTML, or ASCII representations.
+The LaTeX and HTML representations may be useful when :mod:`sciform`
+outputs are being used in contexts outside of e.g. text terminals such
+as `Matplotlib <https://matplotlib.org/>`_ plots,
+`Jupyter <https://jupyter.org/>`_ notebooks, or
+`Quarto <https://quarto.org/>`_ documents which support richer display
+functionality than Unicode text.
+The ASCII representation may be useful if :mod:`sciform` outputs are
+being used in contexts in which only ASCII, and not Unicode, text is
+supported or preferred.
+
+These conversions can be accessed via the
+:meth:`as_latex() <formatter.FormattedNumber.as_latex>`,
+:meth:`as_html() <formatter.FormattedNumber.as_html>`, and
+:meth:`as_ascii() <formatter.FormattedNumber.as_ascii>` methods on the
+:class:`FormattedNumber <formatter.FormattedNumber>` class.
+
+>>> sform = Formatter(
+...     exp_mode="scientific",
+...     exp_val=-1,
+...     upper_separator="_",
+...     superscript=True,
+... )
+>>> formatted_str = sform(12345)
+>>> print(f"{formatted_str} -> {formatted_str.as_latex()}")
+123_450×10⁻¹ -> $123\_450\times10^{-1}$
+>>> print(f"{formatted_str} -> {formatted_str.as_html()}")
+123_450×10⁻¹ -> 123_450×10<sup>-1</sup>
+>>> print(f"{formatted_str} -> {formatted_str.as_ascii()}")
+123_450×10⁻¹ -> 123_450e-01
+
+>>> sform = Formatter(
+...     exp_mode="percent",
+...     lower_separator="_",
+... )
+>>> formatted_str = sform(0.12345678, 0.00000255)
+>>> print(f"{formatted_str} -> {formatted_str.as_latex()}")
+(12.345_678 ± 0.000_255)% -> $(12.345\_678\:\pm\:0.000\_255)\%$
+>>> print(f"{formatted_str} -> {formatted_str.as_html()}")
+(12.345_678 ± 0.000_255)% -> (12.345_678 ± 0.000_255)%
+>>> print(f"{formatted_str} -> {formatted_str.as_ascii()}")
+(12.345_678 ± 0.000_255)% -> (12.345_678 +/- 0.000_255)%
+
+>>> sform = Formatter(
+...     exp_mode="engineering",
+...     exp_format="prefix",
+...     ndigits=4
+... )
+>>> formatted_str = sform(314.159e-6, 2.71828e-6)
+>>> print(f"{formatted_str} -> {formatted_str.as_latex()}")
+(314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
+>>> print(f"{formatted_str} -> {formatted_str.as_html()}")
+(314.159 ± 2.718) μ -> (314.159 ± 2.718) μ
+>>> print(f"{formatted_str} -> {formatted_str.as_ascii()}")
+(314.159 ± 2.718) μ -> (314.159 +/- 2.718) u
+
+The LaTeX enclosing ``"$"`` math environment symbols can be optionally
+stripped:
+
+>>> sform = Formatter(
+...     exp_mode="engineering",
+...     exp_format="prefix",
+...     ndigits=4
+... )
+>>> formatted_str = sform(314.159e-6, 2.71828e-6)
+>>> print(f"{formatted_str} -> {formatted_str.as_latex(strip_math_mode=False)}")
+(314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
+>>> print(f"{formatted_str} -> {formatted_str.as_latex(strip_math_mode=True)}")
+(314.159 ± 2.718) μ -> (314.159\:\pm\:2.718)\:\text{\textmu}
+
+In addition to exposing
+:meth:`as_latex() <formatter.FormattedNumber.as_latex>` and
+:meth:`as_html() <formatter.FormattedNumber.as_html>`,
+the :class:`FormattedNumber <formatter.FormattedNumber>` class defines
+the aliases
+:meth:`_repr_latex_() <formatter.FormattedNumber._repr_latex_>` and
+:meth:`_repr_html_() <formatter.FormattedNumber._repr_html_>`.
+The
+`IPython display functions <https://ipython.readthedocs.io/en/stable/api/generated/IPython.display.html#functions>`_
+looks for these methods, and, if available, will use them to display
+prettier representations of the class than the Unicode ``__repr__``
+representation.
+
+.. image:: ../../examples/outputs/jupyter_output.png
+  :width: 400
 
 .. _dec_and_float:
 

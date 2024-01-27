@@ -9,9 +9,9 @@ from sciform.format_utils import (
     get_sign_str,
     get_top_digit,
     get_top_digit_binary,
-    parse_standard_exp_str,
 )
 from sciform.formatting import format_non_finite
+from sciform.output_conversion import _make_exp_str, convert_sciform_format
 from sciform.user_options import UserOptions
 
 
@@ -233,17 +233,36 @@ class TestInvalidOptions(unittest.TestCase):
             extra_parts_per_forms={},
         )
 
-    def test_parse_standard_exp_str_binary(self):
-        """
-        This is the only place that this is tested while binary
-        value/uncertainty is not implemented.
-        """
-        self.assertEqual(parse_standard_exp_str("b+10"), (2, 10))
-
     def test_mode_str_to_enum_fail(self):
         self.assertRaises(
             ValueError,
             modes.mode_str_to_enum,
             "eng",
             modes.ExpModeEnum,
+        )
+
+    def test_convert_sciform_format_invalid_output_format(self):
+        self.assertRaises(
+            ValueError,
+            convert_sciform_format,
+            "123",
+            "md",
+        )
+
+    def test_make_exp_str_invalid_output_format(self):
+        self.assertRaises(
+            ValueError,
+            _make_exp_str,
+            10,
+            0,
+            "rst",
+        )
+
+    def test_make_exp_str_invalid_base(self):
+        self.assertRaises(
+            ValueError,
+            _make_exp_str,
+            16,
+            0,
+            "ascii",
         )

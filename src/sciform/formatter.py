@@ -6,6 +6,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING
 
 from sciform.formatting import format_num, format_val_unc
+from sciform.output_conversion import convert_sciform_format
 from sciform.user_options import UserOptions
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -57,7 +58,6 @@ class Formatter:
         extra_parts_per_forms: dict[int, str] | None = None,
         capitalize: bool | None = None,
         superscript: bool | None = None,
-        latex: bool | None = None,
         nan_inf_exp: bool | None = None,
         paren_uncertainty: bool | None = None,
         pdg_sig_figs: bool | None = None,
@@ -152,10 +152,6 @@ class Formatter:
           should be converted into superscript notation. E.g.
           ``'1.23e+02'`` is converted to ``'1.23×10²'``
         :type superscript: ``bool | None``
-        :param latex: Flag indicating if the resulting string should be
-          converted into a latex parseable code, e.g.
-          ``'\\left(1.23 \\pm 0.01\\right)\\times 10^{2}'``.
-        :type latex: ``bool | None``
         :param nan_inf_exp: Flag indicating whether non-finite numbers
           such as ``float('nan')`` or ``float('inf')`` should be
           formatted with exponent symbols when exponent modes including
@@ -193,7 +189,7 @@ class Formatter:
         :param add_ppth_form: (default ``False``) if ``True``, adds
           ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
         :type add_ppth_form: ``bool``
-        """  # noqa: RUF002
+        """
         self._user_options = UserOptions(
             exp_mode=exp_mode,
             exp_val=exp_val,
@@ -211,7 +207,6 @@ class Formatter:
             extra_parts_per_forms=extra_parts_per_forms,
             capitalize=capitalize,
             superscript=superscript,
-            latex=latex,
             nan_inf_exp=nan_inf_exp,
             paren_uncertainty=paren_uncertainty,
             pdg_sig_figs=pdg_sig_figs,
@@ -228,7 +223,7 @@ class Formatter:
         value: Number,
         uncertainty: Number | None = None,
         /,
-    ) -> str:
+    ) -> FormattedNumber:
         """
         Format a value or value/uncertainty pair.
 
@@ -246,4 +241,47 @@ class Formatter:
                 Decimal(str(uncertainty)),
                 rendered_options,
             )
-        return output
+        return FormattedNumber(output)
+
+
+class FormattedNumber(str):
+    """
+    Representation (typically string) of a formatted number.
+
+    The ``FormattedNumber`` class is returned by ``sciform`` formatting
+    methods. In most cases it behaves like a regular python string, but
+    it provides the possibility for post-converting the string to
+    various other formats such as latex or html. This allows the
+    formatted number to be displayed in a range of contexts other than
+    e.g. text terminals.
+
+    """
+
+    __slots__ = ()
+
+    def as_str(self: FormattedNumber) -> str:
+        """Return the string representation of the formatted number."""
+        return self.__str__()
+
+    def as_ascii(self: FormattedNumber) -> str:
+        """Return the ascii representation of the formatted number."""
+        return convert_sciform_format(self, "ascii")
+
+    def as_html(self: FormattedNumber) -> str:
+        """Return the html representation of the formatted number."""
+        return convert_sciform_format(self, "html")
+
+    def as_latex(self: FormattedNumber, *, strip_math_mode: bool = False) -> str:
+        """Return the latex representation of the formatted number."""
+        latex_repr = convert_sciform_format(self, "latex")
+        if strip_math_mode:
+            latex_repr = latex_repr.strip("$")
+        return latex_repr
+
+    def _repr_html_(self: FormattedNumber) -> str:
+        """Hook for HTML display."""  # noqa: D401
+        return self.as_html()
+
+    def _repr_latex_(self: FormattedNumber) -> str:
+        """Hook for LaTeX display."""  # noqa: D401
+        return self.as_latex()

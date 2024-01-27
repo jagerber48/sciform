@@ -20,7 +20,6 @@ PKG_DEFAULT_OPTIONS = RenderedOptions(
     extra_parts_per_forms={},
     capitalize=False,
     superscript=False,
-    latex=False,
     nan_inf_exp=False,
     paren_uncertainty=False,
     pdg_sig_figs=False,

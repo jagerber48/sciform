@@ -354,53 +354,6 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
-    def test_latex(self):
-        cases_list = [
-            (
-                (12345, 0.2),
-                [
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_val=-1,
-                            upper_separator="_",
-                            latex=True,
-                        ),
-                        r"\left(123\_450 \pm 2\right)\times 10^{-1}",
-                    ),
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_format="prefix",
-                            exp_val=3,
-                            latex=True,
-                        ),
-                        r"\left(12.3450 \pm 0.0002\right)\text{k}",
-                    ),
-                ],
-            ),
-            (
-                (0.123_456_78, 0.000_002_55),
-                [
-                    (
-                        Formatter(lower_separator="_", exp_mode="percent", latex=True),
-                        r"\left(12.345\_678 \pm 0.000\_255\right)\%",
-                    ),
-                    (
-                        Formatter(
-                            lower_separator="_",
-                            exp_mode="percent",
-                            paren_uncertainty=True,
-                            latex=True,
-                        ),
-                        r"\left(12.345\_678\left(255\right)\right)\%",
-                    ),
-                ],
-            ),
-        ]
-
-        self.run_val_unc_formatter_cases(cases_list)
-
     def test_pdg(self):
         cases_list = [
             (
@@ -541,3 +494,9 @@ class TestFormatting(unittest.TestCase):
     def test_dec_place_warn(self):
         sform = Formatter(round_mode="dec_place")
         self.assertWarns(Warning, sform, 42, 24)
+
+    def test_left_pad_matching(self):
+        sform = Formatter(left_pad_matching=True)
+        result = sform(123, 0.123)
+        expected_result = "123.000 ±   0.123"
+        self.assertEqual(result, expected_result)

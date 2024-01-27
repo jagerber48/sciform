@@ -15,7 +15,6 @@ from sciform.format_utils import (
     get_val_unc_exp,
     get_val_unc_mantissa_strs,
     get_val_unc_top_digit,
-    latex_translate,
     round_val_unc,
 )
 from sciform.grouping import add_separators
@@ -53,8 +52,6 @@ def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
             exp_mode=exp_mode,
             exp_format=options.exp_format,
             capitalize=options.capitalize,
-            latex=options.latex,
-            latex_trim_whitespace=True,
             superscript=options.superscript,
             extra_si_prefixes=options.extra_si_prefixes,
             extra_iec_prefixes=options.extra_iec_prefixes,
@@ -72,9 +69,6 @@ def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
         result = result.upper()
     else:
         result = result.lower()
-
-    if options.latex:
-        result = latex_translate(result)
 
     return result
 
@@ -140,8 +134,6 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
         exp_mode=exp_mode,
         exp_format=options.exp_format,
         capitalize=options.capitalize,
-        latex=options.latex,
-        latex_trim_whitespace=False,
         superscript=options.superscript,
         extra_si_prefixes=options.extra_si_prefixes,
         extra_iec_prefixes=options.extra_iec_prefixes,
@@ -149,9 +141,6 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
     )
 
     result = f"{mantissa_str}{exp_str}"
-
-    if options.latex:
-        result = latex_translate(result)
 
     return result
 
@@ -240,7 +229,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
        * With the calculated shared exponent
        * Without percent mode (percent mode for val/unc pairs is
          handled below in the scope of this function)
-       * Without superscript, prefix, parts-per, or latex translations.
+       * Without superscript, prefix, or parts-per translations.
          The remaining steps rely on parsing an exponent string like
          'e+03' or similar. Such translations are handled within the
          scope of this function.
@@ -253,7 +242,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         exp_mode=exp_mode,
         exp_val=exp_val,
         superscript=False,
-        latex=False,
         exp_format=ExpFormatEnum.STANDARD,
     )
 
@@ -277,7 +265,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         unc_mantissa,
         decimal_separator=options.decimal_separator,
         paren_uncertainty=options.paren_uncertainty,
-        latex=options.latex,
         pm_whitespace=options.pm_whitespace,
         paren_uncertainty_separators=options.paren_uncertainty_separators,
     )
@@ -292,7 +279,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
             extra_iec_prefixes=options.extra_iec_prefixes,
             extra_parts_per_forms=options.extra_parts_per_forms,
             capitalize=options.capitalize,
-            latex=options.latex,
             superscript=options.superscript,
             paren_uncertainty=options.paren_uncertainty,
         )
@@ -301,8 +287,5 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
 
     if options.exp_mode is ExpModeEnum.PERCENT:
         val_unc_exp_str = f"({val_unc_exp_str})%"
-
-    if options.latex:
-        val_unc_exp_str = latex_translate(val_unc_exp_str)
 
     return val_unc_exp_str

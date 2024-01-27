@@ -35,15 +35,22 @@ dev = [
     "sphinx-rtd-theme",
     "sphinx-toolbox",
     "numpy",
+]
+examples = [
+    "numpy",
     "scipy",
     "matplotlib",
     "tabulate",
+    "jupyter",
 ]
 
 [tool.setuptools.dynamic]
 readme = {file = "README.rst"}
 
 [tool.setuptools_scm]
+
+[tool.ruff]
+allowed-confusables = ["×"]
 
 [tool.ruff.lint]
 select = ['ALL']
@@ -57,7 +64,11 @@ ignore = [
     'TD002',
     'TD003',
     'FIX002',
+    'RET504',
 ]
+
+[tool.ruff.format]
+docstring-code-format = true
 
 [tool.ruff.per-file-ignores]
 "tests/*.py" = ["D", "ANN", "PT"]
