@@ -26,15 +26,18 @@ Changed
 * In addition to removing the ``latex`` option from the ``Formatter`` in
   favor of the introduction of the ``FormattedNumber`` class, the
   LaTeX conversion algorithm has been slightly modified.
-  Left and right parentheses are no longer converted to ``"\left("``
-  and ``"\right)"`` due to introducing strange spacing issues.
-  See `Spacing around \\left and \\right <https://tex.stackexchange.com/questions/2607/spacing-around-left-and-right>`_.
-  Previously spaces within the ``sciform`` output were handled
-  inconsistently and occasionally required confusing extra handling.
-  Now any spaces in the input string are directly and explicitly
-  converted into math mode medium spaces: ``"\:"``.
-  Finally, ``"μ"`` is now included in math mode ``\text{}`` environment
-  and converted to ``"\textmu"``.
+
+    * Left and right parentheses are no longer converted to ``"\left("``
+      and ``"\right)"`` due to introducing strange spacing issues.
+      See
+      `Spacing around \\left and \\right <https://tex.stackexchange.com/questions/2607/spacing-around-left-and-right>`_.
+    * Previously spaces within the ``sciform`` output were handled
+      inconsistently and occasionally required confusing extra handling.
+      Now any spaces in the input string are directly and explicitly
+      converted into math mode medium spaces: ``"\:"``.
+    * ``"μ"`` is now included in math mode ``\text{}`` environment
+      and converted to ``"\textmu"``.
+
 * **[BREAKING]** Renamed ``fill_char`` to ``left_pad_char``.
   [`#126 <https://github.com/jagerber48/sciform/issues/126>`_]
 * Slimmed down ``[dev]`` optional dependencies and created
