@@ -19,30 +19,31 @@ jobs:
         python-version: ["3.9", "3.10", "3.11", "3.12"]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        cache: 'pip'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install ruff blackdoc pytest pytest-cov
         python -m pip install -e .[dev]
-    - name: Lint/format with ruff
+    - name: Lint/format source code and docs
       run: |
         ruff check .
         ruff format . --check
-    - name: Lint/format docs
+    - name: Test source code and docs
       run: |
-        blackdoc .
-    - name: Test with pytest
-      run: |
-        pytest --cov --doctest-glob="*.rst"
+        coverage run -m unittest
+        coverage report
+        coverage xml
+        python -m sphinx -b doctest docs/source/ docs/build/doctest/
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         flags: ${{ matrix.python-version }}
+        files: coverage.xml
         fail_ci_if_error: true
         verbose: true
