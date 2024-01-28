@@ -37,12 +37,13 @@ jobs:
       run: |
         coverage run -m unittest
         coverage report
+        coverage xml
         python -m sphinx -b doctest docs/source/ docs/build/doctest/
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         flags: ${{ matrix.python-version }}
-        files: .coverage
+        files: coverage.xml
         fail_ci_if_error: true
         verbose: true
