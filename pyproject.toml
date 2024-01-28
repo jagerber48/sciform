@@ -31,7 +31,6 @@ documentation = "https://sciform.readthedocs.io"
 [project.optional-dependencies]
 dev = [
     "ruff",
-    "blackdoc",
     "coverage",
     "sphinx",
     "sphinx-rtd-theme",

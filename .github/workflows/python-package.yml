@@ -33,7 +33,6 @@ jobs:
       run: |
         ruff check .
         ruff format . --check
-        blackdoc . --check
     - name: Test source code and docs
       run: |
         coverage run -m unittest
