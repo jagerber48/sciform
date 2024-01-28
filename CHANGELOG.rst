@@ -45,6 +45,19 @@ Changed
   The former includes development tools, while the latter includes
   the heavy-weight requirements needed to run all the examples,
   including, e.g. ``jupyter``, ``scipy``, etc.
+* Cleaned up and improved github actions for testing and
+  linting/formatting.
+
+    * Use ``unittest`` and ``coverage`` instead of ``pytest``.
+    * The requirements to run the automation match the ``[dev]``
+      optional dependencies.
+    * Cache ``pip`` requirements to avoid unnecessarily downloading
+      dependencies.
+    * Remove a defunct ``blackdoc`` test.
+      Hopefully this can be replaced when ``ruff`` provides
+      functionality for formatting ``.rst`` files.
+
+
 
 Fixed
 ^^^^^
