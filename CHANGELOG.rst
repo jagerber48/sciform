@@ -47,6 +47,7 @@ Changed
   including, e.g. ``jupyter``, ``scipy``, etc.
 * Cleaned up and improved github actions for testing and
   linting/formatting.
+  [`#136 <https://github.com/jagerber48/sciform/issues/136>`_]
 
     * Use ``unittest`` and ``coverage`` instead of ``pytest``.
     * The requirements to run the automation match the ``[dev]``
