@@ -9,9 +9,11 @@ from sciform.global_configuration import (
 )
 from sciform.modes import AutoDigits, AutoExpVal
 from sciform.scinum import SciNum
+from sciform.target_length import format_to_target_length
 
 __all__ = [
     "Formatter",
+    "format_to_target_length",
     "GlobalDefaultsContext",
     "print_global_defaults",
     "reset_global_defaults",
