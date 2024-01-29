@@ -8,13 +8,13 @@ from sciform import Formatter, format_to_target_length, modes
 
 class TestFormatToTargetLength(unittest.TestCase):
     def run_val_cases(
-            self,
-            cases: list[tuple[tuple[float, float | None], str]],
-            *,
-            target_length: int,
-            allowed_exp_modes: Sequence[modes.ExpMode],
-            base_formatter: Formatter | None,
-            ):
+        self,
+        cases: list[tuple[tuple[float, float | None], str]],
+        *,
+        target_length: int,
+        allowed_exp_modes: Sequence[modes.ExpMode],
+        base_formatter: Formatter | None,
+    ):
         for (val, unc), expected_str in cases:
             with self.subTest(
                 val=val,

@@ -9,13 +9,13 @@ from sciform.formatter import Formatter
 
 
 def format_to_target_length(
-        value: Number,
-        uncertainty: Number = None,
-        /,
-        *,
-        target_length: int,
-        allowed_exp_modes: Sequence[modes.ExpMode] = ("fixed_point",),
-        base_formatter: Formatter = None,
+    value: Number,
+    uncertainty: Number = None,
+    /,
+    *,
+    target_length: int,
+    allowed_exp_modes: Sequence[modes.ExpMode] = ("fixed_point",),
+    base_formatter: Formatter = None,
 ) -> str:
     """
     Format a number while adjusting sig_figs so that the result is a target length.
