@@ -77,9 +77,7 @@ available formatting options.
 >>> num = 314159.27
 >>> unc = 1618
 >>> sform = Formatter(
-...     exp_mode="engineering_shifted",
-...     pdg_sig_figs=True,
-...     paren_uncertainty=True
+...     exp_mode="engineering_shifted", pdg_sig_figs=True, paren_uncertainty=True
 ... )
 >>> print(sform(num, unc))
 (0.3142(16))e+06
@@ -115,7 +113,7 @@ has two significant figures.
 The ``()`` indicates that the value/uncertainty pair should be formatted
 using the parentheses uncertainty format.
 
->>> print(f'{SciNum(123):ex-3p}')
+>>> print(f"{SciNum(123):ex-3p}")
 123000 m
 
 In the preceding example the ``e`` indicates that scientific notation
@@ -123,7 +121,7 @@ should be used.
 The ``x-3`` indicates that the exponent will be forced to equal ``-3``.
 Finally the ``p`` indicates that the SI prefix mode should be used.
 
->>> print(f'{SciNum(123): .-1f}')
+>>> print(f"{SciNum(123): .-1f}")
  120
 
 In this example the leading space indicates a leading space should be
@@ -322,13 +320,9 @@ makes this easy.
 >>> import numpy as np
 >>>
 >>> vec_sform = np.vectorize(sform)
->>> arr = np.array([[1e6, 2e6, 3e6],
-...                 [4e6, 5e6, 6e6],
-...                 [7e6, 8e6, 9e6]])
+>>> arr = np.array([[1e6, 2e6, 3e6], [4e6, 5e6, 6e6], [7e6, 8e6, 9e6]])
 >>>
->>> arr_err = np.array([[9e4, 8e4, 7e4],
-...                     [6e4, 5e4, 4e4],
-...                     [3e4, 2e4, 1e4]])
+>>> arr_err = np.array([[9e4, 8e4, 7e4], [6e4, 5e4, 4e4], [3e4, 2e4, 1e4]])
 >>>
 >>> print(vec_sform(arr))
 [['1 M' '2 M' '3 M']

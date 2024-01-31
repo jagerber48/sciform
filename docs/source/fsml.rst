@@ -34,14 +34,14 @@ usage examples.
 
 
 >>> from sciform import SciNum
->>> print(f'{SciNum(123456):!4f}')
+>>> print(f"{SciNum(123456):!4f}")
 123500
 
 In this example ``!4`` indicates the number should be formatted with
 four significant figures and ``f`` indicates the number should be
 formatted in fixed point mode.
 
->>> print(f'{SciNum(12345, 789):!1r}')
+>>> print(f"{SciNum(12345, 789):!1r}")
 (12.3 ± 0.8)e+03
 
 In this example ``!1`` indicates the number will be formatted so that
