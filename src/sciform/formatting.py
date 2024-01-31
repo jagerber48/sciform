@@ -175,6 +175,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         """
         exp_mode = ExpModeEnum.FIXEDPOINT
 
+    # TODO: Fix this comment
     """
     We round twice in case the first rounding changes the digits place
     to which we need to round. E.g. rounding 999.999 ± 123.456 to two
