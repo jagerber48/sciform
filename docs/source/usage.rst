@@ -273,11 +273,7 @@ These conversions can be accessed via the
 >>> print(f"{formatted_str} -> {formatted_str.as_ascii()}")
 (12.345_678 ± 0.000_255)% -> (12.345_678 +/- 0.000_255)%
 
->>> sform = Formatter(
-...     exp_mode="engineering",
-...     exp_format="prefix",
-...     ndigits=4
-... )
+>>> sform = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
 >>> formatted_str = sform(314.159e-6, 2.71828e-6)
 >>> print(f"{formatted_str} -> {formatted_str.as_latex()}")
 (314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
@@ -289,11 +285,7 @@ These conversions can be accessed via the
 The LaTeX enclosing ``"$"`` math environment symbols can be optionally
 stripped:
 
->>> sform = Formatter(
-...     exp_mode="engineering",
-...     exp_format="prefix",
-...     ndigits=4
-... )
+>>> sform = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
 >>> formatted_str = sform(314.159e-6, 2.71828e-6)
 >>> print(f"{formatted_str} -> {formatted_str.as_latex(strip_math_mode=False)}")
 (314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$

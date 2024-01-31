@@ -300,7 +300,7 @@ specified in the extra translations dictionary:
 >>> sform = Formatter(
 ...     exp_mode="scientific",
 ...     exp_format="prefix",
-...     extra_si_prefixes={-2: 'zzz'},
+...     extra_si_prefixes={-2: "zzz"},
 ...     add_c_prefix=True,
 ... )
 >>> print(sform(0.012))
@@ -327,7 +327,7 @@ used.
 ...     exp_format="prefix",
 ...     add_c_prefix=True,
 ... )
->>> with GlobalDefaultsContext(extra_si_prefixes={1: 'zzz'}):
+>>> with GlobalDefaultsContext(extra_si_prefixes={1: "zzz"}):
 ...     print(sform(12.4))
 1.24e+01
 
