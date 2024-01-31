@@ -71,8 +71,6 @@ def format_to_target_length(
 
     input_kwargs = asdict(base_formatter._user_options)  # noqa: SLF001
 
-    best_length = float("inf")
-    best_sig_figs = 1
     for idx, exp_mode in enumerate(allowed_exp_modes):
         num_sig_figs = 1
         while True:
@@ -91,16 +89,12 @@ def format_to_target_length(
             length = len(result)
 
             if length >= target_length:
-                if length <= best_length and num_sig_figs >= best_sig_figs:
-                    # Only include results which are improvements over previous results.
-                    best_length = length
-                    best_sig_figs = num_sig_figs
-                    """
-                    Use -num_sig_figs instead of num_sig_figs as a hack so that sort
-                    prefers more (rather than less) sig figs!
-                    """
-                    result_tuple = (length, -num_sig_figs, idx, result)
-                    result_array.append(result_tuple)
+                """
+                Use -num_sig_figs instead of num_sig_figs as a hack so that sort
+                prefers more (rather than less) sig figs!
+                """
+                result_tuple = (length, -num_sig_figs, idx, result)
+                result_array.append(result_tuple)
                 break
 
             num_sig_figs += 1
