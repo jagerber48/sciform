@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import InitVar, asdict, dataclass
-from typing import get_args
+from typing import Literal, get_args
 
 from sciform import global_options, modes
 from sciform.rendered_options import RenderedOptions
@@ -22,7 +22,7 @@ class UserOptions:
     decimal_separator: modes.DecimalSeparators | None = None
     lower_separator: modes.LowerSeparators | None = None
     sign_mode: modes.SignMode | None = None
-    left_pad_char: modes.LeftPadChar | None = None
+    left_pad_char: modes.LeftPadChar | Literal[0] | None = None
     left_pad_dec_place: int | None = None
     exp_format: modes.ExpFormat | None = None
     extra_si_prefixes: dict[int, str] | None = None
@@ -47,6 +47,8 @@ class UserOptions:
         add_small_si_prefixes: bool,  # noqa: FBT001
         add_ppth_form: bool,  # noqa: FBT001
     ) -> None:
+        if self.left_pad_char == 0:
+            super().__setattr__("left_pad_char", "0")
         self.populate_dicts(
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,

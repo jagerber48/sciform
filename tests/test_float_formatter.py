@@ -70,6 +70,15 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             upper_separator="_",
                             lower_separator="_",
+                            left_pad_char=0,
+                            left_pad_dec_place=14,
+                        ),
+                        "000_000_123_456_789.654_321",
+                    ),
+                    (
+                        Formatter(
+                            upper_separator="_",
+                            lower_separator="_",
                             left_pad_char=" ",
                             left_pad_dec_place=14,
                         ),
@@ -85,6 +94,15 @@ class TestFormatting(unittest.TestCase):
                             upper_separator="_",
                             lower_separator="_",
                             left_pad_char="0",
+                            left_pad_dec_place=14,
+                        ),
+                        "000_000_004_567_899.765_432_1",
+                    ),
+                    (
+                        Formatter(
+                            upper_separator="_",
+                            lower_separator="_",
+                            left_pad_char=0,
                             left_pad_dec_place=14,
                         ),
                         "000_000_004_567_899.765_432_1",
