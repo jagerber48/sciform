@@ -12,7 +12,7 @@ Added
 ^^^^^
 
 * Now integer ``0`` can be passed into ``left_pad_char`` to get the same
-  behavior as ``"0"``.
+  behavior as string ``"0"``.
 
 ----
 
