@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from sciform.formatting import format_num, format_val_unc
 from sciform.output_conversion import convert_sciform_format
@@ -68,7 +68,7 @@ class Formatter:
         add_small_si_prefixes: bool = False,
         add_ppth_form: bool = False,
     ) -> None:
-        r"""
+        """
         Create a new ``Formatter``.
 
         The following checks are performed when creating a new
@@ -242,6 +242,60 @@ class Formatter:
                 rendered_options,
             )
         return FormattedNumber(output)
+
+    def get_input_options_dict(self: UserOptions) -> dict[str, Any]:
+        """
+        Return the input options used to construct the Formatter as a dict.
+
+        This method might be useful to construct new formatters from old
+        ones.
+
+        >>> from sciform import Formatter
+        >>> old_formatter = Formatter(exp_mode="engineering")
+        >>> kwargs = old_formatter.get_input_options_dict()
+        >>> kwargs["ndigits"] = 2
+        >>> new_formatter = Formatter(**kwargs)
+        >>> print(new_formatter.get_input_options_dict())
+        {'exp_mode': 'engineering', 'ndigits': 2}
+        """
+        return self._user_options.get_input_options_dict()
+
+    def get_rendered_options_dict(self: UserOptions) -> dict[str, Any]:
+        """
+        Return the rendered options resulting from the format options as a dict.
+
+        Return the results of combining the global options with the
+        user input options to see explict values for all options that
+        will be used during formatting.
+
+        >>> from sciform import Formatter
+        >>> formatter = Formatter(exp_mode="engineering", ndigits=2)
+        >>> print(formatter.get_rendered_options_dict())
+        {'exp_mode': 'engineering',
+         'exp_val': AutoExpVal,
+         'round_mode': 'sig_fig',
+         'ndigits': 2,
+         'upper_separator': '',
+         'decimal_separator': '.',
+         'lower_separator': '',
+         'sign_mode': '-',
+         'left_pad_char': ' ',
+         'left_pad_dec_place': 0,
+         'exp_format': 'standard',
+         'extra_si_prefixes': {},
+         'extra_iec_prefixes': {},
+         'extra_parts_per_forms': {},
+         'capitalize': False,
+         'superscript': False,
+         'nan_inf_exp': False,
+         'paren_uncertainty': False,
+         'pdg_sig_figs': False,
+         'left_pad_matching': False,
+         'paren_uncertainty_separators': True,
+         'pm_whitespace': True}
+
+        """
+        return self._user_options.get_rendered_options_dict()
 
 
 class FormattedNumber(str):
