@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from sciform.formatting import format_num, format_val_unc
 from sciform.output_conversion import convert_sciform_format
@@ -50,7 +50,7 @@ class Formatter:
         decimal_separator: modes.DecimalSeparators | None = None,
         lower_separator: modes.LowerSeparators | None = None,
         sign_mode: modes.SignMode | None = None,
-        left_pad_char: modes.LeftPadChar | None = None,
+        left_pad_char: modes.LeftPadChar | Literal[0] | None = None,
         left_pad_dec_place: int | None = None,
         exp_format: modes.ExpFormat | None = None,
         extra_si_prefixes: dict[int, str] | None = None,
@@ -121,7 +121,7 @@ class Formatter:
         :type sign_mode: ``Literal['-', '+', ' '] | None``
         :param left_pad_char: Indicate whether to pad with zeros or
           spaces.
-        :type left_pad_char: ``Literal[' ', '0'] | None``
+        :type left_pad_char: ``Literal[' ', '0', 0] | None``
         :param left_pad_dec_place: Positive ``int`` indicating the
           decimal place to which the string will be left padded before
           the sign symbol. 0 corresponds to the ones place, 1
