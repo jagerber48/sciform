@@ -8,7 +8,11 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* There are no unreleased changes.
+Added
+^^^^^
+
+* Now integer ``0`` can be passed into ``left_pad_char`` to get the same
+  behavior as ``"0"``.
 
 ----
 
