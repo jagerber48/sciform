@@ -1,11 +1,13 @@
 """Main formatting functions."""
+from __future__ import annotations
 
 from dataclasses import replace
 from decimal import Decimal
-from typing import cast
+from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 from sciform.format_utils import (
+    Number,
     construct_val_unc_exp_str,
     construct_val_unc_str,
     format_num_by_top_bottom_dig,
@@ -25,10 +27,31 @@ from sciform.modes import (
     RoundModeEnum,
     SignModeEnum,
 )
-from sciform.rendered_options import RenderedOptions
+from sciform.options.conversion import finalize_input_options
+
+if TYPE_CHECKING:
+    from sciform.options.input_options import InputOptions
+    from sciform.options.finalized_options import FinalizedOptions
 
 
-def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
+def format_from_options(
+        value: Number,
+        uncertainty: Number | None = None,
+        /,
+        input_options: InputOptions | None = None,
+) -> str:
+    """Finalize options and select value of value/uncertainty formatter."""
+    options = finalize_input_options(input_options)
+    value = Decimal(str(value))
+
+    if uncertainty is not None:
+        uncertainty = Decimal(str(uncertainty))
+        return format_val_unc(value, uncertainty, options)
+
+    return format_num(value, options)
+
+
+def format_non_finite(num: Decimal, options: FinalizedOptions) -> str:
     """Format non-finite numbers."""
     if num.is_nan():
         num_str = "nan"
@@ -73,7 +96,7 @@ def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
     return result
 
 
-def format_num(num: Decimal, options: RenderedOptions) -> str:
+def format_num(num: Decimal, options: FinalizedOptions) -> str:
     """Format a single number according to input options."""
     if not num.is_finite():
         return format_non_finite(num, options)
@@ -145,7 +168,7 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
     return result
 
 
-def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
+def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str:
     """Format value/uncertainty pair according to input options."""
     exp_mode = options.exp_mode
 

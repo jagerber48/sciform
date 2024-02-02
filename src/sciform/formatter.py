@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-from decimal import Decimal
 from typing import TYPE_CHECKING, Literal
 
-from sciform.formatting import format_num, format_val_unc
+from sciform.formatting import format_from_options
+from sciform.options.input_options import InputOptions
 from sciform.output_conversion import convert_sciform_format
-from sciform.user_options import UserOptions, render_options
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
@@ -64,9 +63,9 @@ class Formatter:
         left_pad_matching: bool | None = None,
         paren_uncertainty_separators: bool | None = None,
         pm_whitespace: bool | None = None,
-        add_c_prefix: bool = None,
-        add_small_si_prefixes: bool = None,
-        add_ppth_form: bool = None,
+        add_c_prefix: bool | None = None,
+        add_small_si_prefixes: bool | None = None,
+        add_ppth_form: bool | None = None,
     ) -> None:
         r"""
         Create a new ``Formatter``.
@@ -190,7 +189,7 @@ class Formatter:
           ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
         :type add_ppth_form: ``bool``
         """
-        self._user_options = UserOptions(
+        self._user_options = InputOptions(
             exp_mode=exp_mode,
             exp_val=exp_val,
             round_mode=round_mode,
@@ -232,16 +231,9 @@ class Formatter:
         :param uncertainty: Optional uncertainty to be formatted.
         :type uncertainty: ``Decimal | float | int | str | None``
         """
-        rendered_options = render_options(self._user_options)
-        if uncertainty is None:
-            output = format_num(Decimal(str(value)), rendered_options)
-        else:
-            output = format_val_unc(
-                Decimal(str(value)),
-                Decimal(str(uncertainty)),
-                rendered_options,
-            )
-        return FormattedNumber(output)
+        return FormattedNumber(
+            format_from_options(value, uncertainty, input_options=self._user_options)
+        )
 
 
 class FormattedNumber(str):

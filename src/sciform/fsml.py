@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from sciform.user_options import UserOptions
+from sciform.options.input_options import InputOptions
 
 pattern = re.compile(
     r"""^
@@ -51,8 +51,8 @@ def parse_exp_mode(
     return exp_mode, capitalize
 
 
-def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
-    """Resolve UserOptions form format specification string."""
+def format_options_from_fmt_spec(fmt_spec: str) -> InputOptions:
+    """Resolve InputOptions form format specification string."""
     match = pattern.match(fmt_spec)
     if match is None:
         msg = f"Invalid format specifier: '{fmt_spec}'"
@@ -101,7 +101,7 @@ def format_options_from_fmt_spec(fmt_spec: str) -> UserOptions:
     else:
         paren_uncertainty = None
 
-    return UserOptions(
+    return InputOptions(
         left_pad_char=left_pad_char,
         sign_mode=sign_mode,
         left_pad_dec_place=left_pad_dec_place,

@@ -4,13 +4,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from sciform import global_options, modes
-from sciform.user_options import UserOptions, render_options
+from sciform.options import global_options
+from sciform.options.input_options import InputOptions
+from sciform.options.conversion import populate_options
+from sciform.options.populated_options import PopulatedOptions
 
 if TYPE_CHECKING:  # pragma: no cover
+    from sciform import modes
     from types import TracebackType
-
-    from sciform.rendered_options import RenderedOptions
 
 
 def print_global_defaults() -> None:
@@ -51,7 +52,7 @@ def set_global_defaults(  # noqa: PLR0913
 
     Accepts the same keyword arguments as :class:`Formatter`.
     """
-    user_options = UserOptions(
+    input_options = InputOptions(
         exp_mode=exp_mode,
         exp_val=exp_val,
         round_mode=round_mode,
@@ -78,12 +79,12 @@ def set_global_defaults(  # noqa: PLR0913
         add_small_si_prefixes=add_small_si_prefixes,
         add_ppth_form=add_ppth_form,
     )
-    set_global_defaults_rendered(render_options(user_options))
+    set_global_defaults_populated(populate_options(input_options))
 
 
-def set_global_defaults_rendered(rendered_options: RenderedOptions) -> None:
-    """Directly set global defaults to input RenderedOptions."""
-    global_options.GLOBAL_DEFAULT_OPTIONS = rendered_options
+def set_global_defaults_populated(populated_options: PopulatedOptions) -> None:
+    """Directly set global defaults to input FinalizedOptions."""
+    global_options.GLOBAL_DEFAULT_OPTIONS = populated_options
 
 
 def reset_global_defaults() -> None:
@@ -129,7 +130,7 @@ class GlobalDefaultsContext:
         add_small_si_prefixes: bool = False,
         add_ppth_form: bool = False,
     ) -> None:
-        user_options = UserOptions(
+        input_options = InputOptions(
             exp_mode=exp_mode,
             exp_val=exp_val,
             round_mode=round_mode,
@@ -156,13 +157,13 @@ class GlobalDefaultsContext:
             add_small_si_prefixes=add_small_si_prefixes,
             add_ppth_form=add_ppth_form,
         )
-        self.rendered_options = render_options(user_options)
+        self.populated_options = populate_options(input_options)
         self.initial_global_defaults = None
 
     def __enter__(self: GlobalDefaultsContext) -> None:
         """Enter the context."""
         self.initial_global_defaults = global_options.GLOBAL_DEFAULT_OPTIONS
-        set_global_defaults_rendered(self.rendered_options)
+        set_global_defaults_populated(self.populated_options)
 
     def __exit__(
         self: GlobalDefaultsContext,
@@ -171,4 +172,4 @@ class GlobalDefaultsContext:
         exc_tb: TracebackType | None,
     ) -> None:
         """Exit the context."""
-        set_global_defaults_rendered(self.initial_global_defaults)
+        set_global_defaults_populated(self.initial_global_defaults)

@@ -1,7 +1,7 @@
 """
 Rendered format options used in sciform backend formatting algorithm.
 
-:class:`UserOptions` are converted into :class:`RenderedOptions`
+:class:`InputOptions` are converted into :class:`FinalizedOptions`
 internally at format time.
 """
 
@@ -12,12 +12,14 @@ from enum import Enum
 from pprint import pformat
 from typing import TYPE_CHECKING, Any
 
+from sciform.options.validation import validate_options
+
 if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
 
 
 @dataclass(frozen=True)
-class RenderedOptions:
+class FinalizedOptions:
     """Rendered options: All options populated and using Enum instead of Literal."""
 
     exp_mode: modes.ExpModeEnum
@@ -43,13 +45,5 @@ class RenderedOptions:
     paren_uncertainty_separators: bool
     pm_whitespace: bool
 
-    def as_dict(self: RenderedOptions) -> dict[str, Any]:
-        """Return a dict representation of the RenderedOptions."""
-        options_dict = asdict(self)
-        for key, option_value in options_dict.items():
-            if isinstance(option_value, Enum):
-                options_dict[key] = option_value.value
-        return options_dict
-
-    def __str__(self: RenderedOptions) -> str:
-        return pformat(self.as_dict(), sort_dicts=False)
+    def __post_init__(self: FinalizedOptions) -> None:
+        validate_options(self)
