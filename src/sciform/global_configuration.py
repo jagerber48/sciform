@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from sciform import global_options, modes
 from sciform.user_options import UserOptions
@@ -13,14 +13,9 @@ if TYPE_CHECKING:  # pragma: no cover
     from sciform.rendered_options import RenderedOptions
 
 
-def get_global_defaults_dict() -> dict[str, Any]:
-    """Return the global default options as a dictionary."""
-    return global_options.GLOBAL_DEFAULT_OPTIONS.get_rendered_options_dict()
-
-
 def print_global_defaults() -> None:
-    """Print the global default options as a dictionary."""
-    print(get_global_defaults_dict())  # noqa: T201
+    """Print current global default formatting options as a dictionary."""
+    print(str(global_options.GLOBAL_DEFAULT_OPTIONS))  # noqa: T201
 
 
 def set_global_defaults(  # noqa: PLR0913

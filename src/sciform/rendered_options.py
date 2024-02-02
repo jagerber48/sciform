@@ -10,7 +10,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from enum import Enum
 from pprint import pformat
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
@@ -43,23 +43,9 @@ class RenderedOptions:
     paren_uncertainty_separators: bool
     pm_whitespace: bool
 
-    def get_rendered_options_dict(self: RenderedOptions) -> dict[str, Any]:
-        """
-        Get a dict representing the values stored in rendered options.
-
-        Any Enum values are converted to their corresponding user input
-        string values. E.g. ``modes.LeftPadCharEnum.SPACE`` is replaced
-        with ``" "`` as the dict value.
-        """
+    def __str__(self: RenderedOptions) -> str:
         options_dict = asdict(self)
         for key, value in options_dict.items():
             if isinstance(value, Enum):
                 options_dict[key] = value.value
-        return OptionsDict(options_dict)
-
-
-class OptionsDict(dict):
-    """Dictionary with a pretty print __str__."""
-
-    def __str__(self: OptionsDict) -> str:
-        return pformat(self, sort_dicts=False)
+        return pformat(options_dict, sort_dicts=False)

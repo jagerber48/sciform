@@ -2,7 +2,7 @@ import unittest
 from contextlib import redirect_stdout
 from io import StringIO
 
-from sciform import AutoExpVal, Formatter, GlobalDefaultsContext, print_global_defaults
+from sciform import GlobalDefaultsContext, print_global_defaults
 
 
 class TestPrint(unittest.TestCase):
@@ -67,39 +67,3 @@ class TestPrint(unittest.TestCase):
             " 'pm_whitespace': True}\n"
         )
         self.assertEqual(actual_printout, expected_printout)
-
-    def test_user_options_dict(self):
-        formatter = Formatter(exp_mode="engineering", ndigits=2)
-        options_dict = formatter.get_input_options_dict()
-        self.assertDictEqual(options_dict, {"exp_mode": "engineering", "ndigits": 2})
-
-    def test_rendered_options_dict(self):
-        formatter = Formatter(exp_mode="engineering", ndigits=2)
-        options_dict = formatter.get_rendered_options_dict()
-        self.assertDictEqual(
-            options_dict,
-            {
-                "exp_mode": "engineering",
-                "exp_val": AutoExpVal,
-                "round_mode": "sig_fig",
-                "ndigits": 2,
-                "upper_separator": "",
-                "decimal_separator": ".",
-                "lower_separator": "",
-                "sign_mode": "-",
-                "left_pad_char": " ",
-                "left_pad_dec_place": 0,
-                "exp_format": "standard",
-                "extra_si_prefixes": {},
-                "extra_iec_prefixes": {},
-                "extra_parts_per_forms": {},
-                "capitalize": False,
-                "superscript": False,
-                "nan_inf_exp": False,
-                "paren_uncertainty": False,
-                "pdg_sig_figs": False,
-                "left_pad_matching": False,
-                "paren_uncertainty_separators": True,
-                "pm_whitespace": True,
-            },
-        )

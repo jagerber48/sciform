@@ -4,10 +4,10 @@
 from __future__ import annotations
 
 from dataclasses import InitVar, asdict, dataclass
-from typing import Any, Literal, get_args
+from typing import Literal, get_args
 
 from sciform import global_options, modes
-from sciform.rendered_options import OptionsDict, RenderedOptions
+from sciform.rendered_options import RenderedOptions
 
 
 @dataclass(frozen=True)
@@ -188,20 +188,3 @@ class UserOptions:
         rendered_options = RenderedOptions(**kwargs)
         self.validate(rendered_options)
         return rendered_options
-
-    def get_input_options_dict(self: UserOptions) -> dict[str, Any]:
-        """
-        Return the input options used to construct the UserOptions as a dict.
-
-        Any unpopulated options (e.g. None values) are excluded as keys.
-        """
-        input_dict = asdict(self)
-        for key in list(input_dict.keys()):
-            if input_dict[key] is None:
-                del input_dict[key]
-
-        return OptionsDict(input_dict)
-
-    def get_rendered_options_dict(self: UserOptions) -> dict[str, Any]:
-        """Return the resulting rendered options as a dict."""
-        return self.render().get_rendered_options_dict()
