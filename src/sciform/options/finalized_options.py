@@ -7,10 +7,8 @@ internally at format time.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
-from enum import Enum
-from pprint import pformat
-from typing import TYPE_CHECKING, Any
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from sciform.options.validation import validate_options
 
