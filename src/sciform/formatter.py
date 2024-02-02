@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Literal
 
 from sciform.formatting import format_num, format_val_unc
 from sciform.output_conversion import convert_sciform_format
-from sciform.user_options import UserOptions
+from sciform.user_options import UserOptions, render_options
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
@@ -64,9 +64,9 @@ class Formatter:
         left_pad_matching: bool | None = None,
         paren_uncertainty_separators: bool | None = None,
         pm_whitespace: bool | None = None,
-        add_c_prefix: bool = False,
-        add_small_si_prefixes: bool = False,
-        add_ppth_form: bool = False,
+        add_c_prefix: bool = None,
+        add_small_si_prefixes: bool = None,
+        add_ppth_form: bool = None,
     ) -> None:
         r"""
         Create a new ``Formatter``.
@@ -232,7 +232,7 @@ class Formatter:
         :param uncertainty: Optional uncertainty to be formatted.
         :type uncertainty: ``Decimal | float | int | str | None``
         """
-        rendered_options = self._user_options.render()
+        rendered_options = render_options(self._user_options)
         if uncertainty is None:
             output = format_num(Decimal(str(value)), rendered_options)
         else:

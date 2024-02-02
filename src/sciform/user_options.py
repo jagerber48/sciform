@@ -3,8 +3,9 @@
 
 from __future__ import annotations
 
-from dataclasses import InitVar, asdict, dataclass
-from typing import Literal, get_args
+from dataclasses import asdict, dataclass
+from pprint import pformat
+from typing import Any, Literal, get_args
 
 from sciform import global_options, modes
 from sciform.rendered_options import RenderedOptions
@@ -37,154 +38,154 @@ class UserOptions:
     paren_uncertainty_separators: bool | None = None
     pm_whitespace: bool | None = None
 
-    add_c_prefix: InitVar[bool] = False
-    add_small_si_prefixes: InitVar[bool] = False
-    add_ppth_form: InitVar[bool] = False
+    add_c_prefix: bool = None
+    add_small_si_prefixes: bool = None
+    add_ppth_form: bool = None
 
-    def __post_init__(
-        self: UserOptions,
-        add_c_prefix: bool,  # noqa: FBT001
-        add_small_si_prefixes: bool,  # noqa: FBT001
-        add_ppth_form: bool,  # noqa: FBT001
-    ) -> None:
-        if self.left_pad_char == 0:
-            super().__setattr__("left_pad_char", "0")
-        self.populate_dicts(
-            add_c_prefix=add_c_prefix,
-            add_small_si_prefixes=add_small_si_prefixes,
-            add_ppth_form=add_ppth_form,
-        )
-        self.validate(self)
+    def __post_init__(self: UserOptions) -> None:
+        validate_options(self)
 
-    def populate_dicts(  # noqa: C901
-        self: UserOptions,
-        *,
-        add_c_prefix: bool,
-        add_small_si_prefixes: bool,
-        add_ppth_form: bool,
-    ) -> None:
-        """Populate extra prefix translations from user input flags."""
-        if add_c_prefix:
-            if self.extra_si_prefixes is None:
-                super().__setattr__("extra_si_prefixes", {})
-            if -2 not in self.extra_si_prefixes:
-                self.extra_si_prefixes[-2] = "c"
+    def as_dict(self: UserOptions) -> dict[str, Any]:
+        """Return a dict representation of the inputs used to construct UserOptions."""
+        options_dict = asdict(self)
+        for key in list(options_dict.keys()):
+            if options_dict[key] is None:
+                del options_dict[key]
+        return options_dict
 
-        if add_small_si_prefixes:
-            if self.extra_si_prefixes is None:
-                super().__setattr__("extra_si_prefixes", {})
-            if -2 not in self.extra_si_prefixes:
-                self.extra_si_prefixes[-2] = "c"
-            if -1 not in self.extra_si_prefixes:
-                self.extra_si_prefixes[-1] = "d"
-            if +1 not in self.extra_si_prefixes:
-                self.extra_si_prefixes[+1] = "da"
-            if +2 not in self.extra_si_prefixes:
-                self.extra_si_prefixes[+2] = "h"
+    def __str__(self: UserOptions) -> str:
+        return pformat(self.as_dict(), sort_dicts=False)
 
-        if add_ppth_form:
-            if self.extra_parts_per_forms is None:
-                super().__setattr__("extra_parts_per_forms", {})
-            if -3 not in self.extra_parts_per_forms:
-                self.extra_parts_per_forms[-3] = "ppth"
 
-    @staticmethod
-    def validate(options: UserOptions | RenderedOptions) -> None:
-        """Validate user inputs."""
+def validate_options(options: UserOptions | RenderedOptions) -> None:
+    """Validate user inputs."""
+    if (
+        options.round_mode == "sig_fig"
+        and isinstance(options.ndigits, int)
+        and options.ndigits < 1
+    ):
+        msg = f"ndigits must be >= 1 for sig fig rounding, not {options.ndigits}."
+        raise ValueError(msg)
+
+    if options.exp_val is not modes.AutoExpVal and options.exp_val is not None:
+        if options.exp_mode in ["fixed_point", "percent"] and options.exp_val != 0:
+            msg = (
+                f"Exponent must must be 0, not exp_val={options.exp_val}, for "
+                f"fixed point and percent exponent modes."
+            )
+            raise ValueError(msg)
         if (
-            options.round_mode == "sig_fig"
-            and isinstance(options.ndigits, int)
-            and options.ndigits < 1
-        ):
-            msg = f"ndigits must be >= 1 for sig fig rounding, not {options.ndigits}."
-            raise ValueError(msg)
-
-        if options.exp_val is not modes.AutoExpVal and options.exp_val is not None:
-            if options.exp_mode in ["fixed_point", "percent"] and options.exp_val != 0:
-                msg = (
-                    f"Exponent must must be 0, not exp_val={options.exp_val}, for "
-                    f"fixed point and percent exponent modes."
-                )
-                raise ValueError(msg)
-            if (
-                options.exp_mode in ["engineering", "engineering_shifted"]
-                and options.exp_val % 3 != 0
-            ):
-                msg = (
-                    f"Exponent must be a multiple of 3, not exp_val={options.exp_val}, "
-                    f"for engineering exponent modes."
-                )
-                raise ValueError(msg)
-            if options.exp_mode == "binary_iec" and options.exp_val % 10 != 0:
-                msg = (
-                    f"Exponent must be a multiple of 10, not "
-                    f"exp_val={options.exp_val}, for binary IEC exponent mode."
-                )
-                raise ValueError(msg)
-
-        UserOptions.validate_separators(options)
-
-    @staticmethod
-    def validate_separators(options: UserOptions | RenderedOptions) -> None:
-        """Validate separator user input."""
-        if options.upper_separator is not None:
-            if options.upper_separator not in get_args(modes.UpperSeparators):
-                msg = (
-                    f"upper_separator must be in "
-                    f"{get_args(modes.UpperSeparators)}, not "
-                    f"{options.upper_separator}."
-                )
-                raise ValueError(msg)
-            if options.upper_separator == options.decimal_separator:
-                msg = (
-                    f"upper_separator and decimal_separator "
-                    f"({options.upper_separator}) cannot be equal."
-                )
-                raise ValueError(msg)
-
-        if options.decimal_separator is not None and (
-            options.decimal_separator not in get_args(modes.DecimalSeparators)
+            options.exp_mode in ["engineering", "engineering_shifted"]
+            and options.exp_val % 3 != 0
         ):
             msg = (
-                f"decimal_separator must be in "
-                f"{get_args(modes.DecimalSeparators)}, not "
-                f"{options.decimal_separator}."
+                f"Exponent must be a multiple of 3, not exp_val={options.exp_val}, "
+                f"for engineering exponent modes."
+            )
+            raise ValueError(msg)
+        if options.exp_mode == "binary_iec" and options.exp_val % 10 != 0:
+            msg = (
+                f"Exponent must be a multiple of 10, not "
+                f"exp_val={options.exp_val}, for binary IEC exponent mode."
             )
             raise ValueError(msg)
 
-        if options.lower_separator is not None and (
-            options.lower_separator not in get_args(modes.LowerSeparators)
-        ):
+    validate_separator_options(options)
+
+
+def validate_separator_options(options: UserOptions | RenderedOptions) -> None:
+    """Validate separator user input."""
+    if options.upper_separator is not None:
+        if options.upper_separator not in get_args(modes.UpperSeparators):
             msg = (
-                f"lower_separator must be in {get_args(modes.LowerSeparators)}, "
-                f"not {options.lower_separator}."
+                f"upper_separator must be in "
+                f"{get_args(modes.UpperSeparators)}, not "
+                f"{options.upper_separator}."
+            )
+            raise ValueError(msg)
+        if options.upper_separator == options.decimal_separator:
+            msg = (
+                f"upper_separator and decimal_separator "
+                f"({options.upper_separator}) cannot be equal."
             )
             raise ValueError(msg)
 
-    def render(self: UserOptions) -> RenderedOptions:
-        """Render UserOptions into RenderedOptions."""
-        key_to_enum_dict = {
-            "exp_mode": modes.ExpModeEnum,
-            "round_mode": modes.RoundModeEnum,
-            "upper_separator": modes.SeparatorEnum,
-            "decimal_separator": modes.SeparatorEnum,
-            "lower_separator": modes.SeparatorEnum,
-            "sign_mode": modes.SignModeEnum,
-            "left_pad_char": modes.LeftPadCharEnum,
-            "exp_format": modes.ExpFormatEnum,
-        }
+    if options.decimal_separator is not None and (
+        options.decimal_separator not in get_args(modes.DecimalSeparators)
+    ):
+        msg = (
+            f"decimal_separator must be in "
+            f"{get_args(modes.DecimalSeparators)}, not "
+            f"{options.decimal_separator}."
+        )
+        raise ValueError(msg)
 
-        global_defaults_dict = asdict(global_options.GLOBAL_DEFAULT_OPTIONS)
-        kwargs = {}
-        for key, value in asdict(self).items():
+    if options.lower_separator is not None and (
+        options.lower_separator not in get_args(modes.LowerSeparators)
+    ):
+        msg = (
+            f"lower_separator must be in {get_args(modes.LowerSeparators)}, "
+            f"not {options.lower_separator}."
+        )
+        raise ValueError(msg)
+
+
+def render_options(user_options: UserOptions) -> RenderedOptions:  # noqa: C901, PLR0912
+    """Render UserOptions into RenderedOptions."""
+    key_to_enum_dict = {
+        "exp_mode": modes.ExpModeEnum,
+        "round_mode": modes.RoundModeEnum,
+        "upper_separator": modes.SeparatorEnum,
+        "decimal_separator": modes.SeparatorEnum,
+        "lower_separator": modes.SeparatorEnum,
+        "sign_mode": modes.SignModeEnum,
+        "left_pad_char": modes.LeftPadCharEnum,
+        "exp_format": modes.ExpFormatEnum,
+    }
+
+    global_options_dict = asdict(global_options.GLOBAL_DEFAULT_OPTIONS)
+    user_options_dict = asdict(user_options)
+    kwargs = {}
+    for key in list(user_options_dict.keys()):
+        if key in ["add_c_prefix", "add_small_si_prefixes", "add_ppth_form"]:
+            continue
+
+        value = user_options_dict[key]
+        if key == "left_pad_char" and value == 0:
+            value = "0"
+
+        if key == "extra_si_prefixes":
+            if user_options.add_c_prefix:
+                if value is None:
+                    value = {}
+                if -2 not in value:
+                    value[-2] = "c"
+            if user_options.add_small_si_prefixes:
+                if value is None:
+                    value = {}
+                if -2 not in value:
+                    value[-2] = "c"
+                if -1 not in value:
+                    value[-1] = "d"
+                if +1 not in value:
+                    value[+1] = "da"
+                if +2 not in value:
+                    value[+2] = "h"
+        if key == "extra_parts_per_forms" and user_options.add_ppth_form:
             if value is None:
-                rendered_value = global_defaults_dict[key]
-            elif isinstance(value, str):
-                enum = key_to_enum_dict[key]
-                rendered_value = modes.mode_str_to_enum(value, enum)
-            else:
-                rendered_value = value
-            kwargs[key] = rendered_value
-        rendered_options = RenderedOptions(**kwargs)
-        self.validate(rendered_options)
-        return rendered_options
+                value = {}
+            if -3 not in value:
+                value[-3] = "ppth"
+
+        if value is None:
+            rendered_value = global_options_dict[key]
+        elif isinstance(value, str):
+            enum = key_to_enum_dict[key]
+            rendered_value = modes.mode_str_to_enum(value, enum)
+        else:
+            rendered_value = value
+
+        kwargs[key] = rendered_value
+    rendered_options = RenderedOptions(**kwargs)
+    validate_options(rendered_options)
+    return rendered_options

@@ -10,7 +10,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from enum import Enum
 from pprint import pformat
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
@@ -43,9 +43,13 @@ class RenderedOptions:
     paren_uncertainty_separators: bool
     pm_whitespace: bool
 
-    def __str__(self: RenderedOptions) -> str:
+    def as_dict(self: RenderedOptions) -> dict[str, Any]:
+        """Return a dict representation of the RenderedOptions."""
         options_dict = asdict(self)
-        for key, value in options_dict.items():
-            if isinstance(value, Enum):
-                options_dict[key] = value.value
-        return pformat(options_dict, sort_dicts=False)
+        for key, option_value in options_dict.items():
+            if isinstance(option_value, Enum):
+                options_dict[key] = option_value.value
+        return options_dict
+
+    def __str__(self: RenderedOptions) -> str:
+        return pformat(self.as_dict(), sort_dicts=False)

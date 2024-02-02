@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from sciform.formatting import format_num, format_val_unc
 from sciform.fsml import format_options_from_fmt_spec
+from sciform.user_options import render_options
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.format_utils import Number
@@ -47,7 +48,7 @@ class SciNum:
 
     def __format__(self: SciNum, fmt: str) -> str:
         user_options = format_options_from_fmt_spec(fmt)
-        rendered_options = user_options.render()
+        rendered_options = render_options(user_options)
         if self.uncertainty is not None:
             return format_val_unc(self.value, self.uncertainty, rendered_options)
         return format_num(self.value, rendered_options)

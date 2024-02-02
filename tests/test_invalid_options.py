@@ -12,7 +12,7 @@ from sciform.format_utils import (
 )
 from sciform.formatting import format_non_finite
 from sciform.output_conversion import _make_exp_str, convert_sciform_format
-from sciform.user_options import UserOptions
+from sciform.user_options import UserOptions, render_options
 
 
 class TestInvalidOptions(unittest.TestCase):
@@ -154,7 +154,7 @@ class TestInvalidOptions(unittest.TestCase):
             ValueError,
             format_non_finite,
             Decimal(1.0),
-            UserOptions().render(),
+            render_options(UserOptions()),
         )
 
     def test_get_top_digit_infinite(self):

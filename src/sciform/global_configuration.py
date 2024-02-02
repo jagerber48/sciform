@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from sciform import global_options, modes
-from sciform.user_options import UserOptions
+from sciform.user_options import UserOptions, render_options
 
 if TYPE_CHECKING:  # pragma: no cover
     from types import TracebackType
@@ -78,7 +78,7 @@ def set_global_defaults(  # noqa: PLR0913
         add_small_si_prefixes=add_small_si_prefixes,
         add_ppth_form=add_ppth_form,
     )
-    set_global_defaults_rendered(user_options.render())
+    set_global_defaults_rendered(render_options(user_options))
 
 
 def set_global_defaults_rendered(rendered_options: RenderedOptions) -> None:
@@ -156,7 +156,7 @@ class GlobalDefaultsContext:
             add_small_si_prefixes=add_small_si_prefixes,
             add_ppth_form=add_ppth_form,
         )
-        self.rendered_options = user_options.render()
+        self.rendered_options = render_options(user_options)
         self.initial_global_defaults = None
 
     def __enter__(self: GlobalDefaultsContext) -> None:
