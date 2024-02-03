@@ -46,6 +46,7 @@ Added
   ``as_dict()`` methods.
 * Now integer ``0`` can be passed into ``left_pad_char`` to get the same
   behavior as string ``"0"``.
+* Added tests for docstrings.
 
 Removed
 ^^^^^^^
