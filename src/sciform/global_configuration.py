@@ -15,12 +15,12 @@ if TYPE_CHECKING:  # pragma: no cover
     from sciform.options.populated_options import PopulatedOptions
 
 
-def print_global_defaults() -> None:
+def get_global_options() -> PopulatedOptions:
     """Print current global default formatting options as a dictionary."""
-    print(str(global_options.GLOBAL_DEFAULT_OPTIONS))  # noqa: T201
+    return global_options.GLOBAL_DEFAULT_OPTIONS
 
 
-def set_global_defaults(  # noqa: PLR0913
+def set_global_options(  # noqa: PLR0913
     *,
     exp_mode: modes.ExpMode | None = None,
     exp_val: int | type(modes.AutoExpVal) | None = None,
@@ -80,20 +80,20 @@ def set_global_defaults(  # noqa: PLR0913
         add_small_si_prefixes=add_small_si_prefixes,
         add_ppth_form=add_ppth_form,
     )
-    set_global_defaults_populated(populate_options(input_options))
+    set_global_options_populated(populate_options(input_options))
 
 
-def set_global_defaults_populated(populated_options: PopulatedOptions) -> None:
+def set_global_options_populated(populated_options: PopulatedOptions) -> None:
     """Directly set global defaults to input FinalizedOptions."""
     global_options.GLOBAL_DEFAULT_OPTIONS = populated_options
 
 
-def reset_global_defaults() -> None:
+def reset_global_options() -> None:
     """Reset global default options to :mod:`sciform` package defaults."""
     global_options.GLOBAL_DEFAULT_OPTIONS = global_options.PKG_DEFAULT_OPTIONS
 
 
-class GlobalDefaultsContext:
+class GlobalOptionsContext:
     """
     Temporarily update global default options.
 
@@ -103,7 +103,7 @@ class GlobalDefaultsContext:
     """
 
     def __init__(  # noqa: PLR0913
-        self: GlobalDefaultsContext,
+        self: GlobalOptionsContext,
         *,
         exp_mode: modes.ExpMode | None = None,
         exp_val: int | type(modes.AutoExpVal) | None = None,
@@ -161,16 +161,16 @@ class GlobalDefaultsContext:
         self.populated_options = populate_options(input_options)
         self.initial_global_defaults = None
 
-    def __enter__(self: GlobalDefaultsContext) -> None:
+    def __enter__(self: GlobalOptionsContext) -> None:
         """Enter the context."""
-        self.initial_global_defaults = global_options.GLOBAL_DEFAULT_OPTIONS
-        set_global_defaults_populated(self.populated_options)
+        self.initial_global_defaults = get_global_options()
+        set_global_options_populated(self.populated_options)
 
     def __exit__(
-        self: GlobalDefaultsContext,
+        self: GlobalOptionsContext,
         exc_type: type[BaseException] | None,
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
         """Exit the context."""
-        set_global_defaults_populated(self.initial_global_defaults)
+        set_global_options_populated(self.initial_global_defaults)

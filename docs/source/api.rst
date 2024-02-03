@@ -25,13 +25,13 @@ Auto Options
 Global Configuration
 ====================
 
-.. autofunction:: print_global_defaults()
+.. autofunction:: get_global_options()
 
-.. autofunction:: set_global_defaults()
+.. autofunction:: set_global_options()
 
-.. autofunction:: reset_global_defaults()
+.. autofunction:: reset_global_options()
 
-.. autoclass:: GlobalDefaultsContext()
+.. autoclass:: GlobalOptionsContext()
 
 Output Conversion
 =================

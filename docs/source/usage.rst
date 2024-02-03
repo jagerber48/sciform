@@ -117,11 +117,11 @@ In these cases, the unspecified options resolve their values from the
 global default settings at format time.
 
 The global default settings can be viewed using
-:func:`print_global_defaults()` (the settings shown here are the
+:func:`get_global_options()` (the settings shown here are the
 package default settings):
 
->>> from sciform import print_global_defaults
->>> print_global_defaults()
+>>> from sciform import get_global_options
+>>> print(get_global_options())
 {'exp_mode': 'fixed_point',
  'exp_val': AutoExpVal,
  'round_mode': 'sig_fig',
@@ -146,19 +146,19 @@ package default settings):
  'pm_whitespace': True}
 
 The global default settings can be modified using the
-:func:`set_global_defaults()` function.
+:func:`set_global_options()` function.
 Any options passed will overwrite the corresponding options in the
 current global default settings and any unfilled options will remain
 unchanged.
 
->>> from sciform import set_global_defaults
->>> set_global_defaults(
+>>> from sciform import set_global_options
+>>> set_global_options(
 ...     left_pad_char="0",
 ...     exp_mode="engineering_shifted",
 ...     ndigits=4,
 ...     decimal_separator=",",
 ... )
->>> print_global_defaults()
+>>> print(get_global_options())
 {'exp_mode': 'engineering_shifted',
  'exp_val': AutoExpVal,
  'round_mode': 'sig_fig',
@@ -183,25 +183,25 @@ unchanged.
  'pm_whitespace': True}
 
 The global default settings can be reset to the :mod:`sciform` defaults
-using :func:`reset_global_defaults`.
+using :func:`reset_global_options`.
 
->>> from sciform import reset_global_defaults
->>> reset_global_defaults()
+>>> from sciform import reset_global_options
+>>> reset_global_options()
 
 The global default settings can be temporarily modified using the
-:class:`GlobalDefaultsContext` context manager.
+:class:`GlobalOptionsContext` context manager.
 The context manager is configured using the same options as
 :class:`Formatter`.
-Within the context of :class:`GlobalDefaultsContext` manager, the
+Within the context of :class:`GlobalOptionsContext` manager, the
 global defaults take on the specified input settings, but when the
 context is exited, the global default settings revert to their previous
 values.
 
->>> from sciform import GlobalDefaultsContext, SciNum
+>>> from sciform import GlobalOptionsContext, SciNum
 >>> snum = SciNum(0.0123)
 >>> print(f"{snum:.2ep}")
 1.23e-02
->>> with GlobalDefaultsContext(add_c_prefix=True):
+>>> with GlobalOptionsContext(add_c_prefix=True):
 ...     print(f"{snum:.2ep}")
 ...
 1.23 c

@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import GlobalDefaultsContext, SciNum
+from sciform import GlobalOptionsContext, SciNum
 
 ValUncFSMLCases = list[tuple[tuple[float, float], list[tuple[str, str]]]]
 NAN = float("nan")
@@ -347,7 +347,7 @@ class TestFormatting(unittest.TestCase):
                 ],
             ),
         ]
-        with GlobalDefaultsContext(nan_inf_exp=True):
+        with GlobalOptionsContext(nan_inf_exp=True):
             self.run_val_unc_fsml_cases(cases_list)
 
     def test_capitalization(self):
@@ -375,7 +375,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        with GlobalDefaultsContext(nan_inf_exp=True):
+        with GlobalOptionsContext(nan_inf_exp=True):
             self.run_val_unc_fsml_cases(cases_list)
 
     def test_rounding(self):

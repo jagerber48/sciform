@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import GlobalDefaultsContext, SciNum
+from sciform import GlobalOptionsContext, SciNum
 
 FloatFSMLCases = list[tuple[float, list[tuple[str, str]]]]
 
@@ -502,7 +502,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        with GlobalDefaultsContext(nan_inf_exp=True):
+        with GlobalOptionsContext(nan_inf_exp=True):
             self.run_float_fsml_cases(cases_list)
 
     def test_signs(self):

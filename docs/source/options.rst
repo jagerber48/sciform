@@ -313,13 +313,13 @@ e.g. ``extra_si_prefixes`` or with a helper like
 ``add_small_si_prefixes`` then no global extra translations will be
 used.
 
->>> from sciform import GlobalDefaultsContext
+>>> from sciform import GlobalOptionsContext
 >>> sform = Formatter(
 ...     exp_mode="scientific",
 ...     exp_format="prefix",
 ...     extra_si_prefixes={-4: "zzz"},
 ... )
->>> with GlobalDefaultsContext(add_c_prefix=True):
+>>> with GlobalOptionsContext(add_c_prefix=True):
 ...     print(sform(0.012))
 1.2e-02
 >>> sform = Formatter(
@@ -327,7 +327,7 @@ used.
 ...     exp_format="prefix",
 ...     add_c_prefix=True,
 ... )
->>> with GlobalDefaultsContext(extra_si_prefixes={1: "zzz"}):
+>>> with GlobalOptionsContext(extra_si_prefixes={1: "zzz"}):
 ...     print(sform(12.4))
 1.24e+01
 

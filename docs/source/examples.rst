@@ -139,17 +139,17 @@ available string formatting options.
 Note that many options are not available through the :ref:`fsml`, so
 these options must be selected by configuring the global default options
 during formatting.
-Here this is done using the :class:`GlobalDefaultsContext` context
-manager, but this could have been done using :func:`set_global_defaults`
+Here this is done using the :class:`GlobalOptionsContext` context
+manager, but this could have been done using :func:`set_global_options`
 instead.
 
->>> from sciform import SciNum, GlobalDefaultsContext
+>>> from sciform import SciNum, GlobalOptionsContext
 >>> snum = SciNum(12345.54321)
 >>> print(f"{snum:!4e}")
 1.235e+04
 >>> print(f"{snum: .10r}")
  12.3455432100e+03
->>> with GlobalDefaultsContext(
+>>> with GlobalOptionsContext(
 ...     upper_separator=" ",
 ...     decimal_separator=",",
 ...     lower_separator="_",
@@ -158,15 +158,15 @@ instead.
 +12 345,543_21
 
 >>> snum = SciNum(0.076543)
->>> with GlobalDefaultsContext(exp_format="parts_per", add_ppth_form=True):
+>>> with GlobalOptionsContext(exp_format="parts_per", add_ppth_form=True):
 ...     print(f"{snum:ex-3}")
 ...
 76.543 ppth
->>> with GlobalDefaultsContext(exp_format="prefix", add_c_prefix=True):
+>>> with GlobalOptionsContext(exp_format="prefix", add_c_prefix=True):
 ...     print(f"{snum:ex-2}")
 ...
 7.6543 c
->>> with GlobalDefaultsContext(exp_mode="scientific", exp_val=-6, exp_format="prefix"):
+>>> with GlobalOptionsContext(exp_mode="scientific", exp_val=-6, exp_format="prefix"):
 ...     print(f"{snum:ex-6}")
 ...
 76543 μ
@@ -176,13 +176,13 @@ instead.
 >>> num_unc = SciNum(3141592.7, 1618)
 >>> print(f"{num_unc}")
 3141593 ± 1618
->>> with GlobalDefaultsContext(pdg_sig_figs=True, pm_whitespace=False):
+>>> with GlobalOptionsContext(pdg_sig_figs=True, pm_whitespace=False):
 ...     print(f"{num_unc:rp}")
 ...
 (3.1416±0.0016) M
 
 >>> num_unc = SciNum(314159.27, 1618)
->>> with GlobalDefaultsContext(pdg_sig_figs=True):
+>>> with GlobalOptionsContext(pdg_sig_figs=True):
 ...     print(f"{num_unc:#r()}")
 ...
 (0.3142(16))e+06

@@ -2,20 +2,20 @@
 
 from sciform.formatter import Formatter
 from sciform.global_configuration import (
-    GlobalDefaultsContext,
-    print_global_defaults,
-    reset_global_defaults,
-    set_global_defaults,
+    GlobalOptionsContext,
+    get_global_options,
+    reset_global_options,
+    set_global_options,
 )
 from sciform.modes import AutoDigits, AutoExpVal
 from sciform.scinum import SciNum
 
 __all__ = [
     "Formatter",
-    "GlobalDefaultsContext",
-    "print_global_defaults",
-    "reset_global_defaults",
-    "set_global_defaults",
+    "GlobalOptionsContext",
+    "get_global_options",
+    "reset_global_options",
+    "set_global_options",
     "AutoDigits",
     "AutoExpVal",
     "SciNum",

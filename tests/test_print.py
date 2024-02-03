@@ -2,13 +2,13 @@ import unittest
 from contextlib import redirect_stdout
 from io import StringIO
 
-from sciform import GlobalDefaultsContext, print_global_defaults
+from sciform import GlobalOptionsContext, get_global_options
 
 
 class TestPrint(unittest.TestCase):
-    def test_print_global_defaults(self):
+    def test_get_global_options(self):
         with redirect_stdout(StringIO()) as sout:
-            print_global_defaults()
+            print(get_global_options())
         actual_printout = sout.getvalue()
         expected_printout = (
             "{'exp_mode': 'fixed_point',\n"
@@ -38,8 +38,8 @@ class TestPrint(unittest.TestCase):
 
     def test_unrendered_options_repr(self):
         with redirect_stdout(StringIO()) as sout:  # noqa: SIM117
-            with GlobalDefaultsContext(left_pad_dec_place=3, capitalize=True):
-                print_global_defaults()
+            with GlobalOptionsContext(left_pad_dec_place=3, capitalize=True):
+                print(get_global_options())
 
         actual_printout = sout.getvalue()
         expected_printout = (

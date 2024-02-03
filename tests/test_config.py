@@ -2,26 +2,26 @@ import unittest
 
 from sciform import (
     Formatter,
-    GlobalDefaultsContext,
+    GlobalOptionsContext,
     SciNum,
-    reset_global_defaults,
-    set_global_defaults,
+    reset_global_options,
+    set_global_options,
 )
 
 
 class TestConfig(unittest.TestCase):
-    def test_set_reset_global_defaults(self):
+    def test_set_reset_global_options(self):
         num = SciNum(0.0005632)
         self.assertEqual(f"{num}", "0.0005632")
-        set_global_defaults(exp_mode="engineering_shifted", capitalize=True)
+        set_global_options(exp_mode="engineering_shifted", capitalize=True)
         self.assertEqual(f"{num}", "0.5632E-03")
-        reset_global_defaults()
+        reset_global_options()
         self.assertEqual(f"{num}", "0.0005632")
 
     def test_global_defaults_context(self):
         num = SciNum(123.456)
         self.assertEqual(f"{num}", "123.456")
-        with GlobalDefaultsContext(
+        with GlobalOptionsContext(
             sign_mode="+",
             exp_mode="scientific",
             round_mode="sig_fig",
@@ -35,7 +35,7 @@ class TestConfig(unittest.TestCase):
         num = SciNum(123.456)
         fmt_spec = "ex-2p"
         self.assertEqual(f"{num:{fmt_spec}}", "12345.6e-02")
-        with GlobalDefaultsContext(add_c_prefix=True):
+        with GlobalOptionsContext(add_c_prefix=True):
             self.assertEqual(f"{num:{fmt_spec}}", "12345.6 c")
         self.assertEqual(f"{num:{fmt_spec}}", "12345.6e-02")
 
@@ -49,7 +49,7 @@ class TestConfig(unittest.TestCase):
             +2: "1.23456 h",
         }
 
-        with GlobalDefaultsContext(add_small_si_prefixes=True):
+        with GlobalOptionsContext(add_small_si_prefixes=True):
             for exp, expected_num_str in cases_dict.items():
                 num_str = f"{num:ex{exp:+}p}"
                 self.assertEqual(num_str, expected_num_str)
@@ -58,7 +58,7 @@ class TestConfig(unittest.TestCase):
         num = SciNum(1024)
         fmt_spec = "bp"
         self.assertEqual(f"{num:{fmt_spec}}", "1 Ki")
-        with GlobalDefaultsContext(extra_iec_prefixes={10: "KiB"}):
+        with GlobalOptionsContext(extra_iec_prefixes={10: "KiB"}):
             self.assertEqual(f"{num:{fmt_spec}}", "1 KiB")
         self.assertEqual(f"{num:{fmt_spec}}", "1 Ki")
 
@@ -69,7 +69,7 @@ class TestConfig(unittest.TestCase):
             exp_format="parts_per",
         )
         self.assertEqual(formatter(num), "2.4e-03")
-        with GlobalDefaultsContext(add_ppth_form=True):
+        with GlobalOptionsContext(add_ppth_form=True):
             self.assertEqual(formatter(num), "2.4 ppth")
         self.assertEqual(formatter(num), "2.4e-03")
 
@@ -88,5 +88,5 @@ class TestConfig(unittest.TestCase):
             exp_format="prefix",
             extra_si_prefixes={-4: "zzz"},
         )
-        with GlobalDefaultsContext(add_c_prefix=True):
+        with GlobalOptionsContext(add_c_prefix=True):
             self.assertEqual(sform(0.012), "1.2e-02")
