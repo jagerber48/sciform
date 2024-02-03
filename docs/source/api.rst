@@ -36,6 +36,6 @@ Global Configuration
 Output Conversion
 =================
 
-.. autoclass:: sciform.formatter.FormattedNumber
+.. autoclass:: sciform.formatting.FormattedNumber
    :members:
    :private-members:
