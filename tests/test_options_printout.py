@@ -13,10 +13,12 @@ class TestOptionsPrintOut(unittest.TestCase):
         )
         input_options_str = str(formatter.input_options)
         expected_str = (
-            "{'exp_mode': 'engineering',\n"
+            "InputOptions(\n"
+            " 'exp_mode': 'engineering',\n"
             " 'ndigits': 10,\n"
             " 'left_pad_char': 0,\n"
-            " 'add_c_prefix': True}"
+            " 'add_c_prefix': True,\n"
+            ")"
         )
         self.assertEqual(input_options_str, expected_str)
 
@@ -29,7 +31,8 @@ class TestOptionsPrintOut(unittest.TestCase):
         )
         input_options_str = str(formatter.populated_options)
         expected_str = (
-            "{'exp_mode': 'engineering',\n"
+            "PopulatedOptions(\n"
+            " 'exp_mode': 'engineering',\n"
             " 'exp_val': AutoExpVal,\n"
             " 'round_mode': 'sig_fig',\n"
             " 'ndigits': 10,\n"
@@ -50,14 +53,16 @@ class TestOptionsPrintOut(unittest.TestCase):
             " 'pdg_sig_figs': False,\n"
             " 'left_pad_matching': False,\n"
             " 'paren_uncertainty_separators': True,\n"
-            " 'pm_whitespace': True}"
+            " 'pm_whitespace': True,\n"
+            ")"
         )
         self.assertEqual(input_options_str, expected_str)
 
     def test_get_global_options(self):
         actual_string = str(get_global_options())
         expected_string = (
-            "{'exp_mode': 'fixed_point',\n"
+            "PopulatedOptions(\n"
+            " 'exp_mode': 'fixed_point',\n"
             " 'exp_val': AutoExpVal,\n"
             " 'round_mode': 'sig_fig',\n"
             " 'ndigits': AutoDigits,\n"
@@ -78,7 +83,8 @@ class TestOptionsPrintOut(unittest.TestCase):
             " 'pdg_sig_figs': False,\n"
             " 'left_pad_matching': False,\n"
             " 'paren_uncertainty_separators': True,\n"
-            " 'pm_whitespace': True}"
+            " 'pm_whitespace': True,\n"
+            ")"
         )
         self.assertEqual(actual_string, expected_string)
 
@@ -86,7 +92,8 @@ class TestOptionsPrintOut(unittest.TestCase):
         with GlobalOptionsContext(left_pad_dec_place=3, capitalize=True):
             actual_str = str(get_global_options())
         expected_str = (
-            "{'exp_mode': 'fixed_point',\n"
+            "PopulatedOptions(\n"
+            " 'exp_mode': 'fixed_point',\n"
             " 'exp_val': AutoExpVal,\n"
             " 'round_mode': 'sig_fig',\n"
             " 'ndigits': AutoDigits,\n"
@@ -107,6 +114,7 @@ class TestOptionsPrintOut(unittest.TestCase):
             " 'pdg_sig_figs': False,\n"
             " 'left_pad_matching': False,\n"
             " 'paren_uncertainty_separators': True,\n"
-            " 'pm_whitespace': True}"
+            " 'pm_whitespace': True,\n"
+            ")"
         )
         self.assertEqual(actual_str, expected_str)

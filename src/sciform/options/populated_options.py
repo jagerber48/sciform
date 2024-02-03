@@ -48,4 +48,7 @@ class PopulatedOptions:
         return asdict(self)
 
     def __str__(self: PopulatedOptions) -> str:
-        return pformat(self.as_dict(), sort_dicts=False)
+        options_str = pformat(self.as_dict(), width=-1, sort_dicts=False)
+        options_str = options_str.lstrip("{").rstrip("}")
+        options_str = f"PopulatedOptions(\n {options_str},\n)"
+        return options_str

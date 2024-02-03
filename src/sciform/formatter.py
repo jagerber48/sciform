@@ -16,28 +16,117 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class Formatter:
-    """
-    Class to format numbers and pairs of numbers into strings.
+    r"""
+    Class to format value and value/uncertainty pairs.
 
-    :class:`Formatter` is used to convert numbers and pairs of numbers
-    into formatted strings according to a variety of formatting options.
-    See :ref:`formatting_options` for more details on the available
-    options. Any options which are unpopulated (have the value ``None``)
-    will be populated at format time by the corresponding values in the
-    globally configured default options. See :ref:`global_config` for
-    details about how to view and modify the global options.
+    :class:`Formatter` is used to convert value and value/uncertainty
+    pairs into formatted strings according to a variety of formatting
+    options. See :ref:`formatting_options` for more details on the
+    available options. Any options which are not populated (not passed
+    in or passed in the ``None`` value) will be populated at format time
+    by the corresponding values in the globally configured default
+    options. See :ref:`global_config` for details about how to view and
+    modify the global options. The user supplied options cannot be
+    updated after the :class:`Formatter` is constructed.
+
+    After initialization, the :class:`Formatter` is used by passing in
+    a value into the :class:`Formatter`.
 
     >>> from sciform import Formatter
-    >>> sform = Formatter(exp_mode="engineering", round_mode="sig_fig", ndigits=4)
-    >>> print(sform(12345.678))
+    >>> formatter = Formatter(exp_mode="engineering", round_mode="sig_fig", ndigits=4)
+    >>> print(formatter(12345.678))
     12.35e+03
 
-    The Formatter can be called with two aguments for value/uncertainty
-    formatting
+    A value/uncertainty pair can also be passed into the
+    :class:`Formatter`.
 
-    >>> sform = Formatter(exp_mode="engineering", round_mode="sig_fig", ndigits=2)
-    >>> print(sform(12345.678, 3.4))
-    (12.3457 ± 0.0034)e+03
+    >>> formatter = Formatter(
+    ...     exp_mode="engineering",
+    ...     round_mode="sig_fig",
+    ...     ndigits=2,
+    ...     superscript=True,
+    ... )
+    >>> formatted = formatter(12345.678, 3.4)
+    >>> print(formatted)
+    (12.3457 ± 0.0034)×10³
+
+    The returned object behaves like a ``str``, but is, in fact, a
+    :class:`FormattedNumber` instance. The :class:`FormattedNumber` is
+    a subclass of ``str`` but provides methods for post-conversion into
+    LaTeX, HTML, and ASCII formats.
+
+    >>> print(formatted.as_latex())
+    $(12.3457\:\pm\:0.0034)\times10^{3}$
+    >>> print(formatted.as_html())
+    (12.3457 ± 0.0034)×10<sup>3</sup>
+    >>> print(formatted.as_ascii())
+    (12.3457 +/- 0.0034)e+03
+
+    The formatting options input by the user can be checked by
+    inspecting the :attr:`input_options` property
+
+    >>> print(formatter.input_options)
+    InputOptions(
+     'exp_mode': 'engineering',
+     'round_mode': 'sig_fig',
+     'ndigits': 2,
+     'superscript': True,
+    )
+
+    Only explicitly populated options appear in the string printout.
+    However, populated and unpopulated parameters can be inspected by
+    direct attribute access. Unpopulated parameters are ``None``-valued.
+
+    >>> print(formatter.input_options.round_mode)
+    sig_fig
+    >>> print(formatter.input_options.exp_format)
+    None
+
+    The :meth:`InputOptions.as_dict` method returns a dictionary of
+    input options that can be passed back into a :class:`Formatter`
+    constructor as ``**kwargs``, possibly after modification. Only
+    explicitly populated options are included in this dictionary.
+
+    >>> print(formatter.input_options.as_dict())
+    {'exp_mode': 'engineering', 'round_mode': 'sig_fig', 'ndigits': 2, 'superscript': True}
+
+    Likewise, the result of populating the options with the global
+    options can be previewed by inspecting the :attr:`populated_options`
+    property.
+
+    >>> print(formatter.populated_options)
+    PopulatedOptions(
+     'exp_mode': 'engineering',
+     'exp_val': AutoExpVal,
+     'round_mode': 'sig_fig',
+     'ndigits': 2,
+     'upper_separator': '',
+     'decimal_separator': '.',
+     'lower_separator': '',
+     'sign_mode': '-',
+     'left_pad_char': ' ',
+     'left_pad_dec_place': 0,
+     'exp_format': 'standard',
+     'extra_si_prefixes': {},
+     'extra_iec_prefixes': {},
+     'extra_parts_per_forms': {},
+     'capitalize': False,
+     'superscript': True,
+     'nan_inf_exp': False,
+     'paren_uncertainty': False,
+     'pdg_sig_figs': False,
+     'left_pad_matching': False,
+     'paren_uncertainty_separators': True,
+     'pm_whitespace': True,
+    )
+    >>> print(formatter.populated_options.exp_format)
+    standard
+
+    The :class:`PopulatedOptions` class also provides a
+    :class:`PopulatedOptions.as_dict` method which can be used to
+    construct ``**kwargs`` to pass into new :class:`Formatter`
+    instances.
+
     """
 
     def __init__(  # noqa: PLR0913
