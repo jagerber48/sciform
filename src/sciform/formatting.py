@@ -318,15 +318,17 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
 
 class FormattedNumber(str):
     """
-    Representation (typically string) of a formatted number.
+    Representation of a formatted value of value/uncertainty pair.
 
-    The ``FormattedNumber`` class is returned by ``sciform`` formatting
-    methods. In most cases it behaves like a regular python string, but
-    it provides the possibility for post-converting the string to
-    various other formats such as latex or html. This allows the
+    The :class:`FormattedNumber` class is returned by ``sciform``
+    formatting methods. In most cases it behaves like a regular python
+    string, but it provides functionality for post-converting the string
+    to various other formats such as latex or html. This allows the
     formatted number to be displayed in a range of contexts other than
     e.g. text terminals.
 
+    The :class:`FormattedNumber` class should never be instantiated
+    directly.
     """
 
     __slots__ = ()
