@@ -224,11 +224,11 @@ Output Conversion
 Typically the output of the :class:`Formatter` is used as a regular
 python string.
 However, the :class:`Formatter` actually returns a
-:class:`FormattedNumber <formatting.FormattedNumber>` instance.
-The :class:`FormattedNumber <formatting.FormattedNumber>` class
+:class:`FormattedNumber` instance.
+The :class:`FormattedNumber` class
 subclasses ``str`` and in many cases is used like a normal python
 string.
-However, the :class:`FormattedNumber <formatting.FormattedNumber>` class
+However, the :class:`FormattedNumber` class
 exposes methods to convert the standard string representation into
 LaTex, HTML, or ASCII representations.
 The LaTeX and HTML representations may be useful when :mod:`sciform`
@@ -242,10 +242,10 @@ being used in contexts in which only ASCII, and not Unicode, text is
 supported or preferred.
 
 These conversions can be accessed via the
-:meth:`as_latex() <formatting.FormattedNumber.as_latex>`,
-:meth:`as_html() <formatting.FormattedNumber.as_html>`, and
-:meth:`as_ascii() <formatting.FormattedNumber.as_ascii>` methods on the
-:class:`FormattedNumber <formatting.FormattedNumber>` class.
+:meth:`FormattedNumber.as_latex`,
+:meth:`FormattedNumber.as_html`, and
+:meth:`FormattedNumber.as_ascii` methods on the
+:class:`FormattedNumber` class.
 
 >>> sform = Formatter(
 ...     exp_mode="scientific",
@@ -293,12 +293,12 @@ stripped:
 (314.159 ± 2.718) μ -> (314.159\:\pm\:2.718)\:\text{\textmu}
 
 In addition to exposing
-:meth:`as_latex() <formatting.FormattedNumber.as_latex>` and
-:meth:`as_html() <formatting.FormattedNumber.as_html>`,
-the :class:`FormattedNumber <formatting.FormattedNumber>` class defines
+:meth:`FormattedNumber.as_latex` and
+:meth:`FormattedNumber.as_html`,
+the :class:`FormattedNumber` class defines
 the aliases
-:meth:`_repr_latex_() <formatting.FormattedNumber._repr_latex_>` and
-:meth:`_repr_html_() <formatting.FormattedNumber._repr_html_>`.
+:meth:`FormattedNumber._repr_latex_` and
+:meth:`FormattedNumber._repr_html_`.
 The
 `IPython display functions <https://ipython.readthedocs.io/en/stable/api/generated/IPython.display.html#functions>`_
 looks for these methods, and, if available, will use them to display
