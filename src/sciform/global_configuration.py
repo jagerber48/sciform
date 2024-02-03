@@ -16,7 +16,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 def get_global_options() -> PopulatedOptions:
-    """Print current global default formatting options as a dictionary."""
+    """Return the current global options as a :class:`PopulatedOptions` instance."""
     return global_options.GLOBAL_DEFAULT_OPTIONS
 
 
@@ -49,7 +49,7 @@ def set_global_options(  # noqa: PLR0913
     add_ppth_form: bool = False,
 ) -> None:
     """
-    Configure global default format options.
+    Configure the global options.
 
     Accepts the same keyword arguments as :class:`Formatter`.
     """
@@ -84,22 +84,22 @@ def set_global_options(  # noqa: PLR0913
 
 
 def set_global_options_populated(populated_options: PopulatedOptions) -> None:
-    """Directly set global defaults to input FinalizedOptions."""
+    """Directly set global options to input :class:`PopulatedOptions`."""
     global_options.GLOBAL_DEFAULT_OPTIONS = populated_options
 
 
 def reset_global_options() -> None:
-    """Reset global default options to :mod:`sciform` package defaults."""
+    """Reset global options to :mod:`sciform` package defaults."""
     global_options.GLOBAL_DEFAULT_OPTIONS = global_options.PKG_DEFAULT_OPTIONS
 
 
 class GlobalOptionsContext:
     """
-    Temporarily update global default options.
+    Temporarily update global options.
 
-    New settings are applied when the context is entered and original
-    global settings are re-applied when the context is exited. Accepts
-    the same keyword arguments as :class:`Formatter`.
+    New global options are applied when the context is entered and the
+    original global settings are re-applied when the context is exited.
+    Accepts the same keyword arguments as :class:`Formatter`.
     """
 
     def __init__(  # noqa: PLR0913
