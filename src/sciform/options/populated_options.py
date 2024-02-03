@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 from sciform.options.validation import validate_options
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
 
 

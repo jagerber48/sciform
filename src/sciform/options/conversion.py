@@ -11,7 +11,7 @@ from sciform.options.finalized_options import FinalizedOptions
 from sciform.options.populated_options import PopulatedOptions
 from sciform.options.validation import validate_options
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from sciform.options.input_options import InputOptions
 
 
