@@ -15,6 +15,19 @@ Formatting
 
 .. autoclass:: SciNum()
 
+.. autoclass:: FormattedNumber
+   :members:
+   :private-members:
+
+Options
+=======
+
+.. autoclass:: InputOptions()
+   :members:
+
+.. autoclass:: PopulatedOptions()
+   :members:
+
 Auto Options
 ============
 
@@ -32,10 +45,3 @@ Global Configuration
 .. autofunction:: reset_global_options()
 
 .. autoclass:: GlobalOptionsContext()
-
-Output Conversion
-=================
-
-.. autoclass:: FormattedNumber
-   :members:
-   :private-members:

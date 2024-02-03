@@ -15,7 +15,41 @@ if TYPE_CHECKING:  # pragma: no cover
 
 @dataclass(frozen=True)
 class InputOptions:
-    """Dataclass storing user input."""
+    """
+    Dataclass storing user input.
+
+    Stores the user input to :class:`Formatter`, so any keyword
+    arguments that can be passed into :class:`Formatter` are stored in
+    :class:`InputOptions`. Any unpopulated options retain the ``None``
+    value. At format time the :class:`InputOptions` are populated and
+    replaced by a :class:`PopulatedOptions` instance which necessarily
+    has all attributes populated with meaningful values.
+
+    :class:`InputOptions` instances should only be accessed via the
+    :class:`Formatter.input_options()` property. They should not be
+    instantiated directly.
+
+    >>> from sciform import Formatter
+    >>> formatter = Formatter(
+    ...     exp_mode="engineering",
+    ...     round_mode="sig_fig",
+    ...     ndigits=2,
+    ...     superscript=True,
+    ... )
+    >>> print(formatter.input_options.round_mode)
+    sig_fig
+    >>> print(formatter.input_options.exp_format)
+    None
+    >>> print(formatter.input_options)
+    InputOptions(
+     'exp_mode': 'engineering',
+     'round_mode': 'sig_fig',
+     'ndigits': 2,
+     'superscript': True,
+    )
+    >>> print(formatter.input_options.as_dict())
+    {'exp_mode': 'engineering', 'round_mode': 'sig_fig', 'ndigits': 2, 'superscript': True}
+    """  # noqa: E501
 
     exp_mode: modes.ExpMode | None = None
     exp_val: int | type(modes.AutoExpVal) | None = None
@@ -48,7 +82,15 @@ class InputOptions:
         validate_options(self)
 
     def as_dict(self: InputOptions) -> dict[str, Any]:
-        """Return a dict representation of the inputs used to construct InputOptions."""
+        """
+        Return a dict representation of the InputOptions.
+
+        This dict can be passed into :class:`Formatter` as ``**kwargs``,
+        possibly after modification. This allows for the possibility of
+        constructing new :class:`Formatter` instances based on old ones.
+        Only explicitly populated attributes are included in the
+        returned dictionary.
+        """
         options_dict = asdict(self)
         for key in list(options_dict.keys()):
             if options_dict[key] is None:
