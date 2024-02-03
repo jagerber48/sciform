@@ -191,7 +191,7 @@ class Formatter:
           ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
         :type add_ppth_form: ``bool``
         """
-        self.input_options = InputOptions(
+        self._input_options = InputOptions(
             exp_mode=exp_mode,
             exp_val=exp_val,
             round_mode=round_mode,
@@ -220,18 +220,23 @@ class Formatter:
         )
 
     @property
+    def input_options(self: Formatter) -> InputOptions:
+        """Return user input options as :class:`InputOptions` instance."""
+        return self._input_options
+
+    @property
     def populated_options(self: Formatter) -> PopulatedOptions:
         """
-        Return fully populated options.
+        Return fully populated options as :class:`PopulatedOptions` instance.
 
         At format time any input options which were not specified (or
         which were passed in ``None`` values) are populated with the
         corresponding values from the global options. The result of
         this merging can be accessed via the ``populated_options``
-        property. The ``populated_options`` property is recalculated
-        using the input options and the global options at access time,
-        so the result is reflective of the current state of the
-        global options.
+        property which provides a :class:`PopulatedOptions` instance.
+        The ``populated_options`` property is recalculated using the
+        input options and the global options at access time, so the
+        result is reflective of the current state of the global options.
 
         Note that the ``add_c_prefix``, ``add_small_si_prefixes`` and
         ``add_ppth_form`` options do not appear in the populated
