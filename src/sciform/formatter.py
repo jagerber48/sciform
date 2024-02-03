@@ -25,7 +25,7 @@ class Formatter:
     options. Any options which are unpopulated (have the value ``None``)
     will be populated at format time by the corresponding values in the
     globally configured default options. See :ref:`global_config` for
-    details about how to view and modify the global default options.
+    details about how to view and modify the global options.
 
     >>> from sciform import Formatter
     >>> sform = Formatter(exp_mode="engineering", round_mode="sig_fig", ndigits=4)
@@ -69,7 +69,7 @@ class Formatter:
         add_small_si_prefixes: bool | None = None,
         add_ppth_form: bool | None = None,
     ) -> None:
-        r"""
+        """
         Create a new ``Formatter``.
 
         The following checks are performed when creating a new
@@ -221,7 +221,30 @@ class Formatter:
 
     @property
     def populated_options(self: Formatter) -> PopulatedOptions:
-        """Return fully populated options."""
+        """
+        Return fully populated options.
+
+        At format time any input options which were not specified (or
+        which were passed in ``None`` values) are populated with the
+        corresponding values from the global options. The result of
+        this merging can be accessed via the ``populated_options``
+        property. The ``populated_options`` property is recalculated
+        using the input options and the global options at access time,
+        so the result is reflective of the current state of the
+        global options.
+
+        Note that the ``add_c_prefix``, ``add_small_si_prefixes`` and
+        ``add_ppth_form`` options do not appear in the populated
+        options. Instead, if any of these are ``True``, they result in
+        modification of the ``extra_si_prefixes`` or
+        ``extra_parts_per_forms`` attributes in the populated options.
+        Also note that e.g. if ``extra_si_prefixes`` is not passed in,
+        or remains ``None``, but ``add_c_prefix`` is ``True``, then the
+        options will behave as if ``extra_si_prefixes = {-2: "c"}``.
+        That is, importantly, ``extra_si_prefixes`` will **not** be
+        populated by the global options even though its value was not
+        explicit set during options configuration.
+        """
         return populate_options(self.input_options)
 
     def __call__(
