@@ -1,9 +1,25 @@
 import unittest
 
-from sciform import GlobalOptionsContext, get_global_options
+from sciform import Formatter, GlobalOptionsContext, get_global_options
 
 
 class TestOptionsPrintOut(unittest.TestCase):
+    def test_formatter_input_options(self):
+        formatter = Formatter(
+            exp_mode="engineering",
+            ndigits=10,
+            add_c_prefix=True,
+            left_pad_char=0,
+        )
+        input_options_str = str(formatter.input_options)
+        expected_str = (
+            "{'exp_mode': 'engineering',\n"
+            " 'ndigits': 10,\n"
+            " 'left_pad_char': 0,\n"
+            " 'add_c_prefix': True}"
+        )
+        self.assertEqual(input_options_str, expected_str)
+
     def test_get_global_options(self):
         actual_string = str(get_global_options())
         expected_string = (
