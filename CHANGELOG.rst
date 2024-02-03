@@ -8,11 +8,57 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Changed
+^^^^^^^
+
+* **[BREAKING]** Renamed functions for configuring global settings:
+
+  * ``set_global_defaults`` -> ``set_global_options``
+  * ``reset_global_defaults`` -> ``reset_global_options``
+  * ``GlobalDefaultsContext`` -> ``GlobalOptionsContext``
+
+* Refactored backend options handling code.
+  Previous ``UserOptions`` were rendered into ``RenderedOptions``.
+  During rendering the global options were appropriately merged in and
+  some string literal options were replaced with enums for internal use.
+  Now there are ``InputOptions`` (which try to faithfully record user
+  input), ``PopulatedOptions`` (which capture the result of merging
+  the global options into the input options, but still using
+  user-friendly string representations of all options), and
+  ``FinalizedOptions`` which use the internal enum representations of
+  certain options.
+
 Added
 ^^^^^
 
+* The ``Formatter`` now exposes the ``input_options`` and
+  ``populated_options`` attributes.
+  The ``input_options`` attribute holds an ``InputOptions`` object which
+  stores a record of the input options passed into the ``Formatter``.
+  The ``populated_options`` attribute returns a ``PopulatedOptions``
+  object which shows the complete set of populated options which will be
+  used for formatting after merging with the global options.
+  Note that the ``populated_options`` attribute is re-calculated each
+  time it is access so that it reflects the current global options.
+  Both the ``InputOptions`` and ``PopulatedOptions`` objects can be used
+  to provide string representations of the options, or provide
+  programmatic access to the options via either attribute access or the
+  ``as_dict()`` methods.
 * Now integer ``0`` can be passed into ``left_pad_char`` to get the same
   behavior as string ``"0"``.
+
+Removed
+^^^^^^^
+
+* **[BREAKING]** Removed ``print_global_defaults()` in favor of ``get_global_defaults``
+  which now returns a ``PopulatedOptions`` object which can be printed
+  by the user if desired.
+
+Fixed
+^^^^^
+
+* Fixed a bug where ``SciNum`` formatting resulted in ``str`` objects
+  instead of ``FormatedNumber`` objects.
 
 ----
 
