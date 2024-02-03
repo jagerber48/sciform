@@ -5,12 +5,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from sciform.formatting import format_from_options
+from sciform.options.conversion import populate_options
 from sciform.options.input_options import InputOptions
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
     from sciform.format_utils import Number
     from sciform.formatting import FormattedNumber
+    from sciform.options.populated_options import PopulatedOptions
 
 
 class Formatter:
@@ -189,7 +191,7 @@ class Formatter:
           ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
         :type add_ppth_form: ``bool``
         """
-        self._user_options = InputOptions(
+        self.input_options = InputOptions(
             exp_mode=exp_mode,
             exp_val=exp_val,
             round_mode=round_mode,
@@ -217,6 +219,11 @@ class Formatter:
             add_ppth_form=add_ppth_form,
         )
 
+    @property
+    def populated_options(self: Formatter) -> PopulatedOptions:
+        """Return fully populated options."""
+        return populate_options(self.input_options)
+
     def __call__(
         self: Formatter,
         value: Number,
@@ -234,5 +241,5 @@ class Formatter:
         return format_from_options(
             value,
             uncertainty,
-            input_options=self._user_options,
+            input_options=self.input_options,
         )
