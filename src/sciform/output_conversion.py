@@ -84,9 +84,9 @@ def convert_sciform_format(
 
     >>> from sciform.output_conversion import convert_sciform_format
     >>> print(convert_sciform_format("(7.8900 ± 0.0001)×10²", "latex"))
-    (7.8900\:\pm\:0.0001)\times10^{2}
+    $(7.8900\:\pm\:0.0001)\times10^{2}$
     >>> print(convert_sciform_format("16.18033E+03", "latex"))
-    16.18033\times10^{3}
+    $16.18033\times10^{3}$
 
     HTML
     ====
