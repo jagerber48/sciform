@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 
 from sciform import Formatter
-from sciform.formatter import FormattedNumber
+from sciform.formatting import FormattedNumber
 from sciform.output_conversion import convert_sciform_format
 
 ValFormatterCases = list[

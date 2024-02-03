@@ -5,8 +5,7 @@ from __future__ import annotations
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
-from sciform.formatter import FormattedNumber
-from sciform.formatting import format_from_options
+from sciform.formatting import FormattedNumber, format_from_options
 from sciform.fsml import format_options_from_fmt_spec
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -46,15 +45,13 @@ class SciNum:
         else:
             self.uncertainty = Decimal(str(uncertainty))
 
-    def __format__(self: SciNum, fmt: str) -> str:
+    def __format__(self: SciNum, fmt: str) -> FormattedNumber:
         input_options = format_options_from_fmt_spec(fmt)
-        return FormattedNumber(
-            format_from_options(
+        return format_from_options(
                 self.value,
                 self.uncertainty,
                 input_options=input_options,
             )
-        )
 
     def __repr__(self: SciNum) -> str:
         if self.uncertainty is not None:

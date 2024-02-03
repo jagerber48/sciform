@@ -28,6 +28,7 @@ from sciform.modes import (
     SignModeEnum,
 )
 from sciform.options.conversion import finalize_input_options
+from sciform.output_conversion import convert_sciform_format
 
 if TYPE_CHECKING:
     from sciform.options.input_options import InputOptions
@@ -39,16 +40,17 @@ def format_from_options(
         uncertainty: Number | None = None,
         /,
         input_options: InputOptions | None = None,
-) -> str:
+) -> FormattedNumber:
     """Finalize options and select value of value/uncertainty formatter."""
     options = finalize_input_options(input_options)
     value = Decimal(str(value))
 
     if uncertainty is not None:
         uncertainty = Decimal(str(uncertainty))
-        return format_val_unc(value, uncertainty, options)
-
-    return format_num(value, options)
+        formatted_str = format_val_unc(value, uncertainty, options)
+    else:
+        formatted_str = format_num(value, options)
+    return FormattedNumber(formatted_str)
 
 
 def format_non_finite(num: Decimal, options: FinalizedOptions) -> str:
@@ -312,3 +314,46 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         val_unc_exp_str = f"({val_unc_exp_str})%"
 
     return val_unc_exp_str
+
+
+class FormattedNumber(str):
+    """
+    Representation (typically string) of a formatted number.
+
+    The ``FormattedNumber`` class is returned by ``sciform`` formatting
+    methods. In most cases it behaves like a regular python string, but
+    it provides the possibility for post-converting the string to
+    various other formats such as latex or html. This allows the
+    formatted number to be displayed in a range of contexts other than
+    e.g. text terminals.
+
+    """
+
+    __slots__ = ()
+
+    def as_str(self: FormattedNumber) -> str:
+        """Return the string representation of the formatted number."""
+        return self.__str__()
+
+    def as_ascii(self: FormattedNumber) -> str:
+        """Return the ascii representation of the formatted number."""
+        return convert_sciform_format(self, "ascii")
+
+    def as_html(self: FormattedNumber) -> str:
+        """Return the html representation of the formatted number."""
+        return convert_sciform_format(self, "html")
+
+    def as_latex(self: FormattedNumber, *, strip_math_mode: bool = False) -> str:
+        """Return the latex representation of the formatted number."""
+        latex_repr = convert_sciform_format(self, "latex")
+        if strip_math_mode:
+            latex_repr = latex_repr.strip("$")
+        return latex_repr
+
+    def _repr_html_(self: FormattedNumber) -> str:
+        """Hook for HTML display."""  # noqa: D401
+        return self.as_html()
+
+    def _repr_latex_(self: FormattedNumber) -> str:
+        """Hook for LaTeX display."""  # noqa: D401
+        return self.as_latex()
