@@ -48,10 +48,10 @@ class SciNum:
     def __format__(self: SciNum, fmt: str) -> FormattedNumber:
         input_options = format_options_from_fmt_spec(fmt)
         return format_from_options(
-                self.value,
-                self.uncertainty,
-                input_options=input_options,
-            )
+            self.value,
+            self.uncertainty,
+            input_options=input_options,
+        )
 
     def __repr__(self: SciNum) -> str:
         if self.uncertainty is not None:

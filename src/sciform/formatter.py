@@ -232,5 +232,7 @@ class Formatter:
         :type uncertainty: ``Decimal | float | int | str | None``
         """
         return format_from_options(
-            value, uncertainty, input_options=self._user_options,
+            value,
+            uncertainty,
+            input_options=self._user_options,
         )

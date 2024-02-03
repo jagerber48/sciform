@@ -36,10 +36,10 @@ if TYPE_CHECKING:
 
 
 def format_from_options(
-        value: Number,
-        uncertainty: Number | None = None,
-        /,
-        input_options: InputOptions | None = None,
+    value: Number,
+    uncertainty: Number | None = None,
+    /,
+    input_options: InputOptions | None = None,
 ) -> FormattedNumber:
     """Finalize options and select value of value/uncertainty formatter."""
     options = finalize_input_options(input_options)

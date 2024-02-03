@@ -16,10 +16,10 @@ if TYPE_CHECKING:
 
 
 def populate_extra_si_prefixes(
-        extra_si_prefixes: dict[int, str] | None,
-        *,
-        add_c_prefix: bool,
-        add_small_si_prefixes: bool,
+    extra_si_prefixes: dict[int, str] | None,
+    *,
+    add_c_prefix: bool,
+    add_small_si_prefixes: bool,
 ) -> dict[int, str]:
     """Populate extra_si_prefixes dict."""
     if add_c_prefix:
@@ -42,9 +42,9 @@ def populate_extra_si_prefixes(
 
 
 def populate_extra_parts_per_forms(
-        extra_parts_per_forms: dict[int, str] | None,
-        *,
-        add_ppth_form: bool,
+    extra_parts_per_forms: dict[int, str] | None,
+    *,
+    add_ppth_form: bool,
 ) -> dict[int, str]:
     """Populate extra_si_prefixes dict."""
     if add_ppth_form:
