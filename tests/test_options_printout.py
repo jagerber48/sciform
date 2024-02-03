@@ -1,16 +1,12 @@
 import unittest
-from contextlib import redirect_stdout
-from io import StringIO
 
 from sciform import GlobalOptionsContext, get_global_options
 
 
-class TestPrint(unittest.TestCase):
+class TestOptionsPrintOut(unittest.TestCase):
     def test_get_global_options(self):
-        with redirect_stdout(StringIO()) as sout:
-            print(get_global_options())
-        actual_printout = sout.getvalue()
-        expected_printout = (
+        actual_string = str(get_global_options())
+        expected_string = (
             "{'exp_mode': 'fixed_point',\n"
             " 'exp_val': AutoExpVal,\n"
             " 'round_mode': 'sig_fig',\n"
@@ -32,17 +28,14 @@ class TestPrint(unittest.TestCase):
             " 'pdg_sig_figs': False,\n"
             " 'left_pad_matching': False,\n"
             " 'paren_uncertainty_separators': True,\n"
-            " 'pm_whitespace': True}\n"
+            " 'pm_whitespace': True}"
         )
-        self.assertEqual(actual_printout, expected_printout)
+        self.assertEqual(actual_string, expected_string)
 
-    def test_unrendered_options_repr(self):
-        with redirect_stdout(StringIO()) as sout:  # noqa: SIM117
-            with GlobalOptionsContext(left_pad_dec_place=3, capitalize=True):
-                print(get_global_options())
-
-        actual_printout = sout.getvalue()
-        expected_printout = (
+    def test_modified_get_global_options(self):
+        with GlobalOptionsContext(left_pad_dec_place=3, capitalize=True):
+            actual_str = str(get_global_options())
+        expected_str = (
             "{'exp_mode': 'fixed_point',\n"
             " 'exp_val': AutoExpVal,\n"
             " 'round_mode': 'sig_fig',\n"
@@ -64,6 +57,6 @@ class TestPrint(unittest.TestCase):
             " 'pdg_sig_figs': False,\n"
             " 'left_pad_matching': False,\n"
             " 'paren_uncertainty_separators': True,\n"
-            " 'pm_whitespace': True}\n"
+            " 'pm_whitespace': True}"
         )
-        self.assertEqual(actual_printout, expected_printout)
+        self.assertEqual(actual_str, expected_str)
