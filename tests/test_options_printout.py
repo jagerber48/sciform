@@ -7,8 +7,8 @@ class TestOptionsPrintOut(unittest.TestCase):
     def test_formatter_input_options(self):
         formatter = Formatter(
             exp_mode="engineering",
-            ndigits=10,
             add_c_prefix=True,
+            ndigits=10,
             left_pad_char=0,
         )
         input_options_str = str(formatter.input_options)
