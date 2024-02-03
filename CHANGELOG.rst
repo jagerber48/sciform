@@ -8,6 +8,27 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Added
+^^^^^
+
+* The ``Formatter`` now exposes the ``input_options`` and
+  ``populated_options`` attributes.
+  The ``input_options`` attribute holds an ``InputOptions`` object which
+  stores a record of the input options passed into the ``Formatter``.
+  The ``populated_options`` attribute returns a ``PopulatedOptions``
+  object which shows the complete set of populated options which will be
+  used for formatting after merging with the global options.
+  Note that the ``populated_options`` attribute is re-calculated each
+  time it is access so that it reflects the current global options.
+  Both the ``InputOptions`` and ``PopulatedOptions`` objects can be used
+  to provide string representations of the options, or provide
+  programmatic access to the options via either attribute access or the
+  ``as_dict()`` methods.
+* Added ``get_default_global_options``.
+* Now integer ``0`` can be passed into ``left_pad_char`` to get the same
+  behavior as string ``"0"``.
+* Added tests for docstrings.
+
 Changed
 ^^^^^^^
 
@@ -27,26 +48,6 @@ Changed
   user-friendly string representations of all options), and
   ``FinalizedOptions`` which use the internal enum representations of
   certain options.
-
-Added
-^^^^^
-
-* The ``Formatter`` now exposes the ``input_options`` and
-  ``populated_options`` attributes.
-  The ``input_options`` attribute holds an ``InputOptions`` object which
-  stores a record of the input options passed into the ``Formatter``.
-  The ``populated_options`` attribute returns a ``PopulatedOptions``
-  object which shows the complete set of populated options which will be
-  used for formatting after merging with the global options.
-  Note that the ``populated_options`` attribute is re-calculated each
-  time it is access so that it reflects the current global options.
-  Both the ``InputOptions`` and ``PopulatedOptions`` objects can be used
-  to provide string representations of the options, or provide
-  programmatic access to the options via either attribute access or the
-  ``as_dict()`` methods.
-* Now integer ``0`` can be passed into ``left_pad_char`` to get the same
-  behavior as string ``"0"``.
-* Added tests for docstrings.
 
 Removed
 ^^^^^^^
