@@ -57,6 +57,6 @@ class InputOptions:
 
     def __str__(self: InputOptions) -> str:
         options_str = pformat(self.as_dict(), width=-1, sort_dicts=False)
-        options_str = options_str.lstrip('{').rstrip('}')
+        options_str = options_str.lstrip("{").rstrip("}")
         options_str = f"InputOptions(\n {options_str},\n)"
         return options_str
