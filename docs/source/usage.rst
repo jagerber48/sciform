@@ -122,7 +122,8 @@ package default settings):
 
 >>> from sciform import get_global_options
 >>> print(get_global_options())
-{'exp_mode': 'fixed_point',
+PopulatedOptions(
+ 'exp_mode': 'fixed_point',
  'exp_val': AutoExpVal,
  'round_mode': 'sig_fig',
  'ndigits': AutoDigits,
@@ -143,7 +144,8 @@ package default settings):
  'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_separators': True,
- 'pm_whitespace': True}
+ 'pm_whitespace': True,
+)
 
 The global default settings can be modified using the
 :func:`set_global_options()` function.
@@ -159,7 +161,8 @@ unchanged.
 ...     decimal_separator=",",
 ... )
 >>> print(get_global_options())
-{'exp_mode': 'engineering_shifted',
+PopulatedOptions(
+ 'exp_mode': 'engineering_shifted',
  'exp_val': AutoExpVal,
  'round_mode': 'sig_fig',
  'ndigits': 4,
@@ -180,7 +183,8 @@ unchanged.
  'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_separators': True,
- 'pm_whitespace': True}
+ 'pm_whitespace': True,
+)
 
 The global default settings can be reset to the :mod:`sciform` defaults
 using :func:`reset_global_options`.
