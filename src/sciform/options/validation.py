@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, get_args
 
 from sciform import modes
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from sciform.options.finalized_options import FinalizedOptions
     from sciform.options.input_options import InputOptions
     from sciform.options.populated_options import PopulatedOptions
