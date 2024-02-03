@@ -116,8 +116,6 @@ Changed
       Hopefully this can be replaced when ``ruff`` provides
       functionality for formatting ``.rst`` files.
 
-
-
 Fixed
 ^^^^^
 
