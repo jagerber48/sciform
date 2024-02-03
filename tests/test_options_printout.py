@@ -1,6 +1,11 @@
 import unittest
 
-from sciform import Formatter, GlobalOptionsContext, get_global_options
+from sciform import (
+    Formatter,
+    GlobalOptionsContext,
+    get_default_global_options,
+    get_global_options,
+)
 
 
 class TestOptionsPrintOut(unittest.TestCase):
@@ -58,8 +63,8 @@ class TestOptionsPrintOut(unittest.TestCase):
         )
         self.assertEqual(input_options_str, expected_str)
 
-    def test_get_global_options(self):
-        actual_string = str(get_global_options())
+    def test_get_default_global_options(self):
+        actual_string = str(get_default_global_options())
         expected_string = (
             "PopulatedOptions(\n"
             " 'exp_mode': 'fixed_point',\n"
@@ -88,7 +93,7 @@ class TestOptionsPrintOut(unittest.TestCase):
         )
         self.assertEqual(actual_string, expected_string)
 
-    def test_modified_get_global_options(self):
+    def test_get_global_options(self):
         with GlobalOptionsContext(left_pad_dec_place=3, capitalize=True):
             actual_str = str(get_global_options())
         expected_str = (

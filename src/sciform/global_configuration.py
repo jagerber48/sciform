@@ -15,8 +15,13 @@ if TYPE_CHECKING:  # pragma: no cover
     from sciform.options.populated_options import PopulatedOptions
 
 
+def get_default_global_options() -> PopulatedOptions:
+    """Return the package default global options."""
+    return global_options.PKG_DEFAULT_OPTIONS
+
+
 def get_global_options() -> PopulatedOptions:
-    """Return the current global options as a :class:`PopulatedOptions` instance."""
+    """Return the current global options."""
     return global_options.GLOBAL_DEFAULT_OPTIONS
 
 

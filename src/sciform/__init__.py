@@ -4,6 +4,7 @@ from sciform.formatter import Formatter
 from sciform.formatting import FormattedNumber
 from sciform.global_configuration import (
     GlobalOptionsContext,
+    get_default_global_options,
     get_global_options,
     reset_global_options,
     set_global_options,
@@ -17,6 +18,7 @@ __all__ = [
     "Formatter",
     "FormattedNumber",
     "GlobalOptionsContext",
+    "get_default_global_options",
     "get_global_options",
     "reset_global_options",
     "set_global_options",
