@@ -6,11 +6,11 @@ from typing import TYPE_CHECKING, Literal
 
 from sciform.formatting import format_from_options
 from sciform.options.input_options import InputOptions
-from sciform.output_conversion import convert_sciform_format
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
     from sciform.format_utils import Number
+    from sciform.formatting import FormattedNumber
 
 
 class Formatter:
@@ -232,5 +232,5 @@ class Formatter:
         :type uncertainty: ``Decimal | float | int | str | None``
         """
         return format_from_options(
-            value, uncertainty, input_options=self._user_options
+            value, uncertainty, input_options=self._user_options,
         )

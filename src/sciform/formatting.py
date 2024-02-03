@@ -31,8 +31,8 @@ from sciform.options.conversion import finalize_input_options
 from sciform.output_conversion import convert_sciform_format
 
 if TYPE_CHECKING:
-    from sciform.options.input_options import InputOptions
     from sciform.options.finalized_options import FinalizedOptions
+    from sciform.options.input_options import InputOptions
 
 
 def format_from_options(

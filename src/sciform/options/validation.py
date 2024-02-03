@@ -1,3 +1,5 @@
+"""Options validation."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, get_args
@@ -5,13 +7,13 @@ from typing import TYPE_CHECKING, get_args
 from sciform import modes
 
 if TYPE_CHECKING:
-    from sciform.options.input_options import InputOptions
     from sciform.options.finalized_options import FinalizedOptions
+    from sciform.options.input_options import InputOptions
     from sciform.options.populated_options import PopulatedOptions
 
 
 def validate_options(
-        options: InputOptions | PopulatedOptions | FinalizedOptions
+        options: InputOptions | PopulatedOptions | FinalizedOptions,
 ) -> None:
     """Validate user inputs."""
     validate_sig_fig_round_mode(options)
@@ -20,7 +22,7 @@ def validate_options(
 
 
 def validate_sig_fig_round_mode(
-        options: InputOptions | PopulatedOptions | FinalizedOptions
+        options: InputOptions | PopulatedOptions | FinalizedOptions,
 ) -> None:
     r"""Validate ndigits if round_mode == "sig_fig"."""
     if (
@@ -33,7 +35,7 @@ def validate_sig_fig_round_mode(
 
 
 def validate_exp_val(
-        options: InputOptions | PopulatedOptions | FinalizedOptions
+        options: InputOptions | PopulatedOptions | FinalizedOptions,
 ) -> None:
     """Validate exp_val."""
     if options.exp_val is not modes.AutoExpVal and options.exp_val is not None:
@@ -61,7 +63,7 @@ def validate_exp_val(
 
 
 def validate_separator_options(
-        options: InputOptions | PopulatedOptions | FinalizedOptions
+        options: InputOptions | PopulatedOptions | FinalizedOptions,
 ) -> None:
     """Validate separator user input."""
     if options.upper_separator is not None:

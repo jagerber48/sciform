@@ -5,13 +5,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from sciform.options import global_options
-from sciform.options.input_options import InputOptions
 from sciform.options.conversion import populate_options
-from sciform.options.populated_options import PopulatedOptions
+from sciform.options.input_options import InputOptions
 
 if TYPE_CHECKING:  # pragma: no cover
-    from sciform import modes
     from types import TracebackType
+
+    from sciform import modes
+    from sciform.options.populated_options import PopulatedOptions
 
 
 def print_global_defaults() -> None:

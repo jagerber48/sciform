@@ -1,3 +1,5 @@
+"""Code for converting between various types of sciform options."""
+
 from __future__ import annotations
 
 from dataclasses import asdict
@@ -75,7 +77,7 @@ def populate_options(user_options: InputOptions) -> PopulatedOptions:
         if key == "extra_parts_per_forms" and user_options.add_ppth_form:
             value = populate_extra_parts_per_forms(
                 value,
-                add_ppth_form=user_options.add_ppth_form
+                add_ppth_form=user_options.add_ppth_form,
             )
 
         if value is None:
