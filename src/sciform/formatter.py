@@ -127,7 +127,7 @@ class Formatter:
     construct ``**kwargs`` to pass into new :class:`Formatter`
     instances.
 
-    """
+    """  # noqa: E501
 
     def __init__(  # noqa: PLR0913
         self: Formatter,
