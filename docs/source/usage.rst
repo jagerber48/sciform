@@ -23,29 +23,30 @@ The :class:`Formatter` object is then called with a number and returns
 a corresponding formatted string.
 
 >>> from sciform import Formatter
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     round_mode="dec_place", ndigits=6, upper_separator=" ", lower_separator=" "
 ... )
->>> print(sform(51413.14159265359))
+>>> print(formatter(51413.14159265359))
 51 413.141 593
->>> sform = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
->>> print(sform(123456.78))
+>>> formatter = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
+>>> print(formatter(123456.78))
 123.5e+03
 
 It is not necessary to provide input for all options.
 At format time, any un-populated options will be populated with the
-corresponding options from the global default options.
+corresponding options from the global options.
 See :ref:`global_config` for details about how to view and modify the
-global default options.
+global options.
 
 SciNum
 ------
 
 The :mod:`sciform` :ref:`FSML <fsml>` can be accessed via the
 :class:`SciNum` object.
-Python numbers specified as :class:`string`, :class:`float`, or
-:class:`Decimal` objects are cast to :class:`SciNum` objects which can
-be formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
+Python numbers specified as :class:`string`, :class:`int`,
+:class:`float`, or :class:`Decimal` objects are cast to :class:`SciNum`
+objects which can be formatted using the :mod:`sciform`
+:ref:`FSML <fsml>`.
 
 >>> from sciform import SciNum
 >>> num = SciNum(123456)
@@ -72,19 +73,21 @@ using the :class:`SciNum` object.
 
 >>> val = 84.3
 >>> unc = 0.2
->>> sform = Formatter(ndigits=2)
->>> print(sform(val, unc))
+>>> formatter = Formatter(ndigits=2)
+>>> print(formatter(val, unc))
 84.30 ± 0.20
 >>> from sciform import SciNum
->>> val_unc = SciNum(val, unc)
->>> print(f"{val_unc:!2}")
+>>> num = SciNum(val, unc)
+>>> print(f"{num:!2}")
 84.30 ± 0.20
 
 Value/uncertainty pairs can also be formatted using a parentheses
 notation in which the uncertainty is displayed in parentheses following
 the value.
+See
+`BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
 
->>> print(f"{val_unc:!2()}")
+>>> print(f"{num:!2()}")
 84.30(20)
 
 Value/uncertainty pairs are formatted according to the following
@@ -107,21 +110,20 @@ algorithm:
 Global Configuration
 ====================
 
-It is possible to modify the global default configuration for
-:mod:`sciform` to avoid repetition of verbose configuration options or
-format specification strings.
+It is possible to modify the global options for :mod:`sciform` to avoid
+repetition of verbose configuration options or format specification
+strings.
 When the user creates a :class:`Formatter` object or formats a string
 using the :ref:`FSML <fsml>`, they typically do not specify settings for
 all available options.
-In these cases, the unspecified options resolve their values from the
-global default settings at format time.
+In these cases, the unpopulated options resolve their values from the
+global options at format time.
 
-The global default settings can be viewed using
-:func:`get_global_options()` (the settings shown here are the
-package default settings):
+The :mod:`sciform` default global options can be viewed using
+:func:`get_default_global_options`
 
->>> from sciform import get_global_options
->>> print(get_global_options())
+>>> from sciform import get_default_global_options
+>>> print(get_default_global_options())
 PopulatedOptions(
  'exp_mode': 'fixed_point',
  'exp_val': AutoExpVal,
@@ -147,13 +149,21 @@ PopulatedOptions(
  'pm_whitespace': True,
 )
 
-The global default settings can be modified using the
-:func:`set_global_options()` function.
-Any options passed will overwrite the corresponding options in the
-current global default settings and any unfilled options will remain
-unchanged.
+The global options can be viewed using
+:func:`get_global_options()` (the settings shown here are the
+package default settings):
 
->>> from sciform import set_global_options
+
+The global options can be modified using the :func:`set_global_options`
+function.
+Any options passed will overwrite the corresponding options in the
+current global options and any unfilled options will remain unchanged.
+The current global options can be viewed using
+:func:`get_global_options`.
+The global options can be reset to the :mod:`sciform` default global
+options using :func:`reset_global_options`.
+
+>>> from sciform import set_global_options, get_global_options, reset_global_options
 >>> set_global_options(
 ...     left_pad_char="0",
 ...     exp_mode="engineering_shifted",
@@ -185,31 +195,24 @@ PopulatedOptions(
  'paren_uncertainty_separators': True,
  'pm_whitespace': True,
 )
-
-The global default settings can be reset to the :mod:`sciform` defaults
-using :func:`reset_global_options`.
-
->>> from sciform import reset_global_options
 >>> reset_global_options()
 
-The global default settings can be temporarily modified using the
+The global options can be temporarily modified using the
 :class:`GlobalOptionsContext` context manager.
 The context manager is configured using the same options as
-:class:`Formatter`.
+:class:`Formatter` and :func:`set_global_options`.
 Within the context of :class:`GlobalOptionsContext` manager, the
-global defaults take on the specified input settings, but when the
-context is exited, the global default settings revert to their previous
-values.
+global options take on the specified input settings, but when the
+context is exited, the global options revert to their previous values.
 
 >>> from sciform import GlobalOptionsContext, SciNum
->>> snum = SciNum(0.0123)
->>> print(f"{snum:.2ep}")
+>>> num = SciNum(0.0123)
+>>> print(f"{num:.2ep}")
 1.23e-02
 >>> with GlobalOptionsContext(add_c_prefix=True):
-...     print(f"{snum:.2ep}")
-...
+...     print(f"{num:.2ep}")
 1.23 c
->>> print(f"{snum:.2ep}")
+>>> print(f"{num:.2ep}")
 1.23e-02
 
 Note that the :ref:`FSML <fsml>` does not provide complete control over
@@ -217,8 +220,8 @@ all possible format options.
 For example, there is no code in the :ref:`FSML <fsml>` for configuring
 the ``pdg_sig_figs`` option.
 If the user wishes to configure these options, but also use the
-:ref:`FSML <fsml>`, then they must do so by modifying the global default
-settings.
+:ref:`FSML <fsml>`, then they must do so by modifying the global
+options.
 
 .. _output_conversion:
 
@@ -227,14 +230,14 @@ Output Conversion
 
 Typically the output of the :class:`Formatter` is used as a regular
 python string.
-However, the :class:`Formatter` actually returns a
-:class:`FormattedNumber` instance.
+However, the :class:`Formatter` returns a :class:`FormattedNumber`
+instance.
 The :class:`FormattedNumber` class
-subclasses ``str`` and in many cases is used like a normal python
+subclasses :class:`str` and in many cases is used like a normal python
 string.
 However, the :class:`FormattedNumber` class
 exposes methods to convert the standard string representation into
-LaTex, HTML, or ASCII representations.
+LaTeX, HTML, or ASCII representations.
 The LaTeX and HTML representations may be useful when :mod:`sciform`
 outputs are being used in contexts outside of e.g. text terminals such
 as `Matplotlib <https://matplotlib.org/>`_ plots,
@@ -251,49 +254,49 @@ These conversions can be accessed via the
 :meth:`FormattedNumber.as_ascii` methods on the
 :class:`FormattedNumber` class.
 
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     exp_mode="scientific",
 ...     exp_val=-1,
 ...     upper_separator="_",
 ...     superscript=True,
 ... )
->>> formatted_str = sform(12345)
->>> print(f"{formatted_str} -> {formatted_str.as_latex()}")
+>>> formatted = formatter(12345)
+>>> print(f"{formatted} -> {formatted.as_latex()}")
 123_450×10⁻¹ -> $123\_450\times10^{-1}$
->>> print(f"{formatted_str} -> {formatted_str.as_html()}")
+>>> print(f"{formatted} -> {formatted.as_html()}")
 123_450×10⁻¹ -> 123_450×10<sup>-1</sup>
->>> print(f"{formatted_str} -> {formatted_str.as_ascii()}")
+>>> print(f"{formatted} -> {formatted.as_ascii()}")
 123_450×10⁻¹ -> 123_450e-01
 
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     exp_mode="percent",
 ...     lower_separator="_",
 ... )
->>> formatted_str = sform(0.12345678, 0.00000255)
->>> print(f"{formatted_str} -> {formatted_str.as_latex()}")
+>>> formatted = formatter(0.12345678, 0.00000255)
+>>> print(f"{formatted} -> {formatted.as_latex()}")
 (12.345_678 ± 0.000_255)% -> $(12.345\_678\:\pm\:0.000\_255)\%$
->>> print(f"{formatted_str} -> {formatted_str.as_html()}")
+>>> print(f"{formatted} -> {formatted.as_html()}")
 (12.345_678 ± 0.000_255)% -> (12.345_678 ± 0.000_255)%
->>> print(f"{formatted_str} -> {formatted_str.as_ascii()}")
+>>> print(f"{formatted} -> {formatted.as_ascii()}")
 (12.345_678 ± 0.000_255)% -> (12.345_678 +/- 0.000_255)%
 
->>> sform = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
->>> formatted_str = sform(314.159e-6, 2.71828e-6)
->>> print(f"{formatted_str} -> {formatted_str.as_latex()}")
+>>> formatter = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
+>>> formatted = formatter(314.159e-6, 2.71828e-6)
+>>> print(f"{formatted} -> {formatted.as_latex()}")
 (314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
->>> print(f"{formatted_str} -> {formatted_str.as_html()}")
+>>> print(f"{formatted} -> {formatted.as_html()}")
 (314.159 ± 2.718) μ -> (314.159 ± 2.718) μ
->>> print(f"{formatted_str} -> {formatted_str.as_ascii()}")
+>>> print(f"{formatted} -> {formatted.as_ascii()}")
 (314.159 ± 2.718) μ -> (314.159 +/- 2.718) u
 
 The LaTeX enclosing ``"$"`` math environment symbols can be optionally
 stripped:
 
->>> sform = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
->>> formatted_str = sform(314.159e-6, 2.71828e-6)
->>> print(f"{formatted_str} -> {formatted_str.as_latex(strip_math_mode=False)}")
+>>> formatter = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
+>>> formatted = formatter(314.159e-6, 2.71828e-6)
+>>> print(f"{formatted} -> {formatted.as_latex(strip_math_mode=False)}")
 (314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
->>> print(f"{formatted_str} -> {formatted_str.as_latex(strip_math_mode=True)}")
+>>> print(f"{formatted} -> {formatted.as_latex(strip_math_mode=True)}")
 (314.159 ± 2.718) μ -> (314.159\:\pm\:2.718)\:\text{\textmu}
 
 In addition to exposing
@@ -308,6 +311,7 @@ The
 looks for these methods, and, if available, will use them to display
 prettier representations of the class than the Unicode ``__repr__``
 representation.
+Here is example :class:`FormattedNumber` usage in a Jupyter notebook.
 
 .. image:: ../../examples/outputs/jupyter_output.png
   :width: 400
