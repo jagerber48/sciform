@@ -318,26 +318,9 @@ class Formatter:
         """
         Return fully populated options as :class:`PopulatedOptions` instance.
 
-        At format time any input options which were not specified (or
-        which were passed in ``None`` values) are populated with the
-        corresponding values from the global options. The result of
-        this merging can be accessed via the ``populated_options``
-        property which provides a :class:`PopulatedOptions` instance.
-        The ``populated_options`` property is recalculated using the
-        input options and the global options at access time, so the
-        result is reflective of the current state of the global options.
-
-        Note that the ``add_c_prefix``, ``add_small_si_prefixes`` and
-        ``add_ppth_form`` options do not appear in the populated
-        options. Instead, if any of these are ``True``, they result in
-        modification of the ``extra_si_prefixes`` or
-        ``extra_parts_per_forms`` attributes in the populated options.
-        Also note that e.g. if ``extra_si_prefixes`` is not passed in,
-        or remains ``None``, but ``add_c_prefix`` is ``True``, then the
-        options will behave as if ``extra_si_prefixes = {-2: "c"}``.
-        That is, importantly, ``extra_si_prefixes`` will **not** be
-        populated by the global options even though its value was not
-        explicit set during options configuration.
+        :attr:`populated_options` is re-calculated from
+        :attr:`input_options` and the global options each time it is
+        accessed so that it always reflects the current global options.
         """
         return populate_options(self.input_options)
 
