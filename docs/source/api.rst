@@ -7,15 +7,15 @@ API
 Formatting
 ==========
 
-.. autoclass:: Formatter()
+.. autoclass:: Formatter(...)
    :members:
 
    .. automethod:: __init__(...)
    .. automethod:: __call__
 
-.. autoclass:: SciNum()
+.. autoclass:: SciNum
 
-.. autoclass:: FormattedNumber
+.. autoclass:: FormattedNumber()
    :members:
    :private-members:
 
@@ -38,12 +38,12 @@ Auto Options
 Global Configuration
 ====================
 
-.. autofunction:: get_default_global_options()
+.. autofunction:: get_default_global_options
 
-.. autofunction:: get_global_options()
+.. autofunction:: get_global_options
 
-.. autofunction:: set_global_options()
+.. autofunction:: set_global_options(...)
 
-.. autofunction:: reset_global_options()
+.. autofunction:: reset_global_options
 
-.. autoclass:: GlobalOptionsContext()
+.. autoclass:: GlobalOptionsContext(...)

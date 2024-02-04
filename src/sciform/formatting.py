@@ -335,7 +335,10 @@ class FormattedNumber(str):
     directly.
     """
 
-    __slots__ = ("populated_options",)
+    __slots__ = {
+        "populated_options": "Record of the :class:`PopulatedOptions` used to "
+        "generate the :class:`FormattedNumber`.",
+    }
 
     def __new__(
         cls: type[Self],
