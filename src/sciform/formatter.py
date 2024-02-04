@@ -269,16 +269,17 @@ class Formatter:
           whitespace surrounding the ``'±'`` symbols when formatting.
           E.g. ``123.4±2.3`` compared to ``123.4 ± 2.3``.
         :type pm_whitespace: ``bool | None``
-        :param add_c_prefix: (default ``False``) If ``True``, adds
-          ``{-2: 'c'}`` to ``extra_si_prefixes``.
-        :type add_c_prefix: ``bool``
-        :param add_small_si_prefixes: (default ``False``) If ``True``, adds
+        :param add_c_prefix: (default ``None`` is like ``False``) If
+          ``True``, adds ``{-2: 'c'}`` to ``extra_si_prefixes``.
+        :type add_c_prefix: ``bool | None``
+        :param add_small_si_prefixes: (default ``None`` is like
+          ``False``) If ``True``, adds
           ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` to
           ``extra_si_prefixes``.
-        :type add_small_si_prefixes: ``bool``
-        :param add_ppth_form: (default ``False``) if ``True``, adds
-          ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
-        :type add_ppth_form: ``bool``
+        :type add_small_si_prefixes: ``bool | None``
+        :param add_ppth_form: (default ``None`` is like ``False``) if
+          ``True``, adds ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
+        :type add_ppth_form: ``bool | None``
         """
         self._input_options = InputOptions(
             exp_mode=exp_mode,
