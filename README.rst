@@ -102,13 +102,13 @@ controlled when constructing ``Formatter`` objects which are then used
 to format numbers into strings according to the selected options.
 
 >>> from sciform import Formatter
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     round_mode="dec_place", ndigits=6, upper_separator=" ", lower_separator=" "
 ... )
->>> print(sform(51413.14159265359))
+>>> print(formatter(51413.14159265359))
 51 413.141 593
->>> sform = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
->>> print(sform(123456.78))
+>>> formatter = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
+>>> print(formatter(123456.78))
 123.5e+03
 
 Users can also format numbers by constructing ``SciNum`` objects and
@@ -127,11 +127,11 @@ to format pairs of numbers as value/uncertainty pairs.
 This can be done by passing two numbers into a ``Formatter`` call or by
 using the ``SciNum`` object.
 
->>> sform = Formatter(ndigits=2, upper_separator=" ", lower_separator=" ")
->>> print(sform(123456.654321, 0.00345))
+>>> formatter = Formatter(ndigits=2, upper_separator=" ", lower_separator=" ")
+>>> print(formatter(123456.654321, 0.00345))
 123 456.654 3 ± 0.003 4
->>> sform = Formatter(ndigits=4, exp_mode="engineering")
->>> print(sform(123456.654321, 0.00345))
+>>> formatter = Formatter(ndigits=4, exp_mode="engineering")
+>>> print(formatter(123456.654321, 0.00345))
 (123.456654321 ± 0.000003450)e+03
 
 >>> num = SciNum(123456.654321, 0.00345)
