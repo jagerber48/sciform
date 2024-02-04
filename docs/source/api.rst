@@ -38,6 +38,8 @@ Auto Options
 Global Configuration
 ====================
 
+.. autofunction:: get_default_global_options()
+
 .. autofunction:: get_global_options()
 
 .. autofunction:: set_global_options()
