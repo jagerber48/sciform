@@ -240,11 +240,6 @@ PopulatedOptions(
  'pm_whitespace': True,
 )
 
-The global options can be viewed using
-:func:`get_global_options()` (the settings shown here are the
-package default settings):
-
-
 The global options can be modified using the :func:`set_global_options`
 function.
 Any options passed will overwrite the corresponding options in the
