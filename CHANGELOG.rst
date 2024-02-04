@@ -24,10 +24,11 @@ Added
   to provide string representations of the options, or provide
   programmatic access to the options via either attribute access or the
   ``as_dict()`` methods.
+  [`#110 <https://github.com/jagerber48/sciform/issues/110>`_]
 * The ``PopulatedOptions`` used during formatting of a given
   ``FormattedNumber`` instance are stored on that instance for future
   reference.
-* Added ``get_default_global_options``.
+* Added ``get_default_global_options()``.
 * Now integer ``0`` can be passed into ``left_pad_char`` to get the same
   behavior as string ``"0"``.
 * Added tests for docstrings.
@@ -35,35 +36,41 @@ Added
 Changed
 ^^^^^^^
 
-* **[BREAKING]** Renamed functions for configuring global settings:
+* **[BREAKING]** Renamed functions for configuring global options:
 
-  * ``set_global_defaults`` -> ``set_global_options``
-  * ``reset_global_defaults`` -> ``reset_global_options``
-  * ``GlobalDefaultsContext`` -> ``GlobalOptionsContext``
+  * ``set_global_defaults()`` -> ``set_global_options()``
+  * ``reset_global_defaults()`` -> ``reset_global_options()``
+  * ``GlobalDefaultsContext()`` -> ``GlobalOptionsContext()``
 
 * Refactored backend options handling code.
   Previous ``UserOptions`` were rendered into ``RenderedOptions``.
   During rendering the global options were appropriately merged in and
   some string literal options were replaced with enums for internal use.
+  These two classes were private.
   Now there are ``InputOptions`` (which try to faithfully record user
   input), ``PopulatedOptions`` (which capture the result of merging
   the global options into the input options, but still using
   user-friendly string representations of all options), and
-  ``FinalizedOptions`` which use the internal enum representations of
-  certain options.
+  ``FinalizedOptions`` (which use the internal enum representations of
+  certain options).
+  The ``InputOptions`` and ``PopulatedOptions`` are now public while the
+  ``FinalizedOptions`` is still private to shield the ``Enum``
+  representations from the users.
+  This change was precipitated by the publicizing of the options.
+  [`#110 <https://github.com/jagerber48/sciform/issues/110>`_]
 
 Removed
 ^^^^^^^
 
-* **[BREAKING]** Removed ``print_global_defaults()` in favor of ``get_global_defaults``
-  which now returns a ``PopulatedOptions`` object which can be printed
-  by the user if desired.
+* **[BREAKING]** Removed ``print_global_defaults()`` in favor of
+  ``get_global_defaults()`` which now returns a ``PopulatedOptions``
+  object which can be printed by the user if desired.
 
 Fixed
 ^^^^^
 
 * Fixed a bug where ``SciNum`` formatting resulted in ``str`` objects
-  instead of ``FormatedNumber`` objects.
+  instead of ``FormattedNumber`` objects.
 
 ----
 
