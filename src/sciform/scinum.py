@@ -23,13 +23,13 @@ class SciNum:
     be populated with global default settings at format time.
 
     >>> from sciform import SciNum
-    >>> snum = SciNum(12345.54321)
-    >>> print(f"{snum:!3f}")
+    >>> num = SciNum(12345.54321)
+    >>> print(f"{num:!3f}")
     12300
-    >>> print(f"{snum:+2.3R}")
+    >>> print(f"{num:+2.3R}")
     + 12.346E+03
-    >>> snum = SciNum(123456.654321, 0.0234)
-    >>> print(f"{snum:#!2r()}")
+    >>> num = SciNum(123456.654321, 0.0234)
+    >>> print(f"{num:#!2r()}")
     (0.123456654(23))e+06
     """
 

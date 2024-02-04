@@ -9,13 +9,13 @@ class TestFormatting(unittest.TestCase):
     def run_float_formatter_cases(self, cases_list: FloatFormatterCases):
         for num, formats_list in cases_list:
             for formatter, expected_num_str in formats_list:
-                snum_str = formatter(num)
+                num_str = formatter(num)
                 with self.subTest(
                     num=num,
                     expected_num_str=expected_num_str,
-                    actual_num_str=snum_str,
+                    actual_num_str=num_str,
                 ):
-                    self.assertEqual(snum_str, expected_num_str)
+                    self.assertEqual(num_str, expected_num_str)
 
     def test_superscript(self):
         cases_list = [
@@ -222,12 +222,12 @@ class TestFormatting(unittest.TestCase):
         self.run_float_formatter_cases(cases_list)
 
     def test_no_options(self):
-        sform = Formatter()
-        self.assertEqual(sform(42), "42")
+        formatter = Formatter()
+        self.assertEqual(formatter(42), "42")
 
     def test_dec_place_auto_round(self):
-        sform = Formatter(round_mode="dec_place", ndigits=AutoDigits)
-        self.assertEqual(sform(123.456), "123.456")
+        formatter = Formatter(round_mode="dec_place", ndigits=AutoDigits)
+        self.assertEqual(formatter(123.456), "123.456")
 
     def test_pdg_sig_figs(self):
         cases_list = [

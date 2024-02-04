@@ -131,8 +131,8 @@ class TestInvalidOptions(unittest.TestCase):
         and decimal_separator=GroupingSeparator.POINT This options
         combination is not allowed.
         """
-        sform = Formatter(upper_separator=".")
-        self.assertRaises(ValueError, sform, 42)
+        formatter = Formatter(upper_separator=".")
+        self.assertRaises(ValueError, formatter, 42)
 
     def test_upper_decimal_separator_point(self):
         self.assertRaises(

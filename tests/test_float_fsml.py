@@ -9,15 +9,14 @@ class TestFormatting(unittest.TestCase):
     def run_float_fsml_cases(self, cases_list: FloatFSMLCases):
         for num, formats_list in cases_list:
             for format_spec, expected_num_str in formats_list:
-                snum = SciNum(num)
-                snum_str = f"{snum:{format_spec}}"
+                num_str = f"{SciNum(num):{format_spec}}"
                 with self.subTest(
                     num=num,
                     format_spec=format_spec,
                     expected_num_str=expected_num_str,
-                    actual_num_str=snum_str,
+                    actual_num_str=num_str,
                 ):
-                    self.assertEqual(snum_str, expected_num_str)
+                    self.assertEqual(num_str, expected_num_str)
 
     def test_fixed_point(self):
         cases_list = [

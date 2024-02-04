@@ -74,19 +74,19 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(formatter(num), "2.4e-03")
 
     def test_add_c_prefix_no_overwrite(self):
-        sform = Formatter(
+        formatter = Formatter(
             exp_mode="scientific",
             exp_format="prefix",
             extra_si_prefixes={-2: "zzz"},
             add_c_prefix=True,
         )
-        self.assertEqual(sform(0.012), "1.2 zzz")
+        self.assertEqual(formatter(0.012), "1.2 zzz")
 
     def test_global_add_c_prefix_no_overwrite(self):
-        sform = Formatter(
+        formatter = Formatter(
             exp_mode="scientific",
             exp_format="prefix",
             extra_si_prefixes={-4: "zzz"},
         )
         with GlobalOptionsContext(add_c_prefix=True):
-            self.assertEqual(sform(0.012), "1.2e-02")
+            self.assertEqual(formatter(0.012), "1.2e-02")

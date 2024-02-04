@@ -20,66 +20,66 @@ available formatting options.
 
 >>> from sciform import Formatter
 >>> num = 12345.54321
->>> sform = Formatter(exp_mode="scientific", round_mode="sig_fig", ndigits=4)
->>> print(sform(num))
+>>> formatter = Formatter(exp_mode="scientific", round_mode="sig_fig", ndigits=4)
+>>> print(formatter(num))
 1.235e+04
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     exp_mode="engineering",
 ...     round_mode="dec_place",
 ...     ndigits=10,
 ...     sign_mode=" ",
 ...     superscript=True,
 ... )
->>> print(sform(num))
+>>> print(formatter(num))
  12.3455432100×10³
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     exp_mode="fixed_point",
 ...     upper_separator=" ",
 ...     decimal_separator=",",
 ...     lower_separator="_",
 ...     sign_mode="+",
 ... )
->>> print(sform(num))
+>>> print(formatter(num))
 +12 345,543_21
 
 >>> num = 0.076543
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     exp_mode="scientific", exp_val=-3, exp_format="parts_per", add_ppth_form=True
 ... )
->>> print(sform(num))
+>>> print(formatter(num))
 76.543 ppth
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     exp_mode="scientific", exp_val=-2, exp_format="prefix", add_c_prefix=True
 ... )
->>> print(sform(num))
+>>> print(formatter(num))
 7.6543 c
->>> sform = Formatter(exp_mode="scientific", exp_val=-6, exp_format="prefix")
->>> print(sform(num))
+>>> formatter = Formatter(exp_mode="scientific", exp_val=-6, exp_format="prefix")
+>>> print(formatter(num))
 76543 μ
->>> sform = Formatter(exp_mode="percent")
->>> print(sform(num))
+>>> formatter = Formatter(exp_mode="percent")
+>>> print(formatter(num))
 7.6543%
 
 >>> num = 3141592.7
 >>> unc = 1618
->>> sform = Formatter()
->>> print(sform(num, unc))
+>>> formatter = Formatter()
+>>> print(formatter(num, unc))
 3141593 ± 1618
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     exp_mode="engineering",
 ...     exp_format="prefix",
 ...     pdg_sig_figs=True,
 ...     pm_whitespace=False,
 ... )
->>> print(sform(num, unc))
+>>> print(formatter(num, unc))
 (3.1416±0.0016) M
 
 >>> num = 314159.27
 >>> unc = 1618
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     exp_mode="engineering_shifted", pdg_sig_figs=True, paren_uncertainty=True
 ... )
->>> print(sform(num, unc))
+>>> print(formatter(num, unc))
 (0.3142(16))e+06
 
 .. _fsml_examples:
@@ -144,33 +144,33 @@ manager, but this could have been done using :func:`set_global_options`
 instead.
 
 >>> from sciform import SciNum, GlobalOptionsContext
->>> snum = SciNum(12345.54321)
->>> print(f"{snum:!4e}")
+>>> num = SciNum(12345.54321)
+>>> print(f"{num:!4e}")
 1.235e+04
->>> print(f"{snum: .10r}")
+>>> print(f"{num: .10r}")
  12.3455432100e+03
 >>> with GlobalOptionsContext(
 ...     upper_separator=" ",
 ...     decimal_separator=",",
 ...     lower_separator="_",
 ... ):
-...     print(f"{snum:+}")
+...     print(f"{num:+}")
 +12 345,543_21
 
->>> snum = SciNum(0.076543)
+>>> num = SciNum(0.076543)
 >>> with GlobalOptionsContext(exp_format="parts_per", add_ppth_form=True):
-...     print(f"{snum:ex-3}")
+...     print(f"{num:ex-3}")
 ...
 76.543 ppth
 >>> with GlobalOptionsContext(exp_format="prefix", add_c_prefix=True):
-...     print(f"{snum:ex-2}")
+...     print(f"{num:ex-2}")
 ...
 7.6543 c
 >>> with GlobalOptionsContext(exp_mode="scientific", exp_val=-6, exp_format="prefix"):
-...     print(f"{snum:ex-6}")
+...     print(f"{num:ex-6}")
 ...
 76543 μ
->>> print(f"{snum:%}")
+>>> print(f"{num:%}")
 7.6543%
 
 >>> num_unc = SciNum(3141592.7, 1618)
@@ -296,7 +296,7 @@ lists, arrays, etc.) of numbers.
 
 >>> from sciform import Formatter
 >>>
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     exp_mode="engineering",
 ...     exp_format="prefix",
 ...     pdg_sig_figs=True,
@@ -305,11 +305,11 @@ lists, arrays, etc.) of numbers.
 >>> val_list = [1000, 2000, 3000]
 >>> err_list = [200, 400, 600]
 >>>
->>> val_str_list = list(map(sform, val_list))
+>>> val_str_list = list(map(formatter, val_list))
 >>> print(val_str_list)
 ['1 k', '2 k', '3 k']
 >>>
->>> val_err_str_list = list(map(sform, val_list, err_list))
+>>> val_err_str_list = list(map(formatter, val_list, err_list))
 >>> print(val_err_str_list)
 ['1.00(20) k', '2.0(4) k', '3.0(6) k']
 
@@ -319,16 +319,16 @@ makes this easy.
 
 >>> import numpy as np
 >>>
->>> vec_sform = np.vectorize(sform)
+>>> vec_formatter = np.vectorize(formatter)
 >>> arr = np.array([[1e6, 2e6, 3e6], [4e6, 5e6, 6e6], [7e6, 8e6, 9e6]])
 >>>
 >>> arr_err = np.array([[9e4, 8e4, 7e4], [6e4, 5e4, 4e4], [3e4, 2e4, 1e4]])
 >>>
->>> print(vec_sform(arr))
+>>> print(vec_formatter(arr))
 [['1 M' '2 M' '3 M']
  ['4 M' '5 M' '6 M']
  ['7 M' '8 M' '9 M']]
->>> print(vec_sform(arr, arr_err))
+>>> print(vec_formatter(arr, arr_err))
 [['1.00(9) M' '2.00(8) M' '3.00(7) M']
  ['4.00(6) M' '5.00(5) M' '6.00(4) M']
  ['7.000(30) M' '8.000(20) M' '9.000(10) M']]
