@@ -6,6 +6,8 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, cast
 from warnings import warn
 
+from typing_extensions import Self
+
 from sciform.format_utils import (
     Number,
     construct_val_unc_exp_str,
@@ -27,12 +29,13 @@ from sciform.modes import (
     RoundModeEnum,
     SignModeEnum,
 )
-from sciform.options.conversion import finalize_input_options
+from sciform.options.conversion import finalize_populated_options, populate_options
 from sciform.output_conversion import convert_sciform_format
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.options.finalized_options import FinalizedOptions
     from sciform.options.input_options import InputOptions
+    from sciform.options.populated_options import PopulatedOptions
 
 
 def format_from_options(
@@ -42,15 +45,16 @@ def format_from_options(
     input_options: InputOptions | None = None,
 ) -> FormattedNumber:
     """Finalize options and select value of value/uncertainty formatter."""
-    options = finalize_input_options(input_options)
+    populated_options = populate_options(input_options)
+    finalized_options = finalize_populated_options(populated_options)
     value = Decimal(str(value))
 
     if uncertainty is not None:
         uncertainty = Decimal(str(uncertainty))
-        formatted_str = format_val_unc(value, uncertainty, options)
+        formatted_str = format_val_unc(value, uncertainty, finalized_options)
     else:
-        formatted_str = format_num(value, options)
-    return FormattedNumber(formatted_str)
+        formatted_str = format_num(value, finalized_options)
+    return FormattedNumber(formatted_str, populated_options)
 
 
 def format_non_finite(num: Decimal, options: FinalizedOptions) -> str:
@@ -331,7 +335,17 @@ class FormattedNumber(str):
     directly.
     """
 
-    __slots__ = ()
+    __slots__ = ("populated_options",)
+
+    def __new__(
+        cls: type[Self],
+        formatted_str: str,
+        populated_options: PopulatedOptions,
+    ) -> Self:
+        """Get a new string."""
+        obj = super().__new__(cls, formatted_str)
+        obj.populated_options = populated_options
+        return obj
 
     def as_str(self: FormattedNumber) -> str:
         """Return the string representation of the formatted number."""

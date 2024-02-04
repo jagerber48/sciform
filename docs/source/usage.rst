@@ -107,6 +107,97 @@ algorithm:
 
 .. _global_config:
 
+Output Conversion
+=================
+
+Typically the output of the :class:`Formatter` is used as a regular
+python string.
+However, the :class:`Formatter` returns a :class:`FormattedNumber`
+instance.
+The :class:`FormattedNumber` class
+subclasses :class:`str` and in many cases is used like a normal python
+string.
+However, the :class:`FormattedNumber` class
+exposes methods to convert the standard string representation into
+LaTeX, HTML, or ASCII representations.
+The LaTeX and HTML representations may be useful when :mod:`sciform`
+outputs are being used in contexts outside of e.g. text terminals such
+as `Matplotlib <https://matplotlib.org/>`_ plots,
+`Jupyter <https://jupyter.org/>`_ notebooks, or
+`Quarto <https://quarto.org/>`_ documents which support richer display
+functionality than Unicode text.
+The ASCII representation may be useful if :mod:`sciform` outputs are
+being used in contexts in which only ASCII, and not Unicode, text is
+supported or preferred.
+
+These conversions can be accessed via the
+:meth:`FormattedNumber.as_latex`,
+:meth:`FormattedNumber.as_html`, and
+:meth:`FormattedNumber.as_ascii` methods on the
+:class:`FormattedNumber` class.
+
+>>> formatter = Formatter(
+...     exp_mode="scientific",
+...     exp_val=-1,
+...     upper_separator="_",
+...     superscript=True,
+... )
+>>> formatted = formatter(12345)
+>>> print(f"{formatted} -> {formatted.as_latex()}")
+123_450×10⁻¹ -> $123\_450\times10^{-1}$
+>>> print(f"{formatted} -> {formatted.as_html()}")
+123_450×10⁻¹ -> 123_450×10<sup>-1</sup>
+>>> print(f"{formatted} -> {formatted.as_ascii()}")
+123_450×10⁻¹ -> 123_450e-01
+
+>>> formatter = Formatter(
+...     exp_mode="percent",
+...     lower_separator="_",
+... )
+>>> formatted = formatter(0.12345678, 0.00000255)
+>>> print(f"{formatted} -> {formatted.as_latex()}")
+(12.345_678 ± 0.000_255)% -> $(12.345\_678\:\pm\:0.000\_255)\%$
+>>> print(f"{formatted} -> {formatted.as_html()}")
+(12.345_678 ± 0.000_255)% -> (12.345_678 ± 0.000_255)%
+>>> print(f"{formatted} -> {formatted.as_ascii()}")
+(12.345_678 ± 0.000_255)% -> (12.345_678 +/- 0.000_255)%
+
+>>> formatter = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
+>>> formatted = formatter(314.159e-6, 2.71828e-6)
+>>> print(f"{formatted} -> {formatted.as_latex()}")
+(314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
+>>> print(f"{formatted} -> {formatted.as_html()}")
+(314.159 ± 2.718) μ -> (314.159 ± 2.718) μ
+>>> print(f"{formatted} -> {formatted.as_ascii()}")
+(314.159 ± 2.718) μ -> (314.159 +/- 2.718) u
+
+The LaTeX enclosing ``"$"`` math environment symbols can be optionally
+stripped:
+
+>>> formatter = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
+>>> formatted = formatter(314.159e-6, 2.71828e-6)
+>>> print(f"{formatted} -> {formatted.as_latex(strip_math_mode=False)}")
+(314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
+>>> print(f"{formatted} -> {formatted.as_latex(strip_math_mode=True)}")
+(314.159 ± 2.718) μ -> (314.159\:\pm\:2.718)\:\text{\textmu}
+
+In addition to exposing
+:meth:`FormattedNumber.as_latex` and
+:meth:`FormattedNumber.as_html`,
+the :class:`FormattedNumber` class defines
+the aliases
+:meth:`FormattedNumber._repr_latex_` and
+:meth:`FormattedNumber._repr_html_`.
+The
+`IPython display functions <https://ipython.readthedocs.io/en/stable/api/generated/IPython.display.html#functions>`_
+looks for these methods, and, if available, will use them to display
+prettier representations of the class than the Unicode ``__repr__``
+representation.
+Here is example :class:`FormattedNumber` usage in a Jupyter notebook.
+
+.. image:: ../../examples/outputs/jupyter_output.png
+  :width: 400
+
 Global Options
 ==============
 
@@ -306,6 +397,44 @@ Like the :class:`InputOptions` class, the :class:`PopulatedOptions`
 class provides access to its options via direct attribute access and via
 a :meth:`PopulatedOptions.as_dict` method.
 
+The :class:`FormattedNumber` class stores a record of the
+:class:`PopulatedOptions` that were used to generate it.
+
+>>> formatter = Formatter(
+...     exp_mode="engineering",
+...     round_mode="sig_fig",
+...     ndigits=2,
+...     superscript=True,
+... )
+>>> formatted = formatter(12345.678, 3.4)
+>>> print(formatted)
+(12.3457 ± 0.0034)×10³
+>>> print(formatted.populated_options)
+PopulatedOptions(
+ 'exp_mode': 'engineering',
+ 'exp_val': AutoExpVal,
+ 'round_mode': 'sig_fig',
+ 'ndigits': 2,
+ 'upper_separator': '',
+ 'decimal_separator': '.',
+ 'lower_separator': '',
+ 'sign_mode': '-',
+ 'left_pad_char': ' ',
+ 'left_pad_dec_place': 0,
+ 'exp_format': 'standard',
+ 'extra_si_prefixes': {},
+ 'extra_iec_prefixes': {},
+ 'extra_parts_per_forms': {},
+ 'capitalize': False,
+ 'superscript': True,
+ 'nan_inf_exp': False,
+ 'paren_uncertainty': False,
+ 'pdg_sig_figs': False,
+ 'left_pad_matching': False,
+ 'paren_uncertainty_separators': True,
+ 'pm_whitespace': True,
+)
+
 Formatter Options Edge Cases
 ----------------------------
 
@@ -372,97 +501,6 @@ be converted to string ``"0"`` in the :class:`PopulatedOptions`.
 <class 'int'>
 >>> print(type(formatter.populated_options.left_pad_char))
 <class 'str'>
-
-Output Conversion
-=================
-
-Typically the output of the :class:`Formatter` is used as a regular
-python string.
-However, the :class:`Formatter` returns a :class:`FormattedNumber`
-instance.
-The :class:`FormattedNumber` class
-subclasses :class:`str` and in many cases is used like a normal python
-string.
-However, the :class:`FormattedNumber` class
-exposes methods to convert the standard string representation into
-LaTeX, HTML, or ASCII representations.
-The LaTeX and HTML representations may be useful when :mod:`sciform`
-outputs are being used in contexts outside of e.g. text terminals such
-as `Matplotlib <https://matplotlib.org/>`_ plots,
-`Jupyter <https://jupyter.org/>`_ notebooks, or
-`Quarto <https://quarto.org/>`_ documents which support richer display
-functionality than Unicode text.
-The ASCII representation may be useful if :mod:`sciform` outputs are
-being used in contexts in which only ASCII, and not Unicode, text is
-supported or preferred.
-
-These conversions can be accessed via the
-:meth:`FormattedNumber.as_latex`,
-:meth:`FormattedNumber.as_html`, and
-:meth:`FormattedNumber.as_ascii` methods on the
-:class:`FormattedNumber` class.
-
->>> formatter = Formatter(
-...     exp_mode="scientific",
-...     exp_val=-1,
-...     upper_separator="_",
-...     superscript=True,
-... )
->>> formatted = formatter(12345)
->>> print(f"{formatted} -> {formatted.as_latex()}")
-123_450×10⁻¹ -> $123\_450\times10^{-1}$
->>> print(f"{formatted} -> {formatted.as_html()}")
-123_450×10⁻¹ -> 123_450×10<sup>-1</sup>
->>> print(f"{formatted} -> {formatted.as_ascii()}")
-123_450×10⁻¹ -> 123_450e-01
-
->>> formatter = Formatter(
-...     exp_mode="percent",
-...     lower_separator="_",
-... )
->>> formatted = formatter(0.12345678, 0.00000255)
->>> print(f"{formatted} -> {formatted.as_latex()}")
-(12.345_678 ± 0.000_255)% -> $(12.345\_678\:\pm\:0.000\_255)\%$
->>> print(f"{formatted} -> {formatted.as_html()}")
-(12.345_678 ± 0.000_255)% -> (12.345_678 ± 0.000_255)%
->>> print(f"{formatted} -> {formatted.as_ascii()}")
-(12.345_678 ± 0.000_255)% -> (12.345_678 +/- 0.000_255)%
-
->>> formatter = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
->>> formatted = formatter(314.159e-6, 2.71828e-6)
->>> print(f"{formatted} -> {formatted.as_latex()}")
-(314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
->>> print(f"{formatted} -> {formatted.as_html()}")
-(314.159 ± 2.718) μ -> (314.159 ± 2.718) μ
->>> print(f"{formatted} -> {formatted.as_ascii()}")
-(314.159 ± 2.718) μ -> (314.159 +/- 2.718) u
-
-The LaTeX enclosing ``"$"`` math environment symbols can be optionally
-stripped:
-
->>> formatter = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
->>> formatted = formatter(314.159e-6, 2.71828e-6)
->>> print(f"{formatted} -> {formatted.as_latex(strip_math_mode=False)}")
-(314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
->>> print(f"{formatted} -> {formatted.as_latex(strip_math_mode=True)}")
-(314.159 ± 2.718) μ -> (314.159\:\pm\:2.718)\:\text{\textmu}
-
-In addition to exposing
-:meth:`FormattedNumber.as_latex` and
-:meth:`FormattedNumber.as_html`,
-the :class:`FormattedNumber` class defines
-the aliases
-:meth:`FormattedNumber._repr_latex_` and
-:meth:`FormattedNumber._repr_html_`.
-The
-`IPython display functions <https://ipython.readthedocs.io/en/stable/api/generated/IPython.display.html#functions>`_
-looks for these methods, and, if available, will use them to display
-prettier representations of the class than the Unicode ``__repr__``
-representation.
-Here is example :class:`FormattedNumber` usage in a Jupyter notebook.
-
-.. image:: ../../examples/outputs/jupyter_output.png
-  :width: 400
 
 .. _dec_and_float:
 

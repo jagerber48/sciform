@@ -24,6 +24,9 @@ Added
   to provide string representations of the options, or provide
   programmatic access to the options via either attribute access or the
   ``as_dict()`` methods.
+* The ``PopulatedOptions`` used during formatting of a given
+  ``FormattedNumber`` instance are stored on that instance for future
+  reference.
 * Added ``get_default_global_options``.
 * Now integer ``0`` can be passed into ``left_pad_char`` to get the same
   behavior as string ``"0"``.
