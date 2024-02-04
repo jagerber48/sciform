@@ -137,8 +137,7 @@ SciNum, and Global Options
 Here are a small selection of examples which demonstrate some of the
 available string formatting options.
 Note that many options are not available through the :ref:`fsml`, so
-these options must be selected by configuring the global default options
-during formatting.
+these options must be selected by configuring the global options.
 Here this is done using the :class:`GlobalOptionsContext` context
 manager, but this could have been done using :func:`set_global_options`
 instead.
