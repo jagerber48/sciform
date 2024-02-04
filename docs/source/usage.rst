@@ -107,8 +107,8 @@ algorithm:
 
 .. _global_config:
 
-Global Configuration
-====================
+Global Options
+==============
 
 It is possible to modify the global options for :mod:`sciform` to avoid
 repetition of verbose configuration options or format specification
@@ -224,6 +224,154 @@ If the user wishes to configure these options, but also use the
 options.
 
 .. _output_conversion:
+
+Formatter Options
+=================
+
+The :class:`Formatter` options are configured by constructing a
+:class:`Formatter` and passing in keyword arguments corresponding to the
+desired options.
+Only a subset of available options need be specified.
+The user input during :class:`Formatter` construction can be viewed
+using the :attr:`Formatter.input_options` property.
+
+>>> formatter = Formatter(
+...     exp_mode="engineering",
+...     round_mode="sig_fig",
+...     ndigits=2,
+...     superscript=True,
+... )
+>>> print(formatter.input_options)
+InputOptions(
+ 'exp_mode': 'engineering',
+ 'round_mode': 'sig_fig',
+ 'ndigits': 2,
+ 'superscript': True,
+)
+
+The :attr:`Formatter.input_options` property is a :class:`InputOptions`
+instance.
+The string representation of this object indicates the explicitly
+populated options.
+A dictionary of these populated options is available via the
+:meth:`InputOptions.as_dict` method.
+
+>>> print(formatter.input_options.as_dict())
+{'exp_mode': 'engineering', 'round_mode': 'sig_fig', 'ndigits': 2, 'superscript': True}
+
+Both populated and unpopulated options can be accessed by direct
+attribute access.
+
+>>> print(formatter.input_options.round_mode)
+sig_fig
+>>> print(formatter.input_options.exp_format)
+None
+
+In addition to viewing the user input options, it is possible to preview
+the result of populating the unpopulated options with the corresponding
+global options by using the :attr:`Formatter.populated_options`
+property.
+
+>>> print(formatter.populated_options)
+PopulatedOptions(
+ 'exp_mode': 'engineering',
+ 'exp_val': AutoExpVal,
+ 'round_mode': 'sig_fig',
+ 'ndigits': 2,
+ 'upper_separator': '',
+ 'decimal_separator': '.',
+ 'lower_separator': '',
+ 'sign_mode': '-',
+ 'left_pad_char': ' ',
+ 'left_pad_dec_place': 0,
+ 'exp_format': 'standard',
+ 'extra_si_prefixes': {},
+ 'extra_iec_prefixes': {},
+ 'extra_parts_per_forms': {},
+ 'capitalize': False,
+ 'superscript': True,
+ 'nan_inf_exp': False,
+ 'paren_uncertainty': False,
+ 'pdg_sig_figs': False,
+ 'left_pad_matching': False,
+ 'paren_uncertainty_separators': True,
+ 'pm_whitespace': True,
+)
+
+The :attr:`Formatter.populated_options` property is a
+:class:`PopulatedOptions` instance.
+It is recalculated each time the property is accessed so that the output
+always reflects the current global options.
+Like the :class:`InputOptions` class, the :class:`PopulatedOptions`
+class provides access to its options via direct attribute access and via
+a :meth:`PopulatedOptions.as_dict` method.
+
+Formatter Options Edge Cases
+----------------------------
+
+In most cases, at format/option population time, any non-``None`` options
+in the :class:`InputOptions` will be exactly copied over to the
+:class:`PopulatedOptions` and any ``None`` options will be exactly copied
+over from the global options at format time.
+However, a few options have slightly more complicated behavior.
+
+>>> from sciform import set_global_options, get_global_options, reset_global_options
+>>> set_global_options(extra_si_prefixes={-2: "cm"})
+>>> print(get_global_options().extra_si_prefixes)
+{-2: 'cm'}
+>>> formatter = Formatter(add_c_prefix=True)
+>>> print(formatter.input_options.extra_si_prefixes)
+None
+>>> print(formatter.populated_options.extra_si_prefixes)
+{-2: 'c'}
+>>> reset_global_options()
+
+Somewhat surprisingly, even though ``extra_si_prefixes`` is unpopulated
+in the :class:`Formatter`, it does not get populated with the
+corresponding global options ``extra_si_prefixes``.
+This is because the :class:`Formatter` has ``add_c_prefix=True``.
+If ``extra_si_prefixes=None`` but ``add_c_prefix=True`` then the same
+population behavior as if ``extra_si_prefixes={-2: 'c'}`` is realized.
+If ``extra_si_prefixes`` is a dictionary then ``{-2: 'c'}`` is added to
+the dictionary if ``-2`` is not already a key in the dictionary.
+If ``-2`` already appears in the dictionary then its value is not
+overwritten.
+
+>>> set_global_options(extra_si_prefixes={-2: "cm"})
+>>> print(get_global_options().extra_si_prefixes)
+{-2: 'cm'}
+>>> formatter = Formatter(extra_si_prefixes={-15: 'fermi'}, add_c_prefix=True)
+>>> print(formatter.input_options.extra_si_prefixes)
+{-15: 'fermi'}
+>>> print(formatter.populated_options.extra_si_prefixes)
+{-15: 'fermi', -2: 'c'}
+>>> reset_global_options()
+
+>>> formatter = Formatter(extra_si_prefixes={-2: 'cm'}, add_c_prefix=True)
+>>> print(formatter.input_options.extra_si_prefixes)
+{-2: 'cm'}
+>>> print(formatter.populated_options.extra_si_prefixes)
+{-2: 'cm'}
+>>> reset_global_options()
+
+Analogous behavior occurs for the ``add_small_si_prefixes`` and
+``add_ppth_form`` :class:`Formatter` options.
+Note also that these three options, ``add_c_prefix``,
+``add_small_si_prefixes``, and ``add_ppth_form`` appear in the
+:class:`InputOptions` instance if they have been explicitly set, but
+they never appear in the :class:`PopulatedOptions` instance.
+Rather, only the populated ``extra_si_prefixes`` or
+``extra_parts_per_forms`` are appropriately populated.
+
+Finally, if integer ``0`` is passed into ``left_pad_char`` then
+integer ``0`` will be stored in the :class:`InputOptions`, but it will
+be converted to string ``"0"`` in the :class:`PopulatedOptions`.
+
+>>> formatter = Formatter(left_pad_char=0)
+>>> print(type(formatter.input_options.left_pad_char))
+<class 'int'>
+>>> print(type(formatter.populated_options.left_pad_char))
+<class 'str'>
 
 Output Conversion
 =================
