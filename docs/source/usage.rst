@@ -23,29 +23,30 @@ The :class:`Formatter` object is then called with a number and returns
 a corresponding formatted string.
 
 >>> from sciform import Formatter
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     round_mode="dec_place", ndigits=6, upper_separator=" ", lower_separator=" "
 ... )
->>> print(sform(51413.14159265359))
+>>> print(formatter(51413.14159265359))
 51 413.141 593
->>> sform = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
->>> print(sform(123456.78))
+>>> formatter = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
+>>> print(formatter(123456.78))
 123.5e+03
 
 It is not necessary to provide input for all options.
 At format time, any un-populated options will be populated with the
-corresponding options from the global default options.
+corresponding options from the global options.
 See :ref:`global_config` for details about how to view and modify the
-global default options.
+global options.
 
 SciNum
 ------
 
 The :mod:`sciform` :ref:`FSML <fsml>` can be accessed via the
 :class:`SciNum` object.
-Python numbers specified as :class:`string`, :class:`float`, or
-:class:`Decimal` objects are cast to :class:`SciNum` objects which can
-be formatted using the :mod:`sciform` :ref:`FSML <fsml>`.
+Python numbers specified as :class:`string`, :class:`int`,
+:class:`float`, or :class:`Decimal` objects are cast to :class:`SciNum`
+objects which can be formatted using the :mod:`sciform`
+:ref:`FSML <fsml>`.
 
 >>> from sciform import SciNum
 >>> num = SciNum(123456)
@@ -72,19 +73,21 @@ using the :class:`SciNum` object.
 
 >>> val = 84.3
 >>> unc = 0.2
->>> sform = Formatter(ndigits=2)
->>> print(sform(val, unc))
+>>> formatter = Formatter(ndigits=2)
+>>> print(formatter(val, unc))
 84.30 ± 0.20
 >>> from sciform import SciNum
->>> val_unc = SciNum(val, unc)
->>> print(f"{val_unc:!2}")
+>>> num = SciNum(val, unc)
+>>> print(f"{num:!2}")
 84.30 ± 0.20
 
 Value/uncertainty pairs can also be formatted using a parentheses
 notation in which the uncertainty is displayed in parentheses following
 the value.
+See
+`BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
 
->>> print(f"{val_unc:!2()}")
+>>> print(f"{num:!2()}")
 84.30(20)
 
 Value/uncertainty pairs are formatted according to the following
@@ -104,25 +107,116 @@ algorithm:
 
 .. _global_config:
 
-Global Configuration
-====================
+Output Conversion
+=================
 
-It is possible to modify the global default configuration for
-:mod:`sciform` to avoid repetition of verbose configuration options or
-format specification strings.
+Typically the output of the :class:`Formatter` is used as a regular
+python string.
+However, the :class:`Formatter` returns a :class:`FormattedNumber`
+instance.
+The :class:`FormattedNumber` class
+subclasses :class:`str` and in many cases is used like a normal python
+string.
+However, the :class:`FormattedNumber` class
+exposes methods to convert the standard string representation into
+LaTeX, HTML, or ASCII representations.
+The LaTeX and HTML representations may be useful when :mod:`sciform`
+outputs are being used in contexts outside of e.g. text terminals such
+as `Matplotlib <https://matplotlib.org/>`_ plots,
+`Jupyter <https://jupyter.org/>`_ notebooks, or
+`Quarto <https://quarto.org/>`_ documents which support richer display
+functionality than Unicode text.
+The ASCII representation may be useful if :mod:`sciform` outputs are
+being used in contexts in which only ASCII, and not Unicode, text is
+supported or preferred.
+
+These conversions can be accessed via the
+:meth:`FormattedNumber.as_latex`,
+:meth:`FormattedNumber.as_html`, and
+:meth:`FormattedNumber.as_ascii` methods on the
+:class:`FormattedNumber` class.
+
+>>> formatter = Formatter(
+...     exp_mode="scientific",
+...     exp_val=-1,
+...     upper_separator="_",
+...     superscript=True,
+... )
+>>> formatted = formatter(12345)
+>>> print(f"{formatted} -> {formatted.as_latex()}")
+123_450×10⁻¹ -> $123\_450\times10^{-1}$
+>>> print(f"{formatted} -> {formatted.as_html()}")
+123_450×10⁻¹ -> 123_450×10<sup>-1</sup>
+>>> print(f"{formatted} -> {formatted.as_ascii()}")
+123_450×10⁻¹ -> 123_450e-01
+
+>>> formatter = Formatter(
+...     exp_mode="percent",
+...     lower_separator="_",
+... )
+>>> formatted = formatter(0.12345678, 0.00000255)
+>>> print(f"{formatted} -> {formatted.as_latex()}")
+(12.345_678 ± 0.000_255)% -> $(12.345\_678\:\pm\:0.000\_255)\%$
+>>> print(f"{formatted} -> {formatted.as_html()}")
+(12.345_678 ± 0.000_255)% -> (12.345_678 ± 0.000_255)%
+>>> print(f"{formatted} -> {formatted.as_ascii()}")
+(12.345_678 ± 0.000_255)% -> (12.345_678 +/- 0.000_255)%
+
+>>> formatter = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
+>>> formatted = formatter(314.159e-6, 2.71828e-6)
+>>> print(f"{formatted} -> {formatted.as_latex()}")
+(314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
+>>> print(f"{formatted} -> {formatted.as_html()}")
+(314.159 ± 2.718) μ -> (314.159 ± 2.718) μ
+>>> print(f"{formatted} -> {formatted.as_ascii()}")
+(314.159 ± 2.718) μ -> (314.159 +/- 2.718) u
+
+The LaTeX enclosing ``"$"`` math environment symbols can be optionally
+stripped:
+
+>>> formatter = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
+>>> formatted = formatter(314.159e-6, 2.71828e-6)
+>>> print(f"{formatted} -> {formatted.as_latex(strip_math_mode=False)}")
+(314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
+>>> print(f"{formatted} -> {formatted.as_latex(strip_math_mode=True)}")
+(314.159 ± 2.718) μ -> (314.159\:\pm\:2.718)\:\text{\textmu}
+
+In addition to exposing
+:meth:`FormattedNumber.as_latex` and
+:meth:`FormattedNumber.as_html`,
+the :class:`FormattedNumber` class defines
+the aliases
+:meth:`FormattedNumber._repr_latex_` and
+:meth:`FormattedNumber._repr_html_`.
+The
+`IPython display functions <https://ipython.readthedocs.io/en/stable/api/generated/IPython.display.html#functions>`_
+looks for these methods, and, if available, will use them to display
+prettier representations of the class than the Unicode ``__repr__``
+representation.
+Here is example :class:`FormattedNumber` usage in a Jupyter notebook.
+
+.. image:: ../../examples/outputs/jupyter_output.png
+  :width: 400
+
+Global Options
+==============
+
+It is possible to modify the global options for :mod:`sciform` to avoid
+repetition of verbose configuration options or format specification
+strings.
 When the user creates a :class:`Formatter` object or formats a string
 using the :ref:`FSML <fsml>`, they typically do not specify settings for
 all available options.
-In these cases, the unspecified options resolve their values from the
-global default settings at format time.
+In these cases, the unpopulated options resolve their values from the
+global options at format time.
 
-The global default settings can be viewed using
-:func:`print_global_defaults()` (the settings shown here are the
-package default settings):
+The :mod:`sciform` default global options can be viewed using
+:func:`get_default_global_options`
 
->>> from sciform import print_global_defaults
->>> print_global_defaults()
-{'exp_mode': 'fixed_point',
+>>> from sciform import get_default_global_options
+>>> print(get_default_global_options())
+PopulatedOptions(
+ 'exp_mode': 'fixed_point',
  'exp_val': AutoExpVal,
  'round_mode': 'sig_fig',
  'ndigits': AutoDigits,
@@ -143,23 +237,28 @@ package default settings):
  'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_separators': True,
- 'pm_whitespace': True}
+ 'pm_whitespace': True,
+)
 
-The global default settings can be modified using the
-:func:`set_global_defaults()` function.
+The global options can be modified using the :func:`set_global_options`
+function.
 Any options passed will overwrite the corresponding options in the
-current global default settings and any unfilled options will remain
-unchanged.
+current global options and any unfilled options will remain unchanged.
+The current global options can be viewed using
+:func:`get_global_options`.
+The global options can be reset to the :mod:`sciform` default global
+options using :func:`reset_global_options`.
 
->>> from sciform import set_global_defaults
->>> set_global_defaults(
+>>> from sciform import set_global_options, get_global_options, reset_global_options
+>>> set_global_options(
 ...     left_pad_char="0",
 ...     exp_mode="engineering_shifted",
 ...     ndigits=4,
 ...     decimal_separator=",",
 ... )
->>> print_global_defaults()
-{'exp_mode': 'engineering_shifted',
+>>> print(get_global_options())
+PopulatedOptions(
+ 'exp_mode': 'engineering_shifted',
  'exp_val': AutoExpVal,
  'round_mode': 'sig_fig',
  'ndigits': 4,
@@ -180,32 +279,26 @@ unchanged.
  'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_separators': True,
- 'pm_whitespace': True}
+ 'pm_whitespace': True,
+)
+>>> reset_global_options()
 
-The global default settings can be reset to the :mod:`sciform` defaults
-using :func:`reset_global_defaults`.
-
->>> from sciform import reset_global_defaults
->>> reset_global_defaults()
-
-The global default settings can be temporarily modified using the
-:class:`GlobalDefaultsContext` context manager.
+The global options can be temporarily modified using the
+:class:`GlobalOptionsContext` context manager.
 The context manager is configured using the same options as
-:class:`Formatter`.
-Within the context of :class:`GlobalDefaultsContext` manager, the
-global defaults take on the specified input settings, but when the
-context is exited, the global default settings revert to their previous
-values.
+:class:`Formatter` and :func:`set_global_options`.
+Within the context of :class:`GlobalOptionsContext` manager, the
+global options take on the specified input settings, but when the
+context is exited, the global options revert to their previous values.
 
->>> from sciform import GlobalDefaultsContext, SciNum
->>> snum = SciNum(0.0123)
->>> print(f"{snum:.2ep}")
+>>> from sciform import GlobalOptionsContext, SciNum
+>>> num = SciNum(0.0123)
+>>> print(f"{num:.2ep}")
 1.23e-02
->>> with GlobalDefaultsContext(add_c_prefix=True):
-...     print(f"{snum:.2ep}")
-...
+>>> with GlobalOptionsContext(add_c_prefix=True):
+...     print(f"{num:.2ep}")
 1.23 c
->>> print(f"{snum:.2ep}")
+>>> print(f"{num:.2ep}")
 1.23e-02
 
 Note that the :ref:`FSML <fsml>` does not provide complete control over
@@ -213,100 +306,196 @@ all possible format options.
 For example, there is no code in the :ref:`FSML <fsml>` for configuring
 the ``pdg_sig_figs`` option.
 If the user wishes to configure these options, but also use the
-:ref:`FSML <fsml>`, then they must do so by modifying the global default
-settings.
+:ref:`FSML <fsml>`, then they must do so by modifying the global
+options.
 
 .. _output_conversion:
 
-Output Conversion
+Formatter Options
 =================
 
-Typically the output of the :class:`Formatter` is used as a regular
-python string.
-However, the :class:`Formatter` actually returns a
-:class:`FormattedNumber <formatter.FormattedNumber>` instance.
-The :class:`FormattedNumber <formatter.FormattedNumber>` class
-subclasses ``str`` and in many cases is used like a normal python
-string.
-However, the :class:`FormattedNumber <formatter.FormattedNumber>` class
-exposes methods to convert the standard string representation into
-LaTex, HTML, or ASCII representations.
-The LaTeX and HTML representations may be useful when :mod:`sciform`
-outputs are being used in contexts outside of e.g. text terminals such
-as `Matplotlib <https://matplotlib.org/>`_ plots,
-`Jupyter <https://jupyter.org/>`_ notebooks, or
-`Quarto <https://quarto.org/>`_ documents which support richer display
-functionality than Unicode text.
-The ASCII representation may be useful if :mod:`sciform` outputs are
-being used in contexts in which only ASCII, and not Unicode, text is
-supported or preferred.
+The :class:`Formatter` options are configured by constructing a
+:class:`Formatter` and passing in keyword arguments corresponding to the
+desired options.
+Only a subset of available options need be specified.
+The user input during :class:`Formatter` construction can be viewed
+using the :attr:`Formatter.input_options` property.
 
-These conversions can be accessed via the
-:meth:`as_latex() <formatter.FormattedNumber.as_latex>`,
-:meth:`as_html() <formatter.FormattedNumber.as_html>`, and
-:meth:`as_ascii() <formatter.FormattedNumber.as_ascii>` methods on the
-:class:`FormattedNumber <formatter.FormattedNumber>` class.
-
->>> sform = Formatter(
-...     exp_mode="scientific",
-...     exp_val=-1,
-...     upper_separator="_",
+>>> formatter = Formatter(
+...     exp_mode="engineering",
+...     round_mode="sig_fig",
+...     ndigits=2,
 ...     superscript=True,
 ... )
->>> formatted_str = sform(12345)
->>> print(f"{formatted_str} -> {formatted_str.as_latex()}")
-123_450×10⁻¹ -> $123\_450\times10^{-1}$
->>> print(f"{formatted_str} -> {formatted_str.as_html()}")
-123_450×10⁻¹ -> 123_450×10<sup>-1</sup>
->>> print(f"{formatted_str} -> {formatted_str.as_ascii()}")
-123_450×10⁻¹ -> 123_450e-01
+>>> print(formatter.input_options)
+InputOptions(
+ 'exp_mode': 'engineering',
+ 'round_mode': 'sig_fig',
+ 'ndigits': 2,
+ 'superscript': True,
+)
 
->>> sform = Formatter(
-...     exp_mode="percent",
-...     lower_separator="_",
+The :attr:`Formatter.input_options` property is a :class:`InputOptions`
+instance.
+The string representation of this object indicates the explicitly
+populated options.
+A dictionary of these populated options is available via the
+:meth:`InputOptions.as_dict` method.
+
+>>> print(formatter.input_options.as_dict())
+{'exp_mode': 'engineering', 'round_mode': 'sig_fig', 'ndigits': 2, 'superscript': True}
+
+Both populated and unpopulated options can be accessed by direct
+attribute access.
+
+>>> print(formatter.input_options.round_mode)
+sig_fig
+>>> print(formatter.input_options.exp_format)
+None
+
+In addition to viewing the user input options, it is possible to preview
+the result of populating the unpopulated options with the corresponding
+global options by using the :attr:`Formatter.populated_options`
+property.
+
+>>> print(formatter.populated_options)
+PopulatedOptions(
+ 'exp_mode': 'engineering',
+ 'exp_val': AutoExpVal,
+ 'round_mode': 'sig_fig',
+ 'ndigits': 2,
+ 'upper_separator': '',
+ 'decimal_separator': '.',
+ 'lower_separator': '',
+ 'sign_mode': '-',
+ 'left_pad_char': ' ',
+ 'left_pad_dec_place': 0,
+ 'exp_format': 'standard',
+ 'extra_si_prefixes': {},
+ 'extra_iec_prefixes': {},
+ 'extra_parts_per_forms': {},
+ 'capitalize': False,
+ 'superscript': True,
+ 'nan_inf_exp': False,
+ 'paren_uncertainty': False,
+ 'pdg_sig_figs': False,
+ 'left_pad_matching': False,
+ 'paren_uncertainty_separators': True,
+ 'pm_whitespace': True,
+)
+
+The :attr:`Formatter.populated_options` property is a
+:class:`PopulatedOptions` instance.
+It is recalculated each time the property is accessed so that the output
+always reflects the current global options.
+Like the :class:`InputOptions` class, the :class:`PopulatedOptions`
+class provides access to its options via direct attribute access and via
+a :meth:`PopulatedOptions.as_dict` method.
+
+The :class:`FormattedNumber` class stores a record of the
+:class:`PopulatedOptions` that were used to generate it.
+
+>>> formatter = Formatter(
+...     exp_mode="engineering",
+...     round_mode="sig_fig",
+...     ndigits=2,
+...     superscript=True,
 ... )
->>> formatted_str = sform(0.12345678, 0.00000255)
->>> print(f"{formatted_str} -> {formatted_str.as_latex()}")
-(12.345_678 ± 0.000_255)% -> $(12.345\_678\:\pm\:0.000\_255)\%$
->>> print(f"{formatted_str} -> {formatted_str.as_html()}")
-(12.345_678 ± 0.000_255)% -> (12.345_678 ± 0.000_255)%
->>> print(f"{formatted_str} -> {formatted_str.as_ascii()}")
-(12.345_678 ± 0.000_255)% -> (12.345_678 +/- 0.000_255)%
+>>> formatted = formatter(12345.678, 3.4)
+>>> print(formatted)
+(12.3457 ± 0.0034)×10³
+>>> print(formatted.populated_options)
+PopulatedOptions(
+ 'exp_mode': 'engineering',
+ 'exp_val': AutoExpVal,
+ 'round_mode': 'sig_fig',
+ 'ndigits': 2,
+ 'upper_separator': '',
+ 'decimal_separator': '.',
+ 'lower_separator': '',
+ 'sign_mode': '-',
+ 'left_pad_char': ' ',
+ 'left_pad_dec_place': 0,
+ 'exp_format': 'standard',
+ 'extra_si_prefixes': {},
+ 'extra_iec_prefixes': {},
+ 'extra_parts_per_forms': {},
+ 'capitalize': False,
+ 'superscript': True,
+ 'nan_inf_exp': False,
+ 'paren_uncertainty': False,
+ 'pdg_sig_figs': False,
+ 'left_pad_matching': False,
+ 'paren_uncertainty_separators': True,
+ 'pm_whitespace': True,
+)
 
->>> sform = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
->>> formatted_str = sform(314.159e-6, 2.71828e-6)
->>> print(f"{formatted_str} -> {formatted_str.as_latex()}")
-(314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
->>> print(f"{formatted_str} -> {formatted_str.as_html()}")
-(314.159 ± 2.718) μ -> (314.159 ± 2.718) μ
->>> print(f"{formatted_str} -> {formatted_str.as_ascii()}")
-(314.159 ± 2.718) μ -> (314.159 +/- 2.718) u
+Formatter Options Edge Cases
+----------------------------
 
-The LaTeX enclosing ``"$"`` math environment symbols can be optionally
-stripped:
+In most cases, at format/option population time, any non-``None`` options
+in the :class:`InputOptions` will be exactly copied over to the
+:class:`PopulatedOptions` and any ``None`` options will be exactly copied
+over from the global options at format time.
+However, a few options have slightly more complicated behavior.
 
->>> sform = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
->>> formatted_str = sform(314.159e-6, 2.71828e-6)
->>> print(f"{formatted_str} -> {formatted_str.as_latex(strip_math_mode=False)}")
-(314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
->>> print(f"{formatted_str} -> {formatted_str.as_latex(strip_math_mode=True)}")
-(314.159 ± 2.718) μ -> (314.159\:\pm\:2.718)\:\text{\textmu}
+>>> from sciform import set_global_options, get_global_options, reset_global_options
+>>> set_global_options(extra_si_prefixes={-2: "cm"})
+>>> print(get_global_options().extra_si_prefixes)
+{-2: 'cm'}
+>>> formatter = Formatter(add_c_prefix=True)
+>>> print(formatter.input_options.extra_si_prefixes)
+None
+>>> print(formatter.populated_options.extra_si_prefixes)
+{-2: 'c'}
+>>> reset_global_options()
 
-In addition to exposing
-:meth:`as_latex() <formatter.FormattedNumber.as_latex>` and
-:meth:`as_html() <formatter.FormattedNumber.as_html>`,
-the :class:`FormattedNumber <formatter.FormattedNumber>` class defines
-the aliases
-:meth:`_repr_latex_() <formatter.FormattedNumber._repr_latex_>` and
-:meth:`_repr_html_() <formatter.FormattedNumber._repr_html_>`.
-The
-`IPython display functions <https://ipython.readthedocs.io/en/stable/api/generated/IPython.display.html#functions>`_
-looks for these methods, and, if available, will use them to display
-prettier representations of the class than the Unicode ``__repr__``
-representation.
+Somewhat surprisingly, even though ``extra_si_prefixes`` is unpopulated
+in the :class:`Formatter`, it does not get populated with the
+corresponding global options ``extra_si_prefixes``.
+This is because the :class:`Formatter` has ``add_c_prefix=True``.
+If ``extra_si_prefixes=None`` but ``add_c_prefix=True`` then the same
+population behavior as if ``extra_si_prefixes={-2: 'c'}`` is realized.
+If ``extra_si_prefixes`` is a dictionary then ``{-2: 'c'}`` is added to
+the dictionary if ``-2`` is not already a key in the dictionary.
+If ``-2`` already appears in the dictionary then its value is not
+overwritten.
 
-.. image:: ../../examples/outputs/jupyter_output.png
-  :width: 400
+>>> set_global_options(extra_si_prefixes={-2: "cm"})
+>>> print(get_global_options().extra_si_prefixes)
+{-2: 'cm'}
+>>> formatter = Formatter(extra_si_prefixes={-15: 'fermi'}, add_c_prefix=True)
+>>> print(formatter.input_options.extra_si_prefixes)
+{-15: 'fermi'}
+>>> print(formatter.populated_options.extra_si_prefixes)
+{-15: 'fermi', -2: 'c'}
+>>> reset_global_options()
+
+>>> formatter = Formatter(extra_si_prefixes={-2: 'cm'}, add_c_prefix=True)
+>>> print(formatter.input_options.extra_si_prefixes)
+{-2: 'cm'}
+>>> print(formatter.populated_options.extra_si_prefixes)
+{-2: 'cm'}
+>>> reset_global_options()
+
+Analogous behavior occurs for the ``add_small_si_prefixes`` and
+``add_ppth_form`` :class:`Formatter` options.
+Note also that these three options, ``add_c_prefix``,
+``add_small_si_prefixes``, and ``add_ppth_form`` appear in the
+:class:`InputOptions` instance if they have been explicitly set, but
+they never appear in the :class:`PopulatedOptions` instance.
+Rather, only the populated ``extra_si_prefixes`` or
+``extra_parts_per_forms`` are appropriately populated.
+
+Finally, if integer ``0`` is passed into ``left_pad_char`` then
+integer ``0`` will be stored in the :class:`InputOptions`, but it will
+be converted to string ``"0"`` in the :class:`PopulatedOptions`.
+
+>>> formatter = Formatter(left_pad_char=0)
+>>> print(type(formatter.input_options.left_pad_char))
+<class 'int'>
+>>> print(type(formatter.populated_options.left_pad_char))
+<class 'str'>
 
 .. _dec_and_float:
 

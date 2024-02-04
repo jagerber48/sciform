@@ -1,20 +1,20 @@
 """Global Options."""
 
 from sciform import modes
-from sciform.rendered_options import RenderedOptions
+from sciform.options.populated_options import PopulatedOptions
 
-PKG_DEFAULT_OPTIONS = RenderedOptions(
-    exp_mode=modes.ExpModeEnum.FIXEDPOINT,
+PKG_DEFAULT_OPTIONS = PopulatedOptions(
+    exp_mode="fixed_point",
     exp_val=modes.AutoExpVal,
-    round_mode=modes.RoundModeEnum.SIG_FIG,
+    round_mode="sig_fig",
     ndigits=modes.AutoDigits,
-    upper_separator=modes.SeparatorEnum.NONE,
-    decimal_separator=modes.SeparatorEnum.POINT,
-    lower_separator=modes.SeparatorEnum.NONE,
-    sign_mode=modes.SignModeEnum.NEGATIVE,
-    left_pad_char=modes.LeftPadCharEnum.SPACE,
+    upper_separator="",
+    decimal_separator=".",
+    lower_separator="",
+    sign_mode="-",
+    left_pad_char=" ",
     left_pad_dec_place=0,
-    exp_format=modes.ExpFormatEnum.STANDARD,
+    exp_format="standard",
     extra_si_prefixes={},
     extra_iec_prefixes={},
     extra_parts_per_forms={},

@@ -9,14 +9,14 @@ class TestFormatting(unittest.TestCase):
     def run_val_unc_formatter_cases(self, cases_list: ValUncFormatterCases):
         for (val, unc), formats_list in cases_list:
             for formatter, expected_val_unc_str in formats_list:
-                snum_str = formatter(val, unc)
+                num_str = formatter(val, unc)
                 with self.subTest(
                     val=val,
                     unc=unc,
                     expected_num_str=expected_val_unc_str,
-                    actual_num_str=snum_str,
+                    actual_num_str=num_str,
                 ):
-                    self.assertEqual(snum_str, expected_val_unc_str)
+                    self.assertEqual(num_str, expected_val_unc_str)
 
     def test_paren_uncertainty(self):
         cases_list = [
@@ -452,8 +452,8 @@ class TestFormatting(unittest.TestCase):
         self.run_val_unc_formatter_cases(cases_list)
 
     def test_binary_not_implemented(self):
-        sform = Formatter(exp_mode="binary")
-        self.assertRaises(NotImplementedError, sform, 1024, 32)
+        formatter = Formatter(exp_mode="binary")
+        self.assertRaises(NotImplementedError, formatter, 1024, 32)
 
     @unittest.expectedFailure
     def test_binary(self):
@@ -461,8 +461,8 @@ class TestFormatting(unittest.TestCase):
         This test should pass when binary value/uncertainty formatting
         is implemented
         """
-        sform = Formatter(exp_mode="binary")
-        self.assertEqual(sform(1024, 32), "(1.00000 ± 0.03125)b+10")
+        formatter = Formatter(exp_mode="binary")
+        self.assertEqual(formatter(1024, 32), "(1.00000 ± 0.03125)b+10")
 
     def test_pdg_sig_figs(self):
         cases_list = [
@@ -492,11 +492,11 @@ class TestFormatting(unittest.TestCase):
         self.run_val_unc_formatter_cases(cases_list)
 
     def test_dec_place_warn(self):
-        sform = Formatter(round_mode="dec_place")
-        self.assertWarns(Warning, sform, 42, 24)
+        formatter = Formatter(round_mode="dec_place")
+        self.assertWarns(Warning, formatter, 42, 24)
 
     def test_left_pad_matching(self):
-        sform = Formatter(left_pad_matching=True)
-        result = sform(123, 0.123)
+        formatter = Formatter(left_pad_matching=True)
+        result = formatter(123, 0.123)
         expected_result = "123.000 ±   0.123"
         self.assertEqual(result, expected_result)

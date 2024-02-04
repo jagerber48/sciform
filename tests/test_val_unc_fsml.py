@@ -1,6 +1,6 @@
 import unittest
 
-from sciform import GlobalDefaultsContext, SciNum
+from sciform import GlobalOptionsContext, SciNum
 
 ValUncFSMLCases = list[tuple[tuple[float, float], list[tuple[str, str]]]]
 NAN = float("nan")
@@ -11,16 +11,16 @@ class TestFormatting(unittest.TestCase):
     def run_val_unc_fsml_cases(self, cases_list: ValUncFSMLCases):
         for (val, unc), formats_list in cases_list:
             for format_spec, expected_str in formats_list:
-                snum = SciNum(val, unc)
-                snum_str = f"{snum:{format_spec}}"
+                num = SciNum(val, unc)
+                num_str = f"{num:{format_spec}}"
                 with self.subTest(
                     val=val,
                     unc=unc,
                     format_spec=format_spec,
                     expected_str=expected_str,
-                    actual_str=snum_str,
+                    actual_str=num_str,
                 ):
-                    self.assertEqual(snum_str, expected_str)
+                    self.assertEqual(num_str, expected_str)
 
     def test_fixed(self):
         cases_list = [
@@ -347,7 +347,7 @@ class TestFormatting(unittest.TestCase):
                 ],
             ),
         ]
-        with GlobalDefaultsContext(nan_inf_exp=True):
+        with GlobalOptionsContext(nan_inf_exp=True):
             self.run_val_unc_fsml_cases(cases_list)
 
     def test_capitalization(self):
@@ -375,7 +375,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        with GlobalDefaultsContext(nan_inf_exp=True):
+        with GlobalOptionsContext(nan_inf_exp=True):
             self.run_val_unc_fsml_cases(cases_list)
 
     def test_rounding(self):

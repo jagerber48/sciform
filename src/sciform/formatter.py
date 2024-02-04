@@ -2,42 +2,132 @@
 
 from __future__ import annotations
 
-from decimal import Decimal
 from typing import TYPE_CHECKING, Literal
 
-from sciform.formatting import format_num, format_val_unc
-from sciform.output_conversion import convert_sciform_format
-from sciform.user_options import UserOptions
+from sciform.formatting import format_from_options
+from sciform.options.conversion import populate_options
+from sciform.options.input_options import InputOptions
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
     from sciform.format_utils import Number
+    from sciform.formatting import FormattedNumber
+    from sciform.options.populated_options import PopulatedOptions
 
 
 class Formatter:
-    """
-    Class to format numbers and pairs of numbers into strings.
+    r"""
+    Class to format value and value/uncertainty pairs.
 
-    :class:`Formatter` is used to convert numbers and pairs of numbers
-    into formatted strings according to a variety of formatting options.
-    See :ref:`formatting_options` for more details on the available
-    options. Any options which are unpopulated (have the value ``None``)
-    will be populated at format time by the corresponding values in the
-    globally configured default options. See :ref:`global_config` for
-    details about how to view and modify the global default options.
+    :class:`Formatter` is used to convert value and value/uncertainty
+    pairs into formatted strings according to a variety of formatting
+    options. See :ref:`formatting_options` for more details on the
+    available options. Any options which are not populated (not passed
+    in or passed in the ``None`` value) will be populated at format time
+    by the corresponding values in the globally configured default
+    options. See :ref:`global_config` for details about how to view and
+    modify the global options. The user supplied options cannot be
+    updated after the :class:`Formatter` is constructed.
+
+    After initialization, the :class:`Formatter` is used by passing in
+    a value into the :class:`Formatter`.
 
     >>> from sciform import Formatter
-    >>> sform = Formatter(exp_mode="engineering", round_mode="sig_fig", ndigits=4)
-    >>> print(sform(12345.678))
+    >>> formatter = Formatter(exp_mode="engineering", round_mode="sig_fig", ndigits=4)
+    >>> print(formatter(12345.678))
     12.35e+03
 
-    The Formatter can be called with two aguments for value/uncertainty
-    formatting
+    A value/uncertainty pair can also be passed into the
+    :class:`Formatter`.
 
-    >>> sform = Formatter(exp_mode="engineering", round_mode="sig_fig", ndigits=2)
-    >>> print(sform(12345.678, 3.4))
-    (12.3457 ± 0.0034)e+03
-    """
+    >>> formatter = Formatter(
+    ...     exp_mode="engineering",
+    ...     round_mode="sig_fig",
+    ...     ndigits=2,
+    ...     superscript=True,
+    ... )
+    >>> formatted = formatter(12345.678, 3.4)
+    >>> print(formatted)
+    (12.3457 ± 0.0034)×10³
+
+    The returned object behaves like a ``str``, but is, in fact, a
+    :class:`FormattedNumber` instance. The :class:`FormattedNumber` is
+    a subclass of ``str`` but provides methods for post-conversion into
+    LaTeX, HTML, and ASCII formats.
+
+    >>> print(formatted.as_latex())
+    $(12.3457\:\pm\:0.0034)\times10^{3}$
+    >>> print(formatted.as_html())
+    (12.3457 ± 0.0034)×10<sup>3</sup>
+    >>> print(formatted.as_ascii())
+    (12.3457 +/- 0.0034)e+03
+
+    The formatting options input by the user can be checked by
+    inspecting the :attr:`input_options` property
+
+    >>> print(formatter.input_options)
+    InputOptions(
+     'exp_mode': 'engineering',
+     'round_mode': 'sig_fig',
+     'ndigits': 2,
+     'superscript': True,
+    )
+
+    Only explicitly populated options appear in the string printout.
+    However, populated and unpopulated parameters can be inspected by
+    direct attribute access. Unpopulated parameters are ``None``-valued.
+
+    >>> print(formatter.input_options.round_mode)
+    sig_fig
+    >>> print(formatter.input_options.exp_format)
+    None
+
+    The :meth:`InputOptions.as_dict` method returns a dictionary of
+    input options that can be passed back into a :class:`Formatter`
+    constructor as ``**kwargs``, possibly after modification. Only
+    explicitly populated options are included in this dictionary.
+
+    >>> print(formatter.input_options.as_dict())
+    {'exp_mode': 'engineering', 'round_mode': 'sig_fig', 'ndigits': 2, 'superscript': True}
+
+    Likewise, the result of populating the options with the global
+    options can be previewed by inspecting the :attr:`populated_options`
+    property.
+
+    >>> print(formatter.populated_options)
+    PopulatedOptions(
+     'exp_mode': 'engineering',
+     'exp_val': AutoExpVal,
+     'round_mode': 'sig_fig',
+     'ndigits': 2,
+     'upper_separator': '',
+     'decimal_separator': '.',
+     'lower_separator': '',
+     'sign_mode': '-',
+     'left_pad_char': ' ',
+     'left_pad_dec_place': 0,
+     'exp_format': 'standard',
+     'extra_si_prefixes': {},
+     'extra_iec_prefixes': {},
+     'extra_parts_per_forms': {},
+     'capitalize': False,
+     'superscript': True,
+     'nan_inf_exp': False,
+     'paren_uncertainty': False,
+     'pdg_sig_figs': False,
+     'left_pad_matching': False,
+     'paren_uncertainty_separators': True,
+     'pm_whitespace': True,
+    )
+    >>> print(formatter.populated_options.exp_format)
+    standard
+
+    The :class:`PopulatedOptions` class also provides a
+    :class:`PopulatedOptions.as_dict` method which can be used to
+    construct ``**kwargs`` to pass into new :class:`Formatter`
+    instances.
+
+    """  # noqa: E501
 
     def __init__(  # noqa: PLR0913
         self: Formatter,
@@ -64,11 +154,11 @@ class Formatter:
         left_pad_matching: bool | None = None,
         paren_uncertainty_separators: bool | None = None,
         pm_whitespace: bool | None = None,
-        add_c_prefix: bool = False,
-        add_small_si_prefixes: bool = False,
-        add_ppth_form: bool = False,
+        add_c_prefix: bool | None = None,
+        add_small_si_prefixes: bool | None = None,
+        add_ppth_form: bool | None = None,
     ) -> None:
-        r"""
+        """
         Create a new ``Formatter``.
 
         The following checks are performed when creating a new
@@ -179,18 +269,19 @@ class Formatter:
           whitespace surrounding the ``'±'`` symbols when formatting.
           E.g. ``123.4±2.3`` compared to ``123.4 ± 2.3``.
         :type pm_whitespace: ``bool | None``
-        :param add_c_prefix: (default ``False``) If ``True``, adds
-          ``{-2: 'c'}`` to ``extra_si_prefixes``.
-        :type add_c_prefix: ``bool``
-        :param add_small_si_prefixes: (default ``False``) If ``True``, adds
+        :param add_c_prefix: (default ``None`` is like ``False``) If
+          ``True``, adds ``{-2: 'c'}`` to ``extra_si_prefixes``.
+        :type add_c_prefix: ``bool | None``
+        :param add_small_si_prefixes: (default ``None`` is like
+          ``False``) If ``True``, adds
           ``{-2: 'c', -1: 'd', +1: 'da', +2: 'h'}`` to
           ``extra_si_prefixes``.
-        :type add_small_si_prefixes: ``bool``
-        :param add_ppth_form: (default ``False``) if ``True``, adds
-          ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
-        :type add_ppth_form: ``bool``
+        :type add_small_si_prefixes: ``bool | None``
+        :param add_ppth_form: (default ``None`` is like ``False``) if
+          ``True``, adds ``{-3: 'ppth'}`` to ``extra_parts_per_forms``.
+        :type add_ppth_form: ``bool | None``
         """
-        self._user_options = UserOptions(
+        self._input_options = InputOptions(
             exp_mode=exp_mode,
             exp_val=exp_val,
             round_mode=round_mode,
@@ -218,6 +309,22 @@ class Formatter:
             add_ppth_form=add_ppth_form,
         )
 
+    @property
+    def input_options(self: Formatter) -> InputOptions:
+        """Return user input options as :class:`InputOptions` instance."""
+        return self._input_options
+
+    @property
+    def populated_options(self: Formatter) -> PopulatedOptions:
+        """
+        Return fully populated options as :class:`PopulatedOptions` instance.
+
+        :attr:`populated_options` is re-calculated from
+        :attr:`input_options` and the global options each time it is
+        accessed so that it always reflects the current global options.
+        """
+        return populate_options(self.input_options)
+
     def __call__(
         self: Formatter,
         value: Number,
@@ -232,56 +339,8 @@ class Formatter:
         :param uncertainty: Optional uncertainty to be formatted.
         :type uncertainty: ``Decimal | float | int | str | None``
         """
-        rendered_options = self._user_options.render()
-        if uncertainty is None:
-            output = format_num(Decimal(str(value)), rendered_options)
-        else:
-            output = format_val_unc(
-                Decimal(str(value)),
-                Decimal(str(uncertainty)),
-                rendered_options,
-            )
-        return FormattedNumber(output)
-
-
-class FormattedNumber(str):
-    """
-    Representation (typically string) of a formatted number.
-
-    The ``FormattedNumber`` class is returned by ``sciform`` formatting
-    methods. In most cases it behaves like a regular python string, but
-    it provides the possibility for post-converting the string to
-    various other formats such as latex or html. This allows the
-    formatted number to be displayed in a range of contexts other than
-    e.g. text terminals.
-
-    """
-
-    __slots__ = ()
-
-    def as_str(self: FormattedNumber) -> str:
-        """Return the string representation of the formatted number."""
-        return self.__str__()
-
-    def as_ascii(self: FormattedNumber) -> str:
-        """Return the ascii representation of the formatted number."""
-        return convert_sciform_format(self, "ascii")
-
-    def as_html(self: FormattedNumber) -> str:
-        """Return the html representation of the formatted number."""
-        return convert_sciform_format(self, "html")
-
-    def as_latex(self: FormattedNumber, *, strip_math_mode: bool = False) -> str:
-        """Return the latex representation of the formatted number."""
-        latex_repr = convert_sciform_format(self, "latex")
-        if strip_math_mode:
-            latex_repr = latex_repr.strip("$")
-        return latex_repr
-
-    def _repr_html_(self: FormattedNumber) -> str:
-        """Hook for HTML display."""  # noqa: D401
-        return self.as_html()
-
-    def _repr_latex_(self: FormattedNumber) -> str:
-        """Hook for LaTeX display."""  # noqa: D401
-        return self.as_latex()
+        return format_from_options(
+            value,
+            uncertainty,
+            input_options=self.input_options,
+        )

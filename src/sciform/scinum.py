@@ -5,7 +5,7 @@ from __future__ import annotations
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
-from sciform.formatting import format_num, format_val_unc
+from sciform.formatting import FormattedNumber, format_from_options
 from sciform.fsml import format_options_from_fmt_spec
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -23,13 +23,13 @@ class SciNum:
     be populated with global default settings at format time.
 
     >>> from sciform import SciNum
-    >>> snum = SciNum(12345.54321)
-    >>> print(f"{snum:!3f}")
+    >>> num = SciNum(12345.54321)
+    >>> print(f"{num:!3f}")
     12300
-    >>> print(f"{snum:+2.3R}")
+    >>> print(f"{num:+2.3R}")
     + 12.346E+03
-    >>> snum = SciNum(123456.654321, 0.0234)
-    >>> print(f"{snum:#!2r()}")
+    >>> num = SciNum(123456.654321, 0.0234)
+    >>> print(f"{num:#!2r()}")
     (0.123456654(23))e+06
     """
 
@@ -45,12 +45,13 @@ class SciNum:
         else:
             self.uncertainty = Decimal(str(uncertainty))
 
-    def __format__(self: SciNum, fmt: str) -> str:
-        user_options = format_options_from_fmt_spec(fmt)
-        rendered_options = user_options.render()
-        if self.uncertainty is not None:
-            return format_val_unc(self.value, self.uncertainty, rendered_options)
-        return format_num(self.value, rendered_options)
+    def __format__(self: SciNum, fmt: str) -> FormattedNumber:
+        input_options = format_options_from_fmt_spec(fmt)
+        return format_from_options(
+            self.value,
+            self.uncertainty,
+            input_options=input_options,
+        )
 
     def __repr__(self: SciNum) -> str:
         if self.uncertainty is not None:

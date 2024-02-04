@@ -139,11 +139,11 @@ for scientific formatting.
   not compatible with the explicit formatting options preferred by
   :mod:`sciform`. The built-in automation features include
 
-  * Automated selection of fixed-point or scientific notation. For
-    :mod:`sciform`, the exponent is either explicitly indicated by the
-    user or resolved from the global default options.
-  * Truncation of trailing zeros without the ``#`` option. For
-    :mod:`sciform`, trailing zeros are never truncated if they fall
+  * Automated selection of fixed-point or scientific notation.
+    For :mod:`sciform`, the exponent mode is either explicitly indicated
+    by the user or resolved from the global options.
+  * Truncation of trailing zeros without the ``#`` option.
+    For :mod:`sciform`, trailing zeros are never truncated if they fall
     within the user-selected decimal place or significant figures
     rounding.
   * Inclusion of a hanging decimal point, e.g. ``123.``.

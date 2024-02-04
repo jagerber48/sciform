@@ -3,7 +3,9 @@ from __future__ import annotations
 import unittest
 
 from sciform import Formatter
-from sciform.formatter import FormattedNumber
+from sciform.formatting import FormattedNumber
+from sciform.options.conversion import populate_options
+from sciform.options.input_options import InputOptions
 from sciform.output_conversion import convert_sciform_format
 
 ValFormatterCases = list[
@@ -452,7 +454,11 @@ class TestLatexConversion(unittest.TestCase):
             "(0.123456 ± 0.000789) k",
         ]
         for case in cases_list:
-            formatted_number = FormattedNumber(case)
+            dummy_populated_options = populate_options(InputOptions())
+            formatted_number = FormattedNumber(
+                case,
+                dummy_populated_options,
+            )
             with self.subTest(
                 name="check__repr_html_",
                 input_str=case,

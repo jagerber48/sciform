@@ -152,14 +152,14 @@ Note that it is possible, using the ``extra_parts_per_forms`` option to
 override the standard mappings listed above.
 
 >>> from sciform import Formatter
->>> sform = Formatter(
+>>> formatter = Formatter(
 ...     exp_mode="engineering",
 ...     exp_format="parts_per",
 ...     extra_parts_per_forms={-9: None, -12: "ppb"},
 ... )
->>> print(sform(33e-9))
+>>> print(formatter(33e-9))
 33e-09
->>> print(sform(33e-12))
+>>> print(formatter(33e-12))
 33 ppb
 
 IEC Prefixes

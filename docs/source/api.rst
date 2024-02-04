@@ -7,13 +7,26 @@ API
 Formatting
 ==========
 
-.. autoclass:: Formatter()
+.. autoclass:: Formatter(...)
    :members:
 
    .. automethod:: __init__(...)
    .. automethod:: __call__
 
-.. autoclass:: SciNum()
+.. autoclass:: SciNum
+
+.. autoclass:: FormattedNumber()
+   :members:
+   :private-members:
+
+Options
+=======
+
+.. autoclass:: InputOptions()
+   :members:
+
+.. autoclass:: PopulatedOptions()
+   :members:
 
 Auto Options
 ============
@@ -25,17 +38,12 @@ Auto Options
 Global Configuration
 ====================
 
-.. autofunction:: print_global_defaults()
+.. autofunction:: get_default_global_options
 
-.. autofunction:: set_global_defaults()
+.. autofunction:: get_global_options
 
-.. autofunction:: reset_global_defaults()
+.. autofunction:: set_global_options(...)
 
-.. autoclass:: GlobalDefaultsContext()
+.. autofunction:: reset_global_options
 
-Output Conversion
-=================
-
-.. autoclass:: sciform.formatter.FormattedNumber
-   :members:
-   :private-members:
+.. autoclass:: GlobalOptionsContext(...)

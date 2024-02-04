@@ -11,8 +11,9 @@ from sciform.format_utils import (
     get_top_digit_binary,
 )
 from sciform.formatting import format_non_finite
+from sciform.options.conversion import finalize_input_options
+from sciform.options.input_options import InputOptions
 from sciform.output_conversion import _make_exp_str, convert_sciform_format
-from sciform.user_options import UserOptions
 
 
 class TestInvalidOptions(unittest.TestCase):
@@ -125,13 +126,13 @@ class TestInvalidOptions(unittest.TestCase):
         This test raises a ValueError because the upper_separator is
         requested to be POINT. But the package defaults set
         decimal_separator to also be POINT. So when the Formatter
-        UserOptions are rendered into RenderedOptions, at format time,
+        InputOptions are rendered into FinalizedOptions, at format time,
         the result is that both upper_separator=GroupingSeparator.POINT
         and decimal_separator=GroupingSeparator.POINT This options
         combination is not allowed.
         """
-        sform = Formatter(upper_separator=".")
-        self.assertRaises(ValueError, sform, 42)
+        formatter = Formatter(upper_separator=".")
+        self.assertRaises(ValueError, formatter, 42)
 
     def test_upper_decimal_separator_point(self):
         self.assertRaises(
@@ -154,7 +155,7 @@ class TestInvalidOptions(unittest.TestCase):
             ValueError,
             format_non_finite,
             Decimal(1.0),
-            UserOptions().render(),
+            finalize_input_options(InputOptions()),
         )
 
     def test_get_top_digit_infinite(self):

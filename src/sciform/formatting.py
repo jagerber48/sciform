@@ -1,11 +1,15 @@
 """Main formatting functions."""
+from __future__ import annotations
 
 from dataclasses import replace
 from decimal import Decimal
-from typing import cast
+from typing import TYPE_CHECKING, cast
 from warnings import warn
 
+from typing_extensions import Self
+
 from sciform.format_utils import (
+    Number,
     construct_val_unc_exp_str,
     construct_val_unc_str,
     format_num_by_top_bottom_dig,
@@ -25,10 +29,35 @@ from sciform.modes import (
     RoundModeEnum,
     SignModeEnum,
 )
-from sciform.rendered_options import RenderedOptions
+from sciform.options.conversion import finalize_populated_options, populate_options
+from sciform.output_conversion import convert_sciform_format
+
+if TYPE_CHECKING:  # pragma: no cover
+    from sciform.options.finalized_options import FinalizedOptions
+    from sciform.options.input_options import InputOptions
+    from sciform.options.populated_options import PopulatedOptions
 
 
-def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
+def format_from_options(
+    value: Number,
+    uncertainty: Number | None = None,
+    /,
+    input_options: InputOptions | None = None,
+) -> FormattedNumber:
+    """Finalize options and select value of value/uncertainty formatter."""
+    populated_options = populate_options(input_options)
+    finalized_options = finalize_populated_options(populated_options)
+    value = Decimal(str(value))
+
+    if uncertainty is not None:
+        uncertainty = Decimal(str(uncertainty))
+        formatted_str = format_val_unc(value, uncertainty, finalized_options)
+    else:
+        formatted_str = format_num(value, finalized_options)
+    return FormattedNumber(formatted_str, populated_options)
+
+
+def format_non_finite(num: Decimal, options: FinalizedOptions) -> str:
     """Format non-finite numbers."""
     if num.is_nan():
         num_str = "nan"
@@ -73,7 +102,7 @@ def format_non_finite(num: Decimal, options: RenderedOptions) -> str:
     return result
 
 
-def format_num(num: Decimal, options: RenderedOptions) -> str:
+def format_num(num: Decimal, options: FinalizedOptions) -> str:
     """Format a single number according to input options."""
     if not num.is_finite():
         return format_non_finite(num, options)
@@ -145,7 +174,7 @@ def format_num(num: Decimal, options: RenderedOptions) -> str:
     return result
 
 
-def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
+def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str:
     """Format value/uncertainty pair according to input options."""
     exp_mode = options.exp_mode
 
@@ -289,3 +318,61 @@ def format_val_unc(val: Decimal, unc: Decimal, options: RenderedOptions) -> str:
         val_unc_exp_str = f"({val_unc_exp_str})%"
 
     return val_unc_exp_str
+
+
+class FormattedNumber(str):
+    """
+    Representation of a formatted value of value/uncertainty pair.
+
+    The :class:`FormattedNumber` class is returned by ``sciform``
+    formatting methods. In most cases it behaves like a regular python
+    string, but it provides functionality for post-converting the string
+    to various other formats such as latex or html. This allows the
+    formatted number to be displayed in a range of contexts other than
+    e.g. text terminals.
+
+    The :class:`FormattedNumber` class should never be instantiated
+    directly.
+    """
+
+    __slots__ = {
+        "populated_options": "Record of the :class:`PopulatedOptions` used to "
+        "generate the :class:`FormattedNumber`.",
+    }
+
+    def __new__(
+        cls: type[Self],
+        formatted_str: str,
+        populated_options: PopulatedOptions,
+    ) -> Self:
+        """Get a new string."""
+        obj = super().__new__(cls, formatted_str)
+        obj.populated_options = populated_options
+        return obj
+
+    def as_str(self: FormattedNumber) -> str:
+        """Return the string representation of the formatted number."""
+        return self.__str__()
+
+    def as_ascii(self: FormattedNumber) -> str:
+        """Return the ascii representation of the formatted number."""
+        return convert_sciform_format(self, "ascii")
+
+    def as_html(self: FormattedNumber) -> str:
+        """Return the html representation of the formatted number."""
+        return convert_sciform_format(self, "html")
+
+    def as_latex(self: FormattedNumber, *, strip_math_mode: bool = False) -> str:
+        """Return the latex representation of the formatted number."""
+        latex_repr = convert_sciform_format(self, "latex")
+        if strip_math_mode:
+            latex_repr = latex_repr.strip("$")
+        return latex_repr
+
+    def _repr_html_(self: FormattedNumber) -> str:
+        """Hook for HTML display."""  # noqa: D401
+        return self.as_html()
+
+    def _repr_latex_(self: FormattedNumber) -> str:
+        """Hook for LaTeX display."""  # noqa: D401
+        return self.as_latex()
