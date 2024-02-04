@@ -97,6 +97,10 @@ You can view the on-going review
 Usage
 =====
 
+Here we provide a few key usage examples.
+For many more details see
+`Usage <https://sciform.readthedocs.io/en/stable/usage.html>`_.
+
 ``sciform`` provides a wide variety of formatting options which can be
 controlled when constructing ``Formatter`` objects which are then used
 to format numbers into strings according to the selected options.
