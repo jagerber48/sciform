@@ -55,29 +55,29 @@ def populate_extra_parts_per_forms(
     return extra_parts_per_forms
 
 
-def populate_options(user_options: InputOptions) -> PopulatedOptions:
+def populate_options(input_options: InputOptions) -> PopulatedOptions:
     """Populate InputOptions into PopulatedOptions."""
     global_options_dict = asdict(global_options.GLOBAL_DEFAULT_OPTIONS)
-    user_options_dict = asdict(user_options)
+    input_options_dict = asdict(input_options)
     kwargs = {}
-    for key in list(user_options_dict.keys()):
+    for key in list(input_options_dict.keys()):
         if key in ["add_c_prefix", "add_small_si_prefixes", "add_ppth_form"]:
             continue
 
-        value = user_options_dict[key]
+        value = input_options_dict[key]
         if key == "left_pad_char" and value == 0:
             value = "0"
 
         if key == "extra_si_prefixes":
             value = populate_extra_si_prefixes(
                 value,
-                add_c_prefix=user_options.add_c_prefix,
-                add_small_si_prefixes=user_options.add_small_si_prefixes,
+                add_c_prefix=input_options.add_c_prefix,
+                add_small_si_prefixes=input_options.add_small_si_prefixes,
             )
-        if key == "extra_parts_per_forms" and user_options.add_ppth_form:
+        if key == "extra_parts_per_forms" and input_options.add_ppth_form:
             value = populate_extra_parts_per_forms(
                 value,
-                add_ppth_form=user_options.add_ppth_form,
+                add_ppth_form=input_options.add_ppth_form,
             )
 
         if value is None:
