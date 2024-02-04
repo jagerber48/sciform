@@ -43,7 +43,7 @@ Changed
   * ``GlobalDefaultsContext()`` -> ``GlobalOptionsContext()``
 
 * Refactored backend options handling code.
-  Previous ``UserOptions`` were rendered into ``RenderedOptions``.
+  Previously, ``UserOptions`` were rendered into ``RenderedOptions``.
   During rendering the global options were appropriately merged in and
   some string literal options were replaced with enums for internal use.
   These two classes were private.
@@ -54,9 +54,10 @@ Changed
   ``FinalizedOptions`` (which use the internal enum representations of
   certain options).
   The ``InputOptions`` and ``PopulatedOptions`` are now public while the
-  ``FinalizedOptions`` is still private to shield the ``Enum``
+  ``FinalizedOptions`` is still private to shield the enum
   representations from the users.
-  This change was precipitated by the publicizing of the options.
+  This sizable refactor was precipitated by the publicizing of the
+  options.
   [`#110 <https://github.com/jagerber48/sciform/issues/110>`_]
 
 Removed
