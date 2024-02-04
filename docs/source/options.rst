@@ -164,7 +164,7 @@ The user can coerce the exponent for the formatting to a fixed value.
 To explicitly force :mod:`sciform` to automatically select the exponent
 then use the :class:`AutoExpVal` option by passing
 ``exp_val=AutoExpVal``.
-This is the default value in the global configuration.
+This is the default value in the global options.
 
 Note that the forced exponent must be consistent with the requested
 exponent mode.
@@ -192,8 +192,8 @@ IEC prefixes.
 See :ref:`exp_replacements` for all default supported
 replacements.
 Furthermore, it is possible to customize :class:`Formatter`
-objects or the global configuration settings to map additional
-translations, in addition to those provided by default.
+objects or the global options settings to map additional translations,
+in addition to those provided by default.
 
 >>> formatter = Formatter(exp_mode="engineering", exp_format="prefix")
 >>> print(formatter(4242.13))
@@ -358,7 +358,7 @@ digits place to which to round, then the decimal numbers are displayed
 with full precision.
 To explicitly request this behavior, the user may use the
 :class:`AutoDigits` sentinel by passing ``ndigits=AutoDigits``.
-This is the default value in the global configuration.
+This is the default value in the global options.
 
 Note that surprising behavior may be observed if using :class:`float`
 inputs.
