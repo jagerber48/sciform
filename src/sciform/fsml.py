@@ -52,7 +52,7 @@ def parse_exp_mode(
 
 
 def format_options_from_fmt_spec(fmt_spec: str) -> InputOptions:
-    """Resolve InputOptions form format specification string."""
+    """Resolve InputOptions from format specification string."""
     match = pattern.match(fmt_spec)
     if match is None:
         msg = f"Invalid format specifier: '{fmt_spec}'"
