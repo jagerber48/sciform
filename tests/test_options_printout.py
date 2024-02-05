@@ -57,7 +57,7 @@ class TestOptionsPrintOut(unittest.TestCase):
             " 'paren_uncertainty': False,\n"
             " 'pdg_sig_figs': False,\n"
             " 'left_pad_matching': False,\n"
-            " 'paren_uncertainty_trim_digits': True,\n"
+            " 'paren_uncertainty_trim': True,\n"
             " 'pm_whitespace': True,\n"
             ")"
         )
@@ -87,7 +87,7 @@ class TestOptionsPrintOut(unittest.TestCase):
             " 'paren_uncertainty': False,\n"
             " 'pdg_sig_figs': False,\n"
             " 'left_pad_matching': False,\n"
-            " 'paren_uncertainty_trim_digits': True,\n"
+            " 'paren_uncertainty_trim': True,\n"
             " 'pm_whitespace': True,\n"
             ")"
         )
@@ -118,7 +118,7 @@ class TestOptionsPrintOut(unittest.TestCase):
             " 'paren_uncertainty': False,\n"
             " 'pdg_sig_figs': False,\n"
             " 'left_pad_matching': False,\n"
-            " 'paren_uncertainty_trim_digits': True,\n"
+            " 'paren_uncertainty_trim': True,\n"
             " 'pm_whitespace': True,\n"
             ")"
         )

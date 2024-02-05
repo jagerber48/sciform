@@ -236,7 +236,7 @@ PopulatedOptions(
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
  'left_pad_matching': False,
- 'paren_uncertainty_trim_digits': True,
+ 'paren_uncertainty_trim': True,
  'pm_whitespace': True,
 )
 
@@ -278,7 +278,7 @@ PopulatedOptions(
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
  'left_pad_matching': False,
- 'paren_uncertainty_trim_digits': True,
+ 'paren_uncertainty_trim': True,
  'pm_whitespace': True,
 )
 >>> reset_global_options()
@@ -380,7 +380,7 @@ PopulatedOptions(
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
  'left_pad_matching': False,
- 'paren_uncertainty_trim_digits': True,
+ 'paren_uncertainty_trim': True,
  'pm_whitespace': True,
 )
 
@@ -426,7 +426,7 @@ PopulatedOptions(
  'paren_uncertainty': False,
  'pdg_sig_figs': False,
  'left_pad_matching': False,
- 'paren_uncertainty_trim_digits': True,
+ 'paren_uncertainty_trim': True,
  'pm_whitespace': True,
 )
 

@@ -394,6 +394,141 @@ class TestFormatting(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_paren_uncertainties_trim_digits(self):
+        cases_list = [
+            (
+                (123, 0.03),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                        ),
+                        "123.00(3)",
+                    ),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                        ),
+                        "123.00(0.03)",
+                    ),
+                ],
+            ),
+            (
+                (123.456789, 0.0012),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            lower_separator="_",
+                        ),
+                        "123.456_8(0.001_2)",
+                    ),
+                    (
+                        # Intermediate separators are stripped.
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                            lower_separator="_",
+                        ),
+                        "123.456_8(12)",
+                    ),
+                ],
+            ),
+            (
+                (123456, 1234),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            upper_separator=" ",
+                        ),
+                        "123 456(1 234)",
+                    ),
+                    (
+                        # Intermediate separators are stripped.
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                            upper_separator=" ",
+                        ),
+                        "123 456(1234)",
+                    ),
+                ],
+            ),
+            (
+                (123456, 1234),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            upper_separator=",",
+                        ),
+                        "123,456(1,234)",
+                    ),
+                    (
+                        # Intermediate separators are stripped.
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                            upper_separator=",",
+                        ),
+                        "123,456(1234)",
+                    ),
+                ],
+            ),
+            (
+                (0.0012, 123.456789),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            lower_separator="_",
+                        ),
+                        "0.001_200(123.456_789)",
+                    ),
+                    (
+                        # No trimming for uncertainty > value
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                            lower_separator="_",
+                        ),
+                        "0.001_200(123.456_789)",
+                    ),
+                ],
+            ),
+            (
+                (0.0012, 0.0012),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            lower_separator="_",
+                        ),
+                        "0.001_2(0.001_2)",
+                    ),
+                    (
+                        # No trimming for uncertainty == value
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                            lower_separator="_",
+                        ),
+                        "0.001_2(0.001_2)",
+                    ),
+                ],
+            ),
+        ]
+
+        self.run_val_unc_formatter_cases(cases_list)
+
+    def test_paren_uncertainties_trim_digits_bipm(self):
         """
         Matches the example in "BIPM guide to the expression of
         uncertainty in measurements" section 7.2.2
@@ -408,7 +543,7 @@ class TestFormatting(unittest.TestCase):
         with self.subTest():
             formatter = Formatter(
                 paren_uncertainty=True,
-                paren_uncertainty_trim_digits=True,
+                paren_uncertainty_trim=True,
             )
             formatted = formatter(val, unc)
             self.assertEqual(formatted, "100.02147(35)")
@@ -416,7 +551,7 @@ class TestFormatting(unittest.TestCase):
         with self.subTest():
             formatter = Formatter(
                 paren_uncertainty=True,
-                paren_uncertainty_trim_digits=False,
+                paren_uncertainty_trim=False,
             )
             formatted = formatter(val, unc)
             self.assertEqual(formatted, "100.02147(0.00035)")
@@ -424,7 +559,7 @@ class TestFormatting(unittest.TestCase):
         with self.subTest():
             formatter = Formatter(
                 paren_uncertainty=True,
-                paren_uncertainty_trim_digits=False,
+                paren_uncertainty_trim=False,
                 left_pad_matching=True,
                 left_pad_char="0",
             )

@@ -116,7 +116,7 @@ class Formatter:
      'paren_uncertainty': False,
      'pdg_sig_figs': False,
      'left_pad_matching': False,
-     'paren_uncertainty_trim_digits': True,
+     'paren_uncertainty_trim': True,
      'pm_whitespace': True,
     )
     >>> print(formatter.populated_options.exp_format)
@@ -152,7 +152,7 @@ class Formatter:
         paren_uncertainty: bool | None = None,
         pdg_sig_figs: bool | None = None,
         left_pad_matching: bool | None = None,
-        paren_uncertainty_trim_digits: bool | None = None,
+        paren_uncertainty_trim: bool | None = None,
         pm_whitespace: bool | None = None,
         add_c_prefix: bool | None = None,
         add_small_si_prefixes: bool | None = None,
@@ -260,7 +260,12 @@ class Formatter:
           uncertainty should be left padded to ensure they are both left
           padded to the same digits place.
         :type left_pad_matching: ``bool | None``
-        :param paren_uncertainty_separators: Flag indicating if
+        :param paren_uncertainty_trim: Flag indicating if digit
+          and separator characters to the left of the most significant
+          digit of the uncertainty should be stripped from the
+          uncertainty in parentheses uncertainty mode. E.g. expressing
+          ``123.456_789 ± 0.000123`` as ``123.456_789(0.000_123)`` or
+          ``123.456_789(123)``
           separator symbols should be included in the uncertainty when
           using parentheses uncertainty mode. E.g. expressing
           ``123.4 ± 2.3`` either as ``123.4(2.3)`` or ``123.4(23)``.
@@ -302,7 +307,7 @@ class Formatter:
             paren_uncertainty=paren_uncertainty,
             pdg_sig_figs=pdg_sig_figs,
             left_pad_matching=left_pad_matching,
-            paren_uncertainty_trim_digits=paren_uncertainty_trim_digits,
+            paren_uncertainty_trim=paren_uncertainty_trim,
             pm_whitespace=pm_whitespace,
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,
