@@ -295,7 +295,8 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         decimal_separator=options.decimal_separator,
         paren_uncertainty=options.paren_uncertainty,
         pm_whitespace=options.pm_whitespace,
-        paren_uncertainty_separators=options.paren_uncertainty_separators,
+        paren_uncertainty_trim_digits=options.paren_uncertainty_trim_digits,
+        paren_uncertainty_trim_separators=options.paren_uncertainty_trim_separators,
     )
 
     if val.is_finite() or unc.is_finite() or options.nan_inf_exp:

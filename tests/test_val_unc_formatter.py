@@ -235,7 +235,7 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             exp_mode="scientific",
                             exp_val=-1,
-                            paren_uncertainty_separators=False,
+                            paren_uncertainty_trim_separators=True,
                             paren_uncertainty=True,
                         ),
                         "(1234.56(789))e-01",
@@ -258,7 +258,7 @@ class TestFormatting(unittest.TestCase):
                         Formatter(
                             exp_mode="scientific",
                             exp_val=-1,
-                            paren_uncertainty_separators=False,
+                            paren_uncertainty_trim_separators=True,
                             paren_uncertainty=True,
                         ),
                         "(7.89(1234.56))e-01",
@@ -271,14 +271,14 @@ class TestFormatting(unittest.TestCase):
                     (
                         Formatter(
                             paren_uncertainty=True,
-                            paren_uncertainty_separators=False,
+                            paren_uncertainty_trim_separators=True,
                         ),
                         "1.2(nan)",
                     ),
                     (
                         Formatter(
                             paren_uncertainty=True,
-                            paren_uncertainty_separators=True,
+                            paren_uncertainty_trim_separators=False,
                         ),
                         "1.2(nan)",
                     ),
@@ -290,14 +290,14 @@ class TestFormatting(unittest.TestCase):
                     (
                         Formatter(
                             paren_uncertainty=True,
-                            paren_uncertainty_separators=False,
+                            paren_uncertainty_trim_separators=True,
                         ),
                         "nan(1.2)",
                     ),
                     (
                         Formatter(
                             paren_uncertainty=True,
-                            paren_uncertainty_separators=True,
+                            paren_uncertainty_trim_separators=False,
                         ),
                         "nan(1.2)",
                     ),
@@ -309,14 +309,14 @@ class TestFormatting(unittest.TestCase):
                     (
                         Formatter(
                             paren_uncertainty=True,
-                            paren_uncertainty_separators=True,
+                            paren_uncertainty_trim_separators=False,
                         ),
                         "nan(nan)",
                     ),
                     (
                         Formatter(
                             paren_uncertainty=True,
-                            paren_uncertainty_separators=False,
+                            paren_uncertainty_trim_separators=True,
                         ),
                         "nan(nan)",
                     ),

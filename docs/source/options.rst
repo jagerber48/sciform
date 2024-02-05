@@ -751,13 +751,13 @@ separator symbols from the uncertainty in parentheses using the
 
 >>> formatter = Formatter(
 ...     paren_uncertainty=True,
-...     paren_uncertainty_separators=True,
+...     paren_uncertainty_trim_separators=False,
 ... )
 >>> print(formatter(18.4, 2.1))
 18.4(2.1)
 >>> formatter = Formatter(
 ...     paren_uncertainty=True,
-...     paren_uncertainty_separators=False,
+...     paren_uncertainty_trim_separators=True,
 ... )
 >>> print(formatter(18.4, 2.1))
 18.4(21)
@@ -770,7 +770,7 @@ symbols from the uncertainty in the parentheses.
 ...     decimal_separator=",",
 ...     lower_separator="_",
 ...     paren_uncertainty=True,
-...     paren_uncertainty_separators=True,
+...     paren_uncertainty_trim_separators=False,
 ... )
 >>> print(formatter(987654, 1234.4321))
 987.654,000_0(1.234,432_1)
@@ -779,7 +779,7 @@ symbols from the uncertainty in the parentheses.
 ...     decimal_separator=",",
 ...     lower_separator="_",
 ...     paren_uncertainty=True,
-...     paren_uncertainty_separators=False,
+...     paren_uncertainty_trim_separators=True,
 ... )
 >>> print(formatter(987654, 1234.4321))
 987.654,000_0(12344321)
