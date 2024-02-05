@@ -269,7 +269,7 @@ class Formatter:
           separator symbols should be included in the uncertainty when
           using parentheses uncertainty mode. E.g. expressing
           ``123.4 ± 2.3`` either as ``123.4(2.3)`` or ``123.4(23)``.
-        :type paren_uncertainty_separators: ``bool | None``
+        :type paren_uncertainty_trim: ``bool | None``
         :param pm_whitespace: Flag indicating if there should be
           whitespace surrounding the ``'±'`` symbols when formatting.
           E.g. ``123.4±2.3`` compared to ``123.4 ± 2.3``.
