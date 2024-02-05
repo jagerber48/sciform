@@ -689,9 +689,9 @@ The
 `BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_
 Provides three example value/uncertainty formats::
 
-  100,021 47 ± 0,000 35 g
-  100,021 47(0,000 35) g
-  100,021 47(35) g
+  100,021 47 ± 0,000 35
+  100,021 47(0,000 35)
+  100,021 47(35)
 
 In the first example the value and uncertainty are shown as regular
 numbers separated by a ``±``.
@@ -705,12 +705,6 @@ value are uncertain and by how much.
 :mod:`sciform` provides the ability to realize all three of these
 formatting strategies by using the ``paren_uncertainty`` and
 ``paren_uncertainty_trim`` options.
-Note of course that the BIPM examples include a unit, ``g`` but the
-:mod:`sciform` examples do not, because :mod:`sciform` does not support
-appending units to numbers.
-:mod:`sciform` does support
-:ref:`SI prefix translations <exp_str_replacement>` to which the user
-could manually append simple unit strings.
 
 >>> value = 100.02147
 >>> uncertainty = 0.00035
