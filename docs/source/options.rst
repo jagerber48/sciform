@@ -685,41 +685,95 @@ value formatting.
 Parentheses Uncertainty
 -----------------------
 
-Instead of displaying ``123.456 ± 0.789``, there is a notation where
-the uncertainty is shown in parentheses after the value as
-``123.456(789)``.
-Here the ``(789)`` in parentheses is meant to be "matched up" with the
-final three digits of the value so that the 9 in the uncertainty is
-understood to appear in the thousandths place.
-This format is described in the
-`BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
-We call this format "parentheses uncertainty" mode.
-:mod:`sciform` provides this functionality via the ``paren_uncertainty``
-option:
+The
+`BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_
+Provides three example value/uncertainty formats::
 
->>> formatter = Formatter(paren_uncertainty=True)
->>> print(formatter(123.456, 0.789))
-123.456(789)
+  100,021 47 ± 0,000 35 g
+  100,021 47(0,000 35) g
+  100,021 47(35) g
 
-Or with other options:
+In the first example the value and uncertainty are shown as regular
+numbers separated by a ``±``.
+In the second example the uncertainty is shown after the value inside
+parentheses.
+The third example is like the second but all leading zeros and separator
+characters have been removed.
+In the third example it is clear to see exactly which digits of the
+value are uncertain and by how much.
 
->>> formatter = Formatter(ndigits=2, paren_uncertainty=True)
->>> print(formatter(123.456, 0.789))
-123.46(79)
+:mod:`sciform` provides the ability to realize all three of these
+formatting strategies by using the ``paren_uncertainty`` and
+``paren_uncertainty_trim`` options.
+Note of course that the BIPM examples include a unit, ``g`` but the
+:mod:`sciform` examples do not, because :mod:`sciform` does not support
+appending units to numbers.
+:mod:`sciform` does support
+:ref:`SI prefix translations <exp_str_replacement>` to which the user
+could manually append simple unit strings.
+
+>>> value = 100.02147
+>>> uncertainty = 0.00035
+>>>
 >>> formatter = Formatter(
-...     ndigits=2,
-...     exp_mode="scientific",
+...     paren_uncertainty=False,
+...     decimal_separator=",",
+...     lower_separator=" ",
+... )
+>>> print(formatter(value, uncertainty))
+100,021 47 ± 0,000 35
+>>> formatter = Formatter(
+...     paren_uncertainty=True,
+...     paren_uncertainty_trim=False,
+...     decimal_separator=",",
+...     lower_separator=" ",
+... )
+>>> print(formatter(value, uncertainty))
+100,021 47(0,000 35)
+>>> formatter = Formatter(
+...     paren_uncertainty=True,
+...     paren_uncertainty_trim=True,
+...     decimal_separator=",",
+...     lower_separator=" ",
+... )
+>>> print(formatter(value, uncertainty))
+100,021 47(35)
+
+``paren_uncertainty_trim`` eliminates all separators which are not the
+decimal separator.
+
+>>> value = 100.0215
+>>> uncertainty = 0.0035
+>>> formatter = Formatter(
+...     paren_uncertainty=True,
+...     paren_uncertainty_trim=False,
+...     decimal_separator=",",
+...     lower_separator=" ",
+... )
+>>> print(formatter(value, uncertainty))
+100,021 5(0,003 5)
+>>> formatter = Formatter(
+...     paren_uncertainty=True,
+...     paren_uncertainty_trim=True,
+...     decimal_separator=",",
+...     lower_separator=" ",
+... )
+>>> print(formatter(value, uncertainty))
+100,021 5(35)
+
+The default global options have ``paren_uncertainty=False`` and
+``paren_uncertainty_trim=True``.
+
+We can look at the interplay between parentheses uncertainty mode and
+exponent options.
+
+>>> formatter = Formatter(
+...     exp_mode="engineering",
+...     exp_format="standard",
 ...     paren_uncertainty=True,
 ... )
->>> print(formatter(123.456, 0.789))
-(1.2346(79))e+02
-
-When ``paren_uncertainty=True`` is used with the prefix or parts-per
-exponent formats, if the exponent string is replaced, then the enclosing
-parentheses around the value/uncertainty pair are omitted.
-This is consistent with
-`BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
-
+>>> print(formatter(523.4e-3, 1.2e-3))
+(523.4(1.2))e-03
 >>> formatter = Formatter(
 ...     exp_mode="engineering",
 ...     exp_format="prefix",
@@ -728,67 +782,25 @@ This is consistent with
 >>> print(formatter(523.4e-3, 1.2e-3))
 523.4(1.2) m
 
-Parentheses Uncertainty Separators
-----------------------------------
+We see that in the ASCII formatting mode parentheses are included around
+the value/uncertainty, but they are excluded in the SI prefix mode.
+This is consistent with the BIPM examples.
 
-In some cases using parentheses uncertainty results in digits such that
-a decimal point could appear in the uncertainty in the parentheses.
-For example: ``18.4 ± 2.1 -> 18.4(2.1)``.
-In such cases, there is no official guidance on if the decimal symbol
-should be included in the uncertainty or not.
-That is, one may format ``18.4 ± 2.1 -> 18.4(21)``.
-The interpretation here is that the uncertainty is 21 tenths, since the
-least significant digit of the value is in the tenths place.
-The author's preference is to keep the decimal symbol because it allows
-for rapid "lining up" of the decimal places by eye and it is similar to
-`BIPM Guide Section 7.2.2 <https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf/cb0ef43f-baa5-11cf-3f85-4dcd86f77bd6#page=37>`_.
-example 3 in which the entire uncertainty number is shown in
-parentheses.
+Note that the BIPM guide does not show any examples where the digits of
+the uncertainty span either a separation or decimal separator.
+This means there is no official guidance about
 
-:mod:`sciform` allows the user to optionally include or exclude
-separator symbols from the uncertainty in parentheses using the
-``paren_uncertainty_separatros`` option:
+* Should ``18.4 ± 2.1`` be formatted as ``18.4(2.1)`` or ``18.4(21)``.
+* Should ``18.456 4 ± 0.002 1`` be formatted as ``18.456 4(2 1)`` or
+  ``18.456 4(21)``.
 
->>> formatter = Formatter(
-...     paren_uncertainty=True,
-...     paren_uncertainty_trim_separators=False,
-... )
->>> print(formatter(18.4, 2.1))
-18.4(2.1)
->>> formatter = Formatter(
-...     paren_uncertainty=True,
-...     paren_uncertainty_trim_separators=True,
-... )
->>> print(formatter(18.4, 2.1))
-18.4(21)
-
-Note that the ``paren_uncertainty_separators`` removes *all* separator
-symbols from the uncertainty in the parentheses.
-
->>> formatter = Formatter(
-...     upper_separator=".",
-...     decimal_separator=",",
-...     lower_separator="_",
-...     paren_uncertainty=True,
-...     paren_uncertainty_trim_separators=False,
-... )
->>> print(formatter(987654, 1234.4321))
-987.654,000_0(1.234,432_1)
->>> formatter = Formatter(
-...     upper_separator=".",
-...     decimal_separator=",",
-...     lower_separator="_",
-...     paren_uncertainty=True,
-...     paren_uncertainty_trim_separators=True,
-... )
->>> print(formatter(987654, 1234.4321))
-987.654,000_0(12344321)
-
-This latest example demonstrates that the parentheses uncertainty mode
-can become difficult to read in some cases.
-Parentheses uncertainty is most useful when the value is at least a few
-orders of magnitude larger than the uncertainty and when the uncertainty
-is displayed with a small number (e.g. 1 or 2) of significant digits.
+:mod:`sciform` formats the trimmed parentheses uncertainty mode by
+never removing the decimal separator unless it is to the left of the
+most significant digit of the uncertainty but to always remove all
+upper and lower separator characters.
+By contrast, the `siunitx <https://ctan.org/pkg/siunitx?lang=en>`_
+LaTeX package always removes all separators characters, including the
+decimal.
 
 Match Value/Uncertainty Width
 -----------------------------
