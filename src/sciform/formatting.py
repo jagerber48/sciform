@@ -292,7 +292,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         unc_mantissa_str,
         val_mantissa,
         unc_mantissa,
-        decimal_separator=options.decimal_separator,
         paren_uncertainty=options.paren_uncertainty,
         pm_whitespace=options.pm_whitespace,
         paren_uncertainty_trim_digits=options.paren_uncertainty_trim_digits,

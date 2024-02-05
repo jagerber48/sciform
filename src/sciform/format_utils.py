@@ -13,7 +13,6 @@ from sciform.modes import (
     ExpFormatEnum,
     ExpModeEnum,
     RoundModeEnum,
-    SeparatorEnum,
     SignModeEnum,
 )
 from sciform.prefix import (
@@ -435,7 +434,6 @@ def construct_val_unc_str(  # noqa: PLR0913
     unc_mantissa_str: str,
     val_mantissa: Decimal,
     unc_mantissa: Decimal,
-    decimal_separator: SeparatorEnum,
     *,
     paren_uncertainty: bool,
     pm_whitespace: bool,
