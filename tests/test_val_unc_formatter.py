@@ -533,35 +533,39 @@ class TestFormatting(unittest.TestCase):
         Matches the example in "BIPM guide to the expression of
         uncertainty in measurements" section 7.2.2
         """
-        val, unc = 100.02147, 0.00035
+        cases_list = [
+            (
+                (100.02147, 0.00035),
+                [
+                    (
+                        Formatter(paren_uncertainty=False),
+                        "100.02147 ± 0.00035",
+                    ),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                        ),
+                        "100.02147(35)",
+                    ),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                        ),
+                        "100.02147(0.00035)",
+                    ),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            left_pad_matching=True,
+                            left_pad_char="0",
+                        ),
+                        "100.02147(000.00035)",
+                    ),
+                ],
+            ),
+        ]
 
-        with self.subTest():
-            formatter = Formatter(paren_uncertainty=False)
-            formatted = formatter(val, unc)
-            self.assertEqual(formatted, "100.02147 ± 0.00035")
-
-        with self.subTest():
-            formatter = Formatter(
-                paren_uncertainty=True,
-                paren_uncertainty_trim=True,
-            )
-            formatted = formatter(val, unc)
-            self.assertEqual(formatted, "100.02147(35)")
-
-        with self.subTest():
-            formatter = Formatter(
-                paren_uncertainty=True,
-                paren_uncertainty_trim=False,
-            )
-            formatted = formatter(val, unc)
-            self.assertEqual(formatted, "100.02147(0.00035)")
-
-        with self.subTest():
-            formatter = Formatter(
-                paren_uncertainty=True,
-                paren_uncertainty_trim=False,
-                left_pad_matching=True,
-                left_pad_char="0",
-            )
-            formatted = formatter(val, unc)
-            self.assertEqual(formatted, "100.02147(000.00035)")
+        self.run_val_unc_formatter_cases(cases_list)
