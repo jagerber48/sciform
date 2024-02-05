@@ -706,31 +706,29 @@ value are uncertain and by how much.
 formatting strategies by using the ``paren_uncertainty`` and
 ``paren_uncertainty_trim`` options.
 
+>>> from sciform import formatter, GlobalOptionsContext
 >>> value = 100.02147
 >>> uncertainty = 0.00035
 >>>
->>> formatter = Formatter(
-...     paren_uncertainty=False,
-...     decimal_separator=",",
-...     lower_separator=" ",
-... )
->>> print(formatter(value, uncertainty))
+>>> with GlobalOptionsContext(decimal_separator=",", lower_separator=" "):
+...     formatter = Formatter(
+...         paren_uncertainty=False,
+...     )
+...     print(formatter(value, uncertainty))
+...
+...     formatter = Formatter(
+...         paren_uncertainty=True,
+...         paren_uncertainty_trim=False,
+...     )
+...     print(formatter(value, uncertainty))
+...
+...     formatter = Formatter(
+...         paren_uncertainty=True,
+...         paren_uncertainty_trim=True,
+...     )
+...     print(formatter(value, uncertainty))
 100,021 47 ± 0,000 35
->>> formatter = Formatter(
-...     paren_uncertainty=True,
-...     paren_uncertainty_trim=False,
-...     decimal_separator=",",
-...     lower_separator=" ",
-... )
->>> print(formatter(value, uncertainty))
 100,021 47(0,000 35)
->>> formatter = Formatter(
-...     paren_uncertainty=True,
-...     paren_uncertainty_trim=True,
-...     decimal_separator=",",
-...     lower_separator=" ",
-... )
->>> print(formatter(value, uncertainty))
 100,021 47(35)
 
 ``paren_uncertainty_trim`` eliminates all separators which are not the
