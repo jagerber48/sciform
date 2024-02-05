@@ -264,11 +264,8 @@ class Formatter:
           and separator characters to the left of the most significant
           digit of the uncertainty should be stripped from the
           uncertainty in parentheses uncertainty mode. E.g. expressing
-          ``123.456_789 ± 0.000123`` as ``123.456_789(0.000_123)`` or
-          ``123.456_789(123)``
-          separator symbols should be included in the uncertainty when
-          using parentheses uncertainty mode. E.g. expressing
-          ``123.4 ± 2.3`` either as ``123.4(2.3)`` or ``123.4(23)``.
+          ``123.456_78 ± 0.001_23`` as ``123.456_78(0.001_23)`` or
+          ``123.456_78(123)``.
         :type paren_uncertainty_trim: ``bool | None``
         :param pm_whitespace: Flag indicating if there should be
           whitespace surrounding the ``'±'`` symbols when formatting.
