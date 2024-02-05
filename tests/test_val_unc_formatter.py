@@ -500,3 +500,68 @@ class TestFormatting(unittest.TestCase):
         result = formatter(123, 0.123)
         expected_result = "123.000 ±   0.123"
         self.assertEqual(result, expected_result)
+
+    def test_paren_uncertainties_trim_digits(self):
+        """
+        Matches the example in "BIPM guide to the expression of
+        uncertainty in measurements" section 7.2.2
+        """
+        val, unc = 100.02147, 0.00035
+
+        with self.subTest():
+            formatter = Formatter(paren_uncertainty=False)
+            formatted = formatter(val, unc)
+            self.assertEqual(formatted, "100.02147 ± 0.00035")
+
+        with self.subTest():
+            formatter = Formatter(
+                paren_uncertainty=True,
+                paren_uncertainty_trim_digits=True,
+            )
+            formatted = formatter(val, unc)
+            self.assertEqual(formatted, "100.02147(35)")
+
+        with self.subTest():
+            formatter = Formatter(
+                paren_uncertainty=True,
+                paren_uncertainty_trim_digits=False,
+            )
+            formatted = formatter(val, unc)
+            self.assertEqual(formatted, "100.02147(0.00035)")
+
+    def test_paren_uncertainties_trimming_options(self):
+        val = 123456.654321
+        unc = 123.3211
+
+        with self.subTest():
+            formatter = Formatter(
+                paren_uncertainty=True,
+                paren_uncertainty_trim_digits=False,
+                paren_uncertainty_trim_separators=False,
+                upper_separator=",",
+                lower_separator="_",
+            )
+            formatted = formatter(val, unc)
+            self.assertEqual(formatted, "123,456.654_3(123.321_1)")
+
+        with self.subTest():
+            formatter = Formatter(
+                paren_uncertainty=True,
+                paren_uncertainty_trim_digits=True,
+                paren_uncertainty_trim_separators=False,
+                upper_separator=",",
+                lower_separator="_",
+            )
+            formatted = formatter(val, unc)
+            self.assertEqual(formatted, "123,456.654_3(123.321_1)")
+
+        with self.subTest():
+            formatter = Formatter(
+                paren_uncertainty=True,
+                paren_uncertainty_trim_digits=True,
+                paren_uncertainty_trim_separators=True,
+                upper_separator=",",
+                lower_separator="_",
+            )
+            formatted = formatter(val, unc)
+            self.assertEqual(formatted, "123,456.654_3(1233211)")
