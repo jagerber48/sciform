@@ -735,7 +735,7 @@ formatting strategies by using the ``paren_uncertainty`` and
 decimal separator.
 
 >>> value = 100.0215
->>> uncertainty = 0.0035
+>>> uncertainty = 1.2345
 >>> formatter = Formatter(
 ...     paren_uncertainty=True,
 ...     paren_uncertainty_trim=False,
@@ -743,7 +743,7 @@ decimal separator.
 ...     lower_separator=" ",
 ... )
 >>> print(formatter(value, uncertainty))
-100,021 5(0,003 5)
+100,021 5(1,234 5)
 >>> formatter = Formatter(
 ...     paren_uncertainty=True,
 ...     paren_uncertainty_trim=True,
@@ -751,7 +751,23 @@ decimal separator.
 ...     lower_separator=" ",
 ... )
 >>> print(formatter(value, uncertainty))
-100,021 5(35)
+100,021 5(1,2345)
+
+Note that the BIPM guide does not show any examples where the digits of
+the uncertainty span either a grouping or decimal separator.
+This means there is no official guidance about
+
+* Should ``18.4 ± 2.1`` be formatted as ``18.4(2.1)`` or ``18.4(21)``.
+* Should ``18.456 4 ± 0.002 1`` be formatted as ``18.456 4(2 1)`` or
+  ``18.456 4(21)``.
+
+:mod:`sciform` formats the trimmed parentheses uncertainty mode by
+never removing the decimal separator unless it is to the left of the
+most significant digit of the uncertainty but to always remove all
+upper and lower separator characters.
+By contrast, the `siunitx <https://ctan.org/pkg/siunitx?lang=en>`_
+LaTeX package always removes all separators characters, including the
+decimal.
 
 The default global options have ``paren_uncertainty=False`` and
 ``paren_uncertainty_trim=True``.
@@ -777,22 +793,6 @@ exponent options.
 We see that in the ASCII formatting mode parentheses are included around
 the value/uncertainty, but they are excluded in the SI prefix mode.
 This is consistent with the BIPM examples.
-
-Note that the BIPM guide does not show any examples where the digits of
-the uncertainty span either a separation or decimal separator.
-This means there is no official guidance about
-
-* Should ``18.4 ± 2.1`` be formatted as ``18.4(2.1)`` or ``18.4(21)``.
-* Should ``18.456 4 ± 0.002 1`` be formatted as ``18.456 4(2 1)`` or
-  ``18.456 4(21)``.
-
-:mod:`sciform` formats the trimmed parentheses uncertainty mode by
-never removing the decimal separator unless it is to the left of the
-most significant digit of the uncertainty but to always remove all
-upper and lower separator characters.
-By contrast, the `siunitx <https://ctan.org/pkg/siunitx?lang=en>`_
-LaTeX package always removes all separators characters, including the
-decimal.
 
 Match Value/Uncertainty Width
 -----------------------------
