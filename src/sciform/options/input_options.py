@@ -72,7 +72,6 @@ class InputOptions:
     pdg_sig_figs: bool | None = None
     left_pad_matching: bool | None = None
     paren_uncertainty_trim_digits: bool | None = None
-    paren_uncertainty_trim_separators: bool | None = None
     pm_whitespace: bool | None = None
 
     add_c_prefix: bool = None

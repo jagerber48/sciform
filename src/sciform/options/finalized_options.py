@@ -41,7 +41,6 @@ class FinalizedOptions:
     pdg_sig_figs: bool
     left_pad_matching: bool
     paren_uncertainty_trim_digits: bool
-    paren_uncertainty_trim_separators: bool
     pm_whitespace: bool
 
     def __post_init__(self: FinalizedOptions) -> None:

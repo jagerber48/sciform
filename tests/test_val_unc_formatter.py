@@ -218,114 +218,6 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
-    def test_paren_unc_separators(self):
-        cases_list = [
-            (
-                (123.456, 0.789),
-                [
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_val=-1,
-                            paren_uncertainty=True,
-                        ),
-                        "(1234.56(7.89))e-01",
-                    ),
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_val=-1,
-                            paren_uncertainty_trim_separators=True,
-                            paren_uncertainty=True,
-                        ),
-                        "(1234.56(789))e-01",
-                    ),
-                ],
-            ),
-            (
-                (0.789, 123.456),
-                [
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_val=-1,
-                            paren_uncertainty=True,
-                        ),
-                        "(7.89(1234.56))e-01",
-                    ),
-                    # Don't remove "embedded" decimal unless val > unc.
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_val=-1,
-                            paren_uncertainty_trim_separators=True,
-                            paren_uncertainty=True,
-                        ),
-                        "(7.89(1234.56))e-01",
-                    ),
-                ],
-            ),
-            (
-                (1.2, float("nan")),
-                [
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_trim_separators=True,
-                        ),
-                        "1.2(nan)",
-                    ),
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_trim_separators=False,
-                        ),
-                        "1.2(nan)",
-                    ),
-                ],
-            ),
-            (
-                (float("nan"), 1.2),
-                [
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_trim_separators=True,
-                        ),
-                        "nan(1.2)",
-                    ),
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_trim_separators=False,
-                        ),
-                        "nan(1.2)",
-                    ),
-                ],
-            ),
-            (
-                (float("nan"), float("nan")),
-                [
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_trim_separators=False,
-                        ),
-                        "nan(nan)",
-                    ),
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_trim_separators=True,
-                        ),
-                        "nan(nan)",
-                    ),
-                ],
-            ),
-        ]
-
-        self.run_val_unc_formatter_cases(cases_list)
-
     def test_pm_whitespace(self):
         cases_list = [
             (
@@ -529,39 +421,12 @@ class TestFormatting(unittest.TestCase):
             formatted = formatter(val, unc)
             self.assertEqual(formatted, "100.02147(0.00035)")
 
-    def test_paren_uncertainties_trimming_options(self):
-        val = 123456.654321
-        unc = 123.3211
-
         with self.subTest():
             formatter = Formatter(
                 paren_uncertainty=True,
                 paren_uncertainty_trim_digits=False,
-                paren_uncertainty_trim_separators=False,
-                upper_separator=",",
-                lower_separator="_",
+                left_pad_matching=True,
+                left_pad_char="0",
             )
             formatted = formatter(val, unc)
-            self.assertEqual(formatted, "123,456.654_3(123.321_1)")
-
-        with self.subTest():
-            formatter = Formatter(
-                paren_uncertainty=True,
-                paren_uncertainty_trim_digits=True,
-                paren_uncertainty_trim_separators=False,
-                upper_separator=",",
-                lower_separator="_",
-            )
-            formatted = formatter(val, unc)
-            self.assertEqual(formatted, "123,456.654_3(123.321_1)")
-
-        with self.subTest():
-            formatter = Formatter(
-                paren_uncertainty=True,
-                paren_uncertainty_trim_digits=True,
-                paren_uncertainty_trim_separators=True,
-                upper_separator=",",
-                lower_separator="_",
-            )
-            formatted = formatter(val, unc)
-            self.assertEqual(formatted, "123,456.654_3(1233211)")
+            self.assertEqual(formatted, "100.02147(000.00035)")

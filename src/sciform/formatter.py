@@ -117,7 +117,6 @@ class Formatter:
      'pdg_sig_figs': False,
      'left_pad_matching': False,
      'paren_uncertainty_trim_digits': True,
-     'paren_uncertainty_trim_separators': False,
      'pm_whitespace': True,
     )
     >>> print(formatter.populated_options.exp_format)
@@ -154,7 +153,6 @@ class Formatter:
         pdg_sig_figs: bool | None = None,
         left_pad_matching: bool | None = None,
         paren_uncertainty_trim_digits: bool | None = None,
-        paren_uncertainty_trim_separators: bool | None = None,
         pm_whitespace: bool | None = None,
         add_c_prefix: bool | None = None,
         add_small_si_prefixes: bool | None = None,
@@ -305,7 +303,6 @@ class Formatter:
             pdg_sig_figs=pdg_sig_figs,
             left_pad_matching=left_pad_matching,
             paren_uncertainty_trim_digits=paren_uncertainty_trim_digits,
-            paren_uncertainty_trim_separators=paren_uncertainty_trim_separators,
             pm_whitespace=pm_whitespace,
             add_c_prefix=add_c_prefix,
             add_small_si_prefixes=add_small_si_prefixes,
