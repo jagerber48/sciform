@@ -17,6 +17,9 @@ superscript_translation = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-
 output_formats = Literal["latex", "html", "ascii"]
 
 
+def _detect_paren_uncertainty(main_str: str) -> bool:
+    return (re.search(r"[\d.,_ ]+\([\d.,_ ]+\)", main_str) is not None and '%' not in main_str)
+
 def _make_exp_str(
     base: int,
     exp: int,
@@ -137,6 +140,12 @@ def convert_sciform_format(
         main_str = formatted_str
         suffix_str = ""
 
+    if (
+        _detect_paren_uncertainty(main_str)
+        and (match := re.match(r"\((.*)\)", main_str))
+    ):
+        main_str = match.group(1)
+
     if output_format == "latex":
         main_str = re.sub(
             r"([a-zA-Zμ]+)",
@@ -163,6 +172,8 @@ def convert_sciform_format(
             ("μ", "u"),
         ]
         main_str = _string_replacements(main_str, replacements)
+        if _detect_paren_uncertainty(main_str):
+            main_str = f"({main_str})"
         return f"{main_str}{suffix_str}"
     msg = f"output_format must be in {get_args(output_formats)}, not {output_format}"
     raise ValueError(msg)
