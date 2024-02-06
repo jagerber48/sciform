@@ -17,9 +17,6 @@ superscript_translation = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-
 output_formats = Literal["latex", "html", "ascii"]
 
 
-def _detect_paren_uncertainty(main_str: str) -> bool:
-    return (re.search(r"[\d.,_ ]+\([\d.,_ ]+\)", main_str) is not None and '%' not in main_str)
-
 def _make_exp_str(
     base: int,
     exp: int,
