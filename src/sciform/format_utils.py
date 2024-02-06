@@ -505,7 +505,7 @@ def construct_val_unc_exp_str(  # noqa: PLR0913
 
     if exp_str == "":
         val_unc_exp_str = f"{val_unc_str}{exp_str}"
-    elif paren_uncertainty and not re.match(r"^[eEbB][+-]\d+$", exp_str):
+    elif paren_uncertainty:
         """
         "1234(12)" val_unc_str along with exp_str "k" will be formatted as
         "1234(12) k whereas 1234(12) with exp_str "e+03" will be
