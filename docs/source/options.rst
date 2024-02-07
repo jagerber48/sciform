@@ -712,7 +712,7 @@ Or with other options:
 ...     paren_uncertainty=True,
 ... )
 >>> print(formatter(123.456, 0.789))
-(1.2346(79))e+02
+1.2346(79)e+02
 
 When ``paren_uncertainty=True`` is used with the prefix or parts-per
 exponent formats, if the exponent string is replaced, then the enclosing

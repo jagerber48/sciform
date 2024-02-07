@@ -315,7 +315,10 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         val_unc_exp_str = val_unc_str
 
     if options.exp_mode is ExpModeEnum.PERCENT:
-        val_unc_exp_str = f"({val_unc_exp_str})%"
+        if options.paren_uncertainty:
+            val_unc_exp_str = f"{val_unc_exp_str}%"
+        else:
+            val_unc_exp_str = f"({val_unc_exp_str})%"
 
     return val_unc_exp_str
 

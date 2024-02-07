@@ -8,7 +8,27 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* There are no unreleased changes.
+Changed
+^^^^^^^
+
+* Previously, when using ``paren_uncertainty=True``, redundant
+  parentheses were included around the value and uncertainty numbers if
+  there was an ASCII exponent (e.g. ``e+02``) or in percent formatting
+  mode.
+  E.g. outputs would look like ``(32.4(1.2))e+02`` or ``(32.4(1.2))%``.
+  Now these redundant parentheses are excluded so outputs look like
+  ``32.4(1.2)e+02`` or ``32.4(1.2)%``.
+  This is consistent with how the
+  `uncertainties <https://uncertainties-python-package.readthedocs.io/en/latest/>`_
+  package handles these cases.
+  The extra parentheses were originally included for increased clarity,
+  but the extra parentheses only clutter the output and there is
+  sufficient clarity without them.
+  This change eliminates an issue where the redundant parentheses were
+  erroneously included or excluded after LaTeX/HTML/ASCII output
+  conversion.
+  [`#145 <https://github.com/jagerber48/sciform/issues/145>`_]
+
 
 ----
 
