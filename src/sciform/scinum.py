@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from sciform.formatting import FormattedNumber, format_from_options
 from sciform.fsml import format_options_from_fmt_spec
+from sciform.parser import extract_val_unc
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.format_utils import Number
@@ -53,7 +54,28 @@ class SciNum:
             input_options=input_options,
         )
 
+    @classmethod
+    def from_string(cls, input_str: str) -> SciNum:
+        val, unc = extract_val_unc(input_str)
+        return cls(val, unc)
+
     def __repr__(self: SciNum) -> str:
         if self.uncertainty is not None:
             return f"{self.__class__.__name__}({self.value}, {self.uncertainty})"
         return f"{self.__class__.__name__}({self.value})"
+
+    def __eq__(self: SciNum, other: SciNum) -> bool:
+        if self.value.is_nan():
+            val_equal = other.value.is_nan()
+        else:
+            val_equal = self.value == other.value
+
+        if self.uncertainty is None:
+            unc_equal = other.uncertainty is None
+        elif self.uncertainty.is_nan():
+            unc_equal = other.uncertainty.is_nan()
+        else:
+            unc_equal = self.uncertainty == other.uncertainty
+
+        total_equal = val_equal and unc_equal
+        return total_equal
