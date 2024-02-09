@@ -66,6 +66,7 @@ ignore = [
     'TD003',
     'FIX002',
     'RET504',
+    'Q003',
 ]
 
 [tool.ruff.format]

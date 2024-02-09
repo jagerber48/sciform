@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 from sciform.formatting import FormattedNumber, format_from_options
 from sciform.fsml import format_options_from_fmt_spec
-from sciform.parser import extract_val_unc
+from sciform.parser import parse_val_unc_from_str
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.format_utils import Number
@@ -56,7 +56,7 @@ class SciNum:
 
     @classmethod
     def from_string(cls, input_str: str) -> SciNum:
-        val, unc = extract_val_unc(input_str)
+        val, unc = parse_val_unc_from_str(input_str)
         return cls(val, unc)
 
     def __repr__(self: SciNum) -> str:

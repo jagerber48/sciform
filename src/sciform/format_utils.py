@@ -41,7 +41,7 @@ def get_top_digit_binary(num: Decimal) -> int:
 
 
 def get_bottom_digit(num: Decimal) -> int:
-    """Get the decimal plac of a decimal's least significant digit."""
+    """Get the decimal place of a decimal's least significant digit."""
     if not num.is_finite():
         return 0
     _, _, exp = num.as_tuple()
