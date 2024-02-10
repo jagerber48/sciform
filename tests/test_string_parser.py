@@ -3,7 +3,7 @@ from decimal import Decimal
 from math import isnan
 from typing import Optional
 
-from sciform import SciNum
+from sciform import GlobalOptionsContext, SciNum, modes
 from sciform.format_utils import Number
 from sciform.parser import parse_val_unc_from_str
 
@@ -13,7 +13,7 @@ CasesList = list[tuple[str, tuple[Number, Optional[Number]]]]
 NAN = float("nan")
 INF = float("inf")
 
-cases = [
+shared_cases = [
     (
         "000_000_123_456_789.654_321",
         (123456789.654321, None),
@@ -254,11 +254,18 @@ class TestStringParser(unittest.TestCase):
         else:
             self.assertEqual(first, second, msg=msg)
 
-    def run_direct_cases(self, cases: CasesList):
+    def run_direct_cases(
+        self,
+        cases: CasesList,
+        decimal_separator: modes.DecimalSeparators = ".",
+    ):
         for string, (val, unc) in cases:
             expected_val = Decimal(str(val))
             expected_unc = Decimal(str(unc)) if unc is not None else unc
-            result_val, result_unc = parse_val_unc_from_str(string)
+            result_val, result_unc = parse_val_unc_from_str(
+                string,
+                decimal_separator=decimal_separator,
+            )
             with self.subTest(
                 input_string=string,
                 expected_val=expected_val,
@@ -289,10 +296,66 @@ class TestStringParser(unittest.TestCase):
                 self.assertEqual(result_scinum, expected_scinum)
 
     def test_string_parse_cases(self):
-        self.run_direct_cases(cases)
+        self.run_direct_cases(shared_cases)
 
     def test_scinum_cases(self):
-        self.run_scinum_cases(cases)
+        self.run_scinum_cases(shared_cases)
 
     def test_scinum_double_input(self):
         self.assertEqual(SciNum("1 k", "1 m"), SciNum(1e3, 1e-3))
+
+    def test_unrecognized_prefix(self):
+        self.assertRaises(
+            ValueError,
+            parse_val_unc_from_str,
+            "1 d"
+        )
+
+    def test_comma_decimal_separator(self):
+        cases = [
+            (
+                "123,456",
+                (123.456, None),
+            )
+        ]
+        self.run_direct_cases(cases, decimal_separator=",")
+
+    def test_cannot_parse(self):
+        self.assertRaises(
+            ValueError,
+            parse_val_unc_from_str,
+            "nan%",
+        )
+
+    def test_multiple_translations(self):
+        with GlobalOptionsContext(
+            extra_si_prefixes={-9: "ppb"},
+            extra_parts_per_forms={-12: "ppb"},
+        ):
+            self.assertRaises(
+                ValueError,
+                parse_val_unc_from_str,
+                "3 ppb",
+            )
+
+    def test_extra_translations(self):
+        cases = [
+            (
+                "1 c",
+                (1e-2, None),
+            ),
+            (
+                "1 da",
+                (1e1, None)
+            ),
+            (
+                "3 ppth",
+                (3e-3, None),
+            )
+
+        ]
+        with GlobalOptionsContext(
+            add_small_si_prefixes=True,
+            add_ppth_form=True,
+        ):
+            self.run_direct_cases(cases)

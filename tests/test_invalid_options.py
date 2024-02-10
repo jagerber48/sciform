@@ -1,5 +1,6 @@
 import unittest
 from decimal import Decimal
+import re
 
 from sciform import Formatter, modes
 from sciform.format_utils import (
@@ -14,7 +15,7 @@ from sciform.formatting import format_non_finite
 from sciform.options.conversion import finalize_input_options
 from sciform.options.input_options import InputOptions
 from sciform.output_conversion import _make_exp_str, convert_sciform_format
-
+from sciform.parser import _get_ascii_base_exp_val
 
 class TestInvalidOptions(unittest.TestCase):
     def test_sig_fig_ndigits(self):

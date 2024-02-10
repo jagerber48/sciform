@@ -9,6 +9,7 @@ from decimal import Decimal
 
 from sciform import modes
 from sciform import prefix as prefix_module
+from sciform.global_configuration import get_global_options
 
 # language=pythonverboseregexp
 upper_grouping_pattern = r"((_\d{3})*|(\ \d{3})*|(\.\d{3})*|(,\d{3})*|(\d{3})*)"
@@ -89,8 +90,9 @@ def _get_ascii_base_exp_val(match: re.Match) -> tuple[int, int]:
         base = 10
     elif base.lower() == "b":
         base = 2
-    else:
-        raise ValueError
+    else:  # pragma: no cover
+        msg = f'Unexpected ASCII base: "{base}"'
+        raise ValueError(msg)
     exp_val = int(match.group("ascii_exp_val"))
     return base, exp_val
 
@@ -103,15 +105,26 @@ def _get_unicode_base_exp_val(match: re.Match) -> tuple[int, int]:
 
 def _get_prefix_base_exp_val(prefix_exp: str) -> tuple[int, int]:
     candidate_base_exp_val_pairs = []
-    for key, value in prefix_module.si_val_to_prefix_dict.items():
+    global_options = get_global_options()
+
+    si_translations = prefix_module.si_val_to_prefix_dict.copy()
+    si_translations.update(global_options.extra_si_prefixes)
+    for key, value in si_translations.items():
         if prefix_exp == value:
             candidate_base_exp_val_pairs.append((10, key))
-    for key, value in prefix_module.pp_val_to_prefix_dict.items():
+
+    pp_translations = prefix_module.pp_val_to_prefix_dict.copy()
+    pp_translations.update(global_options.extra_parts_per_forms)
+    for key, value in pp_translations.items():
         if prefix_exp == value:
             candidate_base_exp_val_pairs.append((10, key))
-    for key, value in prefix_module.iec_val_to_prefix_dict.items():
+
+    iec_translations = prefix_module.iec_val_to_prefix_dict.copy()
+    iec_translations.update(global_options.extra_iec_prefixes)
+    for key, value in iec_translations.items():
         if prefix_exp == value:
             candidate_base_exp_val_pairs.append((2, key))
+
     if len(candidate_base_exp_val_pairs) == 0:
         msg = f'Unrecognized prefix: "{prefix_exp}". Unable to parse input.'
         raise ValueError(msg)
@@ -137,8 +150,9 @@ def _extract_exp_base_exp_val(
     elif match.group("percent_exp"):
         base = 10
         exp_val = -2
-    else:
-        raise ValueError
+    else:  # pragma: no cover
+        msg = "Expected named match groups not found."
+        raise ValueError(msg)
     return base, exp_val
 
 
@@ -152,37 +166,37 @@ def _extract_decimal_separator(
         # Ambiguous, must fall back to default.
         pass
     elif "." in val and "," in val:
+        """
+        Both separators appear, determine which comes later and set that
+        as the decimal separator.
+        """
         if re.match(r"^[^.]+,[^.]+\..*$", val):
-            # If a decimal point appears after a comma it must be the decimal separator.
             decimal_separator = "."
         else:
             decimal_separator = ","
     elif "." in val and "," not in val:
         upper, lower = val.split(".")
-        if len(upper) <= 3 and len(lower) == 3:
+        if len(upper) > 3 or len(lower) != 3:
             """
-            If there are 1, 2, or 3 digits before the separator and 3 after then it is
-            ambiguous whether the separator is an upper or decimal separator.
-            e.g 12,456 could be 12000 + 456, or 12 + 0.456. Must fall back on the
-            default.
-            """
-            pass  # noqa: PIE790
-        else:
-            """
-            Otherwise the separator must be the decimal separator, e.g. 1234.45 must be
-            1234 + 0.45.
+            e.g. 1234.567 or 1.2
+            In neither case can "." be an an upper separator. Lower
+            separators can only appear if a decimal separator is present
+            but only one separator is present so that is impossible.
+            
+            If len(upper) <= 3 and len(lower) == 3 then "." may be
+            either an upper or decimal separator so we keep the
+            decimal_passed that has been passed in.
+            e.g. 12.456
             """
             decimal_separator = "."
     elif "," in val and "." not in val:
         upper, lower = val.split(",")
-        if len(upper) <= 3 and len(lower) == 3:
-            # See comments above for logic
-            pass
-        else:
+        if len(upper) > 3 or len(lower) != 3:
             # See comments above for logic
             decimal_separator = ","
-    else:
-        raise ValueError
+    else:  # pragma: no cover
+        msg = "Unreachable: All combinations exhausted."
+        raise ValueError(msg)
     return decimal_separator
 
 
@@ -276,7 +290,10 @@ def parse_val_unc_from_str(
     elif match := re.fullmatch(always_exp_pattern, input_str, re.VERBOSE):
         val, unc, base, exp_val = _parse_always_exp_pattern(match)
     else:
-        raise ValueError
+        msg = (
+            f'Cannot parse string "{input_str}" into a value or value/uncertainty pair.'
+        )
+        raise ValueError(msg)
 
     if val.lower() not in ("nan", "inf"):
         decimal_separator = _extract_decimal_separator(val, decimal_separator)
