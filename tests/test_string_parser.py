@@ -267,10 +267,14 @@ class TestStringParser(unittest.TestCase):
                 result_unc=result_unc,
             ):
                 self.assertNanNoneEqual(
-                    result_val, expected_val, msg="Value not equal",
+                    result_val,
+                    expected_val,
+                    msg="Value not equal",
                 )
                 self.assertNanNoneEqual(
-                    result_unc, expected_unc, msg="Uncertainty not equal",
+                    result_unc,
+                    expected_unc,
+                    msg="Uncertainty not equal",
                 )
 
     def run_scinum_cases(self, cases: CasesList):
