@@ -1,6 +1,9 @@
 .. image:: https://www.repostatus.org/badges/latest/wip.svg
      :target: https://www.repostatus.org/#wip
      :alt: Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.
+.. image:: https://tinyurl.com/y22nb8up
+     :target: https://github.com/pyOpenSci/software-review/issues/121
+     :alt: pyOpenSci
 .. image:: https://img.shields.io/readthedocs/sciform?logo=readthedocs&link=https%3A%2F%2Fsciform.readthedocs.io%2Fen%2Fstable%2F
      :target: https://sciform.readthedocs.io/en/stable/
      :alt: Read the Docs
@@ -60,38 +63,6 @@ or install the latest development version from
    python -m pip install git+https://github.com/jagerber48/sciform.git
 
 ``sciform`` is compatible with Python versions >=3.9.
-
-==================
-Under Construction
-==================
-
-``sciform`` adheres to `semantic versioning <https://semver.org/>`_.
-The major version for ``sciform`` is still ``0`` indicating that
-``sciform`` is still in the development stage which means there may be
-backwards-incompatible changes to the interface (e.g. function or object
-behaviors and names) without a corresponding major version bump.
-All changes are announced after new releases in the
-`changelog <https://sciform.readthedocs.io/en/stable/project.html#changelog>`_.
-Backwards incompatible changes are indicated with the **[BREAKING]**
-flag.
-
-We are very excited to get your feedback to help stabilize the interface
-and make ``sciform`` a more useful tool.
-You can provide your feedback on your experience with ``sciform`` by
-filling out
-`the user experience survey <https://forms.gle/TkkKgywYyEMKu9U37>`_.
-Now is a great time to share your ``sciform`` ideas or issues by
-opening a
-`discussion <https://github.com/jagerber48/sciform/discussions>`_ or
-`issue <https://github.com/jagerber48/sciform/issues>`_.
-If you would like to contribute to ``sciform`` then please see
-`How to Contribute <https://sciform.readthedocs.io/en/stable/project.html#how-to-contribute>`_.
-
-``sciform`` is currently undergoing
-`peer review <https://www.pyopensci.org/about-peer-review/index.html>`_
-by the `PyOpenSci <https://www.pyopensci.org/>`_ community.
-You can view the on-going review
-`here <https://github.com/pyOpenSci/software-submission/issues/121>`_.
 
 =====
 Usage
@@ -158,6 +129,39 @@ See `Formatting Options <https://sciform.readthedocs.io/en/stable/options.html>`
 for more details and
 `Examples <https://sciform.readthedocs.io/en/stable/examples.html>`_ for
 more examples.
+
+==============
+Project Status
+==============
+
+``sciform`` adheres to `semantic versioning <https://semver.org/>`_.
+The major version for ``sciform`` is still ``0`` indicating that
+``sciform`` is still in the development stage which means there may be
+backwards-incompatible changes to the interface (e.g. function or object
+behaviors and names) without a corresponding major version bump.
+All changes are announced after new releases in the
+`changelog <https://sciform.readthedocs.io/en/stable/project.html#changelog>`_.
+Backwards incompatible changes are indicated with the **[BREAKING]**
+flag.
+
+We are very excited to get your feedback to help stabilize the interface
+and make ``sciform`` a more useful tool.
+You can provide your feedback on your experience with ``sciform`` by
+filling out
+`the user experience survey <https://forms.gle/TkkKgywYyEMKu9U37>`_.
+Now is a great time to share your ``sciform`` ideas or issues by
+opening a
+`discussion <https://github.com/jagerber48/sciform/discussions>`_ or
+`issue <https://github.com/jagerber48/sciform/issues>`_.
+If you would like to contribute to ``sciform`` then please see
+`How to Contribute <https://sciform.readthedocs.io/en/stable/project.html#how-to-contribute>`_.
+
+``sciform`` has undergone
+`peer review <https://www.pyopensci.org/about-peer-review/index.html>`_
+by the `PyOpenSci <https://www.pyopensci.org/>`_ community and been
+accepted into the PyOpenSci ecosystem.
+You can view the review
+`here <https://github.com/pyOpenSci/software-submission/issues/121>`_.
 
 ================
 Acknowledgements
