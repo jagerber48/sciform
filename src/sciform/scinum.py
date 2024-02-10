@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from typing import TYPE_CHECKING
 
 from sciform.formatting import FormattedNumber, format_from_options
@@ -40,11 +40,26 @@ class SciNum:
         uncertainty: Number | None = None,
         /,
     ) -> None:
-        self.value = Decimal(str(value))
+        try:
+            self.value = Decimal(str(value))
+        except InvalidOperation:
+            self.value, temp_uncertainty = parse_val_unc_from_str(value)
+            if temp_uncertainty is not None:
+                if uncertainty is not None:
+                    msg = (
+                        f"Input string \"{value}\" already includes an"
+                        f"uncertainty. It is not possible to also pass in "
+                        f"\"{uncertainty}\" directly!"
+                    )
+                    raise ValueError(msg) from None
+                uncertainty = temp_uncertainty
         if uncertainty is None:
             self.uncertainty = uncertainty
         else:
-            self.uncertainty = Decimal(str(uncertainty))
+            try:
+                self.uncertainty = Decimal(str(uncertainty))
+            except InvalidOperation:
+                self.uncertainty, _ = parse_val_unc_from_str(uncertainty)
 
     def __format__(self: SciNum, fmt: str) -> FormattedNumber:
         input_options = format_options_from_fmt_spec(fmt)
@@ -55,7 +70,7 @@ class SciNum:
         )
 
     @classmethod
-    def from_string(cls, input_str: str) -> SciNum:
+    def _from_string(cls: type[SciNum], input_str: str) -> SciNum:
         val, unc = parse_val_unc_from_str(input_str)
         return cls(val, unc)
 

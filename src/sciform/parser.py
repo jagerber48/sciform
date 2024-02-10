@@ -62,7 +62,7 @@ any_exp_pattern = rf"""
 no_exp_pattern = rf"^{pm_pattern}|(?P<non_finite_val>{non_finite_val_pattern})$"
 # language=pythonverboseregexp
 optional_exp_pattern = rf"""
-^(?:(?P<val>{finite_val_pattern})|{paren_pattern})(?P<exp>{any_exp_pattern})?$
+^((?P<val>{finite_val_pattern})|{paren_pattern})(?P<exp>{any_exp_pattern})?$
 """
 # language=pythonverboseregexp
 always_exp_pattern = rf"""

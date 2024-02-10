@@ -14,8 +14,9 @@ INF = float("inf")
 class TestStringParser(unittest.TestCase):
     def run_cases(self, cases: CasesList):
         for string, (val, unc) in cases:
+            print(string)
             expected_sci_num = SciNum(val, unc)
-            result_sci_num = SciNum.from_string(string)
+            result_sci_num = SciNum(string)
             with self.subTest(
                 input_string=string,
                 expected_sci_num=expected_sci_num,
@@ -27,67 +28,67 @@ class TestStringParser(unittest.TestCase):
         cases = [
             (
                 "000_000_123_456_789.654_321",
-                (123456789.654321, None)
+                (123456789.654321, None),
             ),
             (
                 "123_456_789.654_321",
-                (123456789.654321, None)
+                (123456789.654321, None),
             ),
             (
                 "nan",
-                (NAN, None)
+                (NAN, None),
             ),
             (
                 "inf",
-                (INF, None)
+                (INF, None),
             ),
             (
                 "-inf",
-                (-INF, None)
+                (-INF, None),
             ),
             (
                 "NAN",
-                (NAN, None)
+                (NAN, None),
             ),
             (
                 "INF",
-                (INF, None)
+                (INF, None),
             ),
             (
                 "-INF",
-                (-INF, None)
+                (-INF, None),
             ),
             (
                 "(nan)%",
-                (NAN, None)
+                (NAN, None),
             ),
             (
                 "(nan)e+00",
-                (NAN, None)
+                (NAN, None),
             ),
             (
                 "0.000123e+03",
-                (0.123, None)
+                (0.123, None),
             ),
             (
                 "0.123",
-                (0.123, None)
+                (0.123, None),
             ),
             (
                 "123e-09",
-                (123e-9, None)
+                (123e-9, None),
             ),
             (
                 "123 ppb",
-                (123e-9, None)
+                (123e-9, None),
             ),
             (
                 "7.89×10²",
-                (7.89e2, None)
+                (7.89e2, None),
             ),
             (
                 "1×2¹⁰",
-                (1024, None)
+                (1024, None),
             ),
             (
                 "1b+10",
@@ -95,7 +96,7 @@ class TestStringParser(unittest.TestCase):
             ),
             (
                 "0b+00",
-                (0, None)
+                (0, None),
             ),
             (
                 "1.618033e+04",
@@ -119,7 +120,7 @@ class TestStringParser(unittest.TestCase):
             ),
             (
                 "1 Ki",
-                (1024, None)
+                (1024, None),
             ),
             (
                 "1 Pi",
@@ -127,15 +128,15 @@ class TestStringParser(unittest.TestCase):
             ),
             (
                 "123.456.789,987_654_321",
-                ("123456789.987654321", None)
+                ("123456789.987654321", None),
             ),
             (
                 "123,456,789.987 654 321",
-                ("123456789.987654321", None)
+                ("123456789.987654321", None),
             ),
             (
                 "123(0)",
-                (123, 00)
+                (123, 00),
             ),
             (
                 "123(nan)",
@@ -147,7 +148,7 @@ class TestStringParser(unittest.TestCase):
             ),
             (
                 "1234.56(7.89)e-01",
-                (123.456, 0.789)
+                (123.456, 0.789),
             ),
             (
                 "nan(1.2)",
@@ -191,47 +192,51 @@ class TestStringParser(unittest.TestCase):
             ),
             (
                 "(1.23456 ± 0.00789)E+02",
-                (123.456, 0.789)
+                (123.456, 0.789),
             ),
             (
                 "(NAN ± NAN)E+00",
-                (NAN, NAN)
+                (NAN, NAN),
             ),
             (
                 "(INF ± NAN)E+00",
-                (INF, NAN)
+                (INF, NAN),
             ),
             (
                 "+  123.456 ±     0.789",
-                (123.456, 0.789)
+                (123.456, 0.789),
             ),
             (
                 "-  123.456 ±     0.789",
-                (-123.456, 0.789)
+                (-123.456, 0.789),
             ),
             (
                 "00123.46 ± 00000.79",
                 (123.46, 0.79),
             ),
             (
+                "00123.46 +/- 00000.79",
+                (123.46, 0.79),
+            ),
+            (
                 "00000.789 ± 00123.456",
-                (0.789, 123.456)
+                (0.789, 123.456),
             ),
             (
                 "(inf ± 1.234)e+01",
-                (INF, 12.34)
+                (INF, 12.34),
             ),
             (
                 "0.000000(1.234560)e+02",
-                (0, 123.456)
+                (0, 123.456),
             ),
             (
                 "1234,567",
-                (1234.567, None)
+                (1234.567, None),
             ),
             (
                 "123,45",
-                (123.45, None)
+                (123.45, None),
             ),
         ]
 
