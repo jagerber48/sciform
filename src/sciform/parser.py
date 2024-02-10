@@ -182,7 +182,7 @@ def _extract_decimal_separator(
             In neither case can "." be an an upper separator. Lower
             separators can only appear if a decimal separator is present
             but only one separator is present so that is impossible.
-            
+
             If len(upper) <= 3 and len(lower) == 3 then "." may be
             either an upper or decimal separator so we keep the
             decimal_passed that has been passed in.

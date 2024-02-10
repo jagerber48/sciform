@@ -308,7 +308,7 @@ class TestStringParser(unittest.TestCase):
         self.assertRaises(
             ValueError,
             parse_val_unc_from_str,
-            "1 d"
+            "1 d",
         )
 
     def test_comma_decimal_separator(self):
@@ -316,7 +316,7 @@ class TestStringParser(unittest.TestCase):
             (
                 "123,456",
                 (123.456, None),
-            )
+            ),
         ]
         self.run_direct_cases(cases, decimal_separator=",")
 
@@ -346,12 +346,12 @@ class TestStringParser(unittest.TestCase):
             ),
             (
                 "1 da",
-                (1e1, None)
+                (1e1, None),
             ),
             (
                 "3 ppth",
                 (3e-3, None),
-            )
+            ),
 
         ]
         with GlobalOptionsContext(
