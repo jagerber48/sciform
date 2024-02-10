@@ -162,18 +162,20 @@ def _extract_decimal_separator(
             default.
             """
             pass  # noqa: PIE790
-        """
-        Otherwise the separator must be the decimal separator, e.g. 1234.45 must be
-        1234 + 0.45.
-        """
-        decimal_separator = "."
+        else:
+            """
+            Otherwise the separator must be the decimal separator, e.g. 1234.45 must be
+            1234 + 0.45.
+            """
+            decimal_separator = "."
     elif "," in val and "." not in val:
         upper, lower = val.split(",")
         if len(upper) <= 3 and len(lower) == 3:
             # See comments above for logic
             pass
-        # See comments above for logic
-        decimal_separator = ","
+        else:
+            # See comments above for logic
+            decimal_separator = ","
     else:
         raise ValueError
     return decimal_separator
