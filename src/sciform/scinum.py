@@ -47,9 +47,9 @@ class SciNum:
             if temp_uncertainty is not None:
                 if uncertainty is not None:
                     msg = (
-                        f"Input string \"{value}\" already includes an"
+                        f'Input string "{value}" already includes an'
                         f"uncertainty. It is not possible to also pass in "
-                        f"\"{uncertainty}\" directly!"
+                        f'"{uncertainty}" directly!'
                     )
                     raise ValueError(msg) from None
                 uncertainty = temp_uncertainty

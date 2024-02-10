@@ -108,11 +108,11 @@ def _get_prefix_base_exp_val(prefix_exp: str) -> tuple[int, int]:
         if prefix_exp == value:
             candidate_base_exp_val_pairs.append((2, key))
     if len(candidate_base_exp_val_pairs) == 0:
-        msg = f"Unrecognized prefix: \"{prefix_exp}\". Unable to parse input."
+        msg = f'Unrecognized prefix: "{prefix_exp}". Unable to parse input.'
         raise ValueError(msg)
     if len(set(candidate_base_exp_val_pairs)) > 1:
         msg = (
-            f"Multiple translations found for prefix \"{prefix_exp}\". Unable to "
+            f'Multiple translations found for prefix "{prefix_exp}". Unable to '
             f"parse input."
         )
         raise ValueError(msg)

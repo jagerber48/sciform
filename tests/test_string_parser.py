@@ -115,7 +115,7 @@ class TestStringParser(unittest.TestCase):
             ),
             (
                 "3.1415 Q",
-                (3.1415e+30, None),
+                (3.1415e30, None),
             ),
             (
                 "1 Ki",
