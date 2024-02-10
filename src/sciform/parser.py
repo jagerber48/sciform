@@ -1,3 +1,7 @@
+# ruff: noqa: ERA001
+
+"""Parse formatted strings back into value/uncertainty pairs."""
+
 from __future__ import annotations
 
 import re
@@ -6,34 +10,70 @@ from decimal import Decimal
 from sciform import modes
 from sciform import prefix as prefix_module
 
-finite_val_pattern = r"(?:[-+]?[\d.,_ ]*\d)"
-non_finite_val_pattern = r"(?:[+-]?(?:nan|NAN|inf|INF))"
-any_val_pattern = rf"(?:{finite_val_pattern}|{non_finite_val_pattern})"
-pm_pattern = rf"(?:(?P<pm_val>{any_val_pattern})(?: ± |±)(?P<pm_unc>{any_val_pattern}))"
-paren_pattern = (
-    rf"(?:(?P<paren_val>{any_val_pattern})\((?P<paren_unc>{any_val_pattern})\))"
+# language=pythonverboseregexp
+finite_val_pattern = r"""  
+(
+  [ +-]?  # Sign
+  (0*|\ *)  # Leading zeros or spaces
+  (\d|\d\d|\d\d\d)((,\d\d\d)*|(\.\d\d\d)*|(\d\d\d)*)  # Leading digit groups 
+  (  # Start of optional fractional part
+    ((?<!,\d\d\d),|(?<!\.\d\d\d)\.)  # decimal_separator != upper_separator
+    ((\d\d\d_)*|(\d\d\d\ )*|(\d\d\d)*)(\d|\d\d|\d\d\d)  # Trailing digit groups
+  )?  # End of optional fractional part
 )
+"""
+# language=pythonverboseregexp
+non_finite_val_pattern = r"(nan|NAN|([ +-]?(inf|INF)))"
+# language=pythonverboseregexp
+any_val_pattern = rf"({finite_val_pattern}|{non_finite_val_pattern})"
 
+# language=pythonverboseregexp
+pm_pattern = rf"""
+(
+  (?P<pm_val>{any_val_pattern})  # Value
+  (\ (±|\+/-)\ |(±|\+/-))  # +/- symbol (optional whitespace)
+  (?P<pm_unc>{any_val_pattern})  # Uncertainty
+)
+"""
+# language=pythonverboseregexp
+paren_pattern = rf"""
+((?P<paren_val>{any_val_pattern})\((?P<paren_unc>{any_val_pattern})\))
+"""
+
+# language=pythonverboseregexp
 ascii_exp_pattern = r"(?P<ascii_exp>(?P<ascii_base>[eEbB])(?P<ascii_exp_val>[+-]\d+))"
+# language=pythonverboseregexp
 uni_exp_pattern = r"(?P<uni_exp>×(?P<uni_base>10|2)(?P<uni_exp_val>[⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]+))"
-prefix_exp_pattern = r"(?:\ (?P<prefix_exp>[a-zA-zμ]+))"
+# language=pythonverboseregexp
+prefix_exp_pattern = r"(\ (?P<prefix_exp>[a-zA-zμ]+))"
+# language=pythonverboseregexp
 percent_exp_pattern = r"(?P<percent_exp>%)"
-any_exp_pattern = (
-    rf"(?:{ascii_exp_pattern}"
-    rf"|{uni_exp_pattern}"
-    rf"|{prefix_exp_pattern}"
-    rf"|{percent_exp_pattern})"
+# language=pythonverboseregexp
+any_exp_pattern = rf"""
+(
+  {ascii_exp_pattern}
+  |{uni_exp_pattern}
+  |{prefix_exp_pattern}
+  |{percent_exp_pattern}
 )
+"""
 
+# language=pythonverboseregexp
 no_exp_pattern = rf"^{pm_pattern}|(?P<non_finite_val>{non_finite_val_pattern})$"
-optional_exp_pattern = (
-    rf"^(?:(?P<val>{finite_val_pattern})|{paren_pattern})(?P<exp>{any_exp_pattern})?$"
+# language=pythonverboseregexp
+optional_exp_pattern = rf"""
+^(?:(?P<val>{finite_val_pattern})|{paren_pattern})(?P<exp>{any_exp_pattern})?$
+"""
+# language=pythonverboseregexp
+always_exp_pattern = rf"""
+^
+(
+  \((?P<non_finite_val>{non_finite_val_pattern})\)
+  |\({pm_pattern}\)
 )
-always_exp_pattern = (
-    rf"^(?:\((?P<non_finite_val>{non_finite_val_pattern})\)"
-    rf"|\({pm_pattern}\))"
-    rf"(?P<exp>{any_exp_pattern})$"
-)
+(?P<exp>{any_exp_pattern})
+$
+"""
 
 superscript_translation = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-0123456789")
 
@@ -99,7 +139,7 @@ def _extract_exp_base_exp_val(
 
 def _extract_decimal_separator(
     val: str,
-    decimal_separator: modes.DecimalSeparators
+    decimal_separator: modes.DecimalSeparators,
 ) -> modes.DecimalSeparators:
     val = val.replace(" ", "")
     val = val.replace("_", "")
@@ -117,8 +157,8 @@ def _extract_decimal_separator(
         if len(upper) <= 3 and len(lower) == 3:
             """
             If there are 1, 2, or 3 digits before the separator and 3 after then it is
-            ambiguous whether the separator is an upper or decimal separator. 
-            e.g 12,456 could be 12000 + 456, or 12 + 0.456. Must fall back on the 
+            ambiguous whether the separator is an upper or decimal separator.
+            e.g 12,456 could be 12000 + 456, or 12 + 0.456. Must fall back on the
             default.
             """
         """
@@ -221,11 +261,11 @@ def parse_val_unc_from_str(
     Finally, the value and uncertainty strings are converted to decimals
     and multiplied by the extracted exponents.
     """
-    if match := re.fullmatch(no_exp_pattern, input_str):
+    if match := re.fullmatch(no_exp_pattern, input_str, re.VERBOSE):
         val, unc, base, exp_val = _parse_no_exp_pattern(match)
-    elif match := re.fullmatch(optional_exp_pattern, input_str):
+    elif match := re.fullmatch(optional_exp_pattern, input_str, re.VERBOSE):
         val, unc, base, exp_val = _parse_optional_exp_pattern(match)
-    elif match := re.fullmatch(always_exp_pattern, input_str):
+    elif match := re.fullmatch(always_exp_pattern, input_str, re.VERBOSE):
         val, unc, base, exp_val = _parse_always_exp_pattern(match)
     else:
         raise ValueError
@@ -248,7 +288,7 @@ def parse_val_unc_from_str(
         val = "123.456" and unc = "7". We can see that unc has resulted
         from a trimmed parentheses value/uncertainty notation. We must
         un-trim it by prepending enough zeros to that the least
-        significant decimal place of unc matches that of val. 
+        significant decimal place of unc matches that of val.
         """
         val_frac_part = val.split(".")[1]
         num_missing_zeros = len(val_frac_part) - len(unc)
