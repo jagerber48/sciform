@@ -69,11 +69,6 @@ class SciNum:
             input_options=input_options,
         )
 
-    @classmethod
-    def _from_string(cls: type[SciNum], input_str: str) -> SciNum:
-        val, unc = parse_val_unc_from_str(input_str)
-        return cls(val, unc)
-
     def __repr__(self: SciNum) -> str:
         if self.uncertainty is not None:
             return f"{self.__class__.__name__}({self.value}, {self.uncertainty})"

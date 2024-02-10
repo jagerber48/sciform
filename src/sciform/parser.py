@@ -11,14 +11,19 @@ from sciform import modes
 from sciform import prefix as prefix_module
 
 # language=pythonverboseregexp
-finite_val_pattern = r"""
+upper_grouping_pattern = r"((_\d{3})*|(\ \d{3})*|(\.\d{3})*|(,\d{3})*|(\d{3})*)"
+# language=pythonverboseregexp
+lower_grouping_pattern = r"((\d{3}_)*|(\d{3}\ )*|(\d{3})*)"
+
+# language=pythonverboseregexp
+finite_val_pattern = rf"""
 (
   [ +-]?  # Sign
-  (0*|\ *)  # Leading zeros or spaces
-  (\d|\d\d|\d\d\d)((,\d\d\d)*|(\.\d\d\d)*|(\d\d\d)*)  # Leading digit groups
+  \ *  # Leading zeros or spaces
+  (\d{{1,3}}){upper_grouping_pattern}  # Leading digit groups
   (  # Start of optional fractional part
-    ((?<!,\d\d\d),|(?<!\.\d\d\d)\.)  # decimal_separator != upper_separator
-    ((\d\d\d_)*|(\d\d\d\ )*|(\d\d\d)*)(\d|\d\d|\d\d\d)  # Trailing digit groups
+    ((?<!,\d{{3}}),|(?<!\.\d{{3}})\.)  # decimal_separator != upper_separator
+    {lower_grouping_pattern}(\d{{1,3}})  # Trailing digit groups
   )?  # End of optional fractional part
 )
 """
