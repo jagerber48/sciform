@@ -14,7 +14,6 @@ INF = float("inf")
 class TestStringParser(unittest.TestCase):
     def run_cases(self, cases: CasesList):
         for string, (val, unc) in cases:
-            print(string)
             expected_sci_num = SciNum(val, unc)
             result_sci_num = SciNum(string)
             with self.subTest(

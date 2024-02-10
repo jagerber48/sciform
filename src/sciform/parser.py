@@ -11,11 +11,11 @@ from sciform import modes
 from sciform import prefix as prefix_module
 
 # language=pythonverboseregexp
-finite_val_pattern = r"""  
+finite_val_pattern = r"""
 (
   [ +-]?  # Sign
   (0*|\ *)  # Leading zeros or spaces
-  (\d|\d\d|\d\d\d)((,\d\d\d)*|(\.\d\d\d)*|(\d\d\d)*)  # Leading digit groups 
+  (\d|\d\d|\d\d\d)((,\d\d\d)*|(\.\d\d\d)*|(\d\d\d)*)  # Leading digit groups
   (  # Start of optional fractional part
     ((?<!,\d\d\d),|(?<!\.\d\d\d)\.)  # decimal_separator != upper_separator
     ((\d\d\d_)*|(\d\d\d\ )*|(\d\d\d)*)(\d|\d\d|\d\d\d)  # Trailing digit groups
