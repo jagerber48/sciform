@@ -12,6 +12,16 @@ Unreleased
 
 ----
 
+0.34.1 (2024-02-10)
+-------------------
+
+Added
+^^^^^
+
+* Updated the readme to reflect completion of the PyOpenSci review.
+
+----
+
 0.34.0 (2024-02-04)
 -------------------
 
