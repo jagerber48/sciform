@@ -352,7 +352,6 @@ class TestStringParser(unittest.TestCase):
                 "3 ppth",
                 (3e-3, None),
             ),
-
         ]
         with GlobalOptionsContext(
             add_small_si_prefixes=True,
