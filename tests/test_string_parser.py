@@ -293,3 +293,6 @@ class TestStringParser(unittest.TestCase):
 
     def test_scinum_cases(self):
         self.run_scinum_cases(cases)
+
+    def test_scinum_double_input(self):
+        self.assertEqual(SciNum("1 k", "1 m"), SciNum(1e3, 1e-3))
