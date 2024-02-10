@@ -1,6 +1,9 @@
 .. image:: https://www.repostatus.org/badges/latest/wip.svg
      :target: https://www.repostatus.org/#wip
      :alt: Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.
+.. image:: https://tinyurl.com/y22nb8up
+     :target: https://github.com/pyOpenSci/software-review/issues/121
+     :alt: pyOpenSci
 .. image:: https://img.shields.io/readthedocs/sciform?logo=readthedocs&link=https%3A%2F%2Fsciform.readthedocs.io%2Fen%2Fstable%2F
      :target: https://sciform.readthedocs.io/en/stable/
      :alt: Read the Docs
