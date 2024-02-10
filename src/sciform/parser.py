@@ -161,6 +161,7 @@ def _extract_decimal_separator(
             e.g 12,456 could be 12000 + 456, or 12 + 0.456. Must fall back on the
             default.
             """
+            pass  # noqa: PIE790
         """
         Otherwise the separator must be the decimal separator, e.g. 1234.45 must be
         1234 + 0.45.
