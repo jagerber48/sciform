@@ -21,6 +21,8 @@ Added
   while ``paren_uncertainties_trim=False`` will give
   ``123.002 3(0.002 1)``.
 
+* Added badge for Zenodo.
+
 Removed
 ^^^^^^^
 
@@ -42,6 +44,16 @@ Removed
   parentheses should handle cases when the uncertainty digits span
   decimal or other separator characters, ``sciform`` will not provide an
   option to strip the decimal separator character.
+
+----
+
+0.34.1 (2024-02-10)
+-------------------
+
+Added
+^^^^^
+
+* Updated the readme to reflect completion of the PyOpenSci review.
 
 ----
 
