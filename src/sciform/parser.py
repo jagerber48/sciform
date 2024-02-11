@@ -5,11 +5,15 @@
 from __future__ import annotations
 
 import re
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
+from typing import TYPE_CHECKING
 
 from sciform import modes
 from sciform import prefix as prefix_module
 from sciform.global_configuration import get_global_options
+
+if TYPE_CHECKING:  # pragma: no cover
+    from sciform.format_utils import Number
 
 # language=pythonverboseregexp
 upper_grouping_pattern = r"((_\d{3})*|(\ \d{3})*|(\.\d{3})*|(,\d{3})*|(\d{3})*)"
@@ -331,3 +335,67 @@ def parse_val_unc_from_str(
             unc *= base**exp_val
 
     return val, unc
+
+
+def parse_val_unc_from_input(
+    value: Number,
+    uncertainty: Number | None,
+) -> tuple[Decimal, Decimal | None]:
+    """
+    Parse a user supplied value/uncertainty into a standard form of one or two Decimals.
+
+    Values and uncertainties are passed in by users as either ints, floats, strings,
+    or Decimals. In all cases these types are converted to Decimal via
+
+      Decimal(str(value))
+
+    For ints, numerical strings, and Decimals these two conversions are trivial.
+    When floats are cast to a string they are converted to the shortest string
+    representation which will round trip.
+
+    User may pass in int, float, string, or Decimal inputs for both value and,
+    optionally, the uncertainty.
+
+    However, users may also pass in strings with more complicated structure than those
+    strings which can be natively converted to float or Decimal. For example
+
+    >>> from sciform.parser import parse_val_unc_from_input
+    >>> val, unc = parse_val_unc_from_input("123 +/- 4", None)
+    >>> print(val)
+    123
+    >>> print(unc)
+    4
+
+    If the value string contains information about both the value and the uncertainty
+    then the uncertainty doesn't accept any value other than None, otherwise a
+    ValueError is raised.
+
+    parse_value_uncertainty accepts all the output formats the :mod:`sciform` can
+    produce.
+
+    >>> val, unc = parse_val_unc_from_input("123(4) k", None)
+    >>> print(val)
+    123000
+    >>> print(unc)
+    4000
+    """
+    try:
+        value = Decimal(str(value))
+    except InvalidOperation:
+        value, parsed_uncertainty = parse_val_unc_from_str(value)
+        if parsed_uncertainty is not None:
+            if uncertainty is not None:
+                msg = (
+                    f'Value input string "{value}" already includes an'
+                    f"uncertainty. In this case, is not possible to "
+                    f'also pass in an uncertainty "{uncertainty}" '
+                    f"directly."
+                )
+                raise ValueError(msg) from None
+            uncertainty = parsed_uncertainty
+    if uncertainty is not None:
+        try:
+            uncertainty = Decimal(str(uncertainty))
+        except InvalidOperation:
+            uncertainty, _ = parse_val_unc_from_str(uncertainty)
+    return value, uncertainty

@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-from decimal import Decimal, InvalidOperation
 from typing import TYPE_CHECKING
 
 from sciform.formatting import FormattedNumber, format_from_options
 from sciform.fsml import format_options_from_fmt_spec
-from sciform.parser import parse_val_unc_from_str
+from sciform.parser import parse_val_unc_from_input
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.format_utils import Number
@@ -40,26 +39,7 @@ class SciNum:
         uncertainty: Number | None = None,
         /,
     ) -> None:
-        try:
-            self.value = Decimal(str(value))
-        except InvalidOperation:
-            self.value, temp_uncertainty = parse_val_unc_from_str(value)
-            if temp_uncertainty is not None:
-                if uncertainty is not None:
-                    msg = (
-                        f'Input string "{value}" already includes an'
-                        f"uncertainty. It is not possible to also pass in "
-                        f'"{uncertainty}" directly!'
-                    )
-                    raise ValueError(msg) from None
-                uncertainty = temp_uncertainty
-        if uncertainty is None:
-            self.uncertainty = uncertainty
-        else:
-            try:
-                self.uncertainty = Decimal(str(uncertainty))
-            except InvalidOperation:
-                self.uncertainty, _ = parse_val_unc_from_str(uncertainty)
+        self.value, self.uncertainty = parse_val_unc_from_input(value, uncertainty)
 
     def __format__(self: SciNum, fmt: str) -> FormattedNumber:
         input_options = format_options_from_fmt_spec(fmt)
