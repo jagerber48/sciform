@@ -80,7 +80,7 @@ available formatting options.
 ...     exp_mode="engineering_shifted", pdg_sig_figs=True, paren_uncertainty=True
 ... )
 >>> print(formatter(num, unc))
-(0.3142(16))e+06
+0.3142(16)e+06
 
 .. _fsml_examples:
 
@@ -103,7 +103,7 @@ The ``f`` indicates that the number will be displayed in fixed point
 exponent mode.
 
 >>> print(f"{SciNum(123, 0.123):#!2R()}")
-(0.12300(12))E+03
+0.12300(12)E+03
 
 In the preceding example the ``#`` alternate flag combined with ``R``
 indicates that the number will be formatted in the shifted engineering
@@ -184,7 +184,7 @@ instead.
 >>> with GlobalOptionsContext(pdg_sig_figs=True):
 ...     print(f"{num_unc:#r()}")
 ...
-(0.3142(16))e+06
+0.3142(16)e+06
 
 Plotting and Tabulating Fit Data
 ================================

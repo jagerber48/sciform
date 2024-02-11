@@ -26,18 +26,18 @@ class TestFormatting(unittest.TestCase):
                     (Formatter(paren_uncertainty=True), "123.456(789)"),
                     (
                         Formatter(exp_mode="scientific", paren_uncertainty=True),
-                        "(1.23456(789))e+02",
+                        "1.23456(789)e+02",
                     ),
                     (
                         Formatter(exp_mode="engineering", paren_uncertainty=True),
-                        "(123.456(789))e+00",
+                        "123.456(789)e+00",
                     ),
                     (
                         Formatter(
                             exp_mode="engineering_shifted",
                             paren_uncertainty=True,
                         ),
-                        "(0.123456(789))e+03",
+                        "0.123456(789)e+03",
                     ),
                     (
                         Formatter(
@@ -45,7 +45,7 @@ class TestFormatting(unittest.TestCase):
                             exp_val=+1,
                             paren_uncertainty=True,
                         ),
-                        "(12.3456(789))e+01",
+                        "12.3456(789)e+01",
                     ),
                     (
                         Formatter(
@@ -53,7 +53,7 @@ class TestFormatting(unittest.TestCase):
                             exp_val=-1,
                             paren_uncertainty=True,
                         ),
-                        "(1234.56(7.89))e-01",
+                        "1234.56(7.89)e-01",
                     ),
                 ],
             ),
@@ -210,7 +210,7 @@ class TestFormatting(unittest.TestCase):
                             paren_uncertainty=True,
                             lower_separator="_",
                         ),
-                        "(12.345_678(255))%",
+                        "12.345_678(255)%",
                     ),
                 ],
             ),
