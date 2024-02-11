@@ -210,7 +210,7 @@ class TestFormatting(unittest.TestCase):
                             paren_uncertainty=True,
                             lower_separator="_",
                         ),
-                        "(12.345_678(255))%",
+                        "12.345_678(255)%",
                     ),
                 ],
             ),
