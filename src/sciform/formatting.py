@@ -316,8 +316,10 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
 
     if options.exp_mode is ExpModeEnum.PERCENT:
         if options.paren_uncertainty:
+            # No parentheses for paren_uncertainty, e.g. 12(4)%
             val_unc_exp_str = f"{val_unc_exp_str}%"
         else:
+            # Wrapping parentheses for ± uncertainty, e.g. (12 ± 4)%
             val_unc_exp_str = f"({val_unc_exp_str})%"
 
     return val_unc_exp_str
