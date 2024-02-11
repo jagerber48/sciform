@@ -71,7 +71,7 @@ class InputOptions:
     paren_uncertainty: bool | None = None
     pdg_sig_figs: bool | None = None
     left_pad_matching: bool | None = None
-    paren_uncertainty_separators: bool | None = None
+    paren_uncertainty_trim: bool | None = None
     pm_whitespace: bool | None = None
 
     add_c_prefix: bool = None

@@ -288,14 +288,14 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     )
 
     val_unc_str = construct_val_unc_str(
-        val_mantissa_str,
-        unc_mantissa_str,
-        val_mantissa,
-        unc_mantissa,
+        val_mantissa_str=val_mantissa_str,
+        unc_mantissa_str=unc_mantissa_str,
+        val_mantissa=val_mantissa,
+        unc_mantissa=unc_mantissa,
         decimal_separator=options.decimal_separator,
         paren_uncertainty=options.paren_uncertainty,
         pm_whitespace=options.pm_whitespace,
-        paren_uncertainty_separators=options.paren_uncertainty_separators,
+        paren_uncertainty_trim=options.paren_uncertainty_trim,
     )
 
     if val.is_finite() or unc.is_finite() or options.nan_inf_exp:

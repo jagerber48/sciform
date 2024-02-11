@@ -11,7 +11,55 @@ Unreleased
 Added
 ^^^^^
 
+* Added the ``paren_uncertainties_trim`` option.
+  The previous behavior was ``paren_uncertainties_trim=True``.
+  Now ``paren_uncertainties_trim=False`` allows a more verbose
+  presentation of the uncertainty in ``paren_uncertainty`` mode in which
+  leading zeros and separator characters are **not** stripped from the
+  string.
+  E.g. ``paren_uncertainties_trim=True`` will give
+
+    123.002 3(21)
+
+  while ``paren_uncertainties_trim=False`` will give
+
+    123.002 3(0.002 1)
+
 * Added badge for Zenodo.
+
+Removed
+^^^^^^^
+
+* **[BREAKING]** Removed the ``paren_uncertainties_separators`` option.
+  This options made it possible (when ``False``) to optionally strip all
+  separator characters, including the decimal separator, from the
+  uncertainty in ``paren_uncertainty`` mode.
+  This lead to the possibility of value/uncertainty pairs like
+
+    123 456.789 8 ± 123.456 7
+
+  being represented as
+
+    123 456.789 8(1234567)
+
+  ``sciform`` will now display this as
+
+    123 456.789 8(123.456 7)
+
+  if ``paren_uncertainty_strip=False`` or
+
+    123 456.789 8(123.4567)
+
+  if ``paren_uncertainty_strip=True``, but always retaining the decimal
+  separator.
+  In most cases many fewer significant digits of the uncertainty are
+  displayed and the resulting outputs don't look as egregious when the
+  decimal separator is stripped.
+  Nonetheless, given that more outputs look better when the decimal is
+  retained and that there is no official BIPM guidance on how
+  parentheses should handle cases when the uncertainty digits span
+  decimal or other separator characters, ``sciform`` will not provide an
+  option to strip the decimal separator character.
 
 ----
 

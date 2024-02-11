@@ -218,114 +218,6 @@ class TestFormatting(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
-    def test_paren_unc_separators(self):
-        cases_list = [
-            (
-                (123.456, 0.789),
-                [
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_val=-1,
-                            paren_uncertainty=True,
-                        ),
-                        "(1234.56(7.89))e-01",
-                    ),
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_val=-1,
-                            paren_uncertainty_separators=False,
-                            paren_uncertainty=True,
-                        ),
-                        "(1234.56(789))e-01",
-                    ),
-                ],
-            ),
-            (
-                (0.789, 123.456),
-                [
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_val=-1,
-                            paren_uncertainty=True,
-                        ),
-                        "(7.89(1234.56))e-01",
-                    ),
-                    # Don't remove "embedded" decimal unless val > unc.
-                    (
-                        Formatter(
-                            exp_mode="scientific",
-                            exp_val=-1,
-                            paren_uncertainty_separators=False,
-                            paren_uncertainty=True,
-                        ),
-                        "(7.89(1234.56))e-01",
-                    ),
-                ],
-            ),
-            (
-                (1.2, float("nan")),
-                [
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_separators=False,
-                        ),
-                        "1.2(nan)",
-                    ),
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_separators=True,
-                        ),
-                        "1.2(nan)",
-                    ),
-                ],
-            ),
-            (
-                (float("nan"), 1.2),
-                [
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_separators=False,
-                        ),
-                        "nan(1.2)",
-                    ),
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_separators=True,
-                        ),
-                        "nan(1.2)",
-                    ),
-                ],
-            ),
-            (
-                (float("nan"), float("nan")),
-                [
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_separators=True,
-                        ),
-                        "nan(nan)",
-                    ),
-                    (
-                        Formatter(
-                            paren_uncertainty=True,
-                            paren_uncertainty_separators=False,
-                        ),
-                        "nan(nan)",
-                    ),
-                ],
-            ),
-        ]
-
-        self.run_val_unc_formatter_cases(cases_list)
-
     def test_pm_whitespace(self):
         cases_list = [
             (
@@ -500,3 +392,180 @@ class TestFormatting(unittest.TestCase):
         result = formatter(123, 0.123)
         expected_result = "123.000 ±   0.123"
         self.assertEqual(result, expected_result)
+
+    def test_paren_uncertainties_trim_digits(self):
+        cases_list = [
+            (
+                (123, 0.03),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                        ),
+                        "123.00(3)",
+                    ),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                        ),
+                        "123.00(0.03)",
+                    ),
+                ],
+            ),
+            (
+                (123.456789, 0.0012),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            lower_separator="_",
+                        ),
+                        "123.456_8(0.001_2)",
+                    ),
+                    (
+                        # Intermediate separators are stripped.
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                            lower_separator="_",
+                        ),
+                        "123.456_8(12)",
+                    ),
+                ],
+            ),
+            (
+                (123456, 1234),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            upper_separator=" ",
+                        ),
+                        "123 456(1 234)",
+                    ),
+                    (
+                        # Intermediate separators are stripped.
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                            upper_separator=" ",
+                        ),
+                        "123 456(1234)",
+                    ),
+                ],
+            ),
+            (
+                (123456, 1234),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            upper_separator=",",
+                        ),
+                        "123,456(1,234)",
+                    ),
+                    (
+                        # Intermediate separators are stripped.
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                            upper_separator=",",
+                        ),
+                        "123,456(1234)",
+                    ),
+                ],
+            ),
+            (
+                (0.0012, 123.456789),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            lower_separator="_",
+                        ),
+                        "0.001_200(123.456_789)",
+                    ),
+                    (
+                        # No trimming for uncertainty > value
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                            lower_separator="_",
+                        ),
+                        "0.001_200(123.456_789)",
+                    ),
+                ],
+            ),
+            (
+                (0.0012, 0.0012),
+                [
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            lower_separator="_",
+                        ),
+                        "0.001_2(0.001_2)",
+                    ),
+                    (
+                        # No trimming for uncertainty == value
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                            lower_separator="_",
+                        ),
+                        "0.001_2(0.001_2)",
+                    ),
+                ],
+            ),
+        ]
+
+        self.run_val_unc_formatter_cases(cases_list)
+
+    def test_paren_uncertainties_trim_digits_bipm(self):
+        """
+        Matches the example in "BIPM guide to the expression of
+        uncertainty in measurements" section 7.2.2
+        """
+        cases_list = [
+            (
+                (100.02147, 0.00035),
+                [
+                    (
+                        Formatter(paren_uncertainty=False),
+                        "100.02147 ± 0.00035",
+                    ),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=True,
+                        ),
+                        "100.02147(35)",
+                    ),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                        ),
+                        "100.02147(0.00035)",
+                    ),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            paren_uncertainty_trim=False,
+                            left_pad_matching=True,
+                            left_pad_char="0",
+                        ),
+                        "100.02147(000.00035)",
+                    ),
+                ],
+            ),
+        ]
+
+        self.run_val_unc_formatter_cases(cases_list)
