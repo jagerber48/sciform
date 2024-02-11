@@ -398,4 +398,9 @@ def parse_val_unc_from_input(
             uncertainty = Decimal(str(uncertainty))
         except InvalidOperation:
             uncertainty, _ = parse_val_unc_from_str(uncertainty)
+
+    value = value.normalize()
+    if uncertainty is not None:
+        uncertainty = uncertainty.normalize()
+
     return value, uncertainty
