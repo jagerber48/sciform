@@ -781,7 +781,7 @@ exponent options.
 ...     paren_uncertainty=True,
 ... )
 >>> print(formatter(523.4e-3, 1.2e-3))
-(523.4(1.2))e-03
+523.4(1.2)e-03
 >>> formatter = Formatter(
 ...     exp_mode="engineering",
 ...     exp_format="prefix",
