@@ -10,6 +10,7 @@ from typing import Literal, Union, cast
 from sciform.modes import (
     AutoDigits,
     AutoExpVal,
+    DecimalSeparatorEnums,
     ExpFormatEnum,
     ExpModeEnum,
     RoundModeEnum,
@@ -435,11 +436,11 @@ def construct_val_unc_str(  # noqa: PLR0913
     unc_mantissa_str: str,
     val_mantissa: Decimal,
     unc_mantissa: Decimal,
-    decimal_separator: SeparatorEnum,
+    decimal_separator: DecimalSeparatorEnums,
     *,
     paren_uncertainty: bool,
     pm_whitespace: bool,
-    paren_uncertainty_separators: bool,
+    paren_uncertainty_trim: bool,
 ) -> str:
     """Construct the value/uncertainty part of the formatted string."""
     if not paren_uncertainty:
@@ -448,32 +449,22 @@ def construct_val_unc_str(  # noqa: PLR0913
             pm_symb = f" {pm_symb} "
         val_unc_str = f"{val_mantissa_str}{pm_symb}{unc_mantissa_str}"
     else:
-        if unc_mantissa.is_finite():
-            if val_mantissa.is_finite() and 0 < unc_mantissa < abs(val_mantissa):
-                """
-                Don't left strip the unc_mantissa_str if val_mantissa is non-finite.
-                Don't left strip the unc_mantissa_str if unc_mantissa == 0 (because then
-                the empty string would remain).
-                Don't left strip the unc_mantissa_str if unc_mantissa >= val_mantissa
-                """
-                unc_mantissa_str = unc_mantissa_str.lstrip("0.,_ ")
-            if not paren_uncertainty_separators:
-                for separator in SeparatorEnum:
-                    if separator == decimal_separator:
-                        if val_mantissa.is_finite():
-                            if unc_mantissa >= abs(val_mantissa):
-                                """
-                                Don't remove the decimal separator if the uncertainty is
-                                larger than the value.
-                                """
-                                continue
-                        else:
-                            """
-                            Don't remove the decimal separator if the value is
-                            non-finite.
-                            """
-                            continue
+        if (
+            paren_uncertainty_trim
+            and unc_mantissa.is_finite()
+            and val_mantissa.is_finite()
+            and 0 < unc_mantissa < abs(val_mantissa)
+        ):
+            """
+            Don't strip the unc_mantissa_str if val_mantissa is non-finite.
+            Don't strip the unc_mantissa_str if unc_mantissa == 0 (because then the
+              empty string would remain).
+            Don't left strip the unc_mantissa_str if unc_mantissa >= val_mantissa
+            """
+            for separator in SeparatorEnum:
+                if separator != decimal_separator:
                     unc_mantissa_str = unc_mantissa_str.replace(separator, "")
+            unc_mantissa_str = unc_mantissa_str.lstrip("0" + decimal_separator)
         val_unc_str = f"{val_mantissa_str}({unc_mantissa_str})"
     return val_unc_str
 

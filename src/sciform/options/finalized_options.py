@@ -40,7 +40,7 @@ class FinalizedOptions:
     paren_uncertainty: bool
     pdg_sig_figs: bool
     left_pad_matching: bool
-    paren_uncertainty_separators: bool
+    paren_uncertainty_trim: bool
     pm_whitespace: bool
 
     def __post_init__(self: FinalizedOptions) -> None:
