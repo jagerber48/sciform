@@ -24,7 +24,7 @@ PKG_DEFAULT_OPTIONS = PopulatedOptions(
     paren_uncertainty=False,
     pdg_sig_figs=False,
     left_pad_matching=False,
-    paren_uncertainty_separators=True,
+    paren_uncertainty_trim=True,
     pm_whitespace=True,
 )
 
