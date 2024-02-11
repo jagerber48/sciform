@@ -19,6 +19,9 @@
 .. image:: https://img.shields.io/github/actions/workflow/status/jagerber48/sciform/python-package.yml?logo=github%20actions
      :target: https://github.com/jagerber48/sciform/blob/main/.github/workflows/python-package.yml
      :alt: GitHub Workflow Status
+.. image:: https://zenodo.org/badge/645611310.svg
+     :target: https://zenodo.org/doi/10.5281/zenodo.10645272
+     :alt: Zenodo
 
 
 #######
