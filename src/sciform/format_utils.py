@@ -497,8 +497,10 @@ def construct_val_unc_exp_str(  # noqa: PLR0913
     if exp_str == "":
         val_unc_exp_str = val_unc_str
     elif paren_uncertainty:
+        # No parentheses for paren_uncertainty, e.g. 123(4)e+03
         val_unc_exp_str = f"{val_unc_str}{exp_str}"
     else:
+        # Wrapping parentheses for ± uncertainty, e.g. (123 ± 4)e+03
         val_unc_exp_str = f"({val_unc_str}){exp_str}"
 
     return val_unc_exp_str
