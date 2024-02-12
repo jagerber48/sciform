@@ -250,6 +250,23 @@ def _parse_always_exp_pattern(match: re.Match) -> tuple[str, str | None, int, in
     return val, unc, base, exp_val
 
 
+def _extract_val_unc_base_exp(
+    input_str: str,
+) -> tuple[str, str | None, int, int]:
+    if match := re.fullmatch(no_exp_pattern, input_str, re.VERBOSE):
+        val, unc, base, exp_val = _parse_no_exp_pattern(match)
+    elif match := re.fullmatch(optional_exp_pattern, input_str, re.VERBOSE):
+        val, unc, base, exp_val = _parse_optional_exp_pattern(match)
+    elif match := re.fullmatch(always_exp_pattern, input_str, re.VERBOSE):
+        val, unc, base, exp_val = _parse_always_exp_pattern(match)
+    else:
+        msg = (
+            f'Input string "{input_str}" does not match any expected input format.'
+        )
+        raise ValueError(msg)
+    return val, unc, base, exp_val
+
+
 def parse_val_unc_from_str(
     input_str: str,
     decimal_separator: modes.DecimalSeparators = ".",
@@ -287,17 +304,7 @@ def parse_val_unc_from_str(
     Finally, the value and uncertainty strings are converted to decimals
     and multiplied by the extracted exponents.
     """
-    if match := re.fullmatch(no_exp_pattern, input_str, re.VERBOSE):
-        val, unc, base, exp_val = _parse_no_exp_pattern(match)
-    elif match := re.fullmatch(optional_exp_pattern, input_str, re.VERBOSE):
-        val, unc, base, exp_val = _parse_optional_exp_pattern(match)
-    elif match := re.fullmatch(always_exp_pattern, input_str, re.VERBOSE):
-        val, unc, base, exp_val = _parse_always_exp_pattern(match)
-    else:
-        msg = (
-            f'Input string "{input_str}" does not match any expected input format.'
-        )
-        raise ValueError(msg)
+    val, unc, base, exp_val = _extract_val_unc_base_exp(input_str)
 
     if val.lower() not in ("nan", "inf"):
         decimal_separator = _extract_decimal_separator(val, decimal_separator)
@@ -307,10 +314,10 @@ def parse_val_unc_from_str(
         unc = _normalize_separators(unc, decimal_separator)
 
     if (
-        unc is not None
+        re.search(paren_pattern, input_str, re.VERBOSE)
+        and re.match(finite_val_pattern, unc, re.VERBOSE)
         and "." in val
         and "." not in unc
-        and unc.lower() not in ("nan", "inf")
     ):
         """
         Looking for cases like 123.456(7). At this point we would have
