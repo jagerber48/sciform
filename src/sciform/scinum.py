@@ -31,6 +31,16 @@ class SciNum:
     >>> num = SciNum(123456.654321, 0.0234)
     >>> print(f"{num:#!2r()}")
     0.123456654(23)e+06
+
+    Formatted input can also be passed into :class:`Scinum. For more
+    details see :ref:`formatted_input`.
+
+    >>> print(f'{SciNum("3.1415e+05"):#!2rp}')
+    0.31 M
+    >>> print(f'{SciNum("123456.654321 +/- 0.0234"):!2()}')
+    123456.654(23)
+    >>> print(f'{SciNum("123456.654321(23400)"):!2()}')
+    123456.654(23)
     """
 
     def __init__(

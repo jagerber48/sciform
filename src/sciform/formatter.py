@@ -51,6 +51,16 @@ class Formatter:
     >>> print(formatted)
     (12.3457 ± 0.0034)×10³
 
+    Formatted input can also be passed into the formatter. For more 
+    details see :ref:`formatted_input`.
+    
+    >>> print(formatter("31.415 M"))
+    31×10⁶
+    >>> print(formatter("12345.678 +/- 3.4"))
+    (12.3457 ± 0.0034)×10³
+    >>> print(formatter("12345.678(3.4)"))
+    (12.3457 ± 0.0034)×10³
+
     The returned object behaves like a ``str``, but is, in fact, a
     :class:`FormattedNumber` instance. The :class:`FormattedNumber` is
     a subclass of ``str`` but provides methods for post-conversion into
