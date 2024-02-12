@@ -172,6 +172,9 @@ However, some input strings can be supplied which are not valid
     into ``+/-`` afterwards using :meth:`FormattedNumber.as_ascii`, see
     :ref:`output_conversion`).
 
+Note that the formatting of the input strings has no bearing on the
+formatting of the resulting outputs.
+
 Like :mod:`sciform` outputs, the input value/uncertainty pairs must
 always share the exponent string.
 

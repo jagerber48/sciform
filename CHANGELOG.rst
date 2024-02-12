@@ -11,6 +11,10 @@ Unreleased
 Added
 ^^^^^
 
+* The ``Formatter`` formatting method and the ``SciNum`` constructor now
+  accept formatted inputs for the value and optional uncertainty inputs.
+  E.g. ``formatter("123.456(7)e-03")`` or ``SciNum("24 +/- 2")`` are now
+  valid inputs.
 * Added the ``paren_uncertainties_trim`` option.
   The previous behavior was ``paren_uncertainties_trim=True``.
   Now ``paren_uncertainties_trim=False`` allows a more verbose
@@ -25,6 +29,8 @@ Added
 
     123.002 3(0.002 1)
 
+* Added ``value`` and ``uncertainty`` attributes to the
+  ``FormattedNumber`` class.
 * Added badge for Zenodo.
 
 Removed
