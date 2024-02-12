@@ -260,9 +260,7 @@ def _extract_val_unc_base_exp(
     elif match := re.fullmatch(always_exp_pattern, input_str, re.VERBOSE):
         val, unc, base, exp_val = _parse_always_exp_pattern(match)
     else:
-        msg = (
-            f'Input string "{input_str}" does not match any expected input format.'
-        )
+        msg = f'Input string "{input_str}" does not match any expected input format.'
         raise ValueError(msg)
     return val, unc, base, exp_val
 
@@ -330,10 +328,10 @@ def parse_val_unc_from_str(
         num_missing_zeros = len(val_frac_part) - len(unc)
         if num_missing_zeros < 0:
             msg = (
-                f'Invalid value/uncertainty pair for parentheses uncertainty: '
+                f"Invalid value/uncertainty pair for parentheses uncertainty: "
                 f'"{input_str}". If a decimal symbol appears in the value but not in '
-                f'the uncertainty then the number of the digits in the uncertainty may '
-                f'not exceed the number of digits in the fractional part of the value.'
+                f"the uncertainty then the number of the digits in the uncertainty may "
+                f"not exceed the number of digits in the fractional part of the value."
             )
             raise ValueError(msg)
         unc = "0." + "0" * num_missing_zeros + unc
