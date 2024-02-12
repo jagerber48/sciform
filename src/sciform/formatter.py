@@ -51,9 +51,9 @@ class Formatter:
     >>> print(formatted)
     (12.3457 ± 0.0034)×10³
 
-    Formatted input can also be passed into the formatter. For more 
+    Formatted input can also be passed into the formatter. For more
     details see :ref:`formatted_input`.
-    
+
     >>> print(formatter("31.415 M"))
     31×10⁶
     >>> print(formatter("12345.678 +/- 3.4"))
