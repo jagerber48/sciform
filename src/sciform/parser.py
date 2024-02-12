@@ -295,7 +295,7 @@ def parse_val_unc_from_str(
         val, unc, base, exp_val = _parse_always_exp_pattern(match)
     else:
         msg = (
-            f'Cannot parse string "{input_str}" into a value or value/uncertainty pair.'
+            f'Input string "{input_str}" does not match any expected input format.'
         )
         raise ValueError(msg)
 
@@ -321,6 +321,14 @@ def parse_val_unc_from_str(
         """
         val_frac_part = val.split(".")[1]
         num_missing_zeros = len(val_frac_part) - len(unc)
+        if num_missing_zeros < 0:
+            msg = (
+                f'Invalid value/uncertainty pair for parentheses uncertainty: '
+                f'"{input_str}". If a decimal symbol appears in the value but not in '
+                f'the uncertainty then the number of the digits in the uncertainty may '
+                f'not exceed the number of digits in the fractional part of the value.'
+            )
+            raise ValueError(msg)
         unc = "0." + "0" * num_missing_zeros + unc
 
     base = Decimal(base)
@@ -386,7 +394,7 @@ def parse_val_unc_from_input(
         if parsed_uncertainty is not None:
             if uncertainty is not None:
                 msg = (
-                    f'Value input string "{value}" already includes an'
+                    f'Value input string "{value}" already includes an '
                     f"uncertainty. In this case, is not possible to "
                     f'also pass in an uncertainty "{uncertainty}" '
                     f"directly."

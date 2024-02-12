@@ -327,6 +327,13 @@ class TestStringParser(unittest.TestCase):
             "nan%",
         )
 
+    def test_paren_uncertainty_too_many_digits(self):
+        self.assertRaises(
+            ValueError,
+            parse_val_unc_from_str,
+            "123.4(56)",
+        )
+
     def test_multiple_translations(self):
         with GlobalOptionsContext(
             extra_si_prefixes={-9: "ppb"},
