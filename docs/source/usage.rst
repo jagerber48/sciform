@@ -108,7 +108,7 @@ algorithm:
 .. _formatted_input:
 
 Formatted Input
-===============
+---------------
 
 Both the :class:`Formatter` format function and :class:`SciNum`
 constructor accept :class:`str`, :class:`int`, :class:`float`, and
