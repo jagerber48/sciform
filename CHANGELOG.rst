@@ -88,6 +88,24 @@ Changed
   conversion.
   [`#145 <https://github.com/jagerber48/sciform/issues/145>`_]
 
+Fixed
+^^^^^
+
+* Previously when formatting individual ``Decimal`` input values the
+  values were always normalized at an early stage in formatting.
+  This meant that even if ``ndigits=AutoDigits`` then ``Decimal("1.0")``
+  would be formatted the same as ``Decimal("1.00")``.
+  However, for value/uncertainty formatting, ``Decimal`` input to the
+  uncertainty was not necessarily normalized at an early stage.
+  This meant that with ``ndigits=AutoDigits``, an uncertainty of
+  ``Decimal("1.0")`` would be formatted to the tenths decimal place
+  while an uncertainty of ``Decimal("1.00")`` would be formatted to the
+  hundredths place.
+  This behavior was inconsistent and undocumented.
+  Now all ``Decimal`` inputs are immediately normalized before any
+  formatting.
+  [`#148 <https://github.com/jagerber48/sciform/issues/148>`_]
+
 ----
 
 0.34.1 (2024-02-10)
