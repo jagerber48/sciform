@@ -51,10 +51,7 @@ def format_from_options(
 
     value, uncertainty = parse_val_unc_from_input(value, uncertainty)
 
-    value = Decimal(str(value))
-
     if uncertainty is not None:
-        uncertainty = Decimal(str(uncertainty))
         formatted_str = format_val_unc(value, uncertainty, finalized_options)
     else:
         formatted_str = format_num(value, finalized_options)
