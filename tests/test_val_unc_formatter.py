@@ -575,4 +575,5 @@ class TestFormatting(unittest.TestCase):
         formatter = Formatter(ndigits=AutoDigits)
         self.assertEqual(
             formatter(Decimal("100.0"), Decimal("1.00")),
-            formatter(Decimal("100"), Decimal("1.0000")))
+            formatter(Decimal("100"), Decimal("1.0000")),
+        )
