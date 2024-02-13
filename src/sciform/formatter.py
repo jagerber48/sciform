@@ -347,6 +347,16 @@ class Formatter:
         """
         Format a value or value/uncertainty pair.
 
+        Inputs may be :class:`str`, :class:`int`, :class:`float`, or
+        :class:`Decimal`.
+
+        :class:`float` inputs are first converted to
+        :class:`str` to retrieve the shortest round-trippable decimal
+        representation of the :class:`float`. For more details see
+        :ref:`float_issues`.
+
+        :class:`Decimal` inputs are normalized upon input.
+
         :param value: Value to be formatted.
         :type value: ``Decimal | float | int | str``
         :param uncertainty: Optional uncertainty to be formatted.

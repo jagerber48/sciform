@@ -666,7 +666,9 @@ data as :class:`float` instances, and only convert to :class:`Decimal`,
 or format using :mod:`sciform`, as the final step when numbers are being
 displayed for human readers.
 
-Float issues
+.. _float_issues:
+
+Float Issues
 ------------
 
 Here I would like to highlight some important facts and possible issues
