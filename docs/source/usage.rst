@@ -113,7 +113,7 @@ Formatted Input
 Both the :class:`Formatter` format function and :class:`SciNum`
 constructor accept :class:`str`, :class:`int`, :class:`float`, and
 :class:`Decimal` input for the value and optionally accept the same
-types, or for the uncertainty.
+types for the uncertainty.
 
 >>> from decimal import Decimal
 >>> from sciform import Formatter
