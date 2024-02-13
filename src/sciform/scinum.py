@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from decimal import Decimal
 from typing import TYPE_CHECKING
 
 from sciform.formatting import FormattedNumber, format_from_options
@@ -49,7 +50,9 @@ class SciNum:
         uncertainty: Number | None = None,
         /,
     ) -> None:
-        self.value, self.uncertainty = parse_val_unc_from_input(value, uncertainty)
+        val, unc = parse_val_unc_from_input(value, uncertainty)
+        self.value: Decimal = val
+        self.uncertainty: Decimal = unc
 
     def __format__(self: SciNum, fmt: str) -> FormattedNumber:
         input_options = format_options_from_fmt_spec(fmt)

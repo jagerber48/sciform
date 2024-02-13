@@ -31,6 +31,7 @@ from sciform.modes import (
 )
 from sciform.options.conversion import finalize_populated_options, populate_options
 from sciform.output_conversion import convert_sciform_format
+from sciform.parser import parse_val_unc_from_input
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.options.finalized_options import FinalizedOptions
@@ -47,6 +48,9 @@ def format_from_options(
     """Finalize options and select value of value/uncertainty formatter."""
     populated_options = populate_options(input_options)
     finalized_options = finalize_populated_options(populated_options)
+
+    value, uncertainty = parse_val_unc_from_input(value, uncertainty)
+
     value = Decimal(str(value))
 
     if uncertainty is not None:
