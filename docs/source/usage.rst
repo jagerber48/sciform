@@ -671,7 +671,7 @@ displayed for human readers.
 Float Issues
 ------------
 
-Here I would like to highlight some important facts and possible issues
+Here we would like to highlight some important facts and possible issues
 with :class:`float` objects that users should be aware of if they are
 concerned with the exact decimal representation of their numerical data.
 
@@ -713,7 +713,7 @@ concerned with the exact decimal representation of their numerical data.
 The `python documentation <https://docs.python.org/3/tutorial/floatingpoint.html#tut-fp-issues>`_
 goes into some detail about possible issues one might encounter when
 working with :class:`float` instances.
-Here I would like to highlight two specific issues.
+Here we would like to highlight two specific issues.
 
 #. **Rounding**.
    `Python's round() function <https://docs.python.org/3/library/functions.html#round>`_
