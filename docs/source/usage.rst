@@ -239,6 +239,7 @@ prefixes along with any global ``extra_si_prefixes``, then checking
 the default parts-per forms along with any global
 ``extra_parts_per_forms``, then checking the default IEC prefixes along
 with any global ``extra_iec_prefixes``.
+If an IEC prefix is detected then the exponent base is chosen to be 2.
 if no valid translations are discovered or more than one valid
 translation is discovered an exception is raised.
 
