@@ -232,9 +232,58 @@ allowed
     ...
   ValueError: Value input string "123" already includes an uncertainty. In this case, is not possible to also pass in an uncertainty "4" directly.
 
+As demonstrated above, the input string parser can parse translated
+exponents such as ``"n" -> "e-09"``.
+These translations are performed by first checking the default SI
+prefixes along with any global ``extra_si_prefixes``, then checking
+the default parts-per forms along with any global
+``extra_parts_per_forms``, then checking the default IEC prefixes along
+with any global ``extra_iec_prefixes``.
+if no valid translations are discovered or more than one valid
+translation is discovered an exception is raised.
+
+.. doctest::
+  :options: -IGNORE_EXCEPTION_DETAIL
+
+  >>> from sciform import GlobalOptionsContext
+  >>> formatter = Formatter()
+  >>> with GlobalOptionsContext(add_c_prefix=True):
+  ...     print(formatter("32 c"))
+  0.32
+  >>> print(formatter("32 c"))
+  Traceback (most recent call last):
+    ...
+  ValueError: Unrecognized prefix: "c". Unable to parse input.
+  >>> with GlobalOptionsContext(extra_si_prefixes={-12: "ppb"}):
+  ...     print(formatter("42 ppb"))
+  Traceback (most recent call last):
+    ...
+  ValueError: Multiple translations found for prefix "ppb: [-12, -9]. Unable to parse input.
+
+In the final example, the SI translation for an exponent of ``-12`` was
+re-mapped to ``"ppb"`` according to the "long scale" definition of
+billion.
+This collides with the "short scale" definition of billion that maps
+``-9`` to ``"ppb"`` as a default parts per form.
+This issue could be corrected as follows.
+
+>>> with GlobalOptionsContext(
+...     exp_mode="engineering",
+...     extra_parts_per_forms={-9: None, -12: "ppb"}
+... ):
+...     print(formatter("42 ppb"))
+42e-12
+
 The same parsing rules apply to :class:`SciNum` construction
 
->>> print(f"{SciNum('123(4)')}")
+
+>>> print(f'{SciNum("+  123_456,789 987 n"):!4f}')
+0.0001235
+>>> print(f'{SciNum("(123.0 ± 0.4) m"):!4f}')
+0.1230000 ± 0.0004000
+>>> print(f'{SciNum("(123 +/- 0.4) m"):!4f}')
+0.1230000 ± 0.0004000
+>>> print(f'{SciNum("123(4)")}')
 123 ± 4
 
 .. _output_conversion:
