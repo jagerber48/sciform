@@ -91,7 +91,7 @@ Changed
 Fixed
 ^^^^^
 
-* Previously when formatting individual ``Decimal`` input values the
+* Previously, when formatting individual ``Decimal`` input values, the
   values were always normalized at an early stage in formatting.
   This meant that even if ``ndigits=AutoDigits`` then ``Decimal("1.0")``
   would be formatted the same as ``Decimal("1.00")``.
