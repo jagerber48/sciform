@@ -137,7 +137,7 @@ def _get_prefix_base_exp_val(prefix_exp: str) -> tuple[int, int]:
             candidate_pair[1] for candidate_pair in candidate_base_exp_val_pairs
         ]
         msg = (
-            f'Multiple translations found for prefix "{prefix_exp}: {candidate_exps}. '
+            f'Multiple translations found for "{prefix_exp}": {candidate_exps}. '
             f"Unable to parse input."
         )
         raise ValueError(msg)

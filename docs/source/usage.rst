@@ -259,7 +259,7 @@ translation is discovered an exception is raised.
   ...     print(formatter("42 ppb"))
   Traceback (most recent call last):
     ...
-  ValueError: Multiple translations found for prefix "ppb: [-12, -9]. Unable to parse input.
+  ValueError: Multiple translations found for "ppb": [-12, -9]. Unable to parse input.
 
 In the final example, the SI translation for an exponent of ``-12`` was
 re-mapped to ``"ppb"`` according to the "long scale" definition of
