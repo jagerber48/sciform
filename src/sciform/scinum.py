@@ -32,7 +32,7 @@ class SciNum:
     >>> print(f"{num:#!2r()}")
     0.123456654(23)e+06
 
-    Formatted input can also be passed into :class:`Scinum. For more
+    Formatted input can also be passed into :class:`SciNum`. For more
     details see :ref:`formatted_input`.
 
     >>> print(f'{SciNum("3.1415e+05"):#!2rp}')
