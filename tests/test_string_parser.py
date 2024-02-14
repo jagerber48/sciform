@@ -417,3 +417,10 @@ class TestStringParser(unittest.TestCase):
         ]
         with GlobalOptionsContext(decimal_separator="."):
             self.run_scinum_cases(cases)
+
+    def test_conflicting_decimal_separator(self):
+        self.assertRaises(
+            ValueError,
+            parse_val_unc_from_str,
+            "123.45(0,3)",
+        )

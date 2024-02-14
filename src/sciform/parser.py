@@ -163,15 +163,14 @@ def _extract_exp_base_exp_val(
     return base, exp_val
 
 
-def _extract_decimal_separator(
+def _infer_decimal_separator(
     val: str,
-    decimal_separator: modes.DecimalSeparators,
-) -> modes.DecimalSeparators:
+) -> modes.DecimalSeparators | None:
     val = val.replace(" ", "")
     val = val.replace("_", "")
     if "." not in val and "," not in val:
         # Ambiguous, must fall back to default.
-        pass
+        decimal_separator = None
     elif "." in val and "," in val:
         """
         Both separators appear, determine which comes later and set that
@@ -196,14 +195,49 @@ def _extract_decimal_separator(
             e.g. 12.456
             """
             decimal_separator = "."
+        else:
+            decimal_separator = None
     elif "," in val and "." not in val:
         upper, lower = val.split(",")
         if len(upper) > 3 or len(lower) != 3:
             # See comments above for logic
             decimal_separator = ","
+        else:
+            decimal_separator = None
     else:  # pragma: no cover
         msg = "Unreachable: All combinations exhausted."
         raise ValueError(msg)
+
+    return decimal_separator
+
+
+def _parse_decimal_separator(
+    val: str,
+    unc: str,
+    decimal_separator: modes.DecimalSeparators | None,
+) -> modes.DecimalSeparators:
+    if decimal_separator is None:
+        decimal_separator = get_global_options().decimal_separator
+
+    val_decimal_separator = _infer_decimal_separator(val)
+    if unc is not None:
+        unc_decimal_separator = _infer_decimal_separator(unc)
+    else:
+        unc_decimal_separator = None
+    if val_decimal_separator is not None:
+        if (
+            unc_decimal_separator is not None
+            and unc_decimal_separator != val_decimal_separator
+        ):
+            msg = (
+                f'Value "{val}" and uncertainty "{unc}" have different '
+                f"decimal separators."
+            )
+            raise ValueError(msg)
+        decimal_separator = val_decimal_separator
+    elif unc_decimal_separator is not None:
+        decimal_separator = unc_decimal_separator
+
     return decimal_separator
 
 
@@ -307,14 +341,10 @@ def parse_val_unc_from_str(
     """
     val, unc, base, exp_val = _extract_val_unc_base_exp(input_str)
 
-    if decimal_separator is None:
-        decimal_separator = get_global_options().decimal_separator
+    decimal_separator = _parse_decimal_separator(val, unc, decimal_separator)
 
-    if val.lower() not in ("nan", "inf"):
-        decimal_separator = _extract_decimal_separator(val, decimal_separator)
-        val = _normalize_separators(val, decimal_separator)
-    elif unc is not None and unc.lower() not in ("nan", "inf"):
-        decimal_separator = _extract_decimal_separator(unc, decimal_separator)
+    val = _normalize_separators(val, decimal_separator)
+    if unc is not None:
         unc = _normalize_separators(unc, decimal_separator)
 
     if (
