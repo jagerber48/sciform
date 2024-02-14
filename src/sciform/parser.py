@@ -163,7 +163,7 @@ def _extract_exp_base_exp_val(
     return base, exp_val
 
 
-def _infer_decimal_separator(
+def _infer_decimal_separator(  # noqa: PLR0912
     val: str,
 ) -> modes.DecimalSeparators | None:
     val = val.replace(" ", "")
@@ -181,29 +181,37 @@ def _infer_decimal_separator(
         else:
             decimal_separator = ","
     elif "." in val and "," not in val:
-        upper, lower = val.split(".")
-        if len(upper) > 3 or len(lower) != 3:
-            """
-            e.g. 1234.567 or 1.2
-            In neither case can "." be an an upper separator. Lower
-            separators can only appear if a decimal separator is present
-            but only one separator is present so that is impossible.
+        sections = val.split(".")
+        if len(sections) == 2:
+            upper, lower = sections
+            if len(upper) > 3 or len(lower) != 3:
+                """
+                e.g. 1234.567 or 1.2
+                In neither case can "." be an an upper separator. Lower
+                separators can only appear if a decimal separator is present
+                but only one separator is present so that is impossible.
 
-            If len(upper) <= 3 and len(lower) == 3 then "." may be
-            either an upper or decimal separator so we keep the
-            decimal_passed that has been passed in.
-            e.g. 12.456
-            """
-            decimal_separator = "."
+                If len(upper) <= 3 and len(lower) == 3 then "." may be
+                either an upper or decimal separator so we keep the
+                decimal_passed that has been passed in.
+                e.g. 12.456
+                """
+                decimal_separator = "."
+            else:
+                decimal_separator = None
         else:
-            decimal_separator = None
-    elif "," in val and "." not in val:
-        upper, lower = val.split(",")
-        if len(upper) > 3 or len(lower) != 3:
-            # See comments above for logic
             decimal_separator = ","
+    elif "," in val and "." not in val:
+        sections = val.split(",")
+        if len(sections) == 2:
+            upper, lower = sections
+            if len(upper) > 3 or len(lower) != 3:
+                # See comments above for logic
+                decimal_separator = ","
+            else:
+                decimal_separator = None
         else:
-            decimal_separator = None
+            decimal_separator = "."
     else:  # pragma: no cover
         msg = "Unreachable: All combinations exhausted."
         raise ValueError(msg)
