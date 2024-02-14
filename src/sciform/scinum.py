@@ -59,7 +59,7 @@ class SciNum:
     ) -> None:
         val, unc = parse_val_unc_from_input(value, uncertainty)
         self.value: Decimal = val
-        self.uncertainty: Decimal = unc
+        self.uncertainty: Decimal | None = unc
 
     def __format__(self: SciNum, fmt: str) -> FormattedNumber:
         input_options = format_options_from_fmt_spec(fmt)
