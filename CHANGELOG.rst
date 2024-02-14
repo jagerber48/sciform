@@ -15,6 +15,7 @@ Added
   accept formatted inputs for the value and optional uncertainty inputs.
   E.g. ``formatter("123.456(7)e-03")`` or ``SciNum("24 +/- 2")`` are now
   valid inputs.
+  [`#104 <https://github.com/jagerber48/sciform/issues/104>`_]
 * Added the ``paren_uncertainties_trim`` option.
   The previous behavior was ``paren_uncertainties_trim=True``.
   Now ``paren_uncertainties_trim=False`` allows a more verbose
@@ -37,7 +38,7 @@ Removed
 ^^^^^^^
 
 * **[BREAKING]** Removed the ``paren_uncertainties_separators`` option.
-  This options made it possible (when ``False``) to optionally strip all
+  This option made it possible (when ``False``) to optionally strip all
   separator characters, including the decimal separator, from the
   uncertainty in ``paren_uncertainty`` mode.
   This lead to the possibility of value/uncertainty pairs like
@@ -64,8 +65,8 @@ Removed
   Nonetheless, given that more outputs look better when the decimal is
   retained and that there is no official BIPM guidance on how
   parentheses should handle cases when the uncertainty digits span
-  decimal or other separator characters, ``sciform`` will not provide an
-  option to strip the decimal separator character.
+  decimal or other separator characters, ``sciform`` will not presently
+  provide an option to strip the decimal separator character.
 
 Changed
 ^^^^^^^
