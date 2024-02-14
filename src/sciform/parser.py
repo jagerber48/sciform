@@ -398,17 +398,18 @@ def parse_val_unc_from_input(
     try:
         value = Decimal(str(value))
     except InvalidOperation:
-        value, parsed_uncertainty = parse_val_unc_from_str(value)
+        parsed_value, parsed_uncertainty = parse_val_unc_from_str(value)
         if parsed_uncertainty is not None:
             if uncertainty is not None:
                 msg = (
                     f'Value input string "{value}" already includes an '
-                    f"uncertainty. In this case, is not possible to "
-                    f'also pass in an uncertainty "{uncertainty}" '
-                    f"directly."
+                    f"uncertainty, ({parsed_uncertainty}). It is not "
+                    f"possible to also pass in an uncertainty "
+                    f"({uncertainty}) directly."
                 )
                 raise ValueError(msg) from None
             uncertainty = parsed_uncertainty
+        value = parsed_value
     if uncertainty is not None:
         try:
             uncertainty = Decimal(str(uncertainty))

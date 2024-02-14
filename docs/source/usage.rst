@@ -231,7 +231,7 @@ allowed
   >>> print(formatter("123(4)", 4))
   Traceback (most recent call last):
     ...
-  ValueError: Value input string "123" already includes an uncertainty. In this case, is not possible to also pass in an uncertainty "4" directly.
+  ValueError: Value input string "123(4)" already includes an uncertainty, (4). It is not possible to also pass in an uncertainty (4) directly.
 
 As demonstrated above, the input string parser can parse translated
 exponents such as ``"n" -> "e-09"``.
