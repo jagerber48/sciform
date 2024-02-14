@@ -35,13 +35,13 @@ class SciNum:
     0.123456654(23)e+06
 
     Inputs may be :class:`str`, :class:`int`, :class:`float`, or
-    :class:`Decimal`.
-
-    :class:`float` inputs are first converted to :class:`str` to
-    retrieve the shortest round-trippable decimal representation of the
-    :class:`float`. For more details see :ref:`float_issues`.
-
-    :class:`Decimal` inputs are normalized upon input.
+    :class:`Decimal`. :class:`float` inputs are first converted to
+    :class:`str` to retrieve the shortest round-trippable decimal
+    representation of the :class:`float`. For more details see
+    :ref:`float_issues`. :class:`Decimal` inputs are normalized upon
+    input. That is, ``Decimal("1.000")`` is treated the same as
+    ``Decimal("1")``. Formatted input strings are also accepted.
+    See :ref:`formatted_input`.
 
     Formatted input can also be passed into :class:`SciNum`. For more
     details see :ref:`formatted_input`.
