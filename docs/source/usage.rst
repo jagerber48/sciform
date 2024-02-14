@@ -201,10 +201,11 @@ interpreted using the following rules.
     and then a sufficient number of zeros so that the least significant
     digit of the uncertainty matches the least significant digit of the
     value.
-    If the uncertainty contains more digits than appear in the
-    fractional part of the value then this padding is impossible and it
-    is not clear what the value of the uncertainty is.
-    In this case an exception is raised.
+
+    * If the uncertainty contains more digits than appear in the
+      fractional part of the value then this padding is impossible and
+      it is not clear what the value of the uncertainty is.
+      In this case an exception is raised.
 
 .. doctest::
   :options: -IGNORE_EXCEPTION_DETAIL
