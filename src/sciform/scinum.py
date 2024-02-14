@@ -43,9 +43,6 @@ class SciNum:
     ``Decimal("1")``. Formatted input strings are also accepted.
     See :ref:`formatted_input`.
 
-    Formatted input can also be passed into :class:`SciNum`. For more
-    details see :ref:`formatted_input`.
-
     >>> print(f'{SciNum("3.1415e+05"):#!2rp}')
     0.31 M
     >>> print(f'{SciNum("123456.654321 +/- 0.0234"):!2()}')
