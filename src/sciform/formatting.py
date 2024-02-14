@@ -49,7 +49,11 @@ def format_from_options(
     populated_options = populate_options(input_options)
     finalized_options = finalize_populated_options(populated_options)
 
-    value, uncertainty = parse_val_unc_from_input(value, uncertainty)
+    value, uncertainty = parse_val_unc_from_input(
+        value,
+        uncertainty,
+        decimal_separator=populated_options.decimal_separator,
+    )
 
     if uncertainty is not None:
         formatted_str = format_val_unc(value, uncertainty, finalized_options)

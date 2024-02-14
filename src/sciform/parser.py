@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 import re
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from typing import TYPE_CHECKING
 
 from sciform import modes
@@ -209,7 +209,7 @@ def _extract_decimal_separator(
 
 def _normalize_separators(
     input_str: str,
-    decimal_separator: modes.DecimalSeparators = ".",
+    decimal_separator: modes.DecimalSeparators,
 ) -> str:
     for separator in modes.SeparatorEnum:
         if separator != decimal_separator:
@@ -270,7 +270,7 @@ def _extract_val_unc_base_exp(
 
 def parse_val_unc_from_str(
     input_str: str,
-    decimal_separator: modes.DecimalSeparators = ".",
+    decimal_separator: modes.DecimalSeparators = None,
 ) -> tuple[Decimal, Decimal | None]:
     """
     Parse a formatted string back into numbers representing the value and uncertainty.
@@ -306,6 +306,9 @@ def parse_val_unc_from_str(
     and multiplied by the extracted exponents.
     """
     val, unc, base, exp_val = _extract_val_unc_base_exp(input_str)
+
+    if decimal_separator is None:
+        decimal_separator = get_global_options().decimal_separator
 
     if val.lower() not in ("nan", "inf"):
         decimal_separator = _extract_decimal_separator(val, decimal_separator)
@@ -356,6 +359,7 @@ def parse_val_unc_from_str(
 def parse_val_unc_from_input(
     value: Number,
     uncertainty: Number | None,
+    decimal_separator: modes.DecimalSeparators | None = None,
 ) -> tuple[Decimal, Decimal | None]:
     """
     Parse a user supplied value/uncertainty into a standard form of one or two Decimals.
@@ -395,10 +399,13 @@ def parse_val_unc_from_input(
     >>> print(unc)
     4000
     """
-    try:
+    if isinstance(value, (float, int)):
         value = Decimal(str(value))
-    except InvalidOperation:
-        parsed_value, parsed_uncertainty = parse_val_unc_from_str(value)
+    if isinstance(value, str):
+        parsed_value, parsed_uncertainty = parse_val_unc_from_str(
+            value,
+            decimal_separator=decimal_separator,
+        )
         if parsed_uncertainty is not None:
             if uncertainty is not None:
                 msg = (
@@ -410,11 +417,15 @@ def parse_val_unc_from_input(
                 raise ValueError(msg) from None
             uncertainty = parsed_uncertainty
         value = parsed_value
+
     if uncertainty is not None:
-        try:
+        if isinstance(uncertainty, (float, int)):
             uncertainty = Decimal(str(uncertainty))
-        except InvalidOperation:
-            uncertainty, _ = parse_val_unc_from_str(uncertainty)
+        if isinstance(uncertainty, str):
+            uncertainty, _ = parse_val_unc_from_str(
+                uncertainty,
+                decimal_separator=decimal_separator,
+            )
 
     value = value.normalize()
     if uncertainty is not None:

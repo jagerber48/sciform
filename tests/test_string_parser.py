@@ -373,3 +373,47 @@ class TestStringParser(unittest.TestCase):
             add_ppth_form=True,
         ):
             self.run_direct_cases(cases)
+
+    def test_decimal_comma_separator(self):
+        cases = [
+            (
+                "123,456",
+                (123.456, None),
+            ),
+            (
+                "123.456",
+                (123456, None),
+            ),
+            (
+                "123,456.789",
+                (123456.789, None),
+            ),
+            (
+                "123.456,789",
+                (123456.789, None),
+            ),
+        ]
+        with GlobalOptionsContext(decimal_separator=","):
+            self.run_scinum_cases(cases)
+
+    def test_decimal_point_separator(self):
+        cases = [
+            (
+                "123,456",
+                (123456, None),
+            ),
+            (
+                "123.456",
+                (123.456, None),
+            ),
+            (
+                "123.456,789",
+                (123456.789, None),
+            ),
+            (
+                "123,456.789",
+                (123456.789, None),
+            ),
+        ]
+        with GlobalOptionsContext(decimal_separator="."):
+            self.run_scinum_cases(cases)
