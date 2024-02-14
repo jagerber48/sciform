@@ -49,6 +49,12 @@ class SciNum:
     123456.654(23)
     >>> print(f'{SciNum("123456.654321(23400)"):!2()}')
     123456.654(23)
+
+
+    :ivar value: The value to be formatted
+    :type value: ``Decimal``
+    :ivar uncertainty: The optional uncertainty to be formatted
+    :type uncertainty: ``Decimal | None``
     """
 
     def __init__(
