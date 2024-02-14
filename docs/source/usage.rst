@@ -145,7 +145,7 @@ When this is formatted in fixed point mode with 4 significant digits the
 result is ``"0.0001235"``.
 
 Instead of passing in two inputs, one representing the value and one
-representing the value, it is possible to pass in one input which
+representing the uncertainty, it is possible to pass in one input which
 contains information about both the value and the uncertainty.
 
 >>> print(formatter("(123.0 ± 0.4) m"))
