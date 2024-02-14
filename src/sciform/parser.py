@@ -163,27 +163,28 @@ def _extract_exp_base_exp_val(
     return base, exp_val
 
 
-def _infer_decimal_separator(  # noqa: PLR0912
+def _infer_decimal_separator(
     val: str,
 ) -> modes.DecimalSeparators | None:
     val = val.replace(" ", "")
     val = val.replace("_", "")
-    if "." not in val and "," not in val:
-        # Ambiguous, must fall back to default.
-        decimal_separator = None
-    elif "." in val and "," in val:
+
+    decimal_separator = None
+
+    if "." in val and "," in val:
         """
         Both separators appear, determine which comes later and set that
         as the decimal separator.
         """
-        if re.match(r"^[^.]+,[^.]+\..*$", val):
+        if "." in val.split(",")[-1]:
             decimal_separator = "."
         else:
             decimal_separator = ","
     elif "." in val and "," not in val:
-        sections = val.split(".")
-        if len(sections) == 2:
-            upper, lower = sections
+        if val.count(".") > 1:
+            decimal_separator = ","
+        else:
+            upper, lower = val.split(".")
             if len(upper) > 3 or len(lower) != 3:
                 """
                 e.g. 1234.567 or 1.2
@@ -197,24 +198,14 @@ def _infer_decimal_separator(  # noqa: PLR0912
                 e.g. 12.456
                 """
                 decimal_separator = "."
-            else:
-                decimal_separator = None
-        else:
-            decimal_separator = ","
     elif "," in val and "." not in val:
-        sections = val.split(",")
-        if len(sections) == 2:
-            upper, lower = sections
+        if val.count(",") > 1:
+            decimal_separator = "."
+        else:
+            upper, lower = val.split(",")
             if len(upper) > 3 or len(lower) != 3:
                 # See comments above for logic
                 decimal_separator = ","
-            else:
-                decimal_separator = None
-        else:
-            decimal_separator = "."
-    else:  # pragma: no cover
-        msg = "Unreachable: All combinations exhausted."
-        raise ValueError(msg)
 
     return decimal_separator
 
