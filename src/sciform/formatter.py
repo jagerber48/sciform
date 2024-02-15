@@ -361,7 +361,6 @@ class Formatter:
         :param uncertainty: Optional uncertainty to be formatted.
         :type uncertainty: ``Decimal | float | int | str | None``
         """
-        value, uncertainty = parse_val_unc_from_input(value, uncertainty)
         return format_from_options(
             value,
             uncertainty,

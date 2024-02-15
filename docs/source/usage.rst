@@ -276,6 +276,57 @@ This issue could be corrected as follows.
 ...     print(formatter("42 ppb"))
 42e-12
 
+In most cases the parser can determine whether the decimal symbol is
+``"."`` or ``","``.
+
+  * If both ``"."`` and ``","`` appear in a formatted value then
+    whichever comes earlier must be the upper separator and whichever
+    comes later must be the lower separator. E.g. ``123.456,789`` must
+    have ``","`` as the decimal separator.
+  * If one separator appears more than once it must be the upper
+    separator. E.g. ``123,456,789`` must have ``"."`` as the decimal
+    separator.
+  * If one separator appears once but it is preceded by more than 3
+    digits, or it is followed by any number of digits other than 3, then
+    that separator must be the decimal separator. E.g. in both
+    ``1234.567`` and ``12.3`` we must have that ``"."`` is the decimal
+    separator.
+  * In some cases the decimal separator cannot be determined, e.g.
+    ``123456``, ``123,456``, ``12.345``.
+
+:mod:`sciform` first tries to infer the decimal separator from the
+both the value and the uncertainty.
+If these inferences are successful and disagree then an exception is
+raised.
+If the inferences agree or only one succeeds then the succeeding result
+is selected as the decimal separator.
+If neither inference is successful then the decimal separator is
+selected either from the populated options on the local
+:class:`Formatter` or from the global options.
+
+.. doctest::
+  :options: -IGNORE_EXCEPTION_DETAIL
+
+  >>> formatter = Formatter(decimal_separator=".")
+  >>> print(formatter("1234,567"))
+  1234.567
+  >>> print(formatter("123,45"))
+  123.45
+  >>> print(formatter("123,45 +/- 345.578"))
+  123 ± 345578
+  >>> print(formatter("12.45 +/- 2,34"))
+  Traceback (most recent call last):
+    ...
+  ValueError: Value "12.45" and uncertainty "2,34" have different decimal separators.
+  >>> formatter = Formatter(decimal_separator=",")
+  >>> print(formatter("123,456"))
+  123,456
+  >>> formatter = Formatter()
+  >>> with GlobalOptionsContext(decimal_separator=","):
+  ...     print(formatter("123,456"))
+  123,456
+
+
 The same parsing rules apply to :class:`SciNum` construction
 
 

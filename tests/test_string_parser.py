@@ -400,6 +400,14 @@ class TestStringParser(unittest.TestCase):
                 "123,456,789",
                 (123456789, None),
             ),
+            (
+                "123,45 +/- 123.456",
+                (123.45, 123456),
+            ),
+            (
+                "123.45 +/- 123,456",
+                (123.45, 123456),
+            ),
         ]
         with GlobalOptionsContext(decimal_separator=","):
             self.run_scinum_cases(cases)
@@ -429,6 +437,14 @@ class TestStringParser(unittest.TestCase):
             (
                 "123,456,789",
                 (123456789, None),
+            ),
+            (
+                "123,45 +/- 123.456",
+                (123.45, 123456),
+            ),
+            (
+                "123.45 +/- 123,456",
+                (123.45, 123456),
             ),
         ]
         with GlobalOptionsContext(decimal_separator="."):
