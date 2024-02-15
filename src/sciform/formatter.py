@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING, Literal
 from sciform.formatting import format_from_options
 from sciform.options.conversion import populate_options
 from sciform.options.input_options import InputOptions
-from sciform.parser import parse_val_unc_from_input
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform import modes
