@@ -11,6 +11,11 @@ Unreleased
 Added
 ^^^^^
 
+* The ``Formatter`` formatting method and the ``SciNum`` constructor now
+  accept formatted inputs for the value and optional uncertainty inputs.
+  E.g. ``formatter("123.456(7)e-03")`` or ``SciNum("24 +/- 2")`` are now
+  valid inputs.
+  [`#104 <https://github.com/jagerber48/sciform/issues/104>`_]
 * Added the ``paren_uncertainties_trim`` option.
   The previous behavior was ``paren_uncertainties_trim=True``.
   Now ``paren_uncertainties_trim=False`` allows a more verbose
@@ -25,13 +30,15 @@ Added
 
     123.002 3(0.002 1)
 
+* Added ``value`` and ``uncertainty`` attributes to the
+  ``FormattedNumber`` class.
 * Added badge for Zenodo.
 
 Removed
 ^^^^^^^
 
 * **[BREAKING]** Removed the ``paren_uncertainties_separators`` option.
-  This options made it possible (when ``False``) to optionally strip all
+  This option made it possible (when ``False``) to optionally strip all
   separator characters, including the decimal separator, from the
   uncertainty in ``paren_uncertainty`` mode.
   This lead to the possibility of value/uncertainty pairs like
@@ -58,8 +65,8 @@ Removed
   Nonetheless, given that more outputs look better when the decimal is
   retained and that there is no official BIPM guidance on how
   parentheses should handle cases when the uncertainty digits span
-  decimal or other separator characters, ``sciform`` will not provide an
-  option to strip the decimal separator character.
+  decimal or other separator characters, ``sciform`` will not presently
+  provide an option to strip the decimal separator character.
 
 Changed
 ^^^^^^^
@@ -81,6 +88,24 @@ Changed
   erroneously included or excluded after LaTeX/HTML/ASCII output
   conversion.
   [`#145 <https://github.com/jagerber48/sciform/issues/145>`_]
+
+Fixed
+^^^^^
+
+* Previously, when formatting individual ``Decimal`` input values, the
+  values were always normalized at an early stage in formatting.
+  This meant that even if ``ndigits=AutoDigits`` then ``Decimal("1.0")``
+  would be formatted the same as ``Decimal("1.00")``.
+  However, for value/uncertainty formatting, ``Decimal`` input to the
+  uncertainty was not necessarily normalized at an early stage.
+  This meant that with ``ndigits=AutoDigits``, an uncertainty of
+  ``Decimal("1.0")`` would be formatted to the tenths decimal place
+  while an uncertainty of ``Decimal("1.00")`` would be formatted to the
+  hundredths place.
+  This behavior was inconsistent and undocumented.
+  Now all ``Decimal`` inputs are immediately normalized before any
+  formatting.
+  [`#148 <https://github.com/jagerber48/sciform/issues/148>`_]
 
 ----
 

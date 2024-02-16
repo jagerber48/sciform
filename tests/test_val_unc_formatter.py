@@ -1,4 +1,5 @@
 import unittest
+from decimal import Decimal
 
 from sciform import AutoDigits, Formatter
 
@@ -569,3 +570,10 @@ class TestFormatting(unittest.TestCase):
         ]
 
         self.run_val_unc_formatter_cases(cases_list)
+
+    def test_decimal_normalization(self):
+        formatter = Formatter(ndigits=AutoDigits)
+        self.assertEqual(
+            formatter(Decimal("100.0"), Decimal("1.00")),
+            formatter(Decimal("100"), Decimal("1.0000")),
+        )

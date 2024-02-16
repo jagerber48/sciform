@@ -50,6 +50,16 @@ class Formatter:
     >>> print(formatted)
     (12.3457 ± 0.0034)×10³
 
+    Formatted input can also be passed into the formatter. For more
+    details see :ref:`formatted_input`.
+
+    >>> print(formatter("31.415 M"))
+    31×10⁶
+    >>> print(formatter("12345.678 +/- 3.4"))
+    (12.3457 ± 0.0034)×10³
+    >>> print(formatter("12345.678(3.4)"))
+    (12.3457 ± 0.0034)×10³
+
     The returned object behaves like a ``str``, but is, in fact, a
     :class:`FormattedNumber` instance. The :class:`FormattedNumber` is
     a subclass of ``str`` but provides methods for post-conversion into
@@ -335,6 +345,15 @@ class Formatter:
     ) -> FormattedNumber:
         """
         Format a value or value/uncertainty pair.
+
+        Inputs may be :class:`str`, :class:`int`, :class:`float`, or
+        :class:`Decimal`. :class:`float` inputs are first converted to
+        :class:`str` to retrieve the shortest round-trippable decimal
+        representation of the :class:`float`. For more details see
+        :ref:`float_issues`. :class:`Decimal` inputs are normalized upon
+        input. That is, ``Decimal("1.000")`` is treated the same as
+        ``Decimal("1")``. Formatted input strings are also accepted.
+        See :ref:`formatted_input`.
 
         :param value: Value to be formatted.
         :type value: ``Decimal | float | int | str``

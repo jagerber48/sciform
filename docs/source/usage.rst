@@ -105,7 +105,241 @@ algorithm:
 #. The value and uncertainty mantissas are formatted together with the
    exponent according to other user-selected display options.
 
-.. _global_config:
+.. _formatted_input:
+
+Formatted Input
+---------------
+
+Both the :class:`Formatter` format function and :class:`SciNum`
+constructor accept :class:`str`, :class:`int`, :class:`float`, and
+:class:`Decimal` input for the value and optionally accept the same
+types for the uncertainty.
+
+>>> from decimal import Decimal
+>>> from sciform import Formatter
+>>>
+>>> formatter = Formatter(ndigits=4)
+>>> print(formatter("32", "9"))
+32.000 ± 9.000
+>>> print(formatter(32, 9))
+32.000 ± 9.000
+>>> print(formatter(32.00, 9.00))
+32.000 ± 9.000
+>>> print(formatter(Decimal("32.000"), Decimal("9.000")))
+32.000 ± 9.000
+
+These example strings can be natively cast to numeric types like
+:class:`int`, :class:`float`, or :class:`Decimal`.
+However, the :class:`Formatter` and :class:`SciNum` also accept
+formatted strings which contain the numeric information, but with more
+sophisticated formatting.
+
+>>> print(formatter("+  123_456,789 987 n"))
+0.0001235
+
+Here the string ``"+  123_45,789 987 n"`` is re-interpreted by the
+:class:`Formatter` as the number ``12345.789987e-09``.
+The ``e-09`` arises as the reverse translation of the SI "nano" prefix
+``n``.
+When this is formatted in fixed point mode with 4 significant digits the
+result is ``"0.0001235"``.
+
+Instead of passing in two inputs, one representing the value and one
+representing the uncertainty, it is possible to pass in one input which
+contains information about both the value and the uncertainty.
+
+>>> print(formatter("(123.0 ± 0.4) m"))
+0.1230000 ± 0.0004000
+>>> print(formatter("(123 +/- 0.4) m"))
+0.1230000 ± 0.0004000
+
+Note that the first example input string is an example :mod:`sciform`
+output string that would have resulted from various options and inputs
+while the second example input string is not an example :mod:`sciform`
+output string.
+Any :mod:`sciform` output string can also be used as an input string.
+However, some input strings can be supplied which are not valid
+:mod:`sciform` outputs.
+
+  * For inputs, it is not necessary that the value and uncertainty are
+    expressed to the same lowest decimal place.
+    By contrast, :mod:`sciform` outputs will always format the value and
+    uncertainty to the same lowest decimal place.
+  * For inputs, the ASCII ``+/-`` symbols may be used to separate the
+    value from the uncertainty.
+    By contrast, :mod:`sciform` will always use the Unicode ``±`` symbol
+    for direct outputs (noting that the ``±`` symbol can be converted
+    into ``+/-`` afterwards using :meth:`FormattedNumber.as_ascii`, see
+    :ref:`output_conversion`).
+
+Note that the formatting of the input strings has no bearing on the
+formatting of the resulting outputs.
+
+Like :mod:`sciform` outputs, the input value/uncertainty pairs must
+always share the exponent string.
+
+.. doctest::
+  :options: -IGNORE_EXCEPTION_DETAIL
+
+  >>> print(formatter("(1.2 +/- 0.1)e+03"))
+  1200.0 ± 100.0
+  >>> print(formatter("1.2e+03 +/- 0.1e+03"))
+  Traceback (most recent call last):
+    ...
+  ValueError: Input string "1.2e+03 +/- 0.1e+03" does not match any expected input format.
+
+Inputs can use parentheses uncertainty notation and will be
+interpreted using the following rules.
+
+  * The value string will always be directly converted to a float.
+  * If the uncertainty string contains a decimal symbol then it will be
+    directly converted to a float.
+  * If the value string contains a decimal symbol but the uncertainty
+    string does not then the string is parsed according to trimmed
+    parentheses notation.
+    In this case the uncertainty is left padded with a leading ``"0."``
+    and then a sufficient number of zeros so that the least significant
+    digit of the uncertainty matches the least significant digit of the
+    value.
+
+    * If the uncertainty contains more digits than appear in the
+      fractional part of the value then this padding is impossible and
+      it is not clear what the value of the uncertainty is.
+      In this case an exception is raised.
+
+.. doctest::
+  :options: -IGNORE_EXCEPTION_DETAIL
+
+  >>> print(formatter("1(100)"))
+  1.0 ± 100.0
+  >>> print(formatter("123.4(5.42)"))
+  123.400 ± 5.420
+  >>> print(formatter("123.4(5)"))
+  123.4000 ± 0.5000
+  >>> print(formatter("123.4(56)"))
+  Traceback (most recent call last):
+    ...
+  ValueError: Invalid value/uncertainty pair for parentheses uncertainty: "123.4(56)". If a decimal symbol appears in the value but not in the uncertainty then the number of the digits in the uncertainty may not exceed the number of digits in the fractional part of the value.
+
+If the input string contains information about the uncertainty then a
+second argument, which would otherwise specify the uncertainty, is not
+allowed
+
+.. doctest::
+  :options: -IGNORE_EXCEPTION_DETAIL
+
+  >>> print(formatter("123(4)", 4))
+  Traceback (most recent call last):
+    ...
+  ValueError: Value input string "123(4)" already includes an uncertainty, (4). It is not possible to also pass in an uncertainty (4) directly.
+
+As demonstrated above, the input string parser can parse translated
+exponents such as ``"n" -> "e-09"``.
+These translations are performed by first checking the default SI
+prefixes along with any global ``extra_si_prefixes``, then checking
+the default parts-per forms along with any global
+``extra_parts_per_forms``, then checking the default IEC prefixes along
+with any global ``extra_iec_prefixes``.
+If an IEC prefix is detected then the exponent base is chosen to be 2.
+if no valid translations are discovered or more than one valid
+translation is discovered an exception is raised.
+
+.. doctest::
+  :options: -IGNORE_EXCEPTION_DETAIL
+
+  >>> from sciform import GlobalOptionsContext
+  >>> formatter = Formatter()
+  >>> with GlobalOptionsContext(add_c_prefix=True):
+  ...     print(formatter("32 c"))
+  0.32
+  >>> print(formatter("32 c"))
+  Traceback (most recent call last):
+    ...
+  ValueError: Unrecognized prefix: "c". Unable to parse input.
+  >>> with GlobalOptionsContext(extra_si_prefixes={-12: "ppb"}):
+  ...     print(formatter("42 ppb"))
+  Traceback (most recent call last):
+    ...
+  ValueError: Multiple translations found for "ppb": [-12, -9]. Unable to parse input.
+
+In the final example, the SI translation for an exponent of ``-12`` was
+re-mapped to ``"ppb"`` according to the "long scale" definition of
+billion.
+This collides with the "short scale" definition of billion that maps
+``-9`` to ``"ppb"`` as a default parts per form.
+This issue could be corrected as follows.
+
+>>> with GlobalOptionsContext(
+...     exp_mode="engineering",
+...     extra_parts_per_forms={-9: None, -12: "ppb"}
+... ):
+...     print(formatter("42 ppb"))
+42e-12
+
+In most cases the parser can determine whether the decimal symbol is
+``"."`` or ``","``.
+
+  * If both ``"."`` and ``","`` appear in a formatted value then
+    whichever comes earlier must be the upper separator and whichever
+    comes later must be the lower separator. E.g. ``123.456,789`` must
+    have ``","`` as the decimal separator.
+  * If one separator appears more than once it must be the upper
+    separator. E.g. ``123,456,789`` must have ``"."`` as the decimal
+    separator.
+  * If one separator appears once but it is preceded by more than 3
+    digits, or it is followed by any number of digits other than 3, then
+    that separator must be the decimal separator. E.g. in both
+    ``1234.567`` and ``12.3`` we must have that ``"."`` is the decimal
+    separator.
+  * In some cases the decimal separator cannot be determined, e.g.
+    ``123456``, ``123,456``, ``12.345``.
+
+:mod:`sciform` first tries to infer the decimal separator from the
+both the value and the uncertainty.
+If these inferences are successful and disagree then an exception is
+raised.
+If the inferences agree or only one succeeds then the succeeding result
+is selected as the decimal separator.
+If neither inference is successful then the decimal separator is
+selected either from the populated options on the local
+:class:`Formatter` or from the global options.
+
+.. doctest::
+  :options: -IGNORE_EXCEPTION_DETAIL
+
+  >>> formatter = Formatter(decimal_separator=".")
+  >>> print(formatter("1234,567"))
+  1234.567
+  >>> print(formatter("123,45"))
+  123.45
+  >>> print(formatter("123,45 +/- 345.578"))
+  123 ± 345578
+  >>> print(formatter("12.45 +/- 2,34"))
+  Traceback (most recent call last):
+    ...
+  ValueError: Value "12.45" and uncertainty "2,34" have different decimal separators.
+  >>> formatter = Formatter(decimal_separator=",")
+  >>> print(formatter("123,456"))
+  123,456
+  >>> formatter = Formatter()
+  >>> with GlobalOptionsContext(decimal_separator=","):
+  ...     print(formatter("123,456"))
+  123,456
+
+
+The same parsing rules apply to :class:`SciNum` construction
+
+
+>>> print(f'{SciNum("+  123_456,789 987 n"):!4f}')
+0.0001235
+>>> print(f'{SciNum("(123.0 ± 0.4) m"):!4f}')
+0.1230000 ± 0.0004000
+>>> print(f'{SciNum("(123 +/- 0.4) m"):!4f}')
+0.1230000 ± 0.0004000
+>>> print(f'{SciNum("123(4)")}')
+123 ± 4
+
+.. _output_conversion:
 
 Output Conversion
 =================
@@ -197,6 +431,8 @@ Here is example :class:`FormattedNumber` usage in a Jupyter notebook.
 
 .. image:: ../../examples/outputs/jupyter_output.png
   :width: 400
+
+.. _global_config:
 
 Global Options
 ==============
@@ -308,8 +544,6 @@ the ``pdg_sig_figs`` option.
 If the user wishes to configure these options, but also use the
 :ref:`FSML <fsml>`, then they must do so by modifying the global
 options.
-
-.. _output_conversion:
 
 Formatter Options
 =================
@@ -534,10 +768,12 @@ data as :class:`float` instances, and only convert to :class:`Decimal`,
 or format using :mod:`sciform`, as the final step when numbers are being
 displayed for human readers.
 
-Float issues
+.. _float_issues:
+
+Float Issues
 ------------
 
-Here I would like to highlight some important facts and possible issues
+Here we would like to highlight some important facts and possible issues
 with :class:`float` objects that users should be aware of if they are
 concerned with the exact decimal representation of their numerical data.
 
@@ -579,7 +815,7 @@ concerned with the exact decimal representation of their numerical data.
 The `python documentation <https://docs.python.org/3/tutorial/floatingpoint.html#tut-fp-issues>`_
 goes into some detail about possible issues one might encounter when
 working with :class:`float` instances.
-Here I would like to highlight two specific issues.
+Here we would like to highlight two specific issues.
 
 #. **Rounding**.
    `Python's round() function <https://docs.python.org/3/library/functions.html#round>`_

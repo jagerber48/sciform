@@ -31,6 +31,7 @@ from sciform.modes import (
 )
 from sciform.options.conversion import finalize_populated_options, populate_options
 from sciform.output_conversion import convert_sciform_format
+from sciform.parser import parse_val_unc_from_input
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.options.finalized_options import FinalizedOptions
@@ -47,14 +48,18 @@ def format_from_options(
     """Finalize options and select value of value/uncertainty formatter."""
     populated_options = populate_options(input_options)
     finalized_options = finalize_populated_options(populated_options)
-    value = Decimal(str(value))
+
+    value, uncertainty = parse_val_unc_from_input(
+        value,
+        uncertainty,
+        decimal_separator=populated_options.decimal_separator,
+    )
 
     if uncertainty is not None:
-        uncertainty = Decimal(str(uncertainty))
         formatted_str = format_val_unc(value, uncertainty, finalized_options)
     else:
         formatted_str = format_num(value, finalized_options)
-    return FormattedNumber(formatted_str, populated_options)
+    return FormattedNumber(formatted_str, value, uncertainty, populated_options)
 
 
 def format_non_finite(num: Decimal, options: FinalizedOptions) -> str:
@@ -341,6 +346,10 @@ class FormattedNumber(str):
     """
 
     __slots__ = {
+        "value": "The value that was formatted to generate the "
+        ":class:`FormattedNumber`.",
+        "uncertainty": "The uncertainty that was formatted to generate the "
+        ":class:`FormattedNumber`.",
         "populated_options": "Record of the :class:`PopulatedOptions` used to "
         "generate the :class:`FormattedNumber`.",
     }
@@ -348,10 +357,14 @@ class FormattedNumber(str):
     def __new__(
         cls: type[Self],
         formatted_str: str,
+        value: Number,
+        uncertainty: Number | None,
         populated_options: PopulatedOptions,
     ) -> Self:
         """Get a new string."""
         obj = super().__new__(cls, formatted_str)
+        obj.value = value
+        obj.uncertainty = uncertainty
         obj.populated_options = populated_options
         return obj
 

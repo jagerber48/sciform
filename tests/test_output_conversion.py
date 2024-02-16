@@ -465,6 +465,8 @@ class TestLatexConversion(unittest.TestCase):
             dummy_populated_options = populate_options(InputOptions())
             formatted_number = FormattedNumber(
                 case,
+                1,
+                None,
                 dummy_populated_options,
             )
             with self.subTest(
