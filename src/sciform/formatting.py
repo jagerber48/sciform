@@ -16,6 +16,7 @@ from sciform.format_utils import (
     get_exp_str,
     get_mantissa_exp_base,
     get_round_digit,
+    get_sign_str,
     get_val_unc_exp,
     get_val_unc_mantissa_strs,
     get_val_unc_top_digit,
@@ -66,10 +67,12 @@ def format_non_finite(num: Decimal, options: FinalizedOptions) -> str:
     """Format non-finite numbers."""
     if num.is_nan():
         num_str = "nan"
-    elif num == Decimal("inf"):
+        if options.sign_mode in [SignModeEnum.ALWAYS, SignModeEnum.SPACE]:
+            num_str = f" {num_str}"
+    elif num.is_infinite():
         num_str = "inf"
-    elif num == Decimal("-inf"):
-        num_str = "-inf"
+        sign_str = get_sign_str(num, options.sign_mode)
+        num_str = f"{sign_str}{num_str}"
     else:
         msg = f"format_non_finite() cannot format {num}."
         raise ValueError(msg)

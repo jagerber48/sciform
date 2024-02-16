@@ -234,16 +234,26 @@ def get_exp_str(  # noqa: PLR0913
 def get_sign_str(num: Decimal, sign_mode: SignModeEnum) -> str:
     """Get the format sign string."""
     if num < 0:
+        # Always return "-" for negative numbers.
         sign_str = "-"
-    elif sign_mode is SignModeEnum.ALWAYS:
-        sign_str = "+"
-    elif sign_mode is SignModeEnum.SPACE:
+    elif num > 0:
+        # Return "+", " ", or "" (nothing) for positive numbers.
+        if sign_mode is SignModeEnum.ALWAYS:
+            sign_str = "+"
+        elif sign_mode is SignModeEnum.SPACE:
+            sign_str = " "
+        elif sign_mode is SignModeEnum.NEGATIVE:
+            sign_str = ""
+        else:
+            msg = f"Invalid sign mode {sign_mode}."
+            raise ValueError(msg)
+    elif sign_mode is SignModeEnum.ALWAYS or sign_mode is SignModeEnum.SPACE:
+        # For anything else (typically 0, possibly nan) return " " in "+" and " " modes
         sign_str = " "
-    elif sign_mode is SignModeEnum.NEGATIVE:
-        sign_str = ""
     else:
-        msg = f"Invalid sign mode {sign_mode}."
-        raise ValueError(msg)
+        # Otherwise return the empty string.
+        sign_str = ""
+
     return sign_str
 
 
