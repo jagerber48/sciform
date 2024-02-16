@@ -515,7 +515,7 @@ including a ``'+'`` symbol.
 
 Note that both :class:`float` ``nan`` and :class:`float` ``0`` have sign
 bits which may be positive or negative.
-:mod:`sciform` always ignores these sign bits and number puts a ``+`` or
+:mod:`sciform` always ignores these sign bits and never puts a ``+`` or
 ``-`` symbol in front of either ``nan`` or ``0``.
 In ``"+"`` or ``" "`` sign modes ``nan`` and ``0`` are always preceded
 by a space.
