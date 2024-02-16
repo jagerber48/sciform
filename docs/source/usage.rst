@@ -130,7 +130,7 @@ types for the uncertainty.
 
 These example strings can be natively cast to numeric types like
 :class:`int`, :class:`float`, or :class:`Decimal`.
-However, the :class:`Formatter` and :class:`SciNum` also accept
+However, :class:`Formatter` and :class:`SciNum` also accept
 formatted strings which contain the numeric information, but with more
 sophisticated formatting.
 

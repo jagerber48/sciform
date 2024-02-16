@@ -502,7 +502,6 @@ extra whitespace in place of a sign symbol.
 This mode may be useful to match string lengths when positive and
 negatives numbers are being presented together, but without explicitly
 including a ``'+'`` symbol.
-Note that ``0`` is always considered positive.
 
 >>> formatter = Formatter(sign_mode="-")
 >>> print(formatter(42))
@@ -513,6 +512,37 @@ Note that ``0`` is always considered positive.
 >>> formatter = Formatter(sign_mode=" ")
 >>> print(formatter(42))
  42
+
+Note that both :class:`float` ``nan`` and :class:`float` ``0`` have sign
+bits which may be positive or negative.
+:mod:`sciform` always ignores these sign bits and never puts a ``+`` or
+``-`` symbol in front of either ``nan`` or ``0``.
+In ``"+"`` or ``" "`` sign modes ``nan`` and ``0`` are always preceded
+by a space.
+The sign symbol for ``±inf`` is resolved the same as for
+finite numbers.
+
+>>> formatter = Formatter(sign_mode="-")
+>>> print(formatter(float("-0")))
+0
+>>> print(formatter(float("-nan")))
+nan
+>>> print(formatter(float("+inf")))
+inf
+>>> formatter = Formatter(sign_mode="+")
+>>> print(formatter(float("+0")))
+ 0
+>>> print(formatter(float("+nan")))
+ nan
+>>> print(formatter(float("+inf")))
++inf
+>>> formatter = Formatter(sign_mode=" ")
+>>> print(formatter(float("-0")))
+ 0
+>>> print(formatter(float("-nan")))
+ nan
+>>> print(formatter(float("-inf")))
+-inf
 
 Capitalization
 ==============
