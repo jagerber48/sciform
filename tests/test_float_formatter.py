@@ -128,12 +128,73 @@ class TestFormatting(unittest.TestCase):
             (
                 float("nan"),
                 [
+                    (Formatter(sign_mode="-"), "nan"),
+                    (Formatter(sign_mode="+"), " nan"),
+                    (Formatter(sign_mode=" "), " nan"),
+                    (Formatter(exp_mode="percent"), "nan"),
+                    (Formatter(exp_mode="percent", nan_inf_exp=True), "(nan)%"),
+                ],
+            ),
+            (
+                float("-nan"),
+                [
+                    (Formatter(sign_mode="-"), "nan"),
+                    (Formatter(sign_mode="+"), " nan"),
+                    (Formatter(sign_mode=" "), " nan"),
                     (Formatter(exp_mode="percent"), "nan"),
                     (Formatter(exp_mode="percent", nan_inf_exp=True), "(nan)%"),
                 ],
             ),
         ]
 
+        self.run_float_formatter_cases(cases_list)
+
+    def test_inf(self):
+        cases_list = [
+            (
+                float("inf"),
+                [
+                    (Formatter(sign_mode="-"), "inf"),
+                    (Formatter(sign_mode="+"), "+inf"),
+                    (Formatter(sign_mode=" "), " inf"),
+                    (Formatter(exp_mode="percent", nan_inf_exp=False), "inf"),
+                    (Formatter(exp_mode="percent", nan_inf_exp=True), "(inf)%"),
+                ],
+            ),
+            (
+                float("-inf"),
+                [
+                    (Formatter(sign_mode="-"), "-inf"),
+                    (Formatter(sign_mode="+"), "-inf"),
+                    (Formatter(sign_mode=" "), "-inf"),
+                    (Formatter(exp_mode="percent", nan_inf_exp=False), "-inf"),
+                    (Formatter(exp_mode="percent", nan_inf_exp=True), "(-inf)%"),
+                ],
+            ),
+        ]
+        self.run_float_formatter_cases(cases_list)
+
+    def test_zero(self):
+        cases_list = [
+            (
+                float("+0"),
+                [
+                    (Formatter(sign_mode="-"), "0"),
+                    (Formatter(sign_mode="+"), " 0"),
+                    (Formatter(sign_mode=" "), " 0"),
+                    (Formatter(exp_mode="percent", nan_inf_exp=False), "0%"),
+                ],
+            ),
+            (
+                float("-0"),
+                [
+                    (Formatter(sign_mode="-"), "0"),
+                    (Formatter(sign_mode="+"), " 0"),
+                    (Formatter(sign_mode=" "), " 0"),
+                    (Formatter(exp_mode="percent", nan_inf_exp=False), "0%"),
+                ],
+            ),
+        ]
         self.run_float_formatter_cases(cases_list)
 
     def test_parts_per_exp(self):

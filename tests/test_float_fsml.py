@@ -529,7 +529,7 @@ class TestFormatting(unittest.TestCase):
                 [
                     ("", "0"),
                     ("-", "0"),
-                    ("+", "+0"),
+                    ("+", " 0"),
                     (" ", " 0"),
                 ],
             ),
@@ -538,7 +538,7 @@ class TestFormatting(unittest.TestCase):
                 [
                     ("", "0"),
                     ("-", "0"),
-                    ("+", "+0"),
+                    ("+", " 0"),
                     (" ", " 0"),
                 ],
             ),
