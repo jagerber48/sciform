@@ -106,6 +106,19 @@ Fixed
   Now all ``Decimal`` inputs are immediately normalized before any
   formatting.
   [`#148 <https://github.com/jagerber48/sciform/issues/148>`_]
+* Fixed the behavior around the sign symbols for zero and non-finite
+  inputs.
+  Previously ``0`` was treated as positive for the sake of resolving
+  its sign symbol, the sign of infinite numbers was preserved but
+  ``+inf`` did not respect the ``"+"`` and ``" "`` sign modes, and
+  ``nan`` never had a sign but also never had an extra character added
+  for ``"+"`` or ``" "`` sign modes.
+  Now both ``0`` and ``nan`` are treated as having no sign.
+  In both ``"+"`` and ``" "`` sign modes ``0`` and ``nan`` are prepended
+  by a space.
+  The sign of infinite numbers is retained as before, but now formatting
+  of these numbers respects the sign mode.
+  [`#147 <https://github.com/jagerber48/sciform/issues/147>`_]
 
 ----
 
