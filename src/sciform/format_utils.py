@@ -237,7 +237,7 @@ def get_sign_str(num: Decimal, sign_mode: SignModeEnum) -> str:
         # Always return "-" for negative numbers.
         sign_str = "-"
     elif num > 0:
-        # Return "+", " ", or "" (nothing) for positive numbers.
+        # Return "+", " ", or "" for positive numbers.
         if sign_mode is SignModeEnum.ALWAYS:
             sign_str = "+"
         elif sign_mode is SignModeEnum.SPACE:
