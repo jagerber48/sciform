@@ -2,7 +2,7 @@ import unittest
 from decimal import Decimal
 
 from sciform import Formatter
-from sciform.format_utils.exponents import get_prefix_dict
+from sciform.format_utils.exponents import get_translation_dict
 from sciform.format_utils.make_strings import (
     get_sign_str,
 )
@@ -218,7 +218,7 @@ class TestInvalidOptions(unittest.TestCase):
     def test_get_prefix_dict_bad_base(self):
         self.assertRaises(
             ValueError,
-            get_prefix_dict,
+            get_translation_dict,
             exp_format=option_types.ExpFormatEnum.PREFIX,
             base=3,
             extra_si_prefixes={},
@@ -229,7 +229,7 @@ class TestInvalidOptions(unittest.TestCase):
     def test_get_prefix_dict_bad_format(self):
         self.assertRaises(
             ValueError,
-            get_prefix_dict,
+            get_translation_dict,
             exp_format="pref",
             base=10,
             extra_si_prefixes={},

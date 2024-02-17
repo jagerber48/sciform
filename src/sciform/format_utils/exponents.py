@@ -21,7 +21,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from decimal import Decimal
 
 
-def get_prefix_dict(
+def get_translation_dict(
     exp_format: ExpFormatEnum,
     base: Literal[10, 2],
     extra_si_prefixes: dict[int, str],
@@ -31,22 +31,22 @@ def get_prefix_dict(
     """Resolve dictionary of prefix translations."""
     if exp_format is ExpFormatEnum.PREFIX:
         if base == 10:
-            prefix_dict = val_to_si_dict.copy()
-            prefix_dict.update(extra_si_prefixes)
+            translation_dict = val_to_si_dict.copy()
+            translation_dict.update(extra_si_prefixes)
         elif base == 2:
-            prefix_dict = val_to_iec_dict.copy()
-            prefix_dict.update(extra_iec_prefixes)
+            translation_dict = val_to_iec_dict.copy()
+            translation_dict.update(extra_iec_prefixes)
         else:
             msg = f"Unhandled base {base}"
             raise ValueError(msg)
     elif exp_format is ExpFormatEnum.PARTS_PER:
-        prefix_dict = val_to_parts_per_dict.copy()
-        prefix_dict.update(extra_parts_per_forms)
+        translation_dict = val_to_parts_per_dict.copy()
+        translation_dict.update(extra_parts_per_forms)
     else:
         msg = f"Unhandled ExpFormat, {exp_format}."
         raise ValueError(msg)
 
-    return prefix_dict
+    return translation_dict
 
 
 def get_standard_exp_str(base: int, exp_val: int, *, capitalize: bool = False) -> str:
@@ -89,16 +89,19 @@ def get_exp_str(  # noqa: PLR0913
     base = cast(Literal[10, 2], base)
 
     if exp_format is ExpFormatEnum.PREFIX or exp_format is ExpFormatEnum.PARTS_PER:
-        text_exp_dict = get_prefix_dict(
+        translation_dict = get_translation_dict(
             exp_format,
             base,
             extra_si_prefixes,
             extra_iec_prefixes,
             extra_parts_per_forms,
         )
-        if exp_val in text_exp_dict and text_exp_dict[exp_val] is not None:
-            exp_str = f" {text_exp_dict[exp_val]}"
-            exp_str = exp_str.rstrip(" ")
+        if (
+            exp_val in translation_dict
+            and (exp_str := translation_dict[exp_val]) is not None
+        ):
+            if exp_str != "":
+                exp_str = f" {exp_str}"
             return exp_str
 
     if superscript:
