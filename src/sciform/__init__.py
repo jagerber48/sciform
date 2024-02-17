@@ -10,8 +10,8 @@ from sciform.api.global_configuration import (
     set_global_options,
 )
 from sciform.api.scinum import SciNum
-from sciform.modes import AutoDigits, AutoExpVal
 from sciform.options.input_options import InputOptions
+from sciform.options.option_types import AutoDigits, AutoExpVal
 from sciform.options.populated_options import PopulatedOptions
 
 __all__ = [

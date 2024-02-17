@@ -7,7 +7,7 @@ from decimal import Decimal
 from math import floor, log2
 from typing import Literal, Union, cast
 
-from sciform.modes import (
+from sciform.options.option_types import (
     AutoDigits,
     AutoExpVal,
     DecimalSeparatorEnums,

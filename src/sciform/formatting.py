@@ -22,14 +22,14 @@ from sciform.format_utils import (
     round_val_unc,
 )
 from sciform.grouping import add_separators
-from sciform.modes import (
+from sciform.options.conversion import finalize_populated_options, populate_options
+from sciform.options.option_types import (
     AutoExpVal,
     ExpFormatEnum,
     ExpModeEnum,
     RoundModeEnum,
     SignModeEnum,
 )
-from sciform.options.conversion import finalize_populated_options, populate_options
 from sciform.parser import parse_val_unc_from_input
 
 if TYPE_CHECKING:  # pragma: no cover
