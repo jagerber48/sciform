@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from sciform.output_conversion import convert_sciform_format
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from typing import Self
 
     from sciform.format_utils import Number
