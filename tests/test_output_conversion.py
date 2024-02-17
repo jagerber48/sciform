@@ -4,9 +4,9 @@ import unittest
 
 from sciform import Formatter
 from sciform.formatting.number_formatting import FormattedNumber
+from sciform.formatting.output_conversion import convert_sciform_format
 from sciform.options.conversion import populate_options
 from sciform.options.input_options import InputOptions
-from sciform.formatting.output_conversion import convert_sciform_format
 
 ValFormatterCases = list[
     tuple[float, list[tuple[Formatter, tuple[str, str, str, str]]]]
