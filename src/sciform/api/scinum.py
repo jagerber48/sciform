@@ -4,13 +4,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from sciform.formatting import FormattedNumber, format_from_options
+from sciform.formatting import format_from_options
 from sciform.fsml import format_options_from_fmt_spec
 from sciform.parser import parse_val_unc_from_input
 
 if TYPE_CHECKING:  # pragma: no cover
     from decimal import Decimal
 
+    from sciform.api.formatted_number import FormattedNumber
     from sciform.format_utils import Number
 
 
