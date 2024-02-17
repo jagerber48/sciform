@@ -8,7 +8,7 @@ import re
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
-from sciform import prefix as prefix_module
+import sciform.format_utils.prefix as prefix_module
 from sciform.options import global_options as global_options_module
 from sciform.options import option_types
 

@@ -1,4 +1,5 @@
 """Utilities for parsing mantissa, base, and exp."""
+
 from __future__ import annotations
 
 from decimal import Decimal

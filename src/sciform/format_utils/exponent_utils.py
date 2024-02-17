@@ -1,4 +1,5 @@
 """Exponent processing and string assembly utilities."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, cast
@@ -6,14 +7,14 @@ from typing import TYPE_CHECKING, Literal, cast
 from sciform.format_utils.number_utils import (
     get_mantissa_exp_base,
 )
-from sciform.options.option_types import (
-    ExpFormatEnum,
-    ExpModeEnum,
-)
-from sciform.prefix import (
+from sciform.format_utils.prefix import (
     iec_val_to_prefix_dict,
     pp_val_to_prefix_dict,
     si_val_to_prefix_dict,
+)
+from sciform.options.option_types import (
+    ExpFormatEnum,
+    ExpModeEnum,
 )
 
 if TYPE_CHECKING:
