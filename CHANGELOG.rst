@@ -8,6 +8,15 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+* Any unreleased changes can be viewed in the latest version
+  documentation
+  `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
+
+----
+
+0.35.0 (2024-02-16)
+-------------------
+
 Added
 ^^^^^
 
