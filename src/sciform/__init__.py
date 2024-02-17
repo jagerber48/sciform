@@ -1,7 +1,6 @@
 """``sciform`` is used to convert python numbers into scientific formatted strings."""
 
 from sciform.api.formatter import Formatter
-from sciform.formatting import FormattedNumber
 from sciform.api.global_configuration import (
     GlobalOptionsContext,
     get_default_global_options,
@@ -9,10 +8,11 @@ from sciform.api.global_configuration import (
     reset_global_options,
     set_global_options,
 )
+from sciform.api.scinum import SciNum
+from sciform.formatting import FormattedNumber
 from sciform.modes import AutoDigits, AutoExpVal
 from sciform.options.input_options import InputOptions
 from sciform.options.populated_options import PopulatedOptions
-from sciform.api.scinum import SciNum
 
 __all__ = [
     "Formatter",
