@@ -9,7 +9,7 @@ from sciform.output_conversion import convert_sciform_format
 if TYPE_CHECKING:  # pragma: no cover
     from typing import Self
 
-    from sciform.format_utils import Number
+    from sciform.format_utils.string_utils import Number
     from sciform.options.populated_options import PopulatedOptions
 
 

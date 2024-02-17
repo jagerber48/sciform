@@ -4,7 +4,7 @@ from math import isnan
 from typing import Optional
 
 from sciform import GlobalOptionsContext, SciNum
-from sciform.format_utils import Number
+from sciform.format_utils.string_utils import Number
 from sciform.options import option_types
 from sciform.parser import parse_val_unc_from_str
 

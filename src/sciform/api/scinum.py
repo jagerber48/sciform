@@ -12,7 +12,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from decimal import Decimal
 
     from sciform.api.formatted_number import FormattedNumber
-    from sciform.format_utils import Number
+    from sciform.format_utils.string_utils import Number
 
 
 class SciNum:
