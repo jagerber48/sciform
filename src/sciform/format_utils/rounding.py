@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from sciform.format_utils.number_utils import (
+from sciform.format_utils.numbers import (
     get_bottom_digit,
     get_top_digit,
 )

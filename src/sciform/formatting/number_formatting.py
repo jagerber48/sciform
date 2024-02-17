@@ -7,14 +7,9 @@ from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 from sciform.api.formatted_number import FormattedNumber
-from sciform.format_utils.exponent_utils import get_val_unc_exp
-from sciform.format_utils.grouping_utils import add_separators
-from sciform.format_utils.number_utils import (
-    get_mantissa_exp_base,
-    get_val_unc_top_digit,
-)
-from sciform.format_utils.rounding_utils import get_round_digit, round_val_unc
-from sciform.format_utils.string_utils import (
+from sciform.format_utils.exponents import get_val_unc_exp
+from sciform.format_utils.grouping import add_separators
+from sciform.format_utils.make_strings import (
     Number,
     construct_val_unc_exp_str,
     construct_val_unc_str,
@@ -23,6 +18,11 @@ from sciform.format_utils.string_utils import (
     get_sign_str,
     get_val_unc_mantissa_strs,
 )
+from sciform.format_utils.numbers import (
+    get_mantissa_exp_base,
+    get_val_unc_top_digit,
+)
+from sciform.format_utils.rounding import get_round_digit, round_val_unc
 from sciform.formatting.parser import parse_val_unc_from_input
 from sciform.options.conversion import finalize_populated_options, populate_options
 from sciform.options.option_types import (

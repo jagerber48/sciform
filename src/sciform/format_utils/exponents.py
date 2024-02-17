@@ -9,7 +9,7 @@ from sciform.format_utils.exp_translations import (
     pp_val_to_prefix_dict,
     si_val_to_prefix_dict,
 )
-from sciform.format_utils.number_utils import (
+from sciform.format_utils.numbers import (
     get_mantissa_exp_base,
 )
 from sciform.options.option_types import (

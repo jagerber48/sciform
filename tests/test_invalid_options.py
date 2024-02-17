@@ -2,16 +2,16 @@ import unittest
 from decimal import Decimal
 
 from sciform import Formatter
-from sciform.format_utils.exponent_utils import get_prefix_dict
-from sciform.format_utils.number_utils import (
+from sciform.format_utils.exponents import get_prefix_dict
+from sciform.format_utils.make_strings import (
+    get_sign_str,
+)
+from sciform.format_utils.numbers import (
     get_mantissa_exp_base,
     get_top_digit,
     get_top_digit_binary,
 )
-from sciform.format_utils.rounding_utils import get_round_digit
-from sciform.format_utils.string_utils import (
-    get_sign_str,
-)
+from sciform.format_utils.rounding import get_round_digit
 from sciform.formatting.number_formatting import format_non_finite
 from sciform.formatting.output_conversion import _make_exp_str, convert_sciform_format
 from sciform.options import option_types

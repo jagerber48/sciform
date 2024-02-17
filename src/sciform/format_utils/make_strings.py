@@ -6,8 +6,8 @@ import re
 from decimal import Decimal
 from typing import Union
 
-from sciform.format_utils.exponent_utils import get_exp_str
-from sciform.format_utils.number_utils import (
+from sciform.format_utils.exponents import get_exp_str
+from sciform.format_utils.numbers import (
     get_top_digit,
 )
 from sciform.options.option_types import (
