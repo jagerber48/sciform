@@ -49,19 +49,23 @@ def get_translation_dict(
     return translation_dict
 
 
+base_exp_symbol_dict = {10: "e", 2: "b"}
+
+
 def get_standard_exp_str(base: int, exp_val: int, *, capitalize: bool = False) -> str:
     """Get standard (eg. 'e+02') exponent string."""
-    base_exp_symbol_dict = {10: "e", 2: "b"}
     exp_symbol = base_exp_symbol_dict[base]
     if capitalize:
         exp_symbol = exp_symbol.capitalize()
     return f"{exp_symbol}{exp_val:+03d}"
 
 
+superscript_translate = str.maketrans("+-0123456789", "⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹")
+
+
 def get_superscript_exp_str(base: int, exp_val: int) -> str:
     """Get superscript (e.g. '×10⁺²') exponent string."""
-    sup_trans = str.maketrans("+-0123456789", "⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹")
-    exp_val_str = f"{exp_val}".translate(sup_trans)
+    exp_val_str = f"{exp_val}".translate(superscript_translate)
     return f"×{base}{exp_val_str}"
 
 
