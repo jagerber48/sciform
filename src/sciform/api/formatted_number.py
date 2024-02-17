@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from sciform.output_conversion import convert_sciform_format
+from sciform.formatting.output_conversion import convert_sciform_format
 
 if TYPE_CHECKING:  # pragma: no cover
     from typing import Self

@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-from sciform.formatting import format_from_options
+from sciform.formatting.number_formatting import format_from_options
 from sciform.options.conversion import populate_options
 from sciform.options.input_options import InputOptions
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.format_utils.string_utils import Number
-    from sciform.formatting import FormattedNumber
+    from sciform.formatting.number_formatting import FormattedNumber
     from sciform.options import option_types
     from sciform.options.populated_options import PopulatedOptions
 

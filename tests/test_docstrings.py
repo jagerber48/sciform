@@ -1,6 +1,6 @@
 import doctest
 
-from sciform import output_conversion
+from sciform.formatting import output_conversion
 from sciform.api import formatter, scinum
 from sciform.options import input_options, populated_options
 

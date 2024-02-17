@@ -6,7 +6,7 @@ from typing import Optional
 from sciform import GlobalOptionsContext, SciNum
 from sciform.format_utils.string_utils import Number
 from sciform.options import option_types
-from sciform.parser import parse_val_unc_from_str
+from sciform.formatting.parser import parse_val_unc_from_str
 
 CasesList = list[tuple[str, tuple[Number, Optional[Number]]]]
 

@@ -23,6 +23,7 @@ from sciform.format_utils.string_utils import (
     get_sign_str,
     get_val_unc_mantissa_strs,
 )
+from sciform.formatting.parser import parse_val_unc_from_input
 from sciform.options.conversion import finalize_populated_options, populate_options
 from sciform.options.option_types import (
     AutoExpVal,
@@ -31,7 +32,6 @@ from sciform.options.option_types import (
     RoundModeEnum,
     SignModeEnum,
 )
-from sciform.parser import parse_val_unc_from_input
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.options.finalized_options import FinalizedOptions

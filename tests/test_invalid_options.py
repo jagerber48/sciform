@@ -12,11 +12,11 @@ from sciform.format_utils.rounding_utils import get_round_digit
 from sciform.format_utils.string_utils import (
     get_sign_str,
 )
-from sciform.formatting import format_non_finite
+from sciform.formatting.number_formatting import format_non_finite
 from sciform.options import option_types
 from sciform.options.conversion import finalize_input_options
 from sciform.options.input_options import InputOptions
-from sciform.output_conversion import _make_exp_str, convert_sciform_format
+from sciform.formatting.output_conversion import _make_exp_str, convert_sciform_format
 
 
 class TestInvalidOptions(unittest.TestCase):
