@@ -5,9 +5,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal, cast
 
 from sciform.format_utils.exp_translations import (
-    iec_val_to_prefix_dict,
-    pp_val_to_prefix_dict,
-    si_val_to_prefix_dict,
+    val_to_iec_dict,
+    val_to_parts_per_dict,
+    val_to_si_dict,
 )
 from sciform.format_utils.numbers import (
     get_mantissa_exp_base,
@@ -31,16 +31,16 @@ def get_prefix_dict(
     """Resolve dictionary of prefix translations."""
     if exp_format is ExpFormatEnum.PREFIX:
         if base == 10:
-            prefix_dict = si_val_to_prefix_dict.copy()
+            prefix_dict = val_to_si_dict.copy()
             prefix_dict.update(extra_si_prefixes)
         elif base == 2:
-            prefix_dict = iec_val_to_prefix_dict.copy()
+            prefix_dict = val_to_iec_dict.copy()
             prefix_dict.update(extra_iec_prefixes)
         else:
             msg = f"Unhandled base {base}"
             raise ValueError(msg)
     elif exp_format is ExpFormatEnum.PARTS_PER:
-        prefix_dict = pp_val_to_prefix_dict.copy()
+        prefix_dict = val_to_parts_per_dict.copy()
         prefix_dict.update(extra_parts_per_forms)
     else:
         msg = f"Unhandled ExpFormat, {exp_format}."
