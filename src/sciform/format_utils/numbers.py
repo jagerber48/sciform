@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from decimal import Decimal
 from math import floor, log2
 from typing import Literal
@@ -151,3 +152,17 @@ def get_mantissa_exp_base(
         mantissa = num * Decimal(base) ** Decimal(-exp)
     mantissa = mantissa.normalize()
     return mantissa, exp, base
+
+
+# Optional parentheses needed to handle (nan)e+00 case
+mantissa_exp_pattern = re.compile(
+    r"^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$",
+)
+
+
+def parse_mantissa_from_ascii_exp_str(number_str: str) -> str:
+    """Break val/unc mantissa/exp strings into mantissa strings and an exp string."""
+    if match := mantissa_exp_pattern.match(number_str):
+        return match.group("mantissa_str")
+    msg = f'Invalid number string "{number_str}".'
+    raise ValueError(msg)

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import re
 from decimal import Decimal
 from typing import Union
 
@@ -73,24 +72,6 @@ def format_num_by_top_bottom_dig(
     num_top_digit = get_top_digit(num)
     pad_str = get_pad_str(left_pad_char, num_top_digit, target_top_digit)
     return f"{sign_str}{pad_str}{abs_mantissa_str}"
-
-
-def get_val_unc_mantissa_strs(
-    val_mantissa_exp_str: str,
-    unc_mantissa_exp_str: str,
-) -> tuple[str, str]:
-    """Break val/unc mantissa/exp strings into mantissa strings and an exp string."""
-    # Optional parentheses needed to handle (nan)e+00 case
-    mantissa_exp_pattern = re.compile(
-        r"^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$",
-    )
-    val_match = mantissa_exp_pattern.match(val_mantissa_exp_str)
-    val_mantissa_str = val_match.group("mantissa_str")
-
-    unc_match = mantissa_exp_pattern.match(unc_mantissa_exp_str)
-    unc_mantissa_str = unc_match.group("mantissa_str")
-
-    return val_mantissa_str, unc_mantissa_str
 
 
 def construct_val_unc_str(  # noqa: PLR0913

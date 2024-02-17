@@ -16,11 +16,11 @@ from sciform.format_utils.make_strings import (
     format_num_by_top_bottom_dig,
     get_exp_str,
     get_sign_str,
-    get_val_unc_mantissa_strs,
 )
 from sciform.format_utils.numbers import (
     get_mantissa_exp_base,
     get_val_unc_top_digit,
+    parse_mantissa_from_ascii_exp_str,
 )
 from sciform.format_utils.rounding import get_round_digit, round_val_unc
 from sciform.formatting.parser import parse_val_unc_from_input
@@ -288,10 +288,8 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     val_mantissa_exp_str = format_num(val_rounded, val_format_options)
     unc_mantissa_exp_str = format_num(unc_rounded, unc_format_options)
 
-    val_mantissa_str, unc_mantissa_str = get_val_unc_mantissa_strs(
-        val_mantissa_exp_str,
-        unc_mantissa_exp_str,
-    )
+    val_mantissa_str = parse_mantissa_from_ascii_exp_str(val_mantissa_exp_str)
+    unc_mantissa_str = parse_mantissa_from_ascii_exp_str(unc_mantissa_exp_str)
 
     val_unc_str = construct_val_unc_str(
         val_mantissa_str=val_mantissa_str,
