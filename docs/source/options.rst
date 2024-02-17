@@ -736,7 +736,7 @@ value are uncertain and by how much.
 formatting strategies by using the ``paren_uncertainty`` and
 ``paren_uncertainty_trim`` options.
 
->>> from sciform import formatter, GlobalOptionsContext
+>>> from sciform import Formatter, GlobalOptionsContext
 >>> value = 100.02147
 >>> uncertainty = 0.00035
 >>>

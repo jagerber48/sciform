@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from sciform import modes
 from sciform import prefix as prefix_module
-from sciform.global_configuration import get_global_options
+from sciform.options import global_options as global_options_module
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.format_utils import Number
@@ -109,7 +109,7 @@ def _get_unicode_base_exp_val(match: re.Match) -> tuple[int, int]:
 
 def _get_prefix_base_exp_val(prefix_exp: str) -> tuple[int, int]:
     candidate_base_exp_val_pairs = []
-    global_options = get_global_options()
+    global_options = global_options_module.GLOBAL_DEFAULT_OPTIONS
 
     si_translations = prefix_module.si_val_to_prefix_dict.copy()
     si_translations.update(global_options.extra_si_prefixes)
@@ -216,7 +216,8 @@ def _parse_decimal_separator(
     decimal_separator: modes.DecimalSeparators | None,
 ) -> modes.DecimalSeparators:
     if decimal_separator is None:
-        decimal_separator = get_global_options().decimal_separator
+        global_options = global_options_module.GLOBAL_DEFAULT_OPTIONS
+        decimal_separator = global_options.decimal_separator
 
     val_decimal_separator = _infer_decimal_separator(val)
     if unc is not None:
