@@ -8,7 +8,7 @@ import re
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
-import sciform.format_utils.prefix as prefix_module
+from sciform.format_utils import exp_translations
 from sciform.options import global_options as global_options_module
 from sciform.options import option_types
 
@@ -111,19 +111,19 @@ def _get_prefix_base_exp_val(prefix_exp: str) -> tuple[int, int]:
     candidate_base_exp_val_pairs = []
     global_options = global_options_module.GLOBAL_DEFAULT_OPTIONS
 
-    si_translations = prefix_module.si_val_to_prefix_dict.copy()
+    si_translations = exp_translations.si_val_to_prefix_dict.copy()
     si_translations.update(global_options.extra_si_prefixes)
     for key, value in si_translations.items():
         if prefix_exp == value:
             candidate_base_exp_val_pairs.append((10, key))
 
-    pp_translations = prefix_module.pp_val_to_prefix_dict.copy()
+    pp_translations = exp_translations.pp_val_to_prefix_dict.copy()
     pp_translations.update(global_options.extra_parts_per_forms)
     for key, value in pp_translations.items():
         if prefix_exp == value:
             candidate_base_exp_val_pairs.append((10, key))
 
-    iec_translations = prefix_module.iec_val_to_prefix_dict.copy()
+    iec_translations = exp_translations.iec_val_to_prefix_dict.copy()
     iec_translations.update(global_options.extra_iec_prefixes)
     for key, value in iec_translations.items():
         if prefix_exp == value:

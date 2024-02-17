@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, cast
 
-from sciform.format_utils.number_utils import (
-    get_mantissa_exp_base,
-)
-from sciform.format_utils.prefix import (
+from sciform.format_utils.exp_translations import (
     iec_val_to_prefix_dict,
     pp_val_to_prefix_dict,
     si_val_to_prefix_dict,
+)
+from sciform.format_utils.number_utils import (
+    get_mantissa_exp_base,
 )
 from sciform.options.option_types import (
     ExpFormatEnum,
