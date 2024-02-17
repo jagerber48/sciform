@@ -10,6 +10,7 @@ from sciform.format_utils.numbers import (
     get_mantissa_exp_base,
     get_top_digit,
     get_top_digit_binary,
+    parse_mantissa_from_ascii_exp_str,
 )
 from sciform.format_utils.rounding import get_round_digit
 from sciform.formatting.number_formatting import format_non_finite
@@ -269,4 +270,11 @@ class TestInvalidOptions(unittest.TestCase):
             16,
             0,
             "ascii",
+        )
+
+    def test_parse_mantissa_from_ascii_exp_str(self):
+        self.assertRaises(
+            ValueError,
+            parse_mantissa_from_ascii_exp_str,
+            "1.23c+04",
         )

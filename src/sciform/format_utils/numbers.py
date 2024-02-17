@@ -7,6 +7,7 @@ from decimal import Decimal
 from math import floor, log2
 from typing import Literal
 
+from sciform.formatting.parser import any_val_pattern
 from sciform.options.option_types import (
     AutoDigits,
     AutoExpVal,
@@ -156,7 +157,13 @@ def get_mantissa_exp_base(
 
 # Optional parentheses needed to handle (nan)e+00 case
 mantissa_exp_pattern = re.compile(
-    r"^\(?(?P<mantissa_str>.*?)\)?(?P<exp_str>[eEbB].*?)?$",
+    rf"""
+    ^
+    \(?(?P<mantissa_str>{any_val_pattern})\)?
+    (?P<exp_str>[eEbB].*?)?
+    $
+""",
+    re.VERBOSE,
 )
 
 
