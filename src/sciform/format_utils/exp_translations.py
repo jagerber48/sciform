@@ -1,6 +1,6 @@
-"""Exponent prefix translations."""
+"""Exponent translations."""
 
-si_val_to_prefix_dict = {
+val_to_si_dict = {
     30: "Q",
     27: "R",
     24: "Y",
@@ -24,7 +24,7 @@ si_val_to_prefix_dict = {
     -30: "q",
 }
 
-iec_val_to_prefix_dict = {
+val_to_iec_dict = {
     0: "",
     10: "Ki",
     20: "Mi",
@@ -36,7 +36,7 @@ iec_val_to_prefix_dict = {
     80: "Yi",
 }
 
-pp_val_to_prefix_dict = {
+val_to_parts_per_dict = {
     0: "",
     -6: "ppm",
     -9: "ppb",

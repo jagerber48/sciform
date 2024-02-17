@@ -4,14 +4,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-from sciform.formatting import format_from_options
+from sciform.formatting.number_formatting import format_from_options
 from sciform.options.conversion import populate_options
 from sciform.options.input_options import InputOptions
 
 if TYPE_CHECKING:  # pragma: no cover
-    from sciform import modes
-    from sciform.format_utils import Number
-    from sciform.formatting import FormattedNumber
+    from sciform.format_utils.make_strings import Number
+    from sciform.formatting.number_formatting import FormattedNumber
+    from sciform.options import option_types
     from sciform.options.populated_options import PopulatedOptions
 
 
@@ -142,17 +142,17 @@ class Formatter:
     def __init__(  # noqa: PLR0913
         self: Formatter,
         *,
-        exp_mode: modes.ExpMode | None = None,
-        exp_val: int | type(modes.AutoExpVal) | None = None,
-        round_mode: modes.RoundMode | None = None,
-        ndigits: int | type(modes.AutoDigits) | None = None,
-        upper_separator: modes.UpperSeparators | None = None,
-        decimal_separator: modes.DecimalSeparators | None = None,
-        lower_separator: modes.LowerSeparators | None = None,
-        sign_mode: modes.SignMode | None = None,
-        left_pad_char: modes.LeftPadChar | Literal[0] | None = None,
+        exp_mode: option_types.ExpMode | None = None,
+        exp_val: int | type(option_types.AutoExpVal) | None = None,
+        round_mode: option_types.RoundMode | None = None,
+        ndigits: int | type(option_types.AutoDigits) | None = None,
+        upper_separator: option_types.UpperSeparators | None = None,
+        decimal_separator: option_types.DecimalSeparators | None = None,
+        lower_separator: option_types.LowerSeparators | None = None,
+        sign_mode: option_types.SignMode | None = None,
+        left_pad_char: option_types.LeftPadChar | Literal[0] | None = None,
         left_pad_dec_place: int | None = None,
-        exp_format: modes.ExpFormat | None = None,
+        exp_format: option_types.ExpFormat | None = None,
         extra_si_prefixes: dict[int, str] | None = None,
         extra_iec_prefixes: dict[int, str] | None = None,
         extra_parts_per_forms: dict[int, str] | None = None,

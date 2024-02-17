@@ -5,8 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict
 from typing import TYPE_CHECKING
 
-from sciform import modes
-from sciform.options import global_options
+from sciform.options import global_options, option_types
 from sciform.options.finalized_options import FinalizedOptions
 from sciform.options.populated_options import PopulatedOptions
 from sciform.options.validation import validate_options
@@ -92,14 +91,14 @@ def populate_options(input_options: InputOptions) -> PopulatedOptions:
 
 
 key_to_enum_dict = {
-    "exp_mode": modes.ExpModeEnum,
-    "round_mode": modes.RoundModeEnum,
-    "upper_separator": modes.SeparatorEnum,
-    "decimal_separator": modes.SeparatorEnum,
-    "lower_separator": modes.SeparatorEnum,
-    "sign_mode": modes.SignModeEnum,
-    "left_pad_char": modes.LeftPadCharEnum,
-    "exp_format": modes.ExpFormatEnum,
+    "exp_mode": option_types.ExpModeEnum,
+    "round_mode": option_types.RoundModeEnum,
+    "upper_separator": option_types.SeparatorEnum,
+    "decimal_separator": option_types.SeparatorEnum,
+    "lower_separator": option_types.SeparatorEnum,
+    "sign_mode": option_types.SignModeEnum,
+    "left_pad_char": option_types.LeftPadCharEnum,
+    "exp_format": option_types.ExpFormatEnum,
 }
 
 
@@ -109,7 +108,7 @@ def finalize_populated_options(populated_options: PopulatedOptions) -> Finalized
     for key, value in kwargs.items():
         if key in key_to_enum_dict:
             enum = key_to_enum_dict[key]
-            kwargs[key] = modes.mode_str_to_enum(value, enum)
+            kwargs[key] = option_types.mode_str_to_enum(value, enum)
     return FinalizedOptions(**kwargs)
 
 

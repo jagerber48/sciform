@@ -6,38 +6,36 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, cast
 from warnings import warn
 
-from typing_extensions import Self
-
-from sciform.format_utils import (
+from sciform.api.formatted_number import FormattedNumber
+from sciform.format_utils.exponents import get_val_unc_exp
+from sciform.format_utils.grouping import add_separators
+from sciform.format_utils.make_strings import (
     Number,
     construct_val_unc_exp_str,
     construct_val_unc_str,
     format_num_by_top_bottom_dig,
     get_exp_str,
-    get_mantissa_exp_base,
-    get_round_digit,
     get_sign_str,
-    get_val_unc_exp,
-    get_val_unc_mantissa_strs,
-    get_val_unc_top_digit,
-    round_val_unc,
 )
-from sciform.grouping import add_separators
-from sciform.modes import (
+from sciform.format_utils.numbers import (
+    get_mantissa_exp_base,
+    get_val_unc_top_digit,
+    parse_mantissa_from_ascii_exp_str,
+)
+from sciform.format_utils.rounding import get_round_digit, round_val_unc
+from sciform.formatting.parser import parse_val_unc_from_input
+from sciform.options.conversion import finalize_populated_options, populate_options
+from sciform.options.option_types import (
     AutoExpVal,
     ExpFormatEnum,
     ExpModeEnum,
     RoundModeEnum,
     SignModeEnum,
 )
-from sciform.options.conversion import finalize_populated_options, populate_options
-from sciform.output_conversion import convert_sciform_format
-from sciform.parser import parse_val_unc_from_input
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.options.finalized_options import FinalizedOptions
     from sciform.options.input_options import InputOptions
-    from sciform.options.populated_options import PopulatedOptions
 
 
 def format_from_options(
@@ -290,10 +288,8 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     val_mantissa_exp_str = format_num(val_rounded, val_format_options)
     unc_mantissa_exp_str = format_num(unc_rounded, unc_format_options)
 
-    val_mantissa_str, unc_mantissa_str = get_val_unc_mantissa_strs(
-        val_mantissa_exp_str,
-        unc_mantissa_exp_str,
-    )
+    val_mantissa_str = parse_mantissa_from_ascii_exp_str(val_mantissa_exp_str)
+    unc_mantissa_str = parse_mantissa_from_ascii_exp_str(unc_mantissa_exp_str)
 
     val_unc_str = construct_val_unc_str(
         val_mantissa_str=val_mantissa_str,
@@ -331,69 +327,3 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
             val_unc_exp_str = f"({val_unc_exp_str})%"
 
     return val_unc_exp_str
-
-
-class FormattedNumber(str):
-    """
-    Representation of a formatted value of value/uncertainty pair.
-
-    The :class:`FormattedNumber` class is returned by ``sciform``
-    formatting methods. In most cases it behaves like a regular python
-    string, but it provides functionality for post-converting the string
-    to various other formats such as latex or html. This allows the
-    formatted number to be displayed in a range of contexts other than
-    e.g. text terminals.
-
-    The :class:`FormattedNumber` class should never be instantiated
-    directly.
-    """
-
-    __slots__ = {
-        "value": "The value that was formatted to generate the "
-        ":class:`FormattedNumber`.",
-        "uncertainty": "The uncertainty that was formatted to generate the "
-        ":class:`FormattedNumber`.",
-        "populated_options": "Record of the :class:`PopulatedOptions` used to "
-        "generate the :class:`FormattedNumber`.",
-    }
-
-    def __new__(
-        cls: type[Self],
-        formatted_str: str,
-        value: Number,
-        uncertainty: Number | None,
-        populated_options: PopulatedOptions,
-    ) -> Self:
-        """Get a new string."""
-        obj = super().__new__(cls, formatted_str)
-        obj.value = value
-        obj.uncertainty = uncertainty
-        obj.populated_options = populated_options
-        return obj
-
-    def as_str(self: FormattedNumber) -> str:
-        """Return the string representation of the formatted number."""
-        return self.__str__()
-
-    def as_ascii(self: FormattedNumber) -> str:
-        """Return the ascii representation of the formatted number."""
-        return convert_sciform_format(self, "ascii")
-
-    def as_html(self: FormattedNumber) -> str:
-        """Return the html representation of the formatted number."""
-        return convert_sciform_format(self, "html")
-
-    def as_latex(self: FormattedNumber, *, strip_math_mode: bool = False) -> str:
-        """Return the latex representation of the formatted number."""
-        latex_repr = convert_sciform_format(self, "latex")
-        if strip_math_mode:
-            latex_repr = latex_repr.strip("$")
-        return latex_repr
-
-    def _repr_html_(self: FormattedNumber) -> str:
-        """Hook for HTML display."""  # noqa: D401
-        return self.as_html()
-
-    def _repr_latex_(self: FormattedNumber) -> str:
-        """Hook for LaTeX display."""  # noqa: D401
-        return self.as_latex()

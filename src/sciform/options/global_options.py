@@ -1,13 +1,13 @@
 """Global Options."""
 
-from sciform import modes
+from sciform.options import option_types
 from sciform.options.populated_options import PopulatedOptions
 
 PKG_DEFAULT_OPTIONS = PopulatedOptions(
     exp_mode="fixed_point",
-    exp_val=modes.AutoExpVal,
+    exp_val=option_types.AutoExpVal,
     round_mode="sig_fig",
-    ndigits=modes.AutoDigits,
+    ndigits=option_types.AutoDigits,
     upper_separator="",
     decimal_separator=".",
     lower_separator="",

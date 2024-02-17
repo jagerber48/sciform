@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Any
 from sciform.options.validation import validate_options
 
 if TYPE_CHECKING:  # pragma: no cover
-    from sciform import modes
+    from sciform.options import option_types
 
 
 @dataclass(frozen=True)
@@ -93,17 +93,17 @@ class PopulatedOptions:
 
     """  # noqa: E501
 
-    exp_mode: modes.ExpMode
-    exp_val: int | type(modes.AutoExpVal)
-    round_mode: modes.RoundMode
-    ndigits: int | type(modes.AutoDigits)
-    upper_separator: modes.UpperSeparators
-    decimal_separator: modes.DecimalSeparators
-    lower_separator: modes.LowerSeparators
-    sign_mode: modes.SignMode
-    left_pad_char: modes.LeftPadChar
+    exp_mode: option_types.ExpMode
+    exp_val: int | type(option_types.AutoExpVal)
+    round_mode: option_types.RoundMode
+    ndigits: int | type(option_types.AutoDigits)
+    upper_separator: option_types.UpperSeparators
+    decimal_separator: option_types.DecimalSeparators
+    lower_separator: option_types.LowerSeparators
+    sign_mode: option_types.SignMode
+    left_pad_char: option_types.LeftPadChar
     left_pad_dec_place: int
-    exp_format: modes.ExpFormat
+    exp_format: option_types.ExpFormat
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
     extra_parts_per_forms: dict[int, str]

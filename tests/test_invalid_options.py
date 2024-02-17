@@ -1,19 +1,23 @@
 import unittest
 from decimal import Decimal
 
-from sciform import Formatter, modes
-from sciform.format_utils import (
-    get_mantissa_exp_base,
-    get_prefix_dict,
-    get_round_digit,
+from sciform import Formatter
+from sciform.format_utils.exponents import get_translation_dict
+from sciform.format_utils.make_strings import (
     get_sign_str,
+)
+from sciform.format_utils.numbers import (
+    get_mantissa_exp_base,
     get_top_digit,
     get_top_digit_binary,
+    parse_mantissa_from_ascii_exp_str,
 )
-from sciform.formatting import format_non_finite
+from sciform.format_utils.rounding import get_round_digit
+from sciform.formatting.number_formatting import format_non_finite
+from sciform.formatting.output_conversion import _make_exp_str, convert_sciform_format
+from sciform.options import option_types
 from sciform.options.conversion import finalize_input_options
 from sciform.options.input_options import InputOptions
-from sciform.output_conversion import _make_exp_str, convert_sciform_format
 
 
 class TestInvalidOptions(unittest.TestCase):
@@ -169,7 +173,7 @@ class TestInvalidOptions(unittest.TestCase):
             ValueError,
             get_mantissa_exp_base,
             num=Decimal(3),
-            exp_mode=modes.ExpModeEnum.FIXEDPOINT,
+            exp_mode=option_types.ExpModeEnum.FIXEDPOINT,
             input_exp=1,
         )
 
@@ -178,7 +182,7 @@ class TestInvalidOptions(unittest.TestCase):
             ValueError,
             get_mantissa_exp_base,
             num=Decimal(3),
-            exp_mode=modes.ExpModeEnum.ENGINEERING,
+            exp_mode=option_types.ExpModeEnum.ENGINEERING,
             input_exp=1,
         )
 
@@ -187,7 +191,7 @@ class TestInvalidOptions(unittest.TestCase):
             ValueError,
             get_mantissa_exp_base,
             num=Decimal(3),
-            exp_mode=modes.ExpModeEnum.BINARY_IEC,
+            exp_mode=option_types.ExpModeEnum.BINARY_IEC,
             input_exp=3,
         )
 
@@ -215,8 +219,8 @@ class TestInvalidOptions(unittest.TestCase):
     def test_get_prefix_dict_bad_base(self):
         self.assertRaises(
             ValueError,
-            get_prefix_dict,
-            exp_format=modes.ExpFormatEnum.PREFIX,
+            get_translation_dict,
+            exp_format=option_types.ExpFormatEnum.PREFIX,
             base=3,
             extra_si_prefixes={},
             extra_iec_prefixes={},
@@ -226,7 +230,7 @@ class TestInvalidOptions(unittest.TestCase):
     def test_get_prefix_dict_bad_format(self):
         self.assertRaises(
             ValueError,
-            get_prefix_dict,
+            get_translation_dict,
             exp_format="pref",
             base=10,
             extra_si_prefixes={},
@@ -237,9 +241,9 @@ class TestInvalidOptions(unittest.TestCase):
     def test_mode_str_to_enum_fail(self):
         self.assertRaises(
             ValueError,
-            modes.mode_str_to_enum,
+            option_types.mode_str_to_enum,
             "eng",
-            modes.ExpModeEnum,
+            option_types.ExpModeEnum,
         )
 
     def test_convert_sciform_format_invalid_output_format(self):
@@ -266,4 +270,11 @@ class TestInvalidOptions(unittest.TestCase):
             16,
             0,
             "ascii",
+        )
+
+    def test_parse_mantissa_from_ascii_exp_str(self):
+        self.assertRaises(
+            ValueError,
+            parse_mantissa_from_ascii_exp_str,
+            "1.23c+04",
         )

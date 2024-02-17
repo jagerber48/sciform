@@ -3,9 +3,10 @@ from decimal import Decimal
 from math import isnan
 from typing import Optional
 
-from sciform import GlobalOptionsContext, SciNum, modes
-from sciform.format_utils import Number
-from sciform.parser import parse_val_unc_from_str
+from sciform import GlobalOptionsContext, SciNum
+from sciform.format_utils.make_strings import Number
+from sciform.formatting.parser import parse_val_unc_from_str
+from sciform.options import option_types
 
 CasesList = list[tuple[str, tuple[Number, Optional[Number]]]]
 
@@ -265,7 +266,7 @@ class TestStringParser(unittest.TestCase):
     def run_direct_cases(
         self,
         cases: CasesList,
-        decimal_separator: modes.DecimalSeparators = ".",
+        decimal_separator: option_types.DecimalSeparators = ".",
     ):
         for string, (val, unc) in cases:
             expected_val = Decimal(str(val))

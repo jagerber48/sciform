@@ -8,9 +8,9 @@ import re
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
-from sciform import modes
-from sciform import prefix as prefix_module
+from sciform.format_utils import exp_translations
 from sciform.options import global_options as global_options_module
+from sciform.options import option_types
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.format_utils import Number
@@ -111,19 +111,19 @@ def _get_prefix_base_exp_val(prefix_exp: str) -> tuple[int, int]:
     candidate_base_exp_val_pairs = []
     global_options = global_options_module.GLOBAL_DEFAULT_OPTIONS
 
-    si_translations = prefix_module.si_val_to_prefix_dict.copy()
+    si_translations = exp_translations.val_to_si_dict.copy()
     si_translations.update(global_options.extra_si_prefixes)
     for key, value in si_translations.items():
         if prefix_exp == value:
             candidate_base_exp_val_pairs.append((10, key))
 
-    pp_translations = prefix_module.pp_val_to_prefix_dict.copy()
+    pp_translations = exp_translations.val_to_parts_per_dict.copy()
     pp_translations.update(global_options.extra_parts_per_forms)
     for key, value in pp_translations.items():
         if prefix_exp == value:
             candidate_base_exp_val_pairs.append((10, key))
 
-    iec_translations = prefix_module.iec_val_to_prefix_dict.copy()
+    iec_translations = exp_translations.val_to_iec_dict.copy()
     iec_translations.update(global_options.extra_iec_prefixes)
     for key, value in iec_translations.items():
         if prefix_exp == value:
@@ -165,7 +165,7 @@ def _extract_exp_base_exp_val(
 
 def _infer_decimal_separator(
     val: str,
-) -> modes.DecimalSeparators | None:
+) -> option_types.DecimalSeparators | None:
     val = val.replace(" ", "")
     val = val.replace("_", "")
 
@@ -213,8 +213,8 @@ def _infer_decimal_separator(
 def _parse_decimal_separator(
     val: str,
     unc: str,
-    decimal_separator: modes.DecimalSeparators | None,
-) -> modes.DecimalSeparators:
+    decimal_separator: option_types.DecimalSeparators | None,
+) -> option_types.DecimalSeparators:
     if decimal_separator is None:
         global_options = global_options_module.GLOBAL_DEFAULT_OPTIONS
         decimal_separator = global_options.decimal_separator
@@ -243,9 +243,9 @@ def _parse_decimal_separator(
 
 def _normalize_separators(
     input_str: str,
-    decimal_separator: modes.DecimalSeparators,
+    decimal_separator: option_types.DecimalSeparators,
 ) -> str:
-    for separator in modes.SeparatorEnum:
+    for separator in option_types.SeparatorEnum:
         if separator != decimal_separator:
             input_str = input_str.replace(separator, "")
     input_str = input_str.replace(",", ".")
@@ -304,7 +304,7 @@ def _extract_val_unc_base_exp(
 
 def parse_val_unc_from_str(
     input_str: str,
-    decimal_separator: modes.DecimalSeparators = None,
+    decimal_separator: option_types.DecimalSeparators = None,
 ) -> tuple[Decimal, Decimal | None]:
     """
     Parse a formatted string back into numbers representing the value and uncertainty.
@@ -389,7 +389,7 @@ def parse_val_unc_from_str(
 def parse_val_unc_from_input(
     value: Number,
     uncertainty: Number | None,
-    decimal_separator: modes.DecimalSeparators | None = None,
+    decimal_separator: option_types.DecimalSeparators | None = None,
 ) -> tuple[Decimal, Decimal | None]:
     """
     Parse a user supplied value/uncertainty into a standard form of one or two Decimals.

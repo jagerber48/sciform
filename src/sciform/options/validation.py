@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, get_args
 
-from sciform import modes
+from sciform.options import option_types
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.options.finalized_options import FinalizedOptions
@@ -38,7 +38,7 @@ def validate_exp_val(
     options: InputOptions | PopulatedOptions | FinalizedOptions,
 ) -> None:
     """Validate exp_val."""
-    if options.exp_val is not modes.AutoExpVal and options.exp_val is not None:
+    if options.exp_val is not option_types.AutoExpVal and options.exp_val is not None:
         if options.exp_mode in ["fixed_point", "percent"] and options.exp_val != 0:
             msg = (
                 f"Exponent must must be 0, not exp_val={options.exp_val}, for "
@@ -67,10 +67,10 @@ def validate_separator_options(
 ) -> None:
     """Validate separator user input."""
     if options.upper_separator is not None:
-        if options.upper_separator not in get_args(modes.UpperSeparators):
+        if options.upper_separator not in get_args(option_types.UpperSeparators):
             msg = (
                 f"upper_separator must be in "
-                f"{get_args(modes.UpperSeparators)}, not "
+                f"{get_args(option_types.UpperSeparators)}, not "
                 f"{options.upper_separator}."
             )
             raise ValueError(msg)
@@ -82,20 +82,20 @@ def validate_separator_options(
             raise ValueError(msg)
 
     if options.decimal_separator is not None and (
-        options.decimal_separator not in get_args(modes.DecimalSeparators)
+        options.decimal_separator not in get_args(option_types.DecimalSeparators)
     ):
         msg = (
             f"decimal_separator must be in "
-            f"{get_args(modes.DecimalSeparators)}, not "
+            f"{get_args(option_types.DecimalSeparators)}, not "
             f"{options.decimal_separator}."
         )
         raise ValueError(msg)
 
     if options.lower_separator is not None and (
-        options.lower_separator not in get_args(modes.LowerSeparators)
+        options.lower_separator not in get_args(option_types.LowerSeparators)
     ):
         msg = (
-            f"lower_separator must be in {get_args(modes.LowerSeparators)}, "
+            f"lower_separator must be in {get_args(option_types.LowerSeparators)}, "
             f"not {options.lower_separator}."
         )
         raise ValueError(msg)

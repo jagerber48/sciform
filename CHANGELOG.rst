@@ -16,8 +16,15 @@ Unreleased
 Changed
 ^^^^^^^
 
-* Move modules containing public interfaces into the ``api/``
-  subpackage.
+* Major source code reorganization.
+  [`#152 <https://github.com/jagerber48/sciform/issues/152>`_]
+
+  * Move modules containing public interfaces into an ``api``
+    sub-package.
+  * Break a bulky ``format_utils`` module into multiple modules, now in
+    a ``format_utils`` sub-package.
+  * Collect the main formatting algorithms into a ``formatting``
+    sub-package.
 
 ----
 

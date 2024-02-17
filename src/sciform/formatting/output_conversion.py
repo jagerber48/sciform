@@ -82,7 +82,7 @@ def convert_sciform_format(
       * ``"×"`` -> ```r"\times"``
       * ``"μ"`` -> ``r"\textmu"``
 
-    >>> from sciform.output_conversion import convert_sciform_format
+    >>> from sciform.formatting.output_conversion import convert_sciform_format
     >>> print(convert_sciform_format("(7.8900 ± 0.0001)×10²", "latex"))
     $(7.8900\:\pm\:0.0001)\times10^{2}$
     >>> print(convert_sciform_format("16.18033E+03", "latex"))
@@ -94,7 +94,7 @@ def convert_sciform_format(
     In HTML mode superscripts are representing using e.g.
     "<sup>-3</sup>".
 
-    >>> from sciform.output_conversion import convert_sciform_format
+    >>> from sciform.formatting.output_conversion import convert_sciform_format
     >>> print(convert_sciform_format("(7.8900 ± 0.0001)×10²", "html"))
     (7.8900 ± 0.0001)×10<sup>2</sup>
     >>> print(convert_sciform_format("16.18033E+03", "html"))
@@ -106,7 +106,7 @@ def convert_sciform_format(
     In the ASCII mode exponents are always represented as e.g. "e-03".
     Also, "±" is replaced by "+/-" and "μ" is replaced by "u".
 
-    >>> from sciform.output_conversion import convert_sciform_format
+    >>> from sciform.formatting.output_conversion import convert_sciform_format
     >>> print(convert_sciform_format("(7.8900 ± 0.0001)×10²", "ascii"))
     (7.8900 +/- 0.0001)e+02
     >>> print(convert_sciform_format("16.18033E+03", "ascii"))

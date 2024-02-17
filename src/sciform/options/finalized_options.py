@@ -13,24 +13,24 @@ from typing import TYPE_CHECKING
 from sciform.options.validation import validate_options
 
 if TYPE_CHECKING:  # pragma: no cover
-    from sciform import modes
+    from sciform.options import option_types
 
 
 @dataclass(frozen=True)
 class FinalizedOptions:
     """Rendered options: All options populated and using Enum instead of Literal."""
 
-    exp_mode: modes.ExpModeEnum
-    exp_val: int | type(modes.AutoExpVal)
-    round_mode: modes.RoundModeEnum
-    ndigits: int | type(modes.AutoDigits)
-    upper_separator: modes.UpperSeparatorEnums
-    decimal_separator: modes.DecimalSeparatorEnums
-    lower_separator: modes.LowerSeparatorEnums
-    sign_mode: modes.SignModeEnum
-    left_pad_char: modes.LeftPadCharEnum
+    exp_mode: option_types.ExpModeEnum
+    exp_val: int | type(option_types.AutoExpVal)
+    round_mode: option_types.RoundModeEnum
+    ndigits: int | type(option_types.AutoDigits)
+    upper_separator: option_types.UpperSeparatorEnums
+    decimal_separator: option_types.DecimalSeparatorEnums
+    lower_separator: option_types.LowerSeparatorEnums
+    sign_mode: option_types.SignModeEnum
+    left_pad_char: option_types.LeftPadCharEnum
     left_pad_dec_place: int
-    exp_format: modes.ExpFormatEnum
+    exp_format: option_types.ExpFormatEnum
     extra_si_prefixes: dict[int, str]
     extra_iec_prefixes: dict[int, str]
     extra_parts_per_forms: dict[int, str]
