@@ -1,4 +1,4 @@
-"""Exponent prefix translations."""
+"""Exponent translations."""
 
 si_val_to_prefix_dict = {
     30: "Q",
