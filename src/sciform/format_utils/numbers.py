@@ -56,6 +56,7 @@ def get_val_unc_top_dec_place(
         )
     else:
         new_top_dec_place = input_top_dec_place
+    new_top_dec_place = max(0, new_top_dec_place)
     return new_top_dec_place
 
 
