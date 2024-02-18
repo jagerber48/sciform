@@ -6,7 +6,7 @@ from sciform.format_utils import Number
 ValFSMLCases = list[tuple[Number, list[tuple[str, str]]]]
 
 
-class TestFormatting(unittest.TestCase):
+class TestValFSML(unittest.TestCase):
     def run_val_fsml_cases(self, cases_list: ValFSMLCases):
         for number, format_cases in cases_list:
             for format_spec, expected_output in format_cases:
