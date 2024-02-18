@@ -248,6 +248,9 @@ force that exponent to not be translated.
 >>> print(formatter(3e-9))
 3e-09
 
+Keys into the extra translations dictionaries must be integers and
+values must consist of only English alphabetic characters.
+
 Two helper options exist to add additional SI prefix translations
 corresponding to::
 
