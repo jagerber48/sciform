@@ -1,22 +1,23 @@
 import unittest
 
 from sciform import GlobalOptionsContext, SciNum
+from sciform.format_utils import Number
 
-FloatFSMLCases = list[tuple[float, list[tuple[str, str]]]]
+ValFSMLCases = list[tuple[Number, list[tuple[str, str]]]]
 
 
-class TestFormatting(unittest.TestCase):
-    def run_float_fsml_cases(self, cases_list: FloatFSMLCases):
-        for num, formats_list in cases_list:
-            for format_spec, expected_num_str in formats_list:
-                num_str = f"{SciNum(num):{format_spec}}"
+class TestValFSML(unittest.TestCase):
+    def run_val_fsml_cases(self, cases_list: ValFSMLCases):
+        for number, format_cases in cases_list:
+            for format_spec, expected_output in format_cases:
+                actual_output = f"{SciNum(number):{format_spec}}"
                 with self.subTest(
-                    num=num,
+                    number=number,
                     format_spec=format_spec,
-                    expected_num_str=expected_num_str,
-                    actual_num_str=num_str,
+                    expected_num_str=expected_output,
+                    actual_output=actual_output,
                 ):
-                    self.assertEqual(num_str, expected_num_str)
+                    self.assertEqual(expected_output, actual_output)
 
     def test_fixed_point(self):
         cases_list = [
@@ -66,7 +67,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_percent(self):
         cases_list = [
@@ -116,7 +117,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_scientific(self):
         cases_list = [
@@ -164,7 +165,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_engineering(self):
         cases_list = [
@@ -235,7 +236,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_engineering_shifted(self):
         cases_list = [
@@ -306,7 +307,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_binary(self):
         cases_list = [
@@ -331,7 +332,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_exp(self):
         cases_list = [
@@ -359,7 +360,7 @@ class TestFormatting(unittest.TestCase):
             (512, [("bx+10", "0.5b+10")]),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_rounding(self):
         cases_list = [
@@ -395,7 +396,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_zero(self):
         cases_list = [
@@ -431,7 +432,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_non_finite(self):
         cases_list = [
@@ -465,7 +466,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_non_finite_with_exp(self):
         cases_list = [
@@ -502,7 +503,7 @@ class TestFormatting(unittest.TestCase):
         ]
 
         with GlobalOptionsContext(nan_inf_exp=True):
-            self.run_float_fsml_cases(cases_list)
+            self.run_val_fsml_cases(cases_list)
 
     def test_signs(self):
         cases_list = [
@@ -544,7 +545,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_capitalization(self):
         cases_list = [
@@ -566,7 +567,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_padding(self):
         cases_list = [
@@ -584,7 +585,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_prefix(self):
         cases_list = [
@@ -660,7 +661,7 @@ class TestFormatting(unittest.TestCase):
             (2**80, [("bp", "1 Yi")]),
         ]
 
-        self.run_float_fsml_cases(cases_list)
+        self.run_val_fsml_cases(cases_list)
 
     def test_invalid_format_spec(self):
         num = SciNum(42)

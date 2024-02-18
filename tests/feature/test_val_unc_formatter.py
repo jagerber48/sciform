@@ -2,22 +2,23 @@ import unittest
 from decimal import Decimal
 
 from sciform import AutoDigits, Formatter
+from sciform.format_utils import Number
 
-ValUncFormatterCases = list[tuple[tuple[float, float], list[tuple[Formatter, str]]]]
+ValUncFormatterCases = list[tuple[tuple[Number, Number], list[tuple[Formatter, str]]]]
 
 
-class TestFormatting(unittest.TestCase):
+class TestValUncFormatter(unittest.TestCase):
     def run_val_unc_formatter_cases(self, cases_list: ValUncFormatterCases):
-        for (val, unc), formats_list in cases_list:
-            for formatter, expected_val_unc_str in formats_list:
-                num_str = formatter(val, unc)
+        for (val, unc), formatter_cases in cases_list:
+            for formatter, expected_output in formatter_cases:
+                actual_output = formatter(val, unc)
                 with self.subTest(
-                    val=val,
-                    unc=unc,
-                    expected_num_str=expected_val_unc_str,
-                    actual_num_str=num_str,
+                    value=val,
+                    uncertainty=unc,
+                    expected_output=expected_output,
+                    actual_output=actual_output,
                 ):
-                    self.assertEqual(num_str, expected_val_unc_str)
+                    self.assertEqual(expected_output, actual_output)
 
     def test_paren_uncertainty(self):
         cases_list = [

@@ -4,7 +4,7 @@ from math import isnan
 from typing import Optional
 
 from sciform import GlobalOptionsContext, SciNum
-from sciform.format_utils.make_strings import Number
+from sciform.format_utils import Number
 from sciform.formatting.parser import parse_val_unc_from_str
 from sciform.options import option_types
 
@@ -271,7 +271,7 @@ class TestStringParser(unittest.TestCase):
         for string, (val, unc) in cases:
             expected_val = Decimal(str(val))
             expected_unc = Decimal(str(unc)) if unc is not None else unc
-            result_val, result_unc = parse_val_unc_from_str(
+            actual_val, actual_unc = parse_val_unc_from_str(
                 string,
                 decimal_separator=decimal_separator,
             )
@@ -279,30 +279,30 @@ class TestStringParser(unittest.TestCase):
                 input_string=string,
                 expected_val=expected_val,
                 expected_unc=expected_unc,
-                result_val=result_val,
-                result_unc=result_unc,
+                actual_val=actual_val,
+                actual_unc=actual_unc,
             ):
                 self.assertNanNoneEqual(
-                    result_val,
                     expected_val,
-                    msg="Value not equal",
+                    actual_val,
+                    msg="Incorrect value.",
                 )
                 self.assertNanNoneEqual(
-                    result_unc,
                     expected_unc,
-                    msg="Uncertainty not equal",
+                    actual_unc,
+                    msg="Incorrect uncertainty.",
                 )
 
     def run_scinum_cases(self, cases: CasesList):
-        for string, (val, unc) in cases:
+        for input_string, (val, unc) in cases:
             expected_scinum = SciNum(val, unc)
-            result_scinum = SciNum(string)
+            actual_scinum = SciNum(input_string)
             with self.subTest(
-                input_string=string,
+                input_string=input_string,
                 expected_scinum=expected_scinum,
-                result_scinum=result_scinum,
+                result_scinum=actual_scinum,
             ):
-                self.assertEqual(result_scinum, expected_scinum)
+                self.assertEqual(expected_scinum, actual_scinum)
 
     def test_string_parse_cases(self):
         self.run_direct_cases(shared_cases)

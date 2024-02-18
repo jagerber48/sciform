@@ -1,22 +1,23 @@
 import unittest
-from decimal import Decimal
+from decimal import Decimal, localcontext
 
 from sciform import AutoDigits, Formatter
+from sciform.format_utils import Number
 
-FloatFormatterCases = list[tuple[float, list[tuple[Formatter, str]]]]
+ValFormatterCases = list[tuple[Number, list[tuple[Formatter, str]]]]
 
 
-class TestFormatting(unittest.TestCase):
-    def run_float_formatter_cases(self, cases_list: FloatFormatterCases):
-        for num, formats_list in cases_list:
-            for formatter, expected_num_str in formats_list:
-                num_str = formatter(num)
+class TestValFormatter(unittest.TestCase):
+    def run_val_formatter_cases(self, cases_list: ValFormatterCases):
+        for number, formatter_cases in cases_list:
+            for formatter, expected_output in formatter_cases:
+                actual_output = formatter(number)
                 with self.subTest(
-                    num=num,
-                    expected_num_str=expected_num_str,
-                    actual_num_str=num_str,
+                    number=number,
+                    expected_output=expected_output,
+                    actual_output=actual_output,
                 ):
-                    self.assertEqual(num_str, expected_num_str)
+                    self.assertEqual(expected_output, actual_output)
 
     def test_superscript(self):
         cases_list = [
@@ -51,7 +52,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_formatter_cases(cases_list)
+        self.run_val_formatter_cases(cases_list)
 
     def test_left_pad_and_separators(self):
         cases_list = [
@@ -121,7 +122,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_formatter_cases(cases_list)
+        self.run_val_formatter_cases(cases_list)
 
     def test_nan(self):
         cases_list = [
@@ -147,7 +148,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_formatter_cases(cases_list)
+        self.run_val_formatter_cases(cases_list)
 
     def test_inf(self):
         cases_list = [
@@ -172,7 +173,7 @@ class TestFormatting(unittest.TestCase):
                 ],
             ),
         ]
-        self.run_float_formatter_cases(cases_list)
+        self.run_val_formatter_cases(cases_list)
 
     def test_zero(self):
         cases_list = [
@@ -195,7 +196,7 @@ class TestFormatting(unittest.TestCase):
                 ],
             ),
         ]
-        self.run_float_formatter_cases(cases_list)
+        self.run_val_formatter_cases(cases_list)
 
     def test_parts_per_exp(self):
         cases_list = [
@@ -281,7 +282,7 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_formatter_cases(cases_list)
+        self.run_val_formatter_cases(cases_list)
 
     def test_no_options(self):
         formatter = Formatter()
@@ -316,8 +317,44 @@ class TestFormatting(unittest.TestCase):
             ),
         ]
 
-        self.run_float_formatter_cases(cases_list)
+        self.run_val_formatter_cases(cases_list)
 
     def test_decimal_normalization(self):
         formatter = Formatter(ndigits=AutoDigits)
         self.assertEqual(formatter(Decimal("1.0")), formatter(Decimal("1.00")))
+
+    def test_long_decimal(self):
+        cases_list = [
+            (
+                Decimal("6834682610.9043126"),
+                [
+                    (
+                        Formatter(
+                            exp_mode="engineering",
+                            exp_format="prefix",
+                            ndigits=AutoDigits,
+                            upper_separator=" ",
+                            lower_separator=" ",
+                        ),
+                        "6.834 682 610 904 312 6 G",
+                    ),
+                ],
+            ),
+            (
+                Decimal("123456789987654321.123456789987654321"),
+                [
+                    (
+                        Formatter(
+                            exp_mode="fixed_point",
+                            ndigits=AutoDigits,
+                        ),
+                        "123456789987654321.123456789987654321",
+                    ),
+                ],
+            ),
+        ]
+
+        with localcontext() as ctx:
+            # Default precision of 28 isn't sufficient for the cases above.
+            ctx.prec = 50
+            self.run_val_formatter_cases(cases_list)

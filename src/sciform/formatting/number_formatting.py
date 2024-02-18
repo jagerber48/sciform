@@ -10,7 +10,6 @@ from sciform.api.formatted_number import FormattedNumber
 from sciform.format_utils.exponents import get_val_unc_exp
 from sciform.format_utils.grouping import add_separators
 from sciform.format_utils.make_strings import (
-    Number,
     construct_val_unc_exp_str,
     construct_val_unc_str,
     format_num_by_top_bottom_dig,
@@ -34,6 +33,7 @@ from sciform.options.option_types import (
 )
 
 if TYPE_CHECKING:  # pragma: no cover
+    from sciform.format_utils import Number
     from sciform.options.finalized_options import FinalizedOptions
     from sciform.options.input_options import InputOptions
 
