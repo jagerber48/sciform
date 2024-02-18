@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unittest
 from decimal import Decimal
 
@@ -37,7 +39,7 @@ class TestNumberUtils(unittest.TestCase):
                 )
 
     def test_get_bottom_dec_place(self):
-        cases = [
+        cases: list[tuple[Decimal, int]] = [
             (Decimal("10000000.0000001"), -7),
             (Decimal("10000000.0000010"), -6),
             (Decimal("10000000.0000100"), -5),
@@ -80,3 +82,68 @@ class TestNumberUtils(unittest.TestCase):
                     expected_output,
                     actual_output,
                 )
+
+    def test_get_val_unc_top_dec_place(self):
+        cases: list[tuple[tuple[Decimal, Decimal, int], int]] = [
+            ((Decimal("123"), Decimal("0.456"), 0), 0),
+            ((Decimal("123"), Decimal("0.456"), 1), 1),
+            ((Decimal("123"), Decimal("0.456"), 2), 2),
+            ((Decimal("123"), Decimal("0.456"), 3), 3),
+            ((Decimal("123"), Decimal("0.456"), 4), 4),
+            ((Decimal("123"), Decimal("0.456"), 5), 5),
+            ((Decimal("123"), Decimal("0.456"), 6), 6),
+        ]
+
+        left_pad_matching = False
+        for (val, unc, input_top_dec_place), expected_output in cases:
+            actual_output = numbers.get_val_unc_top_dec_place(
+                val_mantissa=val,
+                unc_mantissa=unc,
+                input_top_dec_place=input_top_dec_place,
+                left_pad_matching=left_pad_matching,
+            )
+            with self.subTest(
+                val_mantissa=val,
+                unc_mantissa=unc,
+                input_top_dec_place=input_top_dec_place,
+                left_pad_matching=left_pad_matching,
+                expected_output=expected_output,
+                actual_output=actual_output,
+            ):
+                self.assertEqual(expected_output, actual_output)
+
+    def test_get_val_unc_top_dec_place_left_pad_match(self):
+        cases: list[tuple[tuple[Decimal, Decimal, int], int]] = [
+            ((Decimal("123"), Decimal("0.456"), 0), 2),
+            ((Decimal("123"), Decimal("0.456"), 1), 2),
+            ((Decimal("123"), Decimal("0.456"), 2), 2),
+            ((Decimal("123"), Decimal("0.456"), 3), 3),
+            ((Decimal("123"), Decimal("0.456"), 4), 4),
+            ((Decimal("123"), Decimal("0.456"), 5), 5),
+            ((Decimal("123"), Decimal("0.456"), 6), 6),
+            ((Decimal("0.456"), Decimal("123"), 0), 2),
+            ((Decimal("0.456"), Decimal("123"), 1), 2),
+            ((Decimal("0.456"), Decimal("123"), 2), 2),
+            ((Decimal("0.456"), Decimal("123"), 3), 3),
+            ((Decimal("0.456"), Decimal("123"), 4), 4),
+            ((Decimal("0.456"), Decimal("123"), 5), 5),
+            ((Decimal("0.456"), Decimal("123"), 6), 6),
+        ]
+
+        left_pad_matching = True
+        for (val, unc, input_top_dec_place), expected_output in cases:
+            actual_output = numbers.get_val_unc_top_dec_place(
+                val_mantissa=val,
+                unc_mantissa=unc,
+                input_top_dec_place=input_top_dec_place,
+                left_pad_matching=left_pad_matching,
+            )
+            with self.subTest(
+                val_mantissa=val,
+                unc_mantissa=unc,
+                input_top_dec_place=input_top_dec_place,
+                left_pad_matching=left_pad_matching,
+                expected_output=expected_output,
+                actual_output=actual_output,
+            ):
+                self.assertEqual(expected_output, actual_output)

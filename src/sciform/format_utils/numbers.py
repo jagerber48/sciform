@@ -41,7 +41,7 @@ def get_bottom_dec_place(num: Decimal) -> int:
 def get_val_unc_top_dec_place(
     val_mantissa: Decimal,
     unc_mantissa: Decimal,
-    input_top_dec_place: int | AutoDigits,
+    input_top_dec_place: int,
     *,
     left_pad_matching: bool,
 ) -> int | AutoDigits:
