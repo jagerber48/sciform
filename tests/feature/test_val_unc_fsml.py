@@ -1,26 +1,26 @@
 import unittest
 
 from sciform import GlobalOptionsContext, SciNum
+from sciform.format_utils import Number
 
-ValUncFSMLCases = list[tuple[tuple[float, float], list[tuple[str, str]]]]
+ValUncFSMLCases = list[tuple[tuple[Number, Number], list[tuple[str, str]]]]
 NAN = float("nan")
 INF = float("inf")
 
 
-class TestFormatting(unittest.TestCase):
+class TestValUncFSML(unittest.TestCase):
     def run_val_unc_fsml_cases(self, cases_list: ValUncFSMLCases):
-        for (val, unc), formats_list in cases_list:
-            for format_spec, expected_str in formats_list:
-                num = SciNum(val, unc)
-                num_str = f"{num:{format_spec}}"
+        for (val, unc), formatter_cases in cases_list:
+            for format_spec, expected_output in formatter_cases:
+                actual_output = f"{SciNum(val, unc):{format_spec}}"
                 with self.subTest(
-                    val=val,
-                    unc=unc,
+                    value=val,
+                    uncertainty=unc,
                     format_spec=format_spec,
-                    expected_str=expected_str,
-                    actual_str=num_str,
+                    expected_output=expected_output,
+                    actual_output=actual_output,
                 ):
-                    self.assertEqual(num_str, expected_str)
+                    self.assertEqual(expected_output, actual_output)
 
     def test_fixed(self):
         cases_list = [
