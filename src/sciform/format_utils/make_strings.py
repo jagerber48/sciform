@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from decimal import Decimal
-from typing import Union
+from typing import TYPE_CHECKING
 
 from sciform.format_utils.exponents import get_exp_str
 from sciform.format_utils.numbers import (
@@ -17,7 +16,8 @@ from sciform.options.option_types import (
     SignModeEnum,
 )
 
-Number = Union[Decimal, float, int, str]
+if TYPE_CHECKING:
+    from decimal import Decimal
 
 
 def get_sign_str(num: Decimal, sign_mode: SignModeEnum) -> str:
