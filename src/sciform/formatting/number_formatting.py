@@ -18,10 +18,10 @@ from sciform.format_utils.make_strings import (
 )
 from sciform.format_utils.numbers import (
     get_mantissa_exp_base,
-    get_val_unc_top_digit,
+    get_val_unc_top_dec_place,
     parse_mantissa_from_ascii_exp_str,
 )
-from sciform.format_utils.rounding import get_round_digit, round_val_unc
+from sciform.format_utils.rounding import get_round_dec_place, round_val_unc
 from sciform.formatting.parser import parse_val_unc_from_input
 from sciform.options.conversion import finalize_populated_options, populate_options
 from sciform.options.option_types import (
@@ -122,7 +122,7 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
     exp_mode = options.exp_mode
     ndigits = options.ndigits
     mantissa, temp_exp_val, base = get_mantissa_exp_base(num, exp_mode, exp_val)
-    round_digit = get_round_digit(mantissa, round_mode, ndigits)
+    round_digit = get_round_dec_place(mantissa, round_mode, ndigits)
     mantissa_rounded = round(mantissa, -round_digit)
 
     """
@@ -131,7 +131,7 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
     """
     rounded_num = mantissa_rounded * Decimal(base) ** Decimal(temp_exp_val)
     mantissa, exp_val, base = get_mantissa_exp_base(rounded_num, exp_mode, exp_val)
-    round_digit = get_round_digit(mantissa, round_mode, ndigits)
+    round_digit = get_round_dec_place(mantissa, round_mode, ndigits)
     mantissa_rounded = round(mantissa, -int(round_digit))
     mantissa_rounded = cast(Decimal, mantissa_rounded)
 
@@ -247,7 +247,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         input_exp=exp_val,
     )
 
-    new_top_digit = get_val_unc_top_digit(
+    new_top_dec_place = get_val_unc_top_dec_place(
         val_mantissa,
         unc_mantissa,
         options.left_pad_dec_place,
@@ -271,7 +271,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     """
     val_format_options = replace(
         options,
-        left_pad_dec_place=new_top_digit,
+        left_pad_dec_place=new_top_dec_place,
         round_mode=RoundModeEnum.DEC_PLACE,
         ndigits=ndigits,
         exp_mode=exp_mode,

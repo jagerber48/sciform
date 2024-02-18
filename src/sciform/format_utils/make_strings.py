@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from sciform.format_utils.exponents import get_exp_str
 from sciform.format_utils.numbers import (
-    get_top_digit,
+    get_top_dec_place,
 )
 from sciform.options.option_types import (
     DecimalSeparatorEnums,
@@ -46,10 +46,14 @@ def get_sign_str(num: Decimal, sign_mode: SignModeEnum) -> str:
     return sign_str
 
 
-def get_pad_str(left_pad_char: str, top_digit: int, top_padded_digit: int) -> str:
-    """Get the string padding from top_digit place to top_padded_digit place."""
-    if top_padded_digit > top_digit:
-        pad_len = top_padded_digit - max(top_digit, 0)
+def get_pad_str(
+        left_pad_char: str,
+        top_dec_place: int,
+        top_padded_dec_place: int
+) -> str:
+    """Get the string padding from top_dec_place place to top_padded_dec_place place."""
+    if top_padded_dec_place > top_dec_place:
+        pad_len = top_padded_dec_place - max(top_dec_place, 0)
         pad_str = left_pad_char * pad_len
     else:
         pad_str = ""
@@ -58,19 +62,19 @@ def get_pad_str(left_pad_char: str, top_digit: int, top_padded_digit: int) -> st
 
 def format_num_by_top_bottom_dig(
     num: Decimal,
-    target_top_digit: int,
-    target_bottom_digit: int,
+    target_top_dec_place: int,
+    target_bottom_dec_place: int,
     sign_mode: SignModeEnum,
     left_pad_char: str,
 ) -> str:
-    """Format a number according to specified top and bottom digit places."""
-    print_prec = max(0, -target_bottom_digit)
+    """Format a number according to specified top and bottom decimal places."""
+    print_prec = max(0, -target_bottom_dec_place)
     abs_mantissa_str = f"{abs(num):.{print_prec}f}"
 
     sign_str = get_sign_str(num, sign_mode)
 
-    num_top_digit = get_top_digit(num)
-    pad_str = get_pad_str(left_pad_char, num_top_digit, target_top_digit)
+    num_top_dec_place = get_top_dec_place(num)
+    pad_str = get_pad_str(left_pad_char, num_top_dec_place, target_top_dec_place)
     return f"{sign_str}{pad_str}{abs_mantissa_str}"
 
 

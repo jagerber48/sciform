@@ -8,11 +8,11 @@ from sciform.format_utils.make_strings import (
 )
 from sciform.format_utils.numbers import (
     get_mantissa_exp_base,
-    get_top_digit,
-    get_top_digit_binary,
+    get_top_dec_place,
+    get_top_dec_place_binary,
     parse_mantissa_from_ascii_exp_str,
 )
-from sciform.format_utils.rounding import get_round_digit
+from sciform.format_utils.rounding import get_round_dec_place
 from sciform.formatting.number_formatting import format_non_finite
 from sciform.formatting.output_conversion import _make_exp_str, convert_sciform_format
 from sciform.options import option_types
@@ -162,11 +162,11 @@ class TestInvalidOptions(unittest.TestCase):
             finalize_input_options(InputOptions()),
         )
 
-    def test_get_top_digit_infinite(self):
-        self.assertEqual(get_top_digit(Decimal("nan")), 0)
+    def test_get_top_dec_place_infinite(self):
+        self.assertEqual(get_top_dec_place(Decimal("nan")), 0)
 
-    def test_get_top_digit_binary_infinite(self):
-        self.assertEqual(get_top_digit_binary(Decimal("nan")), 0)
+    def test_get_top_dec_place_binary_infinite(self):
+        self.assertEqual(get_top_dec_place_binary(Decimal("nan")), 0)
 
     def test_get_mantissa_exp_base_fixed_point_set_exp(self):
         self.assertRaises(
@@ -210,7 +210,7 @@ class TestInvalidOptions(unittest.TestCase):
     def test_get_round_digit_bad_round_mode(self):
         self.assertRaises(
             ValueError,
-            get_round_digit,
+            get_round_dec_place,
             num=Decimal(123.456),
             round_mode="none",
             ndigits=0,

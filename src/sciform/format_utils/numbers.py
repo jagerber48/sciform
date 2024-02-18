@@ -15,7 +15,7 @@ from sciform.options.option_types import (
 )
 
 
-def get_top_digit(num: Decimal) -> int:
+def get_top_dec_place(num: Decimal) -> int:
     """Get the decimal place of a decimal's most significant digit."""
     if not num.is_finite() or num == 0:
         return 0
@@ -23,14 +23,14 @@ def get_top_digit(num: Decimal) -> int:
     return len(digits) + exp - 1
 
 
-def get_top_digit_binary(num: Decimal) -> int:
+def get_top_dec_place_binary(num: Decimal) -> int:
     """Get the decimal place of a decimal's most significant digit."""
     if not num.is_finite() or num == 0:
         return 0
     return floor(log2(abs(num)))
 
 
-def get_bottom_digit(num: Decimal) -> int:
+def get_bottom_dec_place(num: Decimal) -> int:
     """Get the decimal place of a decimal's least significant digit."""
     if not num.is_finite():
         return 0
@@ -38,25 +38,25 @@ def get_bottom_digit(num: Decimal) -> int:
     return exp
 
 
-def get_val_unc_top_digit(
+def get_val_unc_top_dec_place(
     val_mantissa: Decimal,
     unc_mantissa: Decimal,
-    input_top_digit: int | AutoDigits,
+    input_top_dec_place: int | AutoDigits,
     *,
     left_pad_matching: bool,
 ) -> int | AutoDigits:
-    """Get top digit place for value/uncertainty formatting."""
+    """Get top decimal place for value/uncertainty formatting."""
     if left_pad_matching:
-        val_top_digit = get_top_digit(val_mantissa)
-        unc_top_digit = get_top_digit(unc_mantissa)
-        new_top_digit = max(
-            input_top_digit,
-            val_top_digit,
-            unc_top_digit,
+        val_top_dec_place = get_top_dec_place(val_mantissa)
+        unc_top_dec_place = get_top_dec_place(unc_mantissa)
+        new_top_dec_place = max(
+            input_top_dec_place,
+            val_top_dec_place,
+            unc_top_dec_place,
         )
     else:
-        new_top_digit = input_top_digit
-    return new_top_digit
+        new_top_dec_place = input_top_dec_place
+    return new_top_dec_place
 
 
 def get_fixed_exp(
@@ -74,7 +74,7 @@ def get_scientific_exp(
     input_exp: int | type(AutoExpVal),
 ) -> int:
     """Get the exponent for scientific formatting mode."""
-    return get_top_digit(num) if input_exp is AutoExpVal else input_exp
+    return get_top_dec_place(num) if input_exp is AutoExpVal else input_exp
 
 
 def get_engineering_exp(
@@ -85,7 +85,7 @@ def get_engineering_exp(
 ) -> int:
     """Get the exponent for engineering formatting modes."""
     if input_exp is AutoExpVal:
-        exp_val = get_top_digit(num)
+        exp_val = get_top_dec_place(num)
         exp_val = exp_val // 3 * 3 if not shifted else (exp_val + 1) // 3 * 3
     else:
         if input_exp % 3 != 0:
@@ -106,7 +106,7 @@ def get_binary_exp(
 ) -> int:
     """Get the exponent for binary formatting modes."""
     if input_exp is AutoExpVal:
-        exp_val = get_top_digit_binary(num)
+        exp_val = get_top_dec_place_binary(num)
         if iec:
             exp_val = (exp_val // 10) * 10
     else:
