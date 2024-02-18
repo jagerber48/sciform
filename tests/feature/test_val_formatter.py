@@ -1,5 +1,5 @@
 import unittest
-from decimal import Decimal
+from decimal import Decimal, localcontext
 
 from sciform import AutoDigits, Formatter
 from sciform.format_utils import Number
@@ -322,3 +322,39 @@ class TestValFormatter(unittest.TestCase):
     def test_decimal_normalization(self):
         formatter = Formatter(ndigits=AutoDigits)
         self.assertEqual(formatter(Decimal("1.0")), formatter(Decimal("1.00")))
+
+    def test_long_decimal(self):
+        cases_list = [
+            (
+                Decimal("6834682610.9043126"),
+                [
+                    (
+                        Formatter(
+                            exp_mode="engineering",
+                            exp_format="prefix",
+                            ndigits=AutoDigits,
+                            upper_separator=" ",
+                            lower_separator=" ",
+                        ),
+                        "6.834 682 610 904 312 6 G",
+                    ),
+                ],
+            ),
+            (
+                Decimal("123456789987654321.123456789987654321"),
+                [
+                    (
+                        Formatter(
+                            exp_mode="fixed_point",
+                            ndigits=AutoDigits,
+                        ),
+                        "123456789987654321.123456789987654321",
+                    ),
+                ],
+            ),
+        ]
+
+        with localcontext() as ctx:
+            # Default precision of 28 isn't sufficient for the cases above.
+            ctx.prec = 50
+            self.run_val_formatter_cases(cases_list)
