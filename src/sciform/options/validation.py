@@ -23,6 +23,7 @@ def validate_options(
     validate_extra_translations(options)
     validate_left_pad_options(options)
 
+
 def validate_sig_fig_round_mode(
     options: InputOptions | PopulatedOptions | FinalizedOptions,
 ) -> None:
@@ -133,18 +134,13 @@ def validate_left_pad_options(
 ) -> None:
     """Validate left padding options."""
     dec_place_msg = (
-            f"left_pad_dec_place must an an int >= 0, not {options.left_pad_dec_place}."
-        )
+        f"left_pad_dec_place must an an int >= 0, not {options.left_pad_dec_place}."
+    )
     if options.left_pad_dec_place is not None:
         if not isinstance(options.left_pad_dec_place, int):
             raise TypeError(dec_place_msg)
         if options.left_pad_dec_place < 0:
             raise ValueError(dec_place_msg)
-    if (
-        options.left_pad_char is not None
-        and options.left_pad_char not in [0, "0", " "]
-    ):
-        msg = (
-            f'left_pad_char must be in [" ", "0", 0], not {options.left_pad_char}.'
-        )
+    if options.left_pad_char is not None and options.left_pad_char not in [0, "0", " "]:
+        msg = f'left_pad_char must be in [" ", "0", 0], not {options.left_pad_char}.'
         raise ValueError(msg)

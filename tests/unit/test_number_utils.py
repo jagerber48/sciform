@@ -168,7 +168,7 @@ class TestNumberUtils(unittest.TestCase):
         self.assertRaises(
             ValueError,
             numbers.get_fixed_exp,
-            3
+            3,
         )
 
     def test_get_scientific_exp(self):
