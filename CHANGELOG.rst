@@ -27,6 +27,11 @@ Changed
     sub-package.
   * Sort tests into feature and unit tests.
 
+* Extra translations dictionaries are now checked so that keys must be
+  integers and values must consist of only English alphabetic
+  characters.
+  [`#157 <https://github.com/jagerber48/sciform/issues/157>`_]
+
 ----
 
 0.35.0 (2024-02-16)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING, get_args
 
 from sciform.options import option_types
@@ -19,6 +20,7 @@ def validate_options(
     validate_sig_fig_round_mode(options)
     validate_exp_val(options)
     validate_separator_options(options)
+    validate_extra_translations(options)
 
 
 def validate_sig_fig_round_mode(
@@ -99,3 +101,28 @@ def validate_separator_options(
             f"not {options.lower_separator}."
         )
         raise ValueError(msg)
+
+
+def validate_extra_translations(
+    options: InputOptions | PopulatedOptions | FinalizedOptions,
+) -> None:
+    """Validate translation dictionary have int keys and alphabetic values."""
+    translations_dicts = [
+        options.extra_si_prefixes,
+        options.extra_iec_prefixes,
+        options.extra_parts_per_forms,
+    ]
+
+    for translation_dict in translations_dicts:
+        if translation_dict is not None:
+            for key, value in translation_dict.items():
+                if not isinstance(key, int):
+                    msg = f'Translation dictionary keys must be integers, not "{key}".'
+                    raise TypeError(msg)
+                if value is not None and not re.match(r"[a-zA-Z]+", value):
+                    msg = (
+                        f"Translation dictionary values may only contain lower or "
+                        f"uppercase ASCII characters from the English alphabet, not "
+                        f'"{value}".'
+                    )
+                    raise ValueError(msg)

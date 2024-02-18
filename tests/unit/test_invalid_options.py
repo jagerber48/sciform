@@ -278,3 +278,17 @@ class TestInvalidOptions(unittest.TestCase):
             parse_mantissa_from_ascii_exp_str,
             "1.23c+04",
         )
+
+    def test_invalid_translation_key(self):
+        self.assertRaises(
+            TypeError,
+            Formatter,
+            extra_si_prefixes={"3": "k"},
+        )
+
+    def test_invalid_translation_value(self):
+        self.assertRaises(
+            ValueError,
+            Formatter,
+            extra_si_prefixes={-10: "Å"},
+        )
