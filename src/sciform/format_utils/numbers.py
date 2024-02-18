@@ -19,7 +19,7 @@ def get_top_dec_place(num: Decimal) -> int:
     """Get the decimal place of a decimal's most significant digit."""
     if not num.is_finite() or num == 0:
         return 0
-    _, digits, exp = num.as_tuple()
+    _, digits, exp = num.normalize().as_tuple()
     return len(digits) + exp - 1
 
 
@@ -34,7 +34,7 @@ def get_bottom_dec_place(num: Decimal) -> int:
     """Get the decimal place of a decimal's least significant digit."""
     if not num.is_finite():
         return 0
-    _, _, exp = num.as_tuple()
+    _, _, exp = num.normalize().as_tuple()
     return exp
 
 
