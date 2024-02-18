@@ -16,7 +16,7 @@ Unreleased
 Changed
 ^^^^^^^
 
-* Major source code reorganization.
+* Major code reorganization.
   [`#152 <https://github.com/jagerber48/sciform/issues/152>`_]
 
   * Move modules containing public interfaces into an ``api``
@@ -25,6 +25,7 @@ Changed
     a ``format_utils`` sub-package.
   * Collect the main formatting algorithms into a ``formatting``
     sub-package.
+  * Sort tests into feature and unit tests.
 
 ----
 
