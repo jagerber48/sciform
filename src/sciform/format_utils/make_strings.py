@@ -47,9 +47,9 @@ def get_sign_str(num: Decimal, sign_mode: SignModeEnum) -> str:
 
 
 def get_pad_str(
-        left_pad_char: str,
-        top_dec_place: int,
-        top_padded_dec_place: int
+    left_pad_char: str,
+    top_dec_place: int,
+    top_padded_dec_place: int,
 ) -> str:
     """Get the string padding from top_dec_place place to top_padded_dec_place place."""
     if top_padded_dec_place > top_dec_place:
