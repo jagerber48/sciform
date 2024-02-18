@@ -3,16 +3,17 @@ from __future__ import annotations
 import unittest
 
 from sciform import Formatter
+from sciform.format_utils import Number
 from sciform.formatting.number_formatting import FormattedNumber
 from sciform.formatting.output_conversion import convert_sciform_format
 from sciform.options.conversion import populate_options
 from sciform.options.input_options import InputOptions
 
 ValFormatterCases = list[
-    tuple[float, list[tuple[Formatter, tuple[str, str, str, str]]]]
+    tuple[Number, list[tuple[Formatter, tuple[str, str, str, str]]]]
 ]
 ValUncFormatterCases = list[
-    tuple[tuple[float, float], list[tuple[Formatter, tuple[str, str, str, str]]]]
+    tuple[tuple[Number, Number], list[tuple[Formatter, tuple[str, str, str, str]]]]
 ]
 
 
