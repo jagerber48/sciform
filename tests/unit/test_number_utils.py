@@ -27,17 +27,20 @@ class TestNumberUtils(unittest.TestCase):
             (Decimal("1e+20"), 20),
         ]
 
-        for number, expected_output in cases:
-            actual_output = numbers.get_top_dec_place(number)
-            with self.subTest(
-                number=number,
-                expected_output=expected_output,
-                actual_output=actual_output,
-            ):
-                self.assertEqual(
-                    expected_output,
-                    actual_output,
-                )
+        for base_number, expected_output in cases:
+            for factor in [Decimal(1), Decimal(5)]:
+                test_number = factor * base_number
+                actual_output = numbers.get_top_dec_place(test_number)
+                with self.subTest(
+                    base_number=base_number,
+                    test_number=test_number,
+                    expected_output=expected_output,
+                    actual_output=actual_output,
+                ):
+                    self.assertEqual(
+                        expected_output,
+                        actual_output,
+                    )
 
     def test_get_bottom_dec_place(self):
         cases: list[tuple[Decimal, int]] = [
@@ -74,10 +77,13 @@ class TestNumberUtils(unittest.TestCase):
             (Decimal("1E+7"), +7),
         ]
 
-        for number, expected_output in cases:
-            actual_output = numbers.get_bottom_dec_place(number)
+        for base_number, expected_output in cases:
+            for factor in [Decimal(1), Decimal(5)]:
+                test_number = factor * base_number
+            actual_output = numbers.get_bottom_dec_place(test_number)
             with self.subTest(
-                number=number,
+                base_number=base_number,
+                test_number=test_number,
                 expected_output=expected_output,
                 actual_output=actual_output,
             ):
@@ -201,15 +207,226 @@ class TestNumberUtils(unittest.TestCase):
             ((Decimal("0.000001"), 3), 3),
         ]
 
-        for (number, input_exp), expected_output in cases:
-            actual_output = numbers.get_scientific_exp(
-                number,
-                input_exp,
-            )
-            with self.subTest(
-                number=number,
-                input_exp=input_exp,
-                expected_output=expected_output,
-                actual_output=actual_output,
-            ):
-                self.assertEqual(expected_output, actual_output)
+        for (base_number, input_exp), expected_output in cases:
+            for factor in [Decimal(1), Decimal(5)]:
+                test_number = factor * base_number
+                actual_output = numbers.get_scientific_exp(
+                    test_number,
+                    input_exp,
+                )
+                with self.subTest(
+                    base_number=base_number,
+                    test_number=test_number,
+                    input_exp=input_exp,
+                    expected_output=expected_output,
+                    actual_output=actual_output,
+                ):
+                    self.assertEqual(expected_output, actual_output)
+
+    def test_get_engineering_exp(self):
+        cases: list[tuple[tuple[Decimal, int | type(AutoExpVal)], int]] = [
+            ((Decimal("1000000"), AutoExpVal), 6),
+            ((Decimal("100000"), AutoExpVal), 3),
+            ((Decimal("10000"), AutoExpVal), 3),
+            ((Decimal("1000"), AutoExpVal), 3),
+            ((Decimal("100"), AutoExpVal), 0),
+            ((Decimal("10"), AutoExpVal), 0),
+            ((Decimal("1"), AutoExpVal), 0),
+            ((Decimal("0.1"), AutoExpVal), -3),
+            ((Decimal("0.01"), AutoExpVal), -3),
+            ((Decimal("0.001"), AutoExpVal), -3),
+            ((Decimal("0.0001"), AutoExpVal), -6),
+            ((Decimal("0.00001"), AutoExpVal), -6),
+            ((Decimal("0.000001"), AutoExpVal), -6),
+            ((Decimal("1000000"), 3), 3),
+            ((Decimal("100000"), 3), 3),
+            ((Decimal("10000"), 3), 3),
+            ((Decimal("1000"), 3), 3),
+            ((Decimal("100"), 3), 3),
+            ((Decimal("10"), 3), 3),
+            ((Decimal("1"), 3), 3),
+            ((Decimal("0.1"), 3), 3),
+            ((Decimal("0.01"), 3), 3),
+            ((Decimal("0.001"), 3), 3),
+            ((Decimal("0.0001"), 3), 3),
+            ((Decimal("0.00001"), 3), 3),
+            ((Decimal("0.000001"), 3), 3),
+        ]
+
+        shifted = False
+        for (base_number, input_exp), expected_output in cases:
+            for factor in [Decimal(1), Decimal(5)]:
+                test_number = factor * base_number
+                actual_output = numbers.get_engineering_exp(
+                    base_number,
+                    input_exp,
+                    shifted=shifted,
+                )
+                with self.subTest(
+                    base_number=base_number,
+                    test_number=test_number,
+                    input_exp=input_exp,
+                    shifted=shifted,
+                    expected_output=expected_output,
+                    actual_output=actual_output,
+                ):
+                    self.assertEqual(expected_output, actual_output)
+
+    def test_get_engineering_shifted_exp(self):
+        cases: list[tuple[tuple[Decimal, int | type(AutoExpVal)], int]] = [
+            ((Decimal("1000000"), AutoExpVal), 6),
+            ((Decimal("100000"), AutoExpVal), 6),
+            ((Decimal("10000"), AutoExpVal), 3),
+            ((Decimal("1000"), AutoExpVal), 3),
+            ((Decimal("100"), AutoExpVal), 3),
+            ((Decimal("10"), AutoExpVal), 0),
+            ((Decimal("1"), AutoExpVal), 0),
+            ((Decimal("0.1"), AutoExpVal), 0),
+            ((Decimal("0.01"), AutoExpVal), -3),
+            ((Decimal("0.001"), AutoExpVal), -3),
+            ((Decimal("0.0001"), AutoExpVal), -3),
+            ((Decimal("0.00001"), AutoExpVal), -6),
+            ((Decimal("0.000001"), AutoExpVal), -6),
+            ((Decimal("1000000"), 3), 3),
+            ((Decimal("100000"), 3), 3),
+            ((Decimal("10000"), 3), 3),
+            ((Decimal("1000"), 3), 3),
+            ((Decimal("100"), 3), 3),
+            ((Decimal("10"), 3), 3),
+            ((Decimal("1"), 3), 3),
+            ((Decimal("0.1"), 3), 3),
+            ((Decimal("0.01"), 3), 3),
+            ((Decimal("0.001"), 3), 3),
+            ((Decimal("0.0001"), 3), 3),
+            ((Decimal("0.00001"), 3), 3),
+            ((Decimal("0.000001"), 3), 3),
+        ]
+
+        shifted = True
+        for (base_number, input_exp), expected_output in cases:
+            for factor in [Decimal(1), Decimal(5)]:
+                test_number = factor * base_number
+                actual_output = numbers.get_engineering_exp(
+                    base_number,
+                    input_exp,
+                    shifted=shifted,
+                )
+                with self.subTest(
+                    base_number=base_number,
+                    test_number=test_number,
+                    input_exp=input_exp,
+                    shifted=shifted,
+                    expected_output=expected_output,
+                    actual_output=actual_output,
+                ):
+                    self.assertEqual(expected_output, actual_output)
+
+    def test_get_engineering_exp_bad_input_exp(self):
+        self.assertRaises(
+            ValueError,
+            numbers.get_engineering_exp,
+            Decimal("1.0"),
+            2,
+        )
+
+    def test_get_binary_exp(self):
+        cases: list[tuple[tuple[Decimal, int | type(AutoExpVal)], int]] = [
+            ((Decimal("0.0625"), AutoExpVal), -4),
+            ((Decimal("0.125"), AutoExpVal), -3),
+            ((Decimal("0.25"), AutoExpVal), -2),
+            ((Decimal("0.5"), AutoExpVal), -1),
+            ((Decimal("1"), AutoExpVal), 0),
+            ((Decimal("2"), AutoExpVal), 1),
+            ((Decimal("4"), AutoExpVal), 2),
+            ((Decimal("8"), AutoExpVal), 3),
+            ((Decimal("16"), AutoExpVal), 4),
+            ((Decimal("32"), AutoExpVal), 5),
+            ((Decimal("64"), AutoExpVal), 6),
+            ((Decimal("0.0625"), 3), 3),
+            ((Decimal("0.125"), 3), 3),
+            ((Decimal("0.25"), 3), 3),
+            ((Decimal("0.5"), 3), 3),
+            ((Decimal("1"), 3), 3),
+            ((Decimal("2"), 3), 3),
+            ((Decimal("4"), 3), 3),
+            ((Decimal("8"), 3), 3),
+            ((Decimal("16"), 3), 3),
+            ((Decimal("32"), 3), 3),
+            ((Decimal("64"), 3), 3),
+        ]
+
+        iec: bool = False
+        for (base_number, input_exp), expected_output in cases:
+            for factor in [Decimal(1), Decimal(1.5)]:
+                test_number = factor * base_number
+                actual_output = numbers.get_binary_exp(
+                    test_number,
+                    input_exp,
+                    iec=iec,
+                )
+                with self.subTest(
+                    base_number=base_number,
+                    test_number=test_number,
+                    input_exp=input_exp,
+                    iec=iec,
+                    expected_output=expected_output,
+                    actual_output=actual_output,
+                ):
+                    self.assertEqual(expected_output, actual_output)
+
+    def test_get_binary_iec_exp(self):
+        cases: list[tuple[tuple[Decimal, int | type(AutoExpVal)], int]] = [
+            ((Decimal("0.0625"), AutoExpVal), -10),
+            ((Decimal("0.125"), AutoExpVal), -10),
+            ((Decimal("0.25"), AutoExpVal), -10),
+            ((Decimal("0.5"), AutoExpVal), -10),
+            ((Decimal("1"), AutoExpVal), 0),
+            ((Decimal("2"), AutoExpVal), 0),
+            ((Decimal("4"), AutoExpVal), 0),
+            ((Decimal("8"), AutoExpVal), 0),
+            ((Decimal("16"), AutoExpVal), 0),
+            ((Decimal("32"), AutoExpVal), 0),
+            ((Decimal("64"), AutoExpVal), 0),
+            ((Decimal("1024"), AutoExpVal), 10),
+            ((Decimal(2**20), AutoExpVal), 20),
+            ((Decimal(2**30), AutoExpVal), 30),
+            ((Decimal("0.0625"), 10), 10),
+            ((Decimal("0.125"), 10), 10),
+            ((Decimal("0.25"), 10), 10),
+            ((Decimal("0.5"), 10), 10),
+            ((Decimal("1"), 10), 10),
+            ((Decimal("2"), 10), 10),
+            ((Decimal("4"), 10), 10),
+            ((Decimal("8"), 10), 10),
+            ((Decimal("16"), 10), 10),
+            ((Decimal("32"), 10), 10),
+            ((Decimal("64"), 10), 10),
+        ]
+
+        iec: bool = True
+        for (base_number, input_exp), expected_output in cases:
+            for factor in [Decimal(1), Decimal(1.5)]:
+                test_number = factor * base_number
+                actual_output = numbers.get_binary_exp(
+                    test_number,
+                    input_exp,
+                    iec=iec,
+                )
+                with self.subTest(
+                    base_number=base_number,
+                    test_number=test_number,
+                    input_exp=input_exp,
+                    iec=iec,
+                    expected_output=expected_output,
+                    actual_output=actual_output,
+                ):
+                    self.assertEqual(expected_output, actual_output)
+
+    def test_get_binary_iec_bad_input_exp(self):
+        self.assertRaises(
+            ValueError,
+            numbers.get_binary_exp,
+            Decimal("1.5"),
+            5,
+            iec=True,
+        )
