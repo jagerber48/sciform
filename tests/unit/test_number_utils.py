@@ -893,3 +893,52 @@ class TestNumberUtils(unittest.TestCase):
                 self.assertEqual(expected_mantissa, actual_mantissa)
                 self.assertEqual(expected_exp, actual_exp)
                 self.assertEqual(expected_base, actual_base)
+
+    def test_get_mantissa_exp_base_invalid_exp_mode(self):
+        self.assertRaises(
+            ValueError,
+            numbers.get_mantissa_exp_base,
+            Decimal("3"),
+            exp_mode="fixed_point",
+            input_exp=3,
+        )
+
+    def test_parse_mantissa_from_ascii_exp_str(self):
+        cases = [
+            ("123.456e+03", "123.456"),
+            ("123456e+03", "123456"),
+            ("123_456e+03", "123_456"),
+            ("123_456.789 876e+03", "123_456.789 876"),
+            ("123.456", "123.456"),
+            ("123456", "123456"),
+            ("123_456", "123_456"),
+            ("123_456.789 876", "123_456.789 876"),
+            ("1E+03", "1"),
+            ("(nan)b-4", "nan"),
+            ("(nan)B-4", "nan"),
+            ("inf", "inf"),
+            ("-inf", "-inf"),
+        ]
+        for input_string, expected_output in cases:
+            actual_output = numbers.parse_mantissa_from_ascii_exp_str(input_string)
+            with self.subTest(
+                input_string=input_string,
+                expected_output=expected_output,
+                actual_output=actual_output,
+            ):
+                self.assertEqual(expected_output, actual_output)
+
+    def test_parse_mantissa_from_ascii_exp_str_invalid(self):
+        cases = [
+            "1.2c+03",
+            "(nan)",
+            "(1.2 ± 0.3)e+04",
+        ]
+
+        for input_str in cases:
+            with self.subTest(input_str=input_str):
+                self.assertRaises(
+                    ValueError,
+                    numbers.parse_mantissa_from_ascii_exp_str,
+                    input_str,
+                )

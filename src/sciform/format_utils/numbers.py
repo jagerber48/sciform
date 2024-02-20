@@ -7,7 +7,11 @@ from decimal import Decimal
 from math import floor, log2
 from typing import Literal
 
-from sciform.formatting.parser import any_val_pattern
+from sciform.formatting.parser import (
+    ascii_exp_pattern,
+    finite_val_pattern,
+    non_finite_val_pattern,
+)
 from sciform.options.option_types import (
     AutoDigits,
     AutoExpVal,
@@ -156,21 +160,28 @@ def get_mantissa_exp_base(
     return mantissa, exp, base
 
 
-# Optional parentheses needed to handle (nan)e+00 case
-mantissa_exp_pattern = re.compile(
-    rf"""
-    ^
-    \(?(?P<mantissa_str>{any_val_pattern})\)?
-    (?P<exp_str>[eEbB].*?)?
-    $
-""",
-    re.VERBOSE,
-)
+# language=pythonverboseregexp  noqa: ERA001
+no_exp_pattern = rf"^(?P<mantissa>{non_finite_val_pattern})$"
+# language=pythonverboseregexp  noqa: ERA001
+optional_exp_pattern = rf"""
+^(?P<mantissa>{finite_val_pattern})(?P<exp>{ascii_exp_pattern})?$
+"""
+# language=pythonverboseregexp  noqa: ERA001
+always_exp_pattern = rf"""
+^
+\((?P<mantissa>{non_finite_val_pattern})\)
+(?P<exp>{ascii_exp_pattern})
+$
+"""
 
 
 def parse_mantissa_from_ascii_exp_str(number_str: str) -> str:
     """Break val/unc mantissa/exp strings into mantissa strings and an exp string."""
-    if match := mantissa_exp_pattern.match(number_str):
+    if match := re.match(no_exp_pattern, number_str, re.VERBOSE):
+        return match.group("mantissa_str")
+    if match := re.match(optional_exp_pattern, number_str, re.VERBOSE):
+        return match.group("mantissa_str")
+    if match := re.match(always_exp_pattern, number_str, re.VERBOSE):
         return match.group("mantissa_str")
     msg = f'Invalid number string "{number_str}".'
     raise ValueError(msg)
