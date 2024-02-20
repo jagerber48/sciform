@@ -178,10 +178,10 @@ $
 def parse_mantissa_from_ascii_exp_str(number_str: str) -> str:
     """Break val/unc mantissa/exp strings into mantissa strings and an exp string."""
     if match := re.match(no_exp_pattern, number_str, re.VERBOSE):
-        return match.group("mantissa_str")
+        return match.group("mantissa")
     if match := re.match(optional_exp_pattern, number_str, re.VERBOSE):
-        return match.group("mantissa_str")
+        return match.group("mantissa")
     if match := re.match(always_exp_pattern, number_str, re.VERBOSE):
-        return match.group("mantissa_str")
+        return match.group("mantissa")
     msg = f'Invalid number string "{number_str}".'
     raise ValueError(msg)

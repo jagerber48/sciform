@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 from decimal import Decimal
+from math import isnan
 from typing import Union
 
 from sciform import AutoExpVal
@@ -17,6 +18,12 @@ MantissaExpBaseCase = list[
 
 
 class TestNumberUtils(unittest.TestCase):
+    def assertNanEqual(self, first, second, msg=None):  # noqa: N802
+        if isnan(first):
+            self.assertTrue(isnan(second), msg=msg)
+        else:
+            self.assertEqual(first, second, msg=msg)
+
     def test_get_top_dec_place(self):
         cases = [
             (Decimal("1e-20"), -20),
@@ -34,12 +41,39 @@ class TestNumberUtils(unittest.TestCase):
             (Decimal("1e+05"), 5),
             (Decimal("1e+06"), 6),
             (Decimal("1e+20"), 20),
+            (Decimal("nan"), 0),
+            (Decimal("-inf"), 0),
+            (Decimal("0"), 0),
         ]
 
         for base_number, expected_output in cases:
             for factor in [Decimal(1), Decimal(5)]:
                 test_number = factor * base_number
                 actual_output = numbers.get_top_dec_place(test_number)
+                with self.subTest(
+                    base_number=base_number,
+                    test_number=test_number,
+                    expected_output=expected_output,
+                    actual_output=actual_output,
+                ):
+                    self.assertEqual(
+                        expected_output,
+                        actual_output,
+                    )
+
+    def test_get_top_dec_place_binary(self):
+        cases = [
+            (Decimal("32"), 5),
+            (Decimal("64"), 6),
+            (Decimal("nan"), 0),
+            (Decimal("-inf"), 0),
+            (Decimal("0"), 0),
+        ]
+
+        for base_number, expected_output in cases:
+            for factor in [Decimal(1), Decimal(1.5)]:
+                test_number = factor * base_number
+                actual_output = numbers.get_top_dec_place_binary(test_number)
                 with self.subTest(
                     base_number=base_number,
                     test_number=test_number,
@@ -84,6 +118,9 @@ class TestNumberUtils(unittest.TestCase):
             (Decimal("101E+5"), +5),
             (Decimal("11E+6"), +6),
             (Decimal("1E+7"), +7),
+            (Decimal("nan"), 0),
+            (Decimal("inf"), 0),
+            (Decimal("-inf"), 0),
         ]
 
         for base_number, expected_output in cases:
@@ -642,6 +679,18 @@ class TestNumberUtils(unittest.TestCase):
                 (Decimal(1.5 * 2**10), ExpModeEnum.BINARY_IEC, AutoExpVal),
                 (Decimal("1.5"), 10, 2),
             ),
+            (
+                (Decimal("nan"), ExpModeEnum.FIXEDPOINT, AutoExpVal),
+                (Decimal("nan"), 0, 10),
+            ),
+            (
+                (Decimal("inf"), ExpModeEnum.SCIENTIFIC, AutoExpVal),
+                (Decimal("inf"), 0, 10),
+            ),
+            (
+                (Decimal("-inf"), ExpModeEnum.SCIENTIFIC, 5),
+                (Decimal("-inf"), 5, 10),
+            ),
         ]
 
         for input_data, output_data in cases:
@@ -663,7 +712,7 @@ class TestNumberUtils(unittest.TestCase):
                 expected_base=expected_base,
                 actual_base=actual_base,
             ):
-                self.assertEqual(expected_mantissa, actual_mantissa)
+                self.assertNanEqual(expected_mantissa, actual_mantissa)
                 self.assertEqual(expected_exp, actual_exp)
                 self.assertEqual(expected_base, actual_base)
 
