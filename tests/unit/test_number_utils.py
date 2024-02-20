@@ -666,3 +666,230 @@ class TestNumberUtils(unittest.TestCase):
                 self.assertEqual(expected_mantissa, actual_mantissa)
                 self.assertEqual(expected_exp, actual_exp)
                 self.assertEqual(expected_base, actual_base)
+
+    def test_get_mantissa_exp_base_input_exp(self):
+        cases: MantissaExpBaseCase = [
+            (
+                (Decimal("123456"), ExpModeEnum.FIXEDPOINT, 0),
+                (Decimal("123456"), 0, 10),
+            ),
+            (
+                (Decimal("1234.56"), ExpModeEnum.FIXEDPOINT, 0),
+                (Decimal("1234.56"), 0, 10),
+            ),
+            (
+                (Decimal("12.3456"), ExpModeEnum.FIXEDPOINT, 0),
+                (Decimal("12.3456"), 0, 10),
+            ),
+            (
+                (Decimal("0.123456"), ExpModeEnum.FIXEDPOINT, 0),
+                (Decimal("0.123456"), 0, 10),
+            ),
+            (
+                (Decimal("0.00123456"), ExpModeEnum.FIXEDPOINT, 0),
+                (Decimal("0.00123456"), 0, 10),
+            ),
+            (
+                (Decimal("0.0000123456"), ExpModeEnum.FIXEDPOINT, 0),
+                (Decimal("0.0000123456"), 0, 10),
+            ),
+            (
+                (Decimal("123456"), ExpModeEnum.PERCENT, 0),
+                (Decimal("123456"), 0, 10),
+            ),
+            (
+                (Decimal("1234.56"), ExpModeEnum.PERCENT, 0),
+                (Decimal("1234.56"), 0, 10),
+            ),
+            (
+                (Decimal("12.3456"), ExpModeEnum.PERCENT, 0),
+                (Decimal("12.3456"), 0, 10),
+            ),
+            (
+                (Decimal("0.123456"), ExpModeEnum.PERCENT, 0),
+                (Decimal("0.123456"), 0, 10),
+            ),
+            (
+                (Decimal("0.00123456"), ExpModeEnum.PERCENT, 0),
+                (Decimal("0.00123456"), 0, 10),
+            ),
+            (
+                (Decimal("0.0000123456"), ExpModeEnum.PERCENT, 0),
+                (Decimal("0.0000123456"), 0, 10),
+            ),
+            (
+                (Decimal("123456"), ExpModeEnum.SCIENTIFIC, 2),
+                (Decimal("1234.56"), 2, 10),
+            ),
+            (
+                (Decimal("1234.56"), ExpModeEnum.SCIENTIFIC, 2),
+                (Decimal("12.3456"), 2, 10),
+            ),
+            (
+                (Decimal("12.3456"), ExpModeEnum.SCIENTIFIC, 2),
+                (Decimal("0.123456"), 2, 10),
+            ),
+            (
+                (Decimal("0.123456"), ExpModeEnum.SCIENTIFIC, 2),
+                (Decimal("0.00123456"), 2, 10),
+            ),
+            (
+                (Decimal("0.00123456"), ExpModeEnum.SCIENTIFIC, 2),
+                (Decimal("0.0000123456"), 2, 10),
+            ),
+            (
+                (Decimal("0.0000123456"), ExpModeEnum.SCIENTIFIC, 2),
+                (Decimal("0.000000123456"), 2, 10),
+            ),
+            (
+                (Decimal("123456"), ExpModeEnum.ENGINEERING, 3),
+                (Decimal("123.456"), 3, 10),
+            ),
+            (
+                (Decimal("1234.56"), ExpModeEnum.ENGINEERING, 3),
+                (Decimal("1.23456"), 3, 10),
+            ),
+            (
+                (Decimal("12.3456"), ExpModeEnum.ENGINEERING, 3),
+                (Decimal("0.0123456"), 3, 10),
+            ),
+            (
+                (Decimal("0.123456"), ExpModeEnum.ENGINEERING, 3),
+                (Decimal("0.000123456"), 3, 10),
+            ),
+            (
+                (Decimal("0.00123456"), ExpModeEnum.ENGINEERING, 3),
+                (Decimal("0.00000123456"), 3, 10),
+            ),
+            (
+                (Decimal("0.0000123456"), ExpModeEnum.ENGINEERING, 3),
+                (Decimal("0.0000000123456"), 3, 10),
+            ),
+            (
+                (Decimal("123456"), ExpModeEnum.ENGINEERING_SHIFTED, 3),
+                (Decimal("123.456"), 3, 10),
+            ),
+            (
+                (Decimal("1234.56"), ExpModeEnum.ENGINEERING_SHIFTED, 3),
+                (Decimal("1.23456"), 3, 10),
+            ),
+            (
+                (Decimal("12.3456"), ExpModeEnum.ENGINEERING_SHIFTED, 3),
+                (Decimal("0.0123456"), 3, 10),
+            ),
+            (
+                (Decimal("0.123456"), ExpModeEnum.ENGINEERING_SHIFTED, 3),
+                (Decimal("0.000123456"), 3, 10),
+            ),
+            (
+                (Decimal("0.00123456"), ExpModeEnum.ENGINEERING_SHIFTED, 3),
+                (Decimal("0.00000123456"), 3, 10),
+            ),
+            (
+                (Decimal("0.0000123456"), ExpModeEnum.ENGINEERING_SHIFTED, 3),
+                (Decimal("0.0000000123456"), 3, 10),
+            ),
+            (
+                (Decimal(1 * 2**-10), ExpModeEnum.BINARY, 5),
+                (Decimal("3.0517578125e-05"), 5, 2),
+            ),
+            (
+                (Decimal(1.5 * 2**-10), ExpModeEnum.BINARY, 5),
+                (Decimal("4.57763671875e-05"), 5, 2),
+            ),
+            (
+                (Decimal(1 * 2**-5), ExpModeEnum.BINARY, 5),
+                (Decimal("0.0009765625"), 5, 2),
+            ),
+            (
+                (Decimal(1.5 * 2**-5), ExpModeEnum.BINARY, 5),
+                (Decimal("0.00146484375"), 5, 2),
+            ),
+            (
+                (Decimal(1 * 2**0), ExpModeEnum.BINARY, 5),
+                (Decimal("0.03125"), 5, 2),
+            ),
+            (
+                (Decimal(1.5 * 2**0), ExpModeEnum.BINARY, 5),
+                (Decimal("0.046875"), 5, 2),
+            ),
+            (
+                (Decimal(1 * 2**5), ExpModeEnum.BINARY, 5),
+                (Decimal("1.0"), 5, 2),
+            ),
+            (
+                (Decimal(1.5 * 2**5), ExpModeEnum.BINARY, 5),
+                (Decimal("1.5"), 5, 2),
+            ),
+            (
+                (Decimal(1 * 2**10), ExpModeEnum.BINARY, 5),
+                (Decimal("32"), 5, 2),
+            ),
+            (
+                (Decimal(1.5 * 2**10), ExpModeEnum.BINARY, 5),
+                (Decimal("48"), 5, 2),
+            ),
+            (
+                (Decimal(1 * 2**-10), ExpModeEnum.BINARY_IEC, 10),
+                (Decimal(1 * 2**-20), 10, 2),
+            ),
+            (
+                (Decimal(1.5 * 2**-10), ExpModeEnum.BINARY_IEC, 10),
+                (Decimal(1.5 * 2**-20), 10, 2),
+            ),
+            (
+                (Decimal(1 * 2**-5), ExpModeEnum.BINARY_IEC, 10),
+                (Decimal(1 * 2**-15), 10, 2),
+            ),
+            (
+                (Decimal(1.5 * 2**-5), ExpModeEnum.BINARY_IEC, 10),
+                (Decimal(1.5 * 2**-15), 10, 2),
+            ),
+            (
+                (Decimal(1 * 2**0), ExpModeEnum.BINARY_IEC, 10),
+                (Decimal(1 * 2**-10), 10, 2),
+            ),
+            (
+                (Decimal(1.5 * 2**0), ExpModeEnum.BINARY_IEC, 10),
+                (Decimal(1.5 * 2**-10), 10, 2),
+            ),
+            (
+                (Decimal(1 * 2**5), ExpModeEnum.BINARY_IEC, 10),
+                (Decimal(1 * 2**-5), 10, 2),
+            ),
+            (
+                (Decimal(1.5 * 2**5), ExpModeEnum.BINARY_IEC, 10),
+                (Decimal(1.5 * 2**-5), 10, 2),
+            ),
+            (
+                (Decimal(1 * 2**10), ExpModeEnum.BINARY_IEC, 10),
+                (Decimal("1.0"), 10, 2),
+            ),
+            (
+                (Decimal(1.5 * 2**10), ExpModeEnum.BINARY_IEC, 10),
+                (Decimal("1.5"), 10, 2),
+            ),
+        ]
+
+        for input_data, output_data in cases:
+            num, exp_mode, input_exp = input_data
+            expected_mantissa, expected_exp, expected_base = output_data
+            actual_mantissa, actual_exp, actual_base = numbers.get_mantissa_exp_base(
+                num,
+                exp_mode,
+                input_exp,
+            )
+            with self.subTest(
+                num=num,
+                exp_mode=exp_mode,
+                input_exp=input_exp,
+                expected_mantissa=expected_mantissa,
+                actual_mantissa=actual_mantissa,
+                expected_exp=expected_exp,
+                actual_exp=actual_exp,
+                expected_base=expected_base,
+                actual_base=actual_base,
+            ):
+                self.assertEqual(expected_mantissa, actual_mantissa)
+                self.assertEqual(expected_exp, actual_exp)
+                self.assertEqual(expected_base, actual_base)
