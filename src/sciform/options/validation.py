@@ -28,10 +28,13 @@ def validate_rounding(
     options: InputOptions | PopulatedOptions | FinalizedOptions,
 ) -> None:
     r"""Validate ndigits if round_mode == "sig_fig"."""
-    if not isinstance(options.ndigits, (int, type(option_types.AutoDigits), type(None))):
-        msg = (
-            f'ndigits must be an "int" or "AutoDigits", not {options.ndigits}.'
-        )
+    valid_ndigit_types = (
+        int,
+        type(option_types.AutoDigits),
+        type(None),
+    )
+    if not isinstance(options.ndigits, valid_ndigit_types):
+        msg = f'ndigits must be an "int" or "AutoDigits", not {options.ndigits}.'
         raise TypeError(msg)
 
     if (

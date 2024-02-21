@@ -10,7 +10,7 @@ from sciform.options.option_types import AutoDigits, RoundModeEnum
 RoundDecPlaceCase = list[
     tuple[
         tuple[Decimal, RoundModeEnum, Union[int, type[AutoDigits]]],
-        int
+        int,
     ]
 ]
 
