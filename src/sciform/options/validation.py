@@ -17,17 +17,23 @@ def validate_options(
     options: InputOptions | PopulatedOptions | FinalizedOptions,
 ) -> None:
     """Validate user inputs."""
-    validate_sig_fig_round_mode(options)
+    validate_rounding(options)
     validate_exp_val(options)
     validate_separator_options(options)
     validate_extra_translations(options)
     validate_left_pad_options(options)
 
 
-def validate_sig_fig_round_mode(
+def validate_rounding(
     options: InputOptions | PopulatedOptions | FinalizedOptions,
 ) -> None:
     r"""Validate ndigits if round_mode == "sig_fig"."""
+    if not isinstance(options.ndigits, (int, type(option_types.AutoDigits), type(None))):
+        msg = (
+            f'ndigits must be an "int" or "AutoDigits", not {options.ndigits}.'
+        )
+        raise TypeError(msg)
+
     if (
         options.round_mode == "sig_fig"
         and isinstance(options.ndigits, int)
