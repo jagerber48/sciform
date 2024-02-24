@@ -59,6 +59,7 @@ def get_round_dec_place(
     pdg_sig_figs: bool = False,
 ) -> int:
     """Get the decimal place to which to round."""
+    # TODO: Handle nan and inf
     if round_mode is RoundModeEnum.SIG_FIG:
         if pdg_sig_figs:
             round_digit = get_pdg_round_digit(num)
@@ -98,8 +99,10 @@ def round_val_unc(
             pdg_sig_figs=False,
         )
         unc_rounded = unc
+
     if val.is_finite():
         val_rounded = round(val, -round_digit)
     else:
         val_rounded = val
+
     return val_rounded, unc_rounded, round_digit

@@ -1,21 +1,25 @@
 from __future__ import annotations
 
-import unittest
 from decimal import Decimal
 from typing import Union
 
 from sciform.format_utils import rounding
 from sciform.options.option_types import AutoDigits, RoundModeEnum
 
-RoundDecPlaceCase = list[
-    tuple[
-        tuple[Decimal, RoundModeEnum, Union[int, type[AutoDigits]]],
-        int,
-    ]
+from tests import NanTestCase
+
+RoundDecPlaceCase = tuple[
+    tuple[Decimal, RoundModeEnum, Union[int, type[AutoDigits]]],
+    int,
+]
+
+RoundValUncCase = tuple[
+    tuple[Decimal, Decimal, Union[int, type[AutoDigits]], bool],
+    tuple[Decimal, Decimal, int],
 ]
 
 
-class TestRounding(unittest.TestCase):
+class TestRounding(NanTestCase):
     def test_get_pdg_round_digit(self):
         cases: list[tuple[Decimal, int]] = [
             (Decimal("10.0"), 0),
@@ -72,7 +76,7 @@ class TestRounding(unittest.TestCase):
                 self.assertEqual(expected_output, actual_output)
 
     def test_get_round_dec_place(self):
-        cases: RoundDecPlaceCase = [
+        cases: list[RoundDecPlaceCase] = [
             ((Decimal("123456"), RoundModeEnum.SIG_FIG, 2), 4),
             ((Decimal("12345.6"), RoundModeEnum.SIG_FIG, 2), 3),
             ((Decimal("1234.56"), RoundModeEnum.SIG_FIG, 2), 2),
@@ -145,7 +149,7 @@ class TestRounding(unittest.TestCase):
                 self.assertEqual(expected_output, actual_output)
 
     def test_get_round_dec_place_pdg(self):
-        cases: RoundDecPlaceCase = [
+        cases: list[RoundDecPlaceCase] = [
             ((Decimal("123456"), RoundModeEnum.SIG_FIG, 2), 4),
             ((Decimal("12345.6"), RoundModeEnum.SIG_FIG, 2), 3),
             ((Decimal("1234.56"), RoundModeEnum.SIG_FIG, 2), 2),
@@ -225,3 +229,86 @@ class TestRounding(unittest.TestCase):
             "sig_fig",
             2,
         )
+
+    def test_round_val_unc(self):
+        cases: list[RoundValUncCase] = [
+            (
+                (Decimal("123"), Decimal("0.456"), 1, False),
+                (Decimal("123.0"), Decimal("0.5"), -1),
+            ),
+            (
+                (Decimal("123"), Decimal("0.456"), 4, False),
+                (Decimal("123.0000"), Decimal("0.4560"), -4),
+            ),
+            (
+                (Decimal("123"), Decimal("0.456"), 1, True),
+                (Decimal("123.0"), Decimal("0.5"), -1),
+            ),
+            (
+                (Decimal("123"), Decimal("0.456"), 4, True),
+                (Decimal("123.0"), Decimal("0.5"), -1),
+            ),
+            (
+                (Decimal("0.456"), Decimal("123"), 1, False),
+                (Decimal("0"), Decimal("100"), 2),
+            ),
+            (
+                (Decimal("0.456"), Decimal("123"), 4, False),
+                (Decimal("0.5"), Decimal("123.0"), -1),
+            ),
+            (
+                (Decimal("0.456"), Decimal("123"), 4, True),
+                (Decimal("0"), Decimal("120"), 1),
+            ),
+            (
+                (Decimal("123"), Decimal("nan"), 4, False),
+                (Decimal("123.0"), Decimal("nan"), -1),
+            ),
+            (
+                (Decimal("nan"), Decimal("123"), 4, False),
+                (Decimal("nan"), Decimal("123.0"), -1),
+            ),
+            (
+                (Decimal("nan"), Decimal("inf"), 4, False),
+                (Decimal("nan"), Decimal("inf"), 0),
+            ),
+            (
+                (Decimal("123"), Decimal("nan"), 4, True),
+                (Decimal("123.0"), Decimal("nan"), -1),
+            ),
+            (
+                (Decimal("nan"), Decimal("123"), 4, True),
+                (Decimal("nan"), Decimal("120"), 1),
+            ),
+            (
+                (Decimal("nan"), Decimal("inf"), 4, True),
+                (Decimal("nan"), Decimal("inf"), 0),
+            ),
+        ]
+
+        for input_data, output_data in cases:
+            val, unc, ndigits, use_pdg_sig_figs = input_data
+            (
+                expected_val_rounded,
+                expected_unc_rounded,
+                expected_round_digit,
+            ) = output_data
+            (
+                actual_val_rounded,
+                actual_unc_rounded,
+                actual_round_digit,
+            ) = rounding.round_val_unc(
+                val,
+                unc,
+                ndigits,
+                use_pdg_sig_figs=use_pdg_sig_figs,
+            )
+            with self.subTest(
+                val=val,
+                unc=unc,
+                ndigits=ndigits,
+                use_pdg_sig_figs=use_pdg_sig_figs,
+            ):
+                self.assertNanEqual(expected_val_rounded, actual_val_rounded)
+                self.assertNanEqual(expected_unc_rounded, actual_unc_rounded)
+                self.assertEqual(expected_round_digit, actual_round_digit)

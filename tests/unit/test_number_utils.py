@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import unittest
 from decimal import Decimal
 from math import isnan
 from typing import Union
@@ -8,6 +7,8 @@ from typing import Union
 from sciform import AutoExpVal
 from sciform.format_utils import numbers
 from sciform.options.option_types import ExpModeEnum
+
+from tests import NanTestCase
 
 MantissaExpBaseCase = list[
     tuple[
@@ -17,7 +18,7 @@ MantissaExpBaseCase = list[
 ]
 
 
-class TestNumberUtils(unittest.TestCase):
+class TestNumberUtils(NanTestCase):
     def assertNanEqual(self, first, second, msg=None):  # noqa: N802
         if isnan(first):
             self.assertTrue(isnan(second), msg=msg)
