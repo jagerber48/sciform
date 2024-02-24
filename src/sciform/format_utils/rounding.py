@@ -25,6 +25,10 @@ def get_pdg_round_digit(num: Decimal) -> int:
     https://pdg.lbl.gov/2010/reviews/rpp2010-rev-rpp-intro.pdf
     Section 5.2
     """
+    if not num.is_finite():
+        msg = f"num must be finite, not {num}."
+        raise ValueError(msg)
+
     top_dec_place = get_top_dec_place(num)
 
     # Bring num to be between 100 and 1000.
@@ -46,7 +50,8 @@ def get_pdg_round_digit(num: Decimal) -> int:
         """
         round_digit = top_dec_place
     else:  # pragma: no cover
-        raise ValueError
+        msg = f"Unable to determine PDG rounding decimal place for {num}"
+        raise ValueError(msg)
 
     return round_digit
 
@@ -91,7 +96,11 @@ def round_val_unc(
             pdg_sig_figs=use_pdg_sig_figs,
         )
         unc_rounded = round(unc, -round_digit)
-    else:
+        if val.is_finite():
+            val_rounded = round(val, -round_digit)
+        else:
+            val_rounded = val
+    elif val.is_finite():
         round_digit = get_round_dec_place(
             val,
             RoundModeEnum.SIG_FIG,
@@ -99,10 +108,10 @@ def round_val_unc(
             pdg_sig_figs=False,
         )
         unc_rounded = unc
-
-    if val.is_finite():
         val_rounded = round(val, -round_digit)
     else:
+        round_digit = 0
+        unc_rounded = unc
         val_rounded = val
 
     return val_rounded, unc_rounded, round_digit

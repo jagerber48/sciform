@@ -75,6 +75,13 @@ class TestRounding(NanTestCase):
             ):
                 self.assertEqual(expected_output, actual_output)
 
+    def test_get_pdg_round_digit_invalid(self):
+        self.assertRaises(
+            ValueError,
+            rounding.get_pdg_round_digit,
+            Decimal("nan"),
+        )
+
     def test_get_round_dec_place(self):
         cases: list[RoundDecPlaceCase] = [
             ((Decimal("123456"), RoundModeEnum.SIG_FIG, 2), 4),
