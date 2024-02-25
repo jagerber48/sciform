@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 from decimal import Decimal
-from typing import Literal, Union
+from typing import Any, Literal, Union
 
 from sciform.format_utils import exp_translations, exponents
 from sciform.options.option_types import AutoExpVal, ExpFormatEnum, ExpModeEnum
@@ -194,4 +194,104 @@ class TestExponentUtils(unittest.TestCase):
                 exp_mode=exp_mode,
                 input_exp=input_exp,
             ):
+                self.assertEqual(expected_output, actual_output)
+
+    def test_get_exp_str(self):
+        cases: list[tuple[dict[str, Any], str]] = [
+            (
+                {
+                    "exp_val": 0,
+                    "exp_mode": ExpModeEnum.FIXEDPOINT,
+                    "exp_format": ExpFormatEnum.STANDARD,
+                    "extra_si_prefixes": {},
+                    "extra_iec_prefixes": {},
+                    "extra_parts_per_forms": {},
+                    "capitalize": False,
+                    "superscript": False,
+                },
+                "",
+            ),
+            (
+                {
+                    "exp_val": 0,
+                    "exp_mode": ExpModeEnum.PERCENT,
+                    "exp_format": ExpFormatEnum.STANDARD,
+                    "extra_si_prefixes": {},
+                    "extra_iec_prefixes": {},
+                    "extra_parts_per_forms": {},
+                    "capitalize": False,
+                    "superscript": False,
+                },
+                "%",
+            ),
+            (
+                {
+                    "exp_val": -2,
+                    "exp_mode": ExpModeEnum.ENGINEERING_SHIFTED,
+                    "exp_format": ExpFormatEnum.PREFIX,
+                    "extra_si_prefixes": {-2: "c"},
+                    "extra_iec_prefixes": {},
+                    "extra_parts_per_forms": {},
+                    "capitalize": False,
+                    "superscript": False,
+                },
+                " c",
+            ),
+            (
+                {
+                    "exp_val": -3,
+                    "exp_mode": ExpModeEnum.ENGINEERING_SHIFTED,
+                    "exp_format": ExpFormatEnum.PREFIX,
+                    "extra_si_prefixes": {-3: None},
+                    "extra_iec_prefixes": {},
+                    "extra_parts_per_forms": {},
+                    "capitalize": False,
+                    "superscript": False,
+                },
+                "e-03",
+            ),
+            (
+                {
+                    "exp_val": 0,
+                    "exp_mode": ExpModeEnum.ENGINEERING_SHIFTED,
+                    "exp_format": ExpFormatEnum.PARTS_PER,
+                    "extra_si_prefixes": {},
+                    "extra_iec_prefixes": {},
+                    "extra_parts_per_forms": {},
+                    "capitalize": False,
+                    "superscript": False,
+                },
+                "",
+            ),
+            (
+                {
+                    "exp_val": -3,
+                    "exp_mode": ExpModeEnum.ENGINEERING_SHIFTED,
+                    "exp_format": ExpFormatEnum.STANDARD,
+                    "extra_si_prefixes": {-3: None},
+                    "extra_iec_prefixes": {},
+                    "extra_parts_per_forms": {},
+                    "capitalize": False,
+                    "superscript": True,
+                },
+                "×10⁻³",
+            ),
+            (
+                {
+                    "exp_val": 20,
+                    "exp_mode": ExpModeEnum.BINARY_IEC,
+                    "exp_format": ExpFormatEnum.PREFIX,
+                    "extra_si_prefixes": {},
+                    "extra_iec_prefixes": {},
+                    "extra_parts_per_forms": {},
+                    "capitalize": False,
+                    "superscript": False,
+                },
+                " Mi",
+            ),
+        ]
+
+        for kwargs, expected_output in cases:
+            actual_output = exponents.get_exp_str(**kwargs)
+            with self.subTest(**kwargs):
                 self.assertEqual(expected_output, actual_output)
