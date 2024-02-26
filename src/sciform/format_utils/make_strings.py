@@ -60,22 +60,34 @@ def get_pad_str(
     return pad_str
 
 
-def format_num_by_top_bottom_dig(
+def get_abs_num_str_by_bottom_dec_place(
+    num: Decimal,
+    target_bottom_dec_place: int,
+) -> str:
+    """Format a number according to specified bottom decimal places."""
+    prec = max(0, -target_bottom_dec_place)
+    abs_mantissa_str = f"{abs(num):.{prec}f}"
+    return abs_mantissa_str
+
+
+def construct_num_str(
     num: Decimal,
     target_top_dec_place: int,
     target_bottom_dec_place: int,
     sign_mode: SignModeEnum,
     left_pad_char: str,
 ) -> str:
-    """Format a number according to specified top and bottom decimal places."""
-    print_prec = max(0, -target_bottom_dec_place)
-    abs_mantissa_str = f"{abs(num):.{print_prec}f}"
+    """Format a number to a specified decimal place, with left padding and a sign symbol."""  # noqa: E501
+    abs_num_str = get_abs_num_str_by_bottom_dec_place(
+        num,
+        target_bottom_dec_place,
+    )
 
     sign_str = get_sign_str(num, sign_mode)
 
     num_top_dec_place = get_top_dec_place(num)
     pad_str = get_pad_str(left_pad_char, num_top_dec_place, target_top_dec_place)
-    return f"{sign_str}{pad_str}{abs_mantissa_str}"
+    return f"{sign_str}{pad_str}{abs_num_str}"
 
 
 def construct_val_unc_str(  # noqa: PLR0913

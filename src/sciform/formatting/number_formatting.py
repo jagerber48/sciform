@@ -10,9 +10,9 @@ from sciform.api.formatted_number import FormattedNumber
 from sciform.format_utils.exponents import get_val_unc_exp
 from sciform.format_utils.grouping import add_separators
 from sciform.format_utils.make_strings import (
+    construct_num_str,
     construct_val_unc_exp_str,
     construct_val_unc_str,
-    format_num_by_top_bottom_dig,
     get_exp_str,
     get_sign_str,
 )
@@ -145,7 +145,7 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
         exp_val = 0
 
     left_pad_char = options.left_pad_char.value
-    mantissa_str = format_num_by_top_bottom_dig(
+    mantissa_str = construct_num_str(
         mantissa_rounded.normalize(),
         options.left_pad_dec_place,
         round_digit,
