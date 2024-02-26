@@ -7,13 +7,12 @@ from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 from sciform.api.formatted_number import FormattedNumber
-from sciform.format_utils.exponents import get_val_unc_exp
+from sciform.format_utils.exponents import get_exp_str, get_val_unc_exp
 from sciform.format_utils.grouping import add_separators
 from sciform.format_utils.make_strings import (
     construct_num_str,
     construct_val_unc_exp_str,
     construct_val_unc_str,
-    get_exp_str,
     get_sign_str,
 )
 from sciform.format_utils.numbers import (
@@ -303,8 +302,7 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     )
 
     if val.is_finite() or unc.is_finite() or options.nan_inf_exp:
-        val_unc_exp_str = construct_val_unc_exp_str(
-            val_unc_str=val_unc_str,
+        exp_str = get_exp_str(
             exp_val=exp_val,
             exp_mode=exp_mode,
             exp_format=options.exp_format,
@@ -313,6 +311,10 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
             extra_parts_per_forms=options.extra_parts_per_forms,
             capitalize=options.capitalize,
             superscript=options.superscript,
+        )
+        val_unc_exp_str = construct_val_unc_exp_str(
+            val_unc_str=val_unc_str,
+            exp_str=exp_str,
             paren_uncertainty=options.paren_uncertainty,
         )
     else:

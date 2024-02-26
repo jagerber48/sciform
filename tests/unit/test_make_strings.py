@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 from decimal import Decimal
+from typing import Any
 
 from sciform.format_utils import make_strings
 from sciform.options.option_types import SignModeEnum
@@ -126,4 +127,130 @@ class TestMakeStrings(unittest.TestCase):
             }
             with self.subTest(**kwargs):
                 actual_output = make_strings.construct_num_str(**kwargs)
+                self.assertEqual(expected_output, actual_output)
+
+    def test_construct_val_unc_str(self):
+        cases: list[tuple[dict[str, Any], str]] = [
+            (
+                {
+                    "val_mantissa_str": "123.456",
+                    "unc_mantissa_str": "0.123",
+                    "val_mantissa": Decimal("123.456"),
+                    "unc_mantissa": Decimal("0.123"),
+                    "decimal_separator": ".",
+                    "paren_uncertainty": False,
+                    "pm_whitespace": True,
+                    "paren_uncertainty_trim": False,
+                },
+                "123.456 ± 0.123",
+            ),
+            (
+                {
+                    "val_mantissa_str": "123.456",
+                    "unc_mantissa_str": "0.123",
+                    "val_mantissa": Decimal("123.456"),
+                    "unc_mantissa": Decimal("0.123"),
+                    "decimal_separator": ".",
+                    "paren_uncertainty": False,
+                    "pm_whitespace": False,
+                    "paren_uncertainty_trim": False,
+                },
+                "123.456±0.123",
+            ),
+            (
+                {
+                    "val_mantissa_str": "123,456",
+                    "unc_mantissa_str": "0,123",
+                    "val_mantissa": Decimal("123.456"),
+                    "unc_mantissa": Decimal("0.123"),
+                    "decimal_separator": ",",
+                    "paren_uncertainty": False,
+                    "pm_whitespace": True,
+                    "paren_uncertainty_trim": False,
+                },
+                "123,456 ± 0,123",
+            ),
+            (
+                {
+                    "val_mantissa_str": "123.456",
+                    "unc_mantissa_str": "0.123",
+                    "val_mantissa": Decimal("123.456"),
+                    "unc_mantissa": Decimal("0.123"),
+                    "decimal_separator": ".",
+                    "paren_uncertainty": False,
+                    "pm_whitespace": True,
+                    "paren_uncertainty_trim": False,
+                },
+                "123.456 ± 0.123",
+            ),
+            (
+                {
+                    "val_mantissa_str": "123,456",
+                    "unc_mantissa_str": "0,123",
+                    "val_mantissa": Decimal("123.456"),
+                    "unc_mantissa": Decimal("0.123"),
+                    "decimal_separator": ",",
+                    "paren_uncertainty": True,
+                    "pm_whitespace": True,
+                    "paren_uncertainty_trim": False,
+                },
+                "123,456(0,123)",
+            ),
+            (
+                {
+                    "val_mantissa_str": "123,456",
+                    "unc_mantissa_str": "0,123",
+                    "val_mantissa": Decimal("123.456"),
+                    "unc_mantissa": Decimal("0.123"),
+                    "decimal_separator": ",",
+                    "paren_uncertainty": True,
+                    "pm_whitespace": True,
+                    "paren_uncertainty_trim": True,
+                },
+                "123,456(123)",
+            ),
+            (
+                {
+                    "val_mantissa_str": "123,456,789.123_456",
+                    "unc_mantissa_str": "0.123_456",
+                    "val_mantissa": Decimal("123456789.123456"),
+                    "unc_mantissa": Decimal("0.123456"),
+                    "decimal_separator": ",",
+                    "paren_uncertainty": True,
+                    "pm_whitespace": True,
+                    "paren_uncertainty_trim": False,
+                },
+                "123,456,789.123_456(0.123_456)",
+            ),
+            (
+                {
+                    "val_mantissa_str": "123,456,789.123_456",
+                    "unc_mantissa_str": "0.123_456",
+                    "val_mantissa": Decimal("123456789.123456"),
+                    "unc_mantissa": Decimal("0.123456"),
+                    "decimal_separator": ",",
+                    "paren_uncertainty": True,
+                    "pm_whitespace": True,
+                    "paren_uncertainty_trim": True,
+                },
+                "123,456,789.123_456(123456)",
+            ),
+            (
+                {
+                    "val_mantissa_str": "0.123",
+                    "unc_mantissa_str": "123,456.456",
+                    "val_mantissa": Decimal("0.123"),
+                    "unc_mantissa": Decimal("123456.456"),
+                    "decimal_separator": ",",
+                    "paren_uncertainty": True,
+                    "pm_whitespace": True,
+                    "paren_uncertainty_trim": True,
+                },
+                "0.123(123,456.456)",
+            ),
+        ]
+
+        for kwargs, expected_output in cases:
+            with self.subTest(**kwargs):
+                actual_output = make_strings.construct_val_unc_str(**kwargs)
                 self.assertEqual(expected_output, actual_output)

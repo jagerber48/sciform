@@ -5,14 +5,11 @@ from __future__ import annotations
 import decimal
 from typing import TYPE_CHECKING
 
-from sciform.format_utils.exponents import get_exp_str
 from sciform.format_utils.numbers import (
     get_top_dec_place,
 )
 from sciform.options.option_types import (
     DecimalSeparatorEnums,
-    ExpFormatEnum,
-    ExpModeEnum,
     SeparatorEnum,
     SignModeEnum,
 )
@@ -136,31 +133,13 @@ def construct_val_unc_str(  # noqa: PLR0913
     return val_unc_str
 
 
-def construct_val_unc_exp_str(  # noqa: PLR0913
+def construct_val_unc_exp_str(
     *,
     val_unc_str: str,
-    exp_val: int,
-    exp_mode: ExpModeEnum,
-    exp_format: ExpFormatEnum,
-    extra_si_prefixes: dict[int, str | None],
-    extra_iec_prefixes: dict[int, str | None],
-    extra_parts_per_forms: dict[int, str | None],
-    capitalize: bool,
-    superscript: bool,
+    exp_str: str,
     paren_uncertainty: bool,
 ) -> str:
     """Combine the val_unc_str into the final val_unc_exp_str."""
-    exp_str = get_exp_str(
-        exp_val=exp_val,
-        exp_mode=exp_mode,
-        exp_format=exp_format,
-        capitalize=capitalize,
-        superscript=superscript,
-        extra_si_prefixes=extra_si_prefixes,
-        extra_iec_prefixes=extra_iec_prefixes,
-        extra_parts_per_forms=extra_parts_per_forms,
-    )
-
     if exp_str == "":
         val_unc_exp_str = val_unc_str
     elif paren_uncertainty:
