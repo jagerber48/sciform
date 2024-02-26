@@ -2,17 +2,6 @@ import unittest
 from decimal import Decimal
 
 from sciform import Formatter
-from sciform.format_utils.exponents import get_translation_dict
-from sciform.format_utils.make_strings import (
-    get_sign_str,
-)
-from sciform.format_utils.numbers import (
-    get_mantissa_exp_base,
-    get_top_dec_place,
-    get_top_dec_place_binary,
-    parse_mantissa_from_ascii_exp_str,
-)
-from sciform.format_utils.rounding import get_round_dec_place
 from sciform.formatting.number_formatting import format_non_finite
 from sciform.formatting.output_conversion import _make_exp_str, convert_sciform_format
 from sciform.options import option_types
@@ -162,82 +151,6 @@ class TestInvalidOptions(unittest.TestCase):
             finalize_input_options(InputOptions()),
         )
 
-    def test_get_top_dec_place_infinite(self):
-        self.assertEqual(get_top_dec_place(Decimal("nan")), 0)
-
-    def test_get_top_dec_place_binary_infinite(self):
-        self.assertEqual(get_top_dec_place_binary(Decimal("nan")), 0)
-
-    def test_get_mantissa_exp_base_fixed_point_set_exp(self):
-        self.assertRaises(
-            ValueError,
-            get_mantissa_exp_base,
-            num=Decimal(3),
-            exp_mode=option_types.ExpModeEnum.FIXEDPOINT,
-            input_exp=1,
-        )
-
-    def test_get_mantissa_exp_base_engineering_set_exp(self):
-        self.assertRaises(
-            ValueError,
-            get_mantissa_exp_base,
-            num=Decimal(3),
-            exp_mode=option_types.ExpModeEnum.ENGINEERING,
-            input_exp=1,
-        )
-
-    def test_get_mantissa_exp_base_binary_iec_set_exp(self):
-        self.assertRaises(
-            ValueError,
-            get_mantissa_exp_base,
-            num=Decimal(3),
-            exp_mode=option_types.ExpModeEnum.BINARY_IEC,
-            input_exp=3,
-        )
-
-    def test_get_mantissa_exp_base_bad_exp_mode(self):
-        self.assertRaises(
-            ValueError,
-            get_mantissa_exp_base,
-            num=Decimal(3),
-            exp_mode="eng",
-            input_exp=3,
-        )
-
-    def test_get_sign_str_bad_sign_mode(self):
-        self.assertRaises(ValueError, get_sign_str, num=Decimal(1), sign_mode="space")
-
-    def test_get_round_digit_bad_round_mode(self):
-        self.assertRaises(
-            ValueError,
-            get_round_dec_place,
-            num=Decimal(123.456),
-            round_mode="none",
-            ndigits=0,
-        )
-
-    def test_get_prefix_dict_bad_base(self):
-        self.assertRaises(
-            ValueError,
-            get_translation_dict,
-            exp_format=option_types.ExpFormatEnum.PREFIX,
-            base=3,
-            extra_si_prefixes={},
-            extra_iec_prefixes={},
-            extra_parts_per_forms={},
-        )
-
-    def test_get_prefix_dict_bad_format(self):
-        self.assertRaises(
-            ValueError,
-            get_translation_dict,
-            exp_format="pref",
-            base=10,
-            extra_si_prefixes={},
-            extra_iec_prefixes={},
-            extra_parts_per_forms={},
-        )
-
     def test_mode_str_to_enum_fail(self):
         self.assertRaises(
             ValueError,
@@ -270,13 +183,6 @@ class TestInvalidOptions(unittest.TestCase):
             16,
             0,
             "ascii",
-        )
-
-    def test_parse_mantissa_from_ascii_exp_str(self):
-        self.assertRaises(
-            ValueError,
-            parse_mantissa_from_ascii_exp_str,
-            "1.23c+04",
         )
 
     def test_invalid_translation_key(self):

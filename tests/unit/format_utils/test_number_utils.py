@@ -992,3 +992,40 @@ class TestNumberUtils(NanTestCase):
                     numbers.parse_mantissa_from_ascii_exp_str,
                     input_str,
                 )
+
+    def test_get_mantissa_exp_base_invalid_input(self):
+        with self.subTest(msg="fixed_point_set_exp"):
+            self.assertRaises(
+                ValueError,
+                numbers.get_mantissa_exp_base,
+                num=Decimal(3),
+                exp_mode=ExpModeEnum.FIXEDPOINT,
+                input_exp=1,
+            )
+
+        with self.subTest(msg="engineering_set_exp"):
+            self.assertRaises(
+                ValueError,
+                numbers.get_mantissa_exp_base,
+                num=Decimal(3),
+                exp_mode=ExpModeEnum.ENGINEERING,
+                input_exp=1,
+            )
+
+        with self.subTest(msg="binary_iec_set_exp"):
+            self.assertRaises(
+                ValueError,
+                numbers.get_mantissa_exp_base,
+                num=Decimal(3),
+                exp_mode=ExpModeEnum.BINARY_IEC,
+                input_exp=3,
+            )
+
+        with self.subTest(msg="bad_exp_mode"):
+            self.assertRaises(
+                ValueError,
+                numbers.get_mantissa_exp_base,
+                num=Decimal(3),
+                exp_mode="eng",
+                input_exp=3,
+            )
