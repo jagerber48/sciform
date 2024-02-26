@@ -111,23 +111,26 @@ class TestValidation(unittest.TestCase):
             "extra_parts_per_forms",
         )
 
+        invalid_keys = (-1.0, "3")
         for translation_key in translation_keys:
-            with self.subTest(
-                msg="test_non_int_val",
-                translation_key=translation_key,
-            ):
-                kwargs = {translation_key: {-1.0: "test"}}
-                self.assertRaises(
-                    TypeError,
-                    InputOptions,
-                    **kwargs,
-                )
+            for key in invalid_keys:
+                with self.subTest(
+                    msg="test_non_int_key",
+                    translation_key=translation_key,
+                    key=key,
+                ):
+                    kwargs = {translation_key: {key: "test"}}
+                    self.assertRaises(
+                        TypeError,
+                        InputOptions,
+                        **kwargs,
+                    )
 
         invalid_strs = ("3", "Å")
         for translation_key in translation_keys:
             for invalid_str in invalid_strs:
                 with self.subTest(
-                    msg="test_invalid_strs",
+                    msg="non_alphabetic_val",
                     translation_key=translation_key,
                     invalid_str=invalid_str,
                 ):
