@@ -42,6 +42,14 @@ class TestMakeStrings(unittest.TestCase):
                 actual_output = make_strings.get_sign_str(**kwargs)
                 self.assertEqual(expected_output, actual_output)
 
+    def test_get_sign_str_invalid(self):
+        self.assertRaises(
+            ValueError,
+            make_strings.get_sign_str,
+            Decimal("1.0"),
+            "+",
+        )
+
     def test_get_pad_str(self):
         cases: list[tuple[tuple[str, int, int], str]] = [
             (("0", 3, 0), ""),

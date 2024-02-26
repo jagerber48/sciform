@@ -79,6 +79,28 @@ class TestExponentUtils(unittest.TestCase):
         self.assertEqual("MiB", translation_dict[20])
         self.assertEqual(None, translation_dict[30])
 
+    def test_get_translation_dict_invalid_base(self):
+        self.assertRaises(
+            ValueError,
+            exponents.get_translation_dict,
+            ExpFormatEnum.PREFIX,
+            8,
+            {},
+            {},
+            {},
+        )
+
+    def test_get_translation_dict_invalid_format(self):
+        self.assertRaises(
+            ValueError,
+            exponents.get_translation_dict,
+            "prefix",
+            10,
+            {},
+            {},
+            {},
+        )
+
     def test_get_standard_exp_str(self):
         cases: list[GetStandardExpStrCase] = [
             ((10, -111, False), "e-111"),
