@@ -64,3 +64,26 @@ class TestMakeStrings(unittest.TestCase):
             with self.subTest(**kwargs):
                 actual_output = make_strings.get_pad_str(**kwargs)
                 self.assertEqual(expected_output, actual_output)
+
+    def test_get_abs_num_str_by_bottom_dec_place(self):
+        cases: list[tuple[tuple[Decimal, int], str]] = [
+            ((Decimal("123456.654"), 2), "123457"),
+            ((Decimal("123456.654"), 1), "123457"),
+            ((Decimal("123456.654"), 0), "123457"),
+            ((Decimal("123456.654"), -1), "123456.7"),
+            ((Decimal("123456.654"), -2), "123456.65"),
+            ((Decimal("123456.654"), -3), "123456.654"),
+            ((Decimal("123456.654"), -4), "123456.6540"),
+            ((Decimal("123456.654"), -5), "123456.65400"),
+        ]
+
+        for (num, target_bottom_dec_place), expected_output in cases:
+            kwargs = {
+                "num": num,
+                "target_bottom_dec_place": target_bottom_dec_place,
+            }
+            with self.subTest(**kwargs):
+                actual_output = make_strings.get_abs_num_str_by_bottom_dec_place(
+                    **kwargs,
+                )
+                self.assertEqual(expected_output, actual_output)
