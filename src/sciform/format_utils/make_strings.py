@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import decimal
 from typing import TYPE_CHECKING
 
 from sciform.format_utils.exponents import get_exp_str
@@ -22,26 +23,33 @@ if TYPE_CHECKING:  # pragma: no cover
 
 def get_sign_str(num: Decimal, sign_mode: SignModeEnum) -> str:
     """Get the format sign string."""
-    if num < 0:
-        # Always return "-" for negative numbers.
-        sign_str = "-"
-    elif num > 0:
-        # Return "+", " ", or "" for positive numbers.
-        if sign_mode is SignModeEnum.ALWAYS:
-            sign_str = "+"
-        elif sign_mode is SignModeEnum.SPACE:
+    with decimal.localcontext() as ctx:
+        # TODO: Consider wrapping all the formatting in this context.
+        ctx.traps[decimal.InvalidOperation] = False
+
+        if num < 0:
+            # Always return "-" for negative numbers.
+            sign_str = "-"
+        elif num > 0:
+            # Return "+", " ", or "" for positive numbers.
+            if sign_mode is SignModeEnum.ALWAYS:
+                sign_str = "+"
+            elif sign_mode is SignModeEnum.SPACE:
+                sign_str = " "
+            elif sign_mode is SignModeEnum.NEGATIVE:
+                sign_str = ""
+            else:
+                msg = f"Invalid sign mode {sign_mode}."
+                raise ValueError(msg)
+        elif sign_mode is SignModeEnum.ALWAYS or sign_mode is SignModeEnum.SPACE:
+            """
+            For anything else (typically 0, possibly nan) return " " in "+" and " "
+            modes.
+            """
             sign_str = " "
-        elif sign_mode is SignModeEnum.NEGATIVE:
-            sign_str = ""
         else:
-            msg = f"Invalid sign mode {sign_mode}."
-            raise ValueError(msg)
-    elif sign_mode is SignModeEnum.ALWAYS or sign_mode is SignModeEnum.SPACE:
-        # For anything else (typically 0, possibly nan) return " " in "+" and " " modes
-        sign_str = " "
-    else:
-        # Otherwise return the empty string.
-        sign_str = ""
+            # Otherwise return the empty string.
+            sign_str = ""
 
     return sign_str
 
