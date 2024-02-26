@@ -6,6 +6,11 @@ from decimal import Decimal
 from sciform.format_utils import make_strings
 from sciform.options.option_types import SignModeEnum
 
+ConstructNumStrCase = tuple[
+    tuple[Decimal, int, int, SignModeEnum, str],
+    str,
+]
+
 
 class TestMakeStrings(unittest.TestCase):
     def test_get_sign_str(self):
@@ -86,4 +91,39 @@ class TestMakeStrings(unittest.TestCase):
                 actual_output = make_strings.get_abs_num_str_by_bottom_dec_place(
                     **kwargs,
                 )
+                self.assertEqual(expected_output, actual_output)
+
+    def test_construct_num_str(self):
+        cases: list[ConstructNumStrCase] = [
+            (
+                (Decimal("1"), 3, -3, SignModeEnum.ALWAYS, "0"),
+                "+0001.000",
+            ),
+            (
+                (Decimal("1"), 3, -3, SignModeEnum.SPACE, "0"),
+                " 0001.000",
+            ),
+            (
+                (Decimal("1"), 3, -3, SignModeEnum.SPACE, " "),
+                "    1.000",
+            ),
+        ]
+
+        for input_options, expected_output in cases:
+            (
+                num,
+                target_top_dec_place,
+                target_bottom_dec_place,
+                sign_mode,
+                left_pad_char,
+            ) = input_options
+            kwargs = {
+                "num": num,
+                "target_top_dec_place": target_top_dec_place,
+                "target_bottom_dec_place": target_bottom_dec_place,
+                "sign_mode": sign_mode,
+                "left_pad_char": left_pad_char,
+            }
+            with self.subTest(**kwargs):
+                actual_output = make_strings.construct_num_str(**kwargs)
                 self.assertEqual(expected_output, actual_output)
