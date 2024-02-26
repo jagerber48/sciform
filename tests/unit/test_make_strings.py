@@ -254,3 +254,24 @@ class TestMakeStrings(unittest.TestCase):
             with self.subTest(**kwargs):
                 actual_output = make_strings.construct_val_unc_str(**kwargs)
                 self.assertEqual(expected_output, actual_output)
+
+    def test_construct_val_unc_exp_str(self):
+        cases: list[tuple[tuple[str, str, bool], str]] = [
+            (("123 ± 12", "", False), "123 ± 12"),
+            (("123 ± 12", "e+04", False), "(123 ± 12)e+04"),
+            (("123(12)", "e+04", True), "123(12)e+04"),
+        ]
+
+        for (val_unc_str, exp_str, paren_uncertainty), expected_output in cases:
+            kwargs = {
+                "val_unc_str": val_unc_str,
+                "exp_str": exp_str,
+                "paren_uncertainty": paren_uncertainty,
+            }
+            with self.subTest(**kwargs):
+                actual_output = make_strings.construct_val_unc_exp_str(
+                    val_unc_str=val_unc_str,
+                    exp_str=exp_str,
+                    paren_uncertainty=paren_uncertainty,
+                )
+                self.assertEqual(expected_output, actual_output)
