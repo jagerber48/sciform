@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING, get_args
 from sciform.options import option_types
 
 if TYPE_CHECKING:  # pragma: no cover
-    from sciform.options.input_options import InputOptions
     from sciform.options.finalized_options import FinalizedOptions
+    from sciform.options.input_options import InputOptions
     from sciform.options.populated_options import PopulatedOptions
 
 
@@ -40,14 +40,12 @@ def validate_rounding(
         not (none_allowed and options.round_mode is None)
         and options.round_mode not in allowed_round_modes
     ):
-        msg = (
-            f"round_mode must be in {allowed_round_modes}, not {options.round_mode}."
-        )
+        msg = f"round_mode must be in {allowed_round_modes}, not {options.round_mode}."
         raise ValueError(msg)
 
-    if (
-        not (none_allowed and options.ndigits is None)
-        and not isinstance(options.ndigits, (int, type(option_types.AutoDigits)))
+    if not (none_allowed and options.ndigits is None) and not isinstance(
+        options.ndigits,
+        (int, type(option_types.AutoDigits)),
     ):
         msg = f'ndigits must be an "int" or "AutoDigits", not {options.ndigits}.'
         raise TypeError(msg)
@@ -132,9 +130,7 @@ def validate_sign_mode(
         not (none_allowed and options.sign_mode is None)
         and options.sign_mode not in allowed_sign_modes
     ):
-        msg = (
-            f"sign_mode must be in {allowed_sign_modes}, not {options.sign_mode}."
-        )
+        msg = f"sign_mode must be in {allowed_sign_modes}, not {options.sign_mode}."
         raise ValueError(msg)
 
 
@@ -159,9 +155,8 @@ def validate_separator_options(
             )
             raise ValueError(msg)
 
-    if (
-        not (none_allowed and options.decimal_separator is None)
-        and (options.decimal_separator not in get_args(option_types.DecimalSeparators))
+    if not (none_allowed and options.decimal_separator is None) and (
+        options.decimal_separator not in get_args(option_types.DecimalSeparators)
     ):
         msg = (
             f"decimal_separator must be in "
@@ -170,9 +165,8 @@ def validate_separator_options(
         )
         raise ValueError(msg)
 
-    if (
-        not (none_allowed and options.lower_separator is None)
-        and (options.lower_separator not in get_args(option_types.LowerSeparators))
+    if not (none_allowed and options.lower_separator is None) and (
+        options.lower_separator not in get_args(option_types.LowerSeparators)
     ):
         msg = (
             f"lower_separator must be in {get_args(option_types.LowerSeparators)}, "
@@ -222,9 +216,8 @@ def validate_left_pad_options(
             raise TypeError(dec_place_msg)
         if options.left_pad_dec_place < 0:
             raise ValueError(dec_place_msg)
-    if (
-        not (none_allowed and options.left_pad_char is None)
-        and options.left_pad_char not in [0, "0", " "]
-    ):
+    if not (
+        none_allowed and options.left_pad_char is None
+    ) and options.left_pad_char not in [0, "0", " "]:
         msg = f'left_pad_char must be in [" ", "0", 0], not {options.left_pad_char}.'
         raise ValueError(msg)
