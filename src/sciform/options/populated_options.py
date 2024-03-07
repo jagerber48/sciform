@@ -1,6 +1,5 @@
 """InputOptions Dataclass which stores user input."""
 
-
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass

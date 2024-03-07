@@ -1,4 +1,5 @@
 """Convert sciform outputs into latex commands."""
+
 from __future__ import annotations
 
 import re
