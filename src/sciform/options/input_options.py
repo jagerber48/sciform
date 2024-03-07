@@ -79,7 +79,7 @@ class InputOptions:
     add_ppth_form: bool = None
 
     def __post_init__(self: InputOptions) -> None:
-        validate_options(self)
+        validate_options(self, none_allowed=True)
 
     def as_dict(self: InputOptions) -> dict[str, Any]:
         """

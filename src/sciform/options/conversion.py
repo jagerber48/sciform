@@ -86,7 +86,6 @@ def populate_options(input_options: InputOptions) -> PopulatedOptions:
 
         kwargs[key] = populated_value
     populated_options = PopulatedOptions(**kwargs)
-    validate_options(populated_options)
     return populated_options
 
 
