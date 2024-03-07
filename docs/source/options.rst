@@ -672,8 +672,9 @@ for deciding when to
 display uncertainty with one versus two significant figures.
 The algorithm is as follows.
 
-* Determine the three most significant digits of the uncertainty. E.g.
-  if the uncertainty is 0.004857 then these digits would be 486
+* Determine the three most significant digits of the uncertainty
+  (without rounding). E.g. if the uncertainty is 0.004857 then these
+  digits would be 485
 * If the scaled uncertainty is between 100 and 354 (inclusive) then the
   uncertainty is rounded and displayed to one digit below its most
   significant digit.
