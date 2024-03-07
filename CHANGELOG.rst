@@ -13,6 +13,19 @@ Unreleased
     documentation
     `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
 
+Added
+^^^^^
+
+* Added many unit test to supplement the feature existing feature tests.
+  [`#102 <https://github.com/jagerber48/sciform/issues/102>`_]
+* Added much more input validation and corresponding messaging.
+
+  * Checks on input types and values.
+  * Extra translations dictionaries are now checked so that keys must be
+    integers and values must consist of only English alphabetic
+    characters.
+    [`#157 <https://github.com/jagerber48/sciform/issues/157>`_]
+
 Changed
 ^^^^^^^
 
@@ -21,16 +34,13 @@ Changed
 
   * Move modules containing public interfaces into an ``api``
     sub-package.
-  * Break a bulky ``format_utils`` module into multiple modules, now in
-    a ``format_utils`` sub-package.
+  * Break the bulky ``format_utils`` module into multiple modules, now
+    in a ``format_utils`` sub-package.
   * Collect the main formatting algorithms into a ``formatting``
     sub-package.
   * Sort tests into feature and unit tests.
 
-* Extra translations dictionaries are now checked so that keys must be
-  integers and values must consist of only English alphabetic
-  characters.
-  [`#157 <https://github.com/jagerber48/sciform/issues/157>`_]
+* Some utility code refactoring.
 
 ----
 

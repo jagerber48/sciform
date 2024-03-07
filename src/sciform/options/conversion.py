@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING
 from sciform.options import global_options, option_types
 from sciform.options.finalized_options import FinalizedOptions
 from sciform.options.populated_options import PopulatedOptions
-from sciform.options.validation import validate_options
 
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.options.input_options import InputOptions
@@ -86,7 +85,6 @@ def populate_options(input_options: InputOptions) -> PopulatedOptions:
 
         kwargs[key] = populated_value
     populated_options = PopulatedOptions(**kwargs)
-    validate_options(populated_options)
     return populated_options
 
 

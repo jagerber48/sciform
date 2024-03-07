@@ -1,6 +1,5 @@
 """InputOptions Dataclass which stores user input."""
 
-
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
@@ -117,7 +116,7 @@ class PopulatedOptions:
     pm_whitespace: bool
 
     def __post_init__(self: PopulatedOptions) -> None:
-        validate_options(self)
+        validate_options(self, none_allowed=False)
 
     def as_dict(self: PopulatedOptions) -> dict[str, Any]:
         """

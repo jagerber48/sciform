@@ -2,16 +2,14 @@
 
 from __future__ import annotations
 
+import decimal
 from typing import TYPE_CHECKING
 
-from sciform.format_utils.exponents import get_exp_str
 from sciform.format_utils.numbers import (
-    get_top_digit,
+    get_top_dec_place,
 )
 from sciform.options.option_types import (
     DecimalSeparatorEnums,
-    ExpFormatEnum,
-    ExpModeEnum,
     SeparatorEnum,
     SignModeEnum,
 )
@@ -22,56 +20,79 @@ if TYPE_CHECKING:  # pragma: no cover
 
 def get_sign_str(num: Decimal, sign_mode: SignModeEnum) -> str:
     """Get the format sign string."""
-    if num < 0:
-        # Always return "-" for negative numbers.
-        sign_str = "-"
-    elif num > 0:
-        # Return "+", " ", or "" for positive numbers.
-        if sign_mode is SignModeEnum.ALWAYS:
-            sign_str = "+"
-        elif sign_mode is SignModeEnum.SPACE:
+    with decimal.localcontext() as ctx:
+        # TODO: Consider wrapping all the formatting in this context.
+        ctx.traps[decimal.InvalidOperation] = False
+
+        if num < 0:
+            # Always return "-" for negative numbers.
+            sign_str = "-"
+        elif num > 0:
+            # Return "+", " ", or "" for positive numbers.
+            if sign_mode is SignModeEnum.ALWAYS:
+                sign_str = "+"
+            elif sign_mode is SignModeEnum.SPACE:
+                sign_str = " "
+            elif sign_mode is SignModeEnum.NEGATIVE:
+                sign_str = ""
+            else:
+                msg = f"Invalid sign mode {sign_mode}."
+                raise ValueError(msg)
+        elif sign_mode is SignModeEnum.ALWAYS or sign_mode is SignModeEnum.SPACE:
+            """
+            For anything else (typically 0, possibly nan) return " " in "+" and " "
+            modes.
+            """
             sign_str = " "
-        elif sign_mode is SignModeEnum.NEGATIVE:
-            sign_str = ""
         else:
-            msg = f"Invalid sign mode {sign_mode}."
-            raise ValueError(msg)
-    elif sign_mode is SignModeEnum.ALWAYS or sign_mode is SignModeEnum.SPACE:
-        # For anything else (typically 0, possibly nan) return " " in "+" and " " modes
-        sign_str = " "
-    else:
-        # Otherwise return the empty string.
-        sign_str = ""
+            # Otherwise return the empty string.
+            sign_str = ""
 
     return sign_str
 
 
-def get_pad_str(left_pad_char: str, top_digit: int, top_padded_digit: int) -> str:
-    """Get the string padding from top_digit place to top_padded_digit place."""
-    if top_padded_digit > top_digit:
-        pad_len = top_padded_digit - max(top_digit, 0)
+def get_pad_str(
+    left_pad_char: str,
+    top_dec_place: int,
+    top_padded_dec_place: int,
+) -> str:
+    """Get the string padding from top_dec_place place to top_padded_dec_place place."""
+    if top_padded_dec_place > top_dec_place:
+        pad_len = top_padded_dec_place - max(top_dec_place, 0)
         pad_str = left_pad_char * pad_len
     else:
         pad_str = ""
     return pad_str
 
 
-def format_num_by_top_bottom_dig(
+def get_abs_num_str_by_bottom_dec_place(
     num: Decimal,
-    target_top_digit: int,
-    target_bottom_digit: int,
+    target_bottom_dec_place: int,
+) -> str:
+    """Format a number according to specified bottom decimal places."""
+    prec = max(0, -target_bottom_dec_place)
+    abs_mantissa_str = f"{abs(num):.{prec}f}"
+    return abs_mantissa_str
+
+
+def construct_num_str(
+    num: Decimal,
+    target_top_dec_place: int,
+    target_bottom_dec_place: int,
     sign_mode: SignModeEnum,
     left_pad_char: str,
 ) -> str:
-    """Format a number according to specified top and bottom digit places."""
-    print_prec = max(0, -target_bottom_digit)
-    abs_mantissa_str = f"{abs(num):.{print_prec}f}"
+    """Format a number to a specified decimal place, with left padding and a sign symbol."""  # noqa: E501
+    abs_num_str = get_abs_num_str_by_bottom_dec_place(
+        num,
+        target_bottom_dec_place,
+    )
 
     sign_str = get_sign_str(num, sign_mode)
 
-    num_top_digit = get_top_digit(num)
-    pad_str = get_pad_str(left_pad_char, num_top_digit, target_top_digit)
-    return f"{sign_str}{pad_str}{abs_mantissa_str}"
+    num_top_dec_place = get_top_dec_place(num)
+    pad_str = get_pad_str(left_pad_char, num_top_dec_place, target_top_dec_place)
+    return f"{sign_str}{pad_str}{abs_num_str}"
 
 
 def construct_val_unc_str(  # noqa: PLR0913
@@ -112,31 +133,13 @@ def construct_val_unc_str(  # noqa: PLR0913
     return val_unc_str
 
 
-def construct_val_unc_exp_str(  # noqa: PLR0913
+def construct_val_unc_exp_str(
     *,
     val_unc_str: str,
-    exp_val: int,
-    exp_mode: ExpModeEnum,
-    exp_format: ExpFormatEnum,
-    extra_si_prefixes: dict[int, str | None],
-    extra_iec_prefixes: dict[int, str | None],
-    extra_parts_per_forms: dict[int, str | None],
-    capitalize: bool,
-    superscript: bool,
+    exp_str: str,
     paren_uncertainty: bool,
 ) -> str:
     """Combine the val_unc_str into the final val_unc_exp_str."""
-    exp_str = get_exp_str(
-        exp_val=exp_val,
-        exp_mode=exp_mode,
-        exp_format=exp_format,
-        capitalize=capitalize,
-        superscript=superscript,
-        extra_si_prefixes=extra_si_prefixes,
-        extra_iec_prefixes=extra_iec_prefixes,
-        extra_parts_per_forms=extra_parts_per_forms,
-    )
-
     if exp_str == "":
         val_unc_exp_str = val_unc_str
     elif paren_uncertainty:

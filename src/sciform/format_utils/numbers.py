@@ -7,7 +7,11 @@ from decimal import Decimal
 from math import floor, log2
 from typing import Literal
 
-from sciform.formatting.parser import any_val_pattern
+from sciform.formatting.parser import (
+    ascii_exp_pattern,
+    finite_val_pattern,
+    non_finite_val_pattern,
+)
 from sciform.options.option_types import (
     AutoDigits,
     AutoExpVal,
@@ -15,48 +19,49 @@ from sciform.options.option_types import (
 )
 
 
-def get_top_digit(num: Decimal) -> int:
+def get_top_dec_place(num: Decimal) -> int:
     """Get the decimal place of a decimal's most significant digit."""
     if not num.is_finite() or num == 0:
         return 0
-    _, digits, exp = num.as_tuple()
+    _, digits, exp = num.normalize().as_tuple()
     return len(digits) + exp - 1
 
 
-def get_top_digit_binary(num: Decimal) -> int:
+def get_top_dec_place_binary(num: Decimal) -> int:
     """Get the decimal place of a decimal's most significant digit."""
     if not num.is_finite() or num == 0:
         return 0
     return floor(log2(abs(num)))
 
 
-def get_bottom_digit(num: Decimal) -> int:
+def get_bottom_dec_place(num: Decimal) -> int:
     """Get the decimal place of a decimal's least significant digit."""
     if not num.is_finite():
         return 0
-    _, _, exp = num.as_tuple()
+    _, _, exp = num.normalize().as_tuple()
     return exp
 
 
-def get_val_unc_top_digit(
+def get_val_unc_top_dec_place(
     val_mantissa: Decimal,
     unc_mantissa: Decimal,
-    input_top_digit: int | AutoDigits,
+    input_top_dec_place: int,
     *,
     left_pad_matching: bool,
 ) -> int | AutoDigits:
-    """Get top digit place for value/uncertainty formatting."""
+    """Get top decimal place for value/uncertainty formatting."""
     if left_pad_matching:
-        val_top_digit = get_top_digit(val_mantissa)
-        unc_top_digit = get_top_digit(unc_mantissa)
-        new_top_digit = max(
-            input_top_digit,
-            val_top_digit,
-            unc_top_digit,
+        val_top_dec_place = get_top_dec_place(val_mantissa)
+        unc_top_dec_place = get_top_dec_place(unc_mantissa)
+        new_top_dec_place = max(
+            input_top_dec_place,
+            val_top_dec_place,
+            unc_top_dec_place,
         )
     else:
-        new_top_digit = input_top_digit
-    return new_top_digit
+        new_top_dec_place = input_top_dec_place
+    new_top_dec_place = max(0, new_top_dec_place)
+    return new_top_dec_place
 
 
 def get_fixed_exp(
@@ -74,7 +79,7 @@ def get_scientific_exp(
     input_exp: int | type(AutoExpVal),
 ) -> int:
     """Get the exponent for scientific formatting mode."""
-    return get_top_digit(num) if input_exp is AutoExpVal else input_exp
+    return get_top_dec_place(num) if input_exp is AutoExpVal else input_exp
 
 
 def get_engineering_exp(
@@ -85,7 +90,7 @@ def get_engineering_exp(
 ) -> int:
     """Get the exponent for engineering formatting modes."""
     if input_exp is AutoExpVal:
-        exp_val = get_top_digit(num)
+        exp_val = get_top_dec_place(num)
         exp_val = exp_val // 3 * 3 if not shifted else (exp_val + 1) // 3 * 3
     else:
         if input_exp % 3 != 0:
@@ -106,7 +111,7 @@ def get_binary_exp(
 ) -> int:
     """Get the exponent for binary formatting modes."""
     if input_exp is AutoExpVal:
-        exp_val = get_top_digit_binary(num)
+        exp_val = get_top_dec_place_binary(num)
         if iec:
             exp_val = (exp_val // 10) * 10
     else:
@@ -155,21 +160,28 @@ def get_mantissa_exp_base(
     return mantissa, exp, base
 
 
-# Optional parentheses needed to handle (nan)e+00 case
-mantissa_exp_pattern = re.compile(
-    rf"""
-    ^
-    \(?(?P<mantissa_str>{any_val_pattern})\)?
-    (?P<exp_str>[eEbB].*?)?
-    $
-""",
-    re.VERBOSE,
-)
+# language=pythonverboseregexp  noqa: ERA001
+no_exp_pattern = rf"^(?P<mantissa>{non_finite_val_pattern})$"
+# language=pythonverboseregexp  noqa: ERA001
+optional_exp_pattern = rf"""
+^(?P<mantissa>{finite_val_pattern})(?P<exp>{ascii_exp_pattern})?$
+"""
+# language=pythonverboseregexp  noqa: ERA001
+always_exp_pattern = rf"""
+^
+\((?P<mantissa>{non_finite_val_pattern})\)
+(?P<exp>{ascii_exp_pattern})
+$
+"""
 
 
 def parse_mantissa_from_ascii_exp_str(number_str: str) -> str:
     """Break val/unc mantissa/exp strings into mantissa strings and an exp string."""
-    if match := mantissa_exp_pattern.match(number_str):
-        return match.group("mantissa_str")
+    if match := re.match(no_exp_pattern, number_str, re.VERBOSE):
+        return match.group("mantissa")
+    if match := re.match(optional_exp_pattern, number_str, re.VERBOSE):
+        return match.group("mantissa")
+    if match := re.match(always_exp_pattern, number_str, re.VERBOSE):
+        return match.group("mantissa")
     msg = f'Invalid number string "{number_str}".'
     raise ValueError(msg)

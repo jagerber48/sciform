@@ -44,4 +44,4 @@ class FinalizedOptions:
     pm_whitespace: bool
 
     def __post_init__(self: FinalizedOptions) -> None:
-        validate_options(self)
+        validate_options(self, none_allowed=False)

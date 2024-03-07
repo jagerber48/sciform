@@ -409,7 +409,7 @@ def parse_val_unc_from_input(
     However, users may also pass in strings with more complicated structure than those
     strings which can be natively converted to float or Decimal. For example
 
-    >>> from sciform.parser import parse_val_unc_from_input
+    >>> from sciform.formatting.parser import parse_val_unc_from_input
     >>> val, unc = parse_val_unc_from_input("123 +/- 4", None)
     >>> print(val)
     123
@@ -425,9 +425,9 @@ def parse_val_unc_from_input(
 
     >>> val, unc = parse_val_unc_from_input("123(4) k", None)
     >>> print(val)
-    123000
+    1.23E+5
     >>> print(unc)
-    4000
+    4E+3
     """
     if isinstance(value, (float, int)):
         value = Decimal(str(value))
