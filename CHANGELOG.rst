@@ -42,6 +42,14 @@ Changed
 
 * Some utility code refactoring.
 
+Fixed
+^^^^^
+
+* Fixed a bug where uncertainties between the Particle Data Group
+  uncertainties thresholds would erroneously result in ``ValueError``
+  being raised when formatted with ``pdg_sig_figs=True``.
+  [`#164 <https://github.com/jagerber48/sciform/issues/164>`_]
+
 ----
 
 0.35.0 (2024-02-16)
