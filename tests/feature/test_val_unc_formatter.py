@@ -263,6 +263,18 @@ class TestValUncFormatter(unittest.TestCase):
                 ],
             ),
             (
+                (10, 0.03544),
+                [
+                    (Formatter(pdg_sig_figs=True), "10.000 ± 0.035"),
+                ],
+            ),
+            (
+                (10, 0.03546),
+                [
+                    (Formatter(pdg_sig_figs=True), "10.000 ± 0.035"),
+                ],
+            ),
+            (
                 (10, 0.0355),
                 [
                     (Formatter(pdg_sig_figs=True), "10.00 ± 0.04"),
@@ -275,6 +287,18 @@ class TestValUncFormatter(unittest.TestCase):
                 ],
             ),
             (
+                (10, 0.09494),
+                [
+                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.09"),
+                ],
+            ),
+            (
+                (10, 0.09496),
+                [
+                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.09"),
+                ],
+            ),
+            (
                 (10, 0.0950),
                 [
                     (Formatter(pdg_sig_figs=True), "10.00 ± 0.10"),
@@ -282,6 +306,18 @@ class TestValUncFormatter(unittest.TestCase):
             ),
             (
                 (10, 0.0951),
+                [
+                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.10"),
+                ],
+            ),
+            (
+                (10, 0.09994),
+                [
+                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.10"),
+                ],
+            ),
+            (
+                (10, 0.09996),
                 [
                     (Formatter(pdg_sig_figs=True), "10.00 ± 0.10"),
                 ],
