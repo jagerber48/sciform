@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import unittest
 from decimal import Decimal
-from typing import Any
+from typing import Any, Tuple
 
 from sciform.format_utils import make_strings
 from sciform.options.option_types import SignModeEnum
 
-ConstructNumStrCase = tuple[
-    tuple[Decimal, int, int, SignModeEnum, str],
+ConstructNumStrCase = Tuple[
+    Tuple[Decimal, int, int, SignModeEnum, str],
     str,
 ]
 
