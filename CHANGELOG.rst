@@ -18,6 +18,12 @@ Added
 
 * Added support for Python 3.8.
 
+Changed
+^^^^^^^
+
+* Move ruff configuration out of ``pyproject.toml`` into ``ruff.toml``.
+  [`#163 <https://github.com/jagerber48/sciform/issues/163>`_]
+
 ----
 
 0.36.0 (2024-03-07)
