@@ -1,0 +1,27 @@
+[lint]
+allowed-confusables = ["×"]
+select = ['ALL']
+ignore = [
+    'D105',
+    'D212',
+    'D211',
+    'PLR2004',
+    'RUF001',
+    'SIM108',
+    'TD002',
+    'TD003',
+    'FIX002',
+    'RET504',
+    'COM812',
+    'ISC001',
+]
+
+[lint.pydocstyle]
+convention = "numpy"
+
+[lint.per-file-ignores]
+"tests/*.py" = ["D", "ANN", "PT"]
+"examples/*.py" = ["D"]
+
+[format]
+docstring-code-format = true
