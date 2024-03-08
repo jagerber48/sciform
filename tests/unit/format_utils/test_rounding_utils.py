@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import Tuple, Union
+from typing import Tuple, Type, Union
 
 from sciform.format_utils import rounding
 from sciform.options.option_types import AutoDigits, RoundModeEnum
@@ -9,12 +9,12 @@ from sciform.options.option_types import AutoDigits, RoundModeEnum
 from tests import NanTestCase
 
 RoundDecPlaceCase = Tuple[
-    Tuple[Decimal, RoundModeEnum, Union[int, type[AutoDigits]]],
+    Tuple[Decimal, RoundModeEnum, Union[int, Type[AutoDigits]]],
     int,
 ]
 
 RoundValUncCase = Tuple[
-    Tuple[Decimal, Decimal, Union[int, type[AutoDigits]], bool],
+    Tuple[Decimal, Decimal, Union[int, Type[AutoDigits]], bool],
     Tuple[Decimal, Decimal, int],
 ]
 

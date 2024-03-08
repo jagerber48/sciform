@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 from decimal import Decimal
-from typing import Any, Dict, Literal, Tuple, Union
+from typing import Any, Dict, Literal, Tuple, Type, Union
 
 from sciform.format_utils import exp_translations, exponents
 from sciform.options.option_types import AutoExpVal, ExpFormatEnum, ExpModeEnum
@@ -20,7 +20,7 @@ GetTranslationDictCase = Tuple[
 ]
 GetStandardExpStrCase = Tuple[Tuple[int, int, bool], str]
 GetValUncExpCase = Tuple[
-    Tuple[Decimal, Decimal, ExpModeEnum, Union[int, type[AutoExpVal]]],
+    Tuple[Decimal, Decimal, ExpModeEnum, Union[int, Type[AutoExpVal]]],
     int,
 ]
 
