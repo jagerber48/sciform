@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 from math import isnan
-from typing import Union
+from typing import List, Tuple, Union
 
 from sciform import AutoExpVal
 from sciform.format_utils import numbers
@@ -10,10 +10,10 @@ from sciform.options.option_types import ExpModeEnum
 
 from tests import NanTestCase
 
-MantissaExpBaseCase = list[
-    tuple[
-        tuple[Decimal, ExpModeEnum, Union[int, type(AutoExpVal)]],
-        tuple[Decimal, int, int],
+MantissaExpBaseCase = List[
+    Tuple[
+        Tuple[Decimal, ExpModeEnum, Union[int, type(AutoExpVal)]],
+        Tuple[Decimal, int, int],
     ]
 ]
 

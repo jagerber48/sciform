@@ -1,14 +1,14 @@
 import unittest
 from decimal import Decimal
 from math import isnan
-from typing import Optional
+from typing import List, Optional, Tuple
 
 from sciform import GlobalOptionsContext, SciNum
 from sciform.format_utils import Number
 from sciform.formatting.parser import parse_val_unc_from_str
 from sciform.options import option_types
 
-CasesList = list[tuple[str, tuple[Number, Optional[Number]]]]
+CasesList = List[Tuple[str, Tuple[Number, Optional[Number]]]]
 
 
 NAN = float("nan")

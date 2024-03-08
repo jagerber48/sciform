@@ -1,9 +1,10 @@
 import unittest
+from typing import List, Tuple
 
 from sciform import GlobalOptionsContext, SciNum
 from sciform.format_utils import Number
 
-ValUncFSMLCases = list[tuple[tuple[Number, Number], list[tuple[str, str]]]]
+ValUncFSMLCases = List[Tuple[Tuple[Number, Number], List[Tuple[str, str]]]]
 NAN = float("nan")
 INF = float("inf")
 

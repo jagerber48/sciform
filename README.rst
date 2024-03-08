@@ -65,7 +65,7 @@ or install the latest development version from
 
    python -m pip install git+https://github.com/jagerber48/sciform.git
 
-``sciform`` is compatible with Python versions >=3.9.
+``sciform`` is compatible with Python versions >=3.8.
 
 =====
 Usage

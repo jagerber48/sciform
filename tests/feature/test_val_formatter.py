@@ -1,10 +1,11 @@
 import unittest
 from decimal import Decimal, localcontext
+from typing import List, Tuple
 
 from sciform import AutoDigits, Formatter
 from sciform.format_utils import Number
 
-ValFormatterCases = list[tuple[Number, list[tuple[Formatter, str]]]]
+ValFormatterCases = List[Tuple[Number, List[Tuple[Formatter, str]]]]
 
 
 class TestValFormatter(unittest.TestCase):

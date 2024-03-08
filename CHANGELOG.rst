@@ -8,9 +8,15 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* Any unreleased changes can be viewed in the latest version
-  documentation
-  `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
+..
+  * Any unreleased changes can be viewed in the latest version
+    documentation
+    `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
+
+Added
+^^^^^
+
+* Added support for Python 3.8.
 
 ----
 
