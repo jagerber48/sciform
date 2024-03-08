@@ -1,9 +1,10 @@
 import unittest
+from typing import List, Tuple
 
 from sciform import GlobalOptionsContext, SciNum
 from sciform.format_utils import Number
 
-ValFSMLCases = list[tuple[Number, list[tuple[str, str]]]]
+ValFSMLCases = List[Tuple[Number, List[Tuple[str, str]]]]
 
 
 class TestValFSML(unittest.TestCase):

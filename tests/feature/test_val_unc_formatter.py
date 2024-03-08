@@ -1,10 +1,11 @@
 import unittest
 from decimal import Decimal
+from typing import List, Tuple
 
 from sciform import AutoDigits, Formatter
 from sciform.format_utils import Number
 
-ValUncFormatterCases = list[tuple[tuple[Number, Number], list[tuple[Formatter, str]]]]
+ValUncFormatterCases = List[Tuple[Tuple[Number, Number], List[Tuple[Formatter, str]]]]
 
 
 class TestValUncFormatter(unittest.TestCase):

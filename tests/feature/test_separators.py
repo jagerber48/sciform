@@ -1,10 +1,11 @@
 import unittest
+from typing import List, Tuple
 
 from sciform import Formatter
 from sciform.format_utils import Number
 
-FloatFormatterCases = list[tuple[Number, list[tuple[Formatter, str]]]]
-ValUncFormatterCases = list[tuple[tuple[Number, Number], list[tuple[Formatter, str]]]]
+FloatFormatterCases = List[Tuple[Number, List[Tuple[Formatter, str]]]]
+ValUncFormatterCases = List[Tuple[Tuple[Number, Number], List[Tuple[Formatter, str]]]]
 
 
 class TestSeparators(unittest.TestCase):

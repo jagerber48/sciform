@@ -8,6 +8,7 @@ authors = [
     {name = "Justin Gerber", email="justin.gerber48@gmail.com"}
 ]
 description = "A package for formatting numbers into scientific formatted strings."
+requires-python = ">= 3.8"
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Development Status :: 4 - Beta",
@@ -53,7 +54,6 @@ readme = {file = "README.rst"}
 
 [tool.ruff]
 allowed-confusables = ["×"]
-target-version = "py38"
 
 [tool.ruff.lint]
 select = ['ALL']
