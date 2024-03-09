@@ -308,6 +308,7 @@ class TestRounding(NanTestCase):
                 val,
                 unc,
                 ndigits,
+                RoundModeEnum.SIG_FIG,
                 use_pdg_sig_figs=use_pdg_sig_figs,
             )
             with self.subTest(
