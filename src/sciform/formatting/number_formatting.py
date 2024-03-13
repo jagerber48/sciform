@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import replace
 from decimal import Decimal
 from typing import TYPE_CHECKING, cast
@@ -307,15 +308,21 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     val_mantissa_str = parse_mantissa_from_ascii_exp_str(val_mantissa_exp_str)
     unc_mantissa_str = parse_mantissa_from_ascii_exp_str(unc_mantissa_exp_str)
 
+    paren_uncertainty_trim = (
+        options.paren_uncertainty_trim
+        and val.is_finite()
+        and unc.is_finite()
+        and unc < abs(val)
+        and re.search(r"[1-9]", unc_mantissa_str) is not None
+    )
+
     val_unc_str = construct_val_unc_str(
         val_mantissa_str=val_mantissa_str,
         unc_mantissa_str=unc_mantissa_str,
-        val=val,
-        unc=unc,
         decimal_separator=options.decimal_separator,
         paren_uncertainty=options.paren_uncertainty,
         pm_whitespace=options.pm_whitespace,
-        paren_uncertainty_trim=options.paren_uncertainty_trim,
+        paren_uncertainty_trim=paren_uncertainty_trim,
     )
 
     if val.is_finite() or unc.is_finite() or options.nan_inf_exp:

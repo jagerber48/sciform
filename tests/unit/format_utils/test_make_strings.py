@@ -143,8 +143,6 @@ class TestMakeStrings(unittest.TestCase):
                 {
                     "val_mantissa_str": "123.456",
                     "unc_mantissa_str": "0.123",
-                    "val": Decimal("123.456"),
-                    "unc": Decimal("0.123"),
                     "decimal_separator": ".",
                     "paren_uncertainty": False,
                     "pm_whitespace": True,
@@ -156,8 +154,6 @@ class TestMakeStrings(unittest.TestCase):
                 {
                     "val_mantissa_str": "123.456",
                     "unc_mantissa_str": "0.123",
-                    "val": Decimal("123.456"),
-                    "unc": Decimal("0.123"),
                     "decimal_separator": ".",
                     "paren_uncertainty": False,
                     "pm_whitespace": False,
@@ -169,8 +165,6 @@ class TestMakeStrings(unittest.TestCase):
                 {
                     "val_mantissa_str": "123,456",
                     "unc_mantissa_str": "0,123",
-                    "val": Decimal("123.456"),
-                    "unc": Decimal("0.123"),
                     "decimal_separator": ",",
                     "paren_uncertainty": False,
                     "pm_whitespace": True,
@@ -182,8 +176,6 @@ class TestMakeStrings(unittest.TestCase):
                 {
                     "val_mantissa_str": "123.456",
                     "unc_mantissa_str": "0.123",
-                    "val": Decimal("123.456"),
-                    "unc": Decimal("0.123"),
                     "decimal_separator": ".",
                     "paren_uncertainty": False,
                     "pm_whitespace": True,
@@ -195,8 +187,6 @@ class TestMakeStrings(unittest.TestCase):
                 {
                     "val_mantissa_str": "123,456",
                     "unc_mantissa_str": "0,123",
-                    "val": Decimal("123.456"),
-                    "unc": Decimal("0.123"),
                     "decimal_separator": ",",
                     "paren_uncertainty": True,
                     "pm_whitespace": True,
@@ -208,8 +198,6 @@ class TestMakeStrings(unittest.TestCase):
                 {
                     "val_mantissa_str": "123,456",
                     "unc_mantissa_str": "0,123",
-                    "val": Decimal("123.456"),
-                    "unc": Decimal("0.123"),
                     "decimal_separator": ",",
                     "paren_uncertainty": True,
                     "pm_whitespace": True,
@@ -221,8 +209,6 @@ class TestMakeStrings(unittest.TestCase):
                 {
                     "val_mantissa_str": "123,456,789.123_456",
                     "unc_mantissa_str": "0.123_456",
-                    "val": Decimal("123456789.123456"),
-                    "unc": Decimal("0.123456"),
                     "decimal_separator": ",",
                     "paren_uncertainty": True,
                     "pm_whitespace": True,
@@ -234,8 +220,6 @@ class TestMakeStrings(unittest.TestCase):
                 {
                     "val_mantissa_str": "123,456,789.123_456",
                     "unc_mantissa_str": "0.123_456",
-                    "val": Decimal("123456789.123456"),
-                    "unc": Decimal("0.123456"),
                     "decimal_separator": ",",
                     "paren_uncertainty": True,
                     "pm_whitespace": True,
@@ -247,12 +231,10 @@ class TestMakeStrings(unittest.TestCase):
                 {
                     "val_mantissa_str": "0.123",
                     "unc_mantissa_str": "123,456.456",
-                    "val": Decimal("0.123"),
-                    "unc": Decimal("123456.456"),
                     "decimal_separator": ",",
                     "paren_uncertainty": True,
                     "pm_whitespace": True,
-                    "paren_uncertainty_trim": True,
+                    "paren_uncertainty_trim": False,
                 },
                 "0.123(123,456.456)",
             ),

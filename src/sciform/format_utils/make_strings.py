@@ -92,20 +92,9 @@ def construct_num_str(
     return f"{sign_str}{pad_str}{abs_num_str}"
 
 
-def str_is_zero(unc_str: str) -> bool:
-    """Check if a string contains no non-zero integers."""
-    is_zero = True
-    for i in range(1, 10):
-        if str(i) in unc_str:
-            is_zero = False
-    return is_zero
-
-
 def construct_val_unc_str(  # noqa: PLR0913
     val_mantissa_str: str,
     unc_mantissa_str: str,
-    val: Decimal,
-    unc: Decimal,
     decimal_separator: DecimalSeparatorEnums,
     *,
     paren_uncertainty: bool,
@@ -119,13 +108,7 @@ def construct_val_unc_str(  # noqa: PLR0913
             pm_symb = f" {pm_symb} "
         val_unc_str = f"{val_mantissa_str}{pm_symb}{unc_mantissa_str}"
     else:
-        if (
-            paren_uncertainty_trim
-            and unc.is_finite()
-            and val.is_finite()
-            and unc < abs(val)
-            and not str_is_zero(unc_mantissa_str)
-        ):
+        if paren_uncertainty_trim:
             """
             Don't strip the unc_mantissa_str if val_mantissa is non-finite.
             Don't strip the unc_mantissa_str if unc_mantissa == 0 (because then the
