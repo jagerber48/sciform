@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import decimal
-from typing import TYPE_CHECKING
+from decimal import Decimal
 
 from sciform.format_utils.numbers import (
     get_top_dec_place,
@@ -13,9 +13,6 @@ from sciform.options.option_types import (
     SeparatorEnum,
     SignModeEnum,
 )
-
-if TYPE_CHECKING:  # pragma: no cover
-    from decimal import Decimal
 
 
 def get_sign_str(num: Decimal, sign_mode: SignModeEnum) -> str:
@@ -95,11 +92,19 @@ def construct_num_str(
     return f"{sign_str}{pad_str}{abs_num_str}"
 
 
+def str_is_zero(unc_str: str) -> bool:
+    is_zero = True
+    for i in range(1, 10):
+        if str(i) in unc_str:
+            is_zero = False
+    return is_zero
+
+
 def construct_val_unc_str(  # noqa: PLR0913
     val_mantissa_str: str,
     unc_mantissa_str: str,
-    val_mantissa: Decimal,
-    unc_mantissa: Decimal,
+    val: Decimal,
+    unc: Decimal,
     decimal_separator: DecimalSeparatorEnums,
     *,
     paren_uncertainty: bool,
@@ -115,9 +120,10 @@ def construct_val_unc_str(  # noqa: PLR0913
     else:
         if (
             paren_uncertainty_trim
-            and unc_mantissa.is_finite()
-            and val_mantissa.is_finite()
-            and 0 < unc_mantissa < abs(val_mantissa)
+            and unc.is_finite()
+            and val.is_finite()
+            and unc < abs(val)
+            and not str_is_zero(unc_mantissa_str)
         ):
             """
             Don't strip the unc_mantissa_str if val_mantissa is non-finite.

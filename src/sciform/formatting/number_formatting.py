@@ -24,6 +24,7 @@ from sciform.format_utils.rounding import get_round_dec_place, round_val_unc
 from sciform.formatting.parser import parse_val_unc_from_input
 from sciform.options.conversion import finalize_populated_options, populate_options
 from sciform.options.option_types import (
+    AutoDigits,
     AutoExpVal,
     ExpFormatEnum,
     ExpModeEnum,
@@ -35,6 +36,49 @@ if TYPE_CHECKING:  # pragma: no cover
     from sciform.format_utils import Number
     from sciform.options.finalized_options import FinalizedOptions
     from sciform.options.input_options import InputOptions
+
+
+def re_round_mantissa_exp_decomposition(
+    number: Number,
+    exp_mode: ExpModeEnum,
+    input_exp_val: int | type(AutoExpVal),
+    round_mode: RoundModeEnum,
+    ndigits: int | type(AutoDigits),
+) -> tuple[Decimal, int, int, int]:
+    """Decompose a number into a mantissa and exponent using repeated rounding."""
+    first_mantissa, first_exp_val, base = get_mantissa_exp_base(
+        number,
+        exp_mode,
+        input_exp_val,
+    )
+    first_round_digit = get_round_dec_place(first_mantissa, round_mode, ndigits)
+    first_mantissa_rounded = round(first_mantissa, -first_round_digit)
+
+    number_rounded = first_mantissa_rounded * base ** Decimal(first_exp_val)
+
+    """
+    Repeat mantissa + exponent discovery after rounding in case rounding
+    altered the required exponent.
+    """
+    second_mantissa, exp_val, _ = get_mantissa_exp_base(
+        number_rounded,
+        exp_mode,
+        input_exp_val
+    )
+    round_digit = get_round_dec_place(second_mantissa, round_mode, ndigits)
+    mantissa = round(second_mantissa, -round_digit)
+    mantissa = cast(Decimal, mantissa)
+
+    if mantissa == 0:
+        """
+        This catches an edge case involving negative ndigits when the
+        resulting mantissa is zero after the second rounding. This
+        result is technically correct (e.g. 0e+03 = 0e+00), but sciform
+        always presents zero values with an exponent of zero.
+        """
+        exp_val = 0
+
+    return mantissa, exp_val, base, round_digit
 
 
 def format_from_options(
@@ -116,38 +160,19 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
         num *= 100
         num = num.normalize()
 
-    exp_val = options.exp_val
-    round_mode = options.round_mode
-    exp_mode = options.exp_mode
-    ndigits = options.ndigits
-    mantissa, temp_exp_val, base = get_mantissa_exp_base(num, exp_mode, exp_val)
-    round_digit = get_round_dec_place(mantissa, round_mode, ndigits)
-    mantissa_rounded = round(mantissa, -round_digit)
-
-    """
-    Repeat mantissa + exponent discovery after rounding in case rounding
-    altered the required exponent.
-    """
-    rounded_num = mantissa_rounded * Decimal(base) ** Decimal(temp_exp_val)
-    mantissa, exp_val, base = get_mantissa_exp_base(rounded_num, exp_mode, exp_val)
-    round_digit = get_round_dec_place(mantissa, round_mode, ndigits)
-    mantissa_rounded = round(mantissa, -int(round_digit))
-    mantissa_rounded = cast(Decimal, mantissa_rounded)
-
-    if mantissa_rounded == 0:
-        """
-        This catches an edge case involving negative ndigits when the
-        resulting mantissa is zero after the second rounding. This
-        result is technically correct (e.g. 0e+03 = 0e+00), but sciform
-        always presents zero values with an exponent of zero.
-        """
-        exp_val = 0
+    mantissa, exp_val, base, round_dec_place = re_round_mantissa_exp_decomposition(
+        num,
+        options.exp_mode,
+        options.exp_val,
+        options.round_mode,
+        options.ndigits
+    )
 
     left_pad_char = options.left_pad_char.value
     mantissa_str = construct_num_str(
-        mantissa_rounded.normalize(),
+        mantissa.normalize(),
         options.left_pad_dec_place,
-        round_digit,
+        round_dec_place,
         options.sign_mode,
         left_pad_char,
     )
@@ -165,7 +190,7 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
 
     exp_str = get_exp_str(
         exp_val=exp_val,
-        exp_mode=exp_mode,
+        exp_mode=options.exp_mode,
         exp_format=options.exp_format,
         capitalize=options.capitalize,
         superscript=options.superscript,
@@ -230,6 +255,11 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         options.exp_val,
     )
 
+    if options.round_mode is RoundModeEnum.SIG_FIG:
+        ndigits = -round_digit + exp_val
+    else:
+        ndigits = options.ndigits
+
     val_mantissa, _, _ = get_mantissa_exp_base(
         val_rounded,
         exp_mode=exp_mode,
@@ -247,8 +277,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         options.left_pad_dec_place,
         left_pad_matching=options.left_pad_matching,
     )
-
-    ndigits = -round_digit + exp_val
 
     """
     We will format the val and unc mantissas
@@ -288,8 +316,8 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     val_unc_str = construct_val_unc_str(
         val_mantissa_str=val_mantissa_str,
         unc_mantissa_str=unc_mantissa_str,
-        val_mantissa=val_mantissa,
-        unc_mantissa=unc_mantissa,
+        val=val,
+        unc=unc,
         decimal_separator=options.decimal_separator,
         paren_uncertainty=options.paren_uncertainty,
         pm_whitespace=options.pm_whitespace,
