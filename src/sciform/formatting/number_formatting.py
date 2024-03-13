@@ -61,9 +61,7 @@ def re_round_mantissa_exp_decomposition(
     altered the required exponent.
     """
     second_mantissa, exp_val, _ = get_mantissa_exp_base(
-        number_rounded,
-        exp_mode,
-        input_exp_val
+        number_rounded, exp_mode, input_exp_val
     )
     round_digit = get_round_dec_place(second_mantissa, round_mode, ndigits)
     mantissa = round(second_mantissa, -round_digit)
@@ -161,11 +159,7 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
         num = num.normalize()
 
     mantissa, exp_val, base, round_dec_place = re_round_mantissa_exp_decomposition(
-        num,
-        options.exp_mode,
-        options.exp_val,
-        options.round_mode,
-        options.ndigits
+        num, options.exp_mode, options.exp_val, options.round_mode, options.ndigits
     )
 
     left_pad_char = options.left_pad_char.value

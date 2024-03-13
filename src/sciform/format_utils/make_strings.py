@@ -93,6 +93,7 @@ def construct_num_str(
 
 
 def str_is_zero(unc_str: str) -> bool:
+    """Check if a string contains no non-zero integers."""
     is_zero = True
     for i in range(1, 10):
         if str(i) in unc_str:
