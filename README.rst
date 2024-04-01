@@ -21,7 +21,7 @@
      :alt: GitHub Workflow Status
 .. image:: https://zenodo.org/badge/645611310.svg
      :target: https://zenodo.org/doi/10.5281/zenodo.10645272
-     :alt: Zenodo 
+     :alt: Zenodo
 
 
 #######
@@ -174,3 +174,5 @@ Acknowledgements
 the `prefixed <https://github.com/Rockhopper-Technologies/prefixed>`_
 package and the value ± uncertainty formatting in the
 `uncertainties <https://github.com/lebigot/uncertainties>`_ package.
+
+test
