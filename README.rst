@@ -77,55 +77,55 @@ For many more details see
 
 ``sciform`` provides a wide variety of formatting options which can be
 controlled when constructing ``Formatter`` objects which are then used
-to format numbers into strings according to the selected options.
+to format numbers into strings according to the selected options::
 
->>> from sciform import Formatter
->>> formatter = Formatter(
-...     round_mode="dec_place", ndigits=6, upper_separator=" ", lower_separator=" "
-... )
->>> print(formatter(51413.14159265359))
-51 413.141 593
->>> formatter = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
->>> print(formatter(123456.78))
-123.5e+03
+  >>> from sciform import Formatter
+  >>> formatter = Formatter(
+  ...     round_mode="dec_place", ndigits=6, upper_separator=" ", lower_separator=" "
+  ... )
+  >>> print(formatter(51413.14159265359))
+  51 413.141 593
+  >>> formatter = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
+  >>> print(formatter(123456.78))
+  123.5e+03
 
 Users can also format numbers by constructing ``SciNum`` objects and
 using string formatting to format the ``SciNum`` instances according
-to a custom FSML.
+to a custom FSML::
 
->>> from sciform import SciNum
->>> num = SciNum(12345)
->>> print(f"{num:!2f}")
-12000
->>> print(f"{num:!2r}")
-12e+03
+  >>> from sciform import SciNum
+  >>> num = SciNum(12345)
+  >>> print(f"{num:!2f}")
+  12000
+  >>> print(f"{num:!2r}")
+  12e+03
 
 In addition to formatting individual numbers, ``sciform`` can be used
 to format pairs of numbers as value/uncertainty pairs.
 This can be done by passing two numbers into a ``Formatter`` call or by
-using the ``SciNum`` object.
+using the ``SciNum`` object::
+  
+  >>> formatter = Formatter(ndigits=2, upper_separator=" ", lower_separator=" ")
+  >>> print(formatter(123456.654321, 0.00345))
+  123 456.654 3 ± 0.003 4
+  >>> formatter = Formatter(ndigits=4, exp_mode="engineering")
+  >>> print(formatter(123456.654321, 0.00345))
+  (123.456654321 ± 0.000003450)e+03
 
->>> formatter = Formatter(ndigits=2, upper_separator=" ", lower_separator=" ")
->>> print(formatter(123456.654321, 0.00345))
-123 456.654 3 ± 0.003 4
->>> formatter = Formatter(ndigits=4, exp_mode="engineering")
->>> print(formatter(123456.654321, 0.00345))
-(123.456654321 ± 0.000003450)e+03
-
->>> num = SciNum(123456.654321, 0.00345)
->>> print(f"{num:!2f}")
-123456.6543 ± 0.0034
->>> print(f"{num:!2f()}")
-123456.6543(34)
+  >>> num = SciNum(123456.654321, 0.00345)
+  >>> print(f"{num:!2f}")
+  123456.6543 ± 0.0034
+  >>> print(f"{num:!2f()}")
+  123456.6543(34)
 
 Note that the above examples demonstrate that ``sciform`` uses
 `"round-to-even" <https://en.wikipedia.org/wiki/Rounding#Rounding_half_to_even>`_
-rounding.
+rounding::
 
->>> print(f"{SciNum(865):!2}")
-860
->>> print(f"{SciNum(875):!2}")
-880
+  >>> print(f"{SciNum(865):!2}")
+  860
+  >>> print(f"{SciNum(875):!2}")
+  880
 
 See `Formatting Options <https://sciform.readthedocs.io/en/stable/options.html>`_,
 `Format Specification Mini-Language <https://sciform.readthedocs.io/en/stable/fsml.html>`_
