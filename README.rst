@@ -1,25 +1,29 @@
-.. image:: https://www.repostatus.org/badges/latest/wip.svg
+.. container::
+
+    |Repro Status| |pyOpenSci| |Documentation Status| |PyPI Version| |PyPI Python| |Coverage Status| |GH Workflow Status| |Zenodo|
+
+.. |Repro Status| image:: https://www.repostatus.org/badges/latest/wip.svg
      :target: https://www.repostatus.org/#wip
      :alt: Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.
-.. image:: https://tinyurl.com/y22nb8up
+.. |pyOpenSci| image:: https://tinyurl.com/y22nb8up
      :target: https://github.com/pyOpenSci/software-review/issues/121
      :alt: pyOpenSci
-.. image:: https://img.shields.io/readthedocs/sciform?logo=readthedocs&link=https%3A%2F%2Fsciform.readthedocs.io%2Fen%2Fstable%2F
+.. |Documentation Status| image:: https://img.shields.io/readthedocs/sciform?logo=readthedocs&link=https%3A%2F%2Fsciform.readthedocs.io%2Fen%2Fstable%2F
      :target: https://sciform.readthedocs.io/en/stable/
      :alt: Read the Docs
-.. image:: https://img.shields.io/pypi/v/sciform?logo=pypi
+.. |PyPI Version| image:: https://img.shields.io/pypi/v/sciform?logo=pypi
      :target: https://pypi.org/project/sciform/
      :alt: PyPI - Version
-.. image:: https://img.shields.io/pypi/pyversions/sciform?logo=python
+.. |PyPI Python| image:: https://img.shields.io/pypi/pyversions/sciform?logo=python
      :target: https://pypi.org/project/sciform/
      :alt: PyPI - Python Version
-.. image:: https://img.shields.io/codecov/c/github/jagerber48/sciform?logo=codecov
+.. |Coverage Status| image:: https://img.shields.io/codecov/c/github/jagerber48/sciform?logo=codecov
      :target: https://codecov.io/gh/jagerber48/sciform
      :alt: Codecov
-.. image:: https://img.shields.io/github/actions/workflow/status/jagerber48/sciform/python-package.yml?logo=github%20actions
+.. |GH Workflow Status| image:: https://img.shields.io/github/actions/workflow/status/jagerber48/sciform/python-package.yml?logo=github%20actions
      :target: https://github.com/jagerber48/sciform/blob/main/.github/workflows/python-package.yml
      :alt: GitHub Workflow Status
-.. image:: https://zenodo.org/badge/645611310.svg
+.. |Zenodo| image:: https://zenodo.org/badge/645611310.svg
      :target: https://zenodo.org/doi/10.5281/zenodo.10645272
      :alt: Zenodo
 
@@ -28,9 +32,9 @@
 sciform
 #######
 
-|  **Repository:** `<https://github.com/jagerber48/sciform>`_
-|  **Documentation:** `<https://sciform.readthedocs.io/en/stable/>`_
-|  **PyPi:** `<https://pypi.org/project/sciform/>`_
+| **Repository:** `<https://github.com/jagerber48/sciform>`_
+| **Documentation:** `<https://sciform.readthedocs.io/en/stable/>`_
+| **PyPi:** `<https://pypi.org/project/sciform/>`_
 
 We would greatly appreciate you taking the time to fill out the
 `User Experience Survey <https://forms.gle/TkkKgywYyEMKu9U37>`_ to help
