@@ -1,8 +1,8 @@
 .. container::
 
-    |Repro Status| |pyOpenSci| |Documentation Status| |PyPI Version| |PyPI Python| |Coverage Status| |GH Workflow Status| |Zenodo|
+    |Repo Status| |pyOpenSci| |Documentation Status| |PyPI Version| |PyPI Python| |Coverage Status| |GH Workflow Status| |Zenodo|
 
-.. |Repro Status| image:: https://www.repostatus.org/badges/latest/wip.svg
+.. |Repo Status| image:: https://www.repostatus.org/badges/latest/wip.svg
      :target: https://www.repostatus.org/#wip
      :alt: Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.
 .. |pyOpenSci| image:: https://tinyurl.com/y22nb8up
@@ -108,7 +108,7 @@ In addition to formatting individual numbers, ``sciform`` can be used
 to format pairs of numbers as value/uncertainty pairs.
 This can be done by passing two numbers into a ``Formatter`` call or by
 using the ``SciNum`` object::
-  
+
   >>> formatter = Formatter(ndigits=2, upper_separator=" ", lower_separator=" ")
   >>> print(formatter(123456.654321, 0.00345))
   123 456.654 3 ± 0.003 4
