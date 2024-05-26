@@ -1,25 +1,29 @@
-.. image:: https://www.repostatus.org/badges/latest/wip.svg
+.. container::
+
+    |Repo Status| |pyOpenSci| |Documentation Status| |PyPI Version| |PyPI Python| |Coverage Status| |GH Workflow Status| |Zenodo|
+
+.. |Repo Status| image:: https://www.repostatus.org/badges/latest/wip.svg
      :target: https://www.repostatus.org/#wip
      :alt: Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.
-.. image:: https://tinyurl.com/y22nb8up
+.. |pyOpenSci| image:: https://tinyurl.com/y22nb8up
      :target: https://github.com/pyOpenSci/software-review/issues/121
      :alt: pyOpenSci
-.. image:: https://img.shields.io/readthedocs/sciform?logo=readthedocs&link=https%3A%2F%2Fsciform.readthedocs.io%2Fen%2Fstable%2F
+.. |Documentation Status| image:: https://img.shields.io/readthedocs/sciform?logo=readthedocs&link=https%3A%2F%2Fsciform.readthedocs.io%2Fen%2Fstable%2F
      :target: https://sciform.readthedocs.io/en/stable/
      :alt: Read the Docs
-.. image:: https://img.shields.io/pypi/v/sciform?logo=pypi
+.. |PyPI Version| image:: https://img.shields.io/pypi/v/sciform?logo=pypi
      :target: https://pypi.org/project/sciform/
      :alt: PyPI - Version
-.. image:: https://img.shields.io/pypi/pyversions/sciform?logo=python
+.. |PyPI Python| image:: https://img.shields.io/pypi/pyversions/sciform?logo=python
      :target: https://pypi.org/project/sciform/
      :alt: PyPI - Python Version
-.. image:: https://img.shields.io/codecov/c/github/jagerber48/sciform?logo=codecov
+.. |Coverage Status| image:: https://img.shields.io/codecov/c/github/jagerber48/sciform?logo=codecov
      :target: https://codecov.io/gh/jagerber48/sciform
      :alt: Codecov
-.. image:: https://img.shields.io/github/actions/workflow/status/jagerber48/sciform/python-package.yml?logo=github%20actions
+.. |GH Workflow Status| image:: https://img.shields.io/github/actions/workflow/status/jagerber48/sciform/python-package.yml?logo=github%20actions
      :target: https://github.com/jagerber48/sciform/blob/main/.github/workflows/python-package.yml
      :alt: GitHub Workflow Status
-.. image:: https://zenodo.org/badge/645611310.svg
+.. |Zenodo| image:: https://zenodo.org/badge/645611310.svg
      :target: https://zenodo.org/doi/10.5281/zenodo.10645272
      :alt: Zenodo
 
@@ -28,9 +32,9 @@
 sciform
 #######
 
-|  **Repository:** `<https://github.com/jagerber48/sciform>`_
-|  **Documentation:** `<https://sciform.readthedocs.io/en/stable/>`_
-|  **PyPi:** `<https://pypi.org/project/sciform/>`_
+| **Repository:** `<https://github.com/jagerber48/sciform>`_
+| **Documentation:** `<https://sciform.readthedocs.io/en/stable/>`_
+| **PyPi:** `<https://pypi.org/project/sciform/>`_
 
 We would greatly appreciate you taking the time to fill out the
 `User Experience Survey <https://forms.gle/TkkKgywYyEMKu9U37>`_ to help
@@ -77,55 +81,55 @@ For many more details see
 
 ``sciform`` provides a wide variety of formatting options which can be
 controlled when constructing ``Formatter`` objects which are then used
-to format numbers into strings according to the selected options.
+to format numbers into strings according to the selected options::
 
->>> from sciform import Formatter
->>> formatter = Formatter(
-...     round_mode="dec_place", ndigits=6, upper_separator=" ", lower_separator=" "
-... )
->>> print(formatter(51413.14159265359))
-51 413.141 593
->>> formatter = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
->>> print(formatter(123456.78))
-123.5e+03
+  >>> from sciform import Formatter
+  >>> formatter = Formatter(
+  ...     round_mode="dec_place", ndigits=6, upper_separator=" ", lower_separator=" "
+  ... )
+  >>> print(formatter(51413.14159265359))
+  51 413.141 593
+  >>> formatter = Formatter(round_mode="sig_fig", ndigits=4, exp_mode="engineering")
+  >>> print(formatter(123456.78))
+  123.5e+03
 
 Users can also format numbers by constructing ``SciNum`` objects and
 using string formatting to format the ``SciNum`` instances according
-to a custom FSML.
+to a custom FSML::
 
->>> from sciform import SciNum
->>> num = SciNum(12345)
->>> print(f"{num:!2f}")
-12000
->>> print(f"{num:!2r}")
-12e+03
+  >>> from sciform import SciNum
+  >>> num = SciNum(12345)
+  >>> print(f"{num:!2f}")
+  12000
+  >>> print(f"{num:!2r}")
+  12e+03
 
 In addition to formatting individual numbers, ``sciform`` can be used
 to format pairs of numbers as value/uncertainty pairs.
 This can be done by passing two numbers into a ``Formatter`` call or by
-using the ``SciNum`` object.
+using the ``SciNum`` object::
 
->>> formatter = Formatter(ndigits=2, upper_separator=" ", lower_separator=" ")
->>> print(formatter(123456.654321, 0.00345))
-123 456.654 3 ± 0.003 4
->>> formatter = Formatter(ndigits=4, exp_mode="engineering")
->>> print(formatter(123456.654321, 0.00345))
-(123.456654321 ± 0.000003450)e+03
+  >>> formatter = Formatter(ndigits=2, upper_separator=" ", lower_separator=" ")
+  >>> print(formatter(123456.654321, 0.00345))
+  123 456.654 3 ± 0.003 4
+  >>> formatter = Formatter(ndigits=4, exp_mode="engineering")
+  >>> print(formatter(123456.654321, 0.00345))
+  (123.456654321 ± 0.000003450)e+03
 
->>> num = SciNum(123456.654321, 0.00345)
->>> print(f"{num:!2f}")
-123456.6543 ± 0.0034
->>> print(f"{num:!2f()}")
-123456.6543(34)
+  >>> num = SciNum(123456.654321, 0.00345)
+  >>> print(f"{num:!2f}")
+  123456.6543 ± 0.0034
+  >>> print(f"{num:!2f()}")
+  123456.6543(34)
 
 Note that the above examples demonstrate that ``sciform`` uses
 `"round-to-even" <https://en.wikipedia.org/wiki/Rounding#Rounding_half_to_even>`_
-rounding.
+rounding::
 
->>> print(f"{SciNum(865):!2}")
-860
->>> print(f"{SciNum(875):!2}")
-880
+  >>> print(f"{SciNum(865):!2}")
+  860
+  >>> print(f"{SciNum(875):!2}")
+  880
 
 See `Formatting Options <https://sciform.readthedocs.io/en/stable/options.html>`_,
 `Format Specification Mini-Language <https://sciform.readthedocs.io/en/stable/fsml.html>`_
