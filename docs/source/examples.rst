@@ -331,3 +331,69 @@ makes this easy.
 [['1.00(9) M' '2.00(8) M' '3.00(7) M']
  ['4.00(6) M' '5.00(5) M' '6.00(4) M']
  ['7.000(30) M' '8.000(20) M' '9.000(10) M']]
+
+Appending Units
+========================
+
+The :mod:`sciform` :ref:`SI prefix mode<exp_str_replacement>` allows
+exponent strings such as ``'e+03'`` to be replaced with their SI
+prefix counterparts such as ``'k'``.
+In scientific applications numbers and numbers with uncertainty include
+units such as ``'g'``, ``'s'``, and ``'Hz'``.
+The simple utility function below appends units to a :mod:`sciform`
+output string in such a way that, if an SI prefix is present the unit
+is appended to the prefix, otherwise there is a space between the unit
+and the number.
+
+>>> import re
+>>> from sciform import FormattedNumber, SciNum
+>>>
+>>> def add_units(formatted_number: FormattedNumber, unit: str) -> FormattedNumber:
+...     """Add units to a number string."""
+...     if re.match(r"[a-zA-Z]", formatted_number[-1]):
+...         num_with_units = f"{formatted_number}{unit}"
+...     else:
+...         num_with_units = f"{formatted_number} {unit}"
+...     return FormattedNumber(
+...         num_with_units,
+...         formatted_number.value,
+...         formatted_number.uncertainty,
+...         formatted_number.populated_options,
+...     )
+>>>
+>>> num_str = format(SciNum(123e6, 0.45e6), "rp()")
+>>> print(num_str)
+123.00(45) M
+>>> print(add_units(num_str, "Hz"))
+123.00(45) MHz
+>>> num_str = format(SciNum(123, 0.45), "rp()")
+>>> print(add_units(num_str, "Hz"))
+123.00(45) Hz
+>>> num_str = format(SciNum(123e6, 0.45e6), "e()")
+>>> print(add_units(num_str, "Hz"))
+1.2300(45)e+08 Hz
+
+The utility function has been written to preserve the
+:class:`FormattedNumber` structure of the input so that the output
+numbers with units can be still be e.g. converted to LaTeX:
+
+>>> num_str = format(SciNum(123e6, 0.45e6), "rp()")
+>>> print(add_units(num_str, "Hz").as_latex())
+$123.00(45)\:\text{MHz}$
+
+This utility function can be used for more complex units e.g.:
+
+>>> num_str = format(SciNum(123e3, 0.45e3), "rp()")
+>>> print(add_units(num_str, "m/s"))
+123.00(45) km/s
+
+however, you must remember that :mod:`sciform`, of course, only has
+control over the single prefix out front.
+If the user wants automated selection of multiple prefixes within a
+compound unit such as ``'cm/ms'``, then they will need to do logic to
+determine the exact unit string or utilize a more sophisticated unit
+framework.
+At this point it would be recommended to, instead, directly calculate
+the unit, rescale the numerical inputs to :mod:`sciform` formatting, and
+append the entire unit without utilizing the :mod:`sciform` SI prefix
+mode.
