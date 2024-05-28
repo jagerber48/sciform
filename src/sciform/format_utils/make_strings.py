@@ -110,10 +110,10 @@ def construct_val_unc_str(  # noqa: PLR0913
     else:
         if paren_uncertainty_trim:
             """
-            Don't strip the unc_mantissa_str if val_mantissa is non-finite.
-            Don't strip the unc_mantissa_str if unc_mantissa == 0 (because then the
-              empty string would remain).
-            Don't left strip the unc_mantissa_str if unc_mantissa >= val_mantissa
+            Strip out all leading zeros and separators except the
+            decimal separator if it has non-zero numbers to the left.
+            (000_000.004 567) -> (4567)
+            (0_123.456 789) -> (123.456)
             """
             for separator in SeparatorEnum:
                 if separator != decimal_separator:
