@@ -341,7 +341,7 @@ prefix counterparts such as ``'k'``.
 In scientific applications numbers and numbers with uncertainty include
 units such as ``'g'``, ``'s'``, and ``'Hz'``.
 The simple utility function below appends units to a :mod:`sciform`
-output string in such a way that, if an SI prefix is present, the unit
+output string in such a way that, if an SI prefix is present the unit
 is appended to the prefix, otherwise there is a space between the unit
 and the number.
 
@@ -373,7 +373,7 @@ and the number.
 >>> print(add_units(num_str, "Hz"))
 1.2300(45)e+08 Hz
 
-Note that the utility function has been written to preserve the
+The utility function has been written to preserve the
 :class:`FormattedNumber` structure of the input so that the output
 numbers with units can be still be e.g. converted to LaTeX:
 
@@ -387,11 +387,13 @@ This utility function can be used for more complex units e.g.:
 >>> print(add_units(num_str, "m/s"))
 123.00(45) km/s
 
-however, you must remember that :mod:`sciform` of course only has
-control over the single overall prefix.
-If the user wants automated control to realize units like ``'cm/ms'``
-then they will need to do logic to determine the exact unit or utilize
-a more sophisticated unit framework.
-At that point it would be best to directly calculate the unit, rescale
-the numerical inputs to :mod:`sciform` formatting and append the entire
-unit without utilizing the :mod:`sciform` SI prefix mode.
+however, you must remember that :mod:`sciform`, of course, only has
+control over the single prefix out front.
+If the user wants automated selection of multiple prefixes within a
+compound unit such as ``'cm/ms'``, then they will need to do logic to
+determine the exact unit string or utilize a more sophisticated unit
+framework.
+At this point it would be recommended to, instead, directly calculate
+the unit, rescale the numerical inputs to :mod:`sciform` formatting, and
+append the entire unit without utilizing the :mod:`sciform` SI prefix
+mode.
