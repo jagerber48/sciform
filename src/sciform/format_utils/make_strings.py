@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import decimal
-from decimal import Decimal
+from typing import TYPE_CHECKING
 
 from sciform.format_utils.numbers import (
     get_top_dec_place,
@@ -13,6 +13,9 @@ from sciform.options.option_types import (
     SeparatorEnum,
     SignModeEnum,
 )
+
+if TYPE_CHECKING:
+    from decimal import Decimal
 
 
 def get_sign_str(num: Decimal, sign_mode: SignModeEnum) -> str:
