@@ -14,7 +14,7 @@ from sciform.options.option_types import (
     SignModeEnum,
 )
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from decimal import Decimal
 
 
