@@ -84,6 +84,7 @@ def round_val_unc(
     val: Decimal,
     unc: Decimal,
     ndigits: int | type[AutoDigits],
+    round_mode: RoundModeEnum,
     *,
     use_pdg_sig_figs: bool = False,
 ) -> tuple[Decimal, Decimal, int]:
@@ -91,7 +92,7 @@ def round_val_unc(
     if unc.is_finite() and unc != 0:
         round_digit = get_round_dec_place(
             unc,
-            RoundModeEnum.SIG_FIG,
+            round_mode,
             ndigits,
             pdg_sig_figs=use_pdg_sig_figs,
         )
@@ -103,7 +104,7 @@ def round_val_unc(
     elif val.is_finite():
         round_digit = get_round_dec_place(
             val,
-            RoundModeEnum.SIG_FIG,
+            round_mode,
             ndigits,
             pdg_sig_figs=False,
         )
