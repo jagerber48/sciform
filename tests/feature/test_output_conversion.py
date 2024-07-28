@@ -476,7 +476,7 @@ class TestLatexConversion(unittest.TestCase):
                 input_str=case,
             ):
                 self.assertEqual(
-                    formatted_number._repr_html_(),  # noqa: SLF001
+                    formatted_number._repr_html_(),
                     formatted_number.as_html(),
                 )
 
@@ -485,6 +485,6 @@ class TestLatexConversion(unittest.TestCase):
                 input_str=case,
             ):
                 self.assertEqual(
-                    formatted_number._repr_latex_(),  # noqa: SLF001
+                    formatted_number._repr_latex_(),
                     formatted_number.as_latex(strip_math_mode=False),
                 )
