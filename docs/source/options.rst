@@ -162,8 +162,7 @@ The user can coerce the exponent for the formatting to a fixed value.
 0.123456e+03
 
 To explicitly force :mod:`sciform` to automatically select the exponent
-then use the :class:`AutoExpVal` option by passing
-``exp_val=AutoExpVal``.
+then set ``exp_val="auto"``.
 This is the default value in the global options.
 
 Note that the forced exponent must be consistent with the requested
