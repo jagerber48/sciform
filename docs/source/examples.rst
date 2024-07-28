@@ -2,7 +2,7 @@ Examples
 ########
 
 .. module:: sciform
-   :noindex:
+   :no-index:
 
 Test Cases
 ==========

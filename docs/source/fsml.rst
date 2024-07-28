@@ -4,7 +4,7 @@ Format Specification Mini-Language
 ##################################
 
 .. module:: sciform
-   :noindex:
+   :no-index:
 
 Specification
 =============

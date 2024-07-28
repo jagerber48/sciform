@@ -5,7 +5,7 @@ Formatting Options
 ##################
 
 .. module:: sciform
-   :noindex:
+   :no-index:
 
 :mod:`sciform` provides a variety of options for converting numbers into
 formatted strings.

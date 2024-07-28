@@ -2,7 +2,7 @@ API
 ###
 
 .. module:: sciform
-   :noindex:
+   :no-index:
 
 Formatting
 ==========
