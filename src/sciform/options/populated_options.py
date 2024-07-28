@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from pprint import pformat
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 from sciform.options.validation import validate_options
 
@@ -44,7 +44,7 @@ class PopulatedOptions:
     >>> print(formatter.populated_options)
     PopulatedOptions(
      'exp_mode': 'engineering',
-     'exp_val': AutoExpVal,
+     'exp_val': 'auto',
      'round_mode': 'sig_fig',
      'ndigits': 2,
      'upper_separator': '',
@@ -67,7 +67,7 @@ class PopulatedOptions:
      'pm_whitespace': True,
     )
     >>> print(formatter.populated_options.as_dict())
-    {'exp_mode': 'engineering', 'exp_val': AutoExpVal, 'round_mode': 'sig_fig', 'ndigits': 2, 'upper_separator': '', 'decimal_separator': '.', 'lower_separator': '', 'sign_mode': '-', 'left_pad_char': ' ', 'left_pad_dec_place': 0, 'exp_format': 'standard', 'extra_si_prefixes': {}, 'extra_iec_prefixes': {}, 'extra_parts_per_forms': {}, 'capitalize': False, 'superscript': True, 'nan_inf_exp': False, 'paren_uncertainty': False, 'pdg_sig_figs': False, 'left_pad_matching': False, 'paren_uncertainty_trim': True, 'pm_whitespace': True}
+    {'exp_mode': 'engineering', 'exp_val': 'auto', 'round_mode': 'sig_fig', 'ndigits': 2, 'upper_separator': '', 'decimal_separator': '.', 'lower_separator': '', 'sign_mode': '-', 'left_pad_char': ' ', 'left_pad_dec_place': 0, 'exp_format': 'standard', 'extra_si_prefixes': {}, 'extra_iec_prefixes': {}, 'extra_parts_per_forms': {}, 'capitalize': False, 'superscript': True, 'nan_inf_exp': False, 'paren_uncertainty': False, 'pdg_sig_figs': False, 'left_pad_matching': False, 'paren_uncertainty_trim': True, 'pm_whitespace': True}
 
     Note that :class:`PopulatedOptions` lacks the ``add_c_prefix``,
     ``add_small_si_prefixes`` and ``add_ppth_form`` options present
@@ -93,9 +93,9 @@ class PopulatedOptions:
     """  # noqa: E501
 
     exp_mode: option_types.ExpMode
-    exp_val: int | type(option_types.AutoExpVal)
+    exp_val: int | Literal["auto"]
     round_mode: option_types.RoundMode
-    ndigits: int | type(option_types.AutoDigits)
+    ndigits: int | Literal["auto"]
     upper_separator: option_types.UpperSeparators
     decimal_separator: option_types.DecimalSeparators
     lower_separator: option_types.LowerSeparators

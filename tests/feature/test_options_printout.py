@@ -38,7 +38,7 @@ class TestOptionsPrintOut(unittest.TestCase):
         expected_str = (
             "PopulatedOptions(\n"
             " 'exp_mode': 'engineering',\n"
-            " 'exp_val': AutoExpVal,\n"
+            " 'exp_val': 'auto',\n"
             " 'round_mode': 'sig_fig',\n"
             " 'ndigits': 10,\n"
             " 'upper_separator': '',\n"

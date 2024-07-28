@@ -5,9 +5,9 @@ from sciform.options.populated_options import PopulatedOptions
 
 PKG_DEFAULT_OPTIONS = PopulatedOptions(
     exp_mode="fixed_point",
-    exp_val=option_types.AutoExpVal,
+    exp_val="auto",
     round_mode="sig_fig",
-    ndigits=option_types.AutoDigits,
+    ndigits="auto",
     upper_separator="",
     decimal_separator=".",
     lower_separator="",

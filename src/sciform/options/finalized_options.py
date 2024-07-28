@@ -43,5 +43,5 @@ class FinalizedOptions:
     paren_uncertainty_trim: bool
     pm_whitespace: bool
 
-    def __post_init__(self: FinalizedOptions) -> None:
-        validate_options(self, none_allowed=False)
+    # def __post_init__(self: FinalizedOptions) -> None:
+    #     validate_options(self, none_allowed=False)

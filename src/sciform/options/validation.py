@@ -43,11 +43,12 @@ def validate_rounding(
         msg = f"round_mode must be in {allowed_round_modes}, not {options.round_mode}."
         raise ValueError(msg)
 
-    if not (none_allowed and options.ndigits is None) and not isinstance(
-        options.ndigits,
-        (int, type(option_types.AutoDigits)),
+    if (
+            not (none_allowed and options.ndigits is None)
+            and not isinstance(options.ndigits, int)
+            and options.ndigits != "auto"
     ):
-        msg = f'ndigits must be an "int" or "AutoDigits", not {options.ndigits}.'
+        msg = f"ndigits must be an int or 'auto', not {options.ndigits}."
         raise TypeError(msg)
 
     if (
@@ -61,7 +62,6 @@ def validate_rounding(
 
 
 allowed_exp_modes = get_args(option_types.ExpMode)
-allowed_exp_val_types = (int, type(option_types.AutoExpVal), type(None))
 allowed_exp_formats = get_args(option_types.ExpFormat)
 
 
@@ -79,11 +79,15 @@ def validate_exp_options(
         raise ValueError(msg)
 
     if not (none_allowed and options.exp_val is None):
-        if not isinstance(options.exp_val, allowed_exp_val_types):
-            msg = f"exp_val must be an int, AutoExpVal, or None, not {options.exp_val}."
+        if (
+                options.exp_val is not None
+                and not isinstance(options.exp_val, int)
+                and options.exp_val != "auto"
+        ):
+            msg = f"exp_val must be an int, 'auto', or None, not {options.exp_val}."
             raise TypeError(msg)
 
-        if options.exp_val is not option_types.AutoExpVal:
+        if options.exp_val != "auto":
             if options.exp_mode in ["fixed_point", "percent"] and options.exp_val != 0:
                 msg = (
                     f"Exponent must must be 0, not exp_val={options.exp_val}, for "

@@ -107,7 +107,7 @@ class Formatter:
     >>> print(formatter.populated_options)
     PopulatedOptions(
      'exp_mode': 'engineering',
-     'exp_val': AutoExpVal,
+     'exp_val': 'auto',
      'round_mode': 'sig_fig',
      'ndigits': 2,
      'upper_separator': '',
@@ -143,9 +143,9 @@ class Formatter:
         self: Formatter,
         *,
         exp_mode: option_types.ExpMode | None = None,
-        exp_val: int | type(option_types.AutoExpVal) | None = None,
+        exp_val: int | Literal["auto"] | None = None,
         round_mode: option_types.RoundMode | None = None,
-        ndigits: int | type(option_types.AutoDigits) | None = None,
+        ndigits: int | Literal["auto"] | None = None,
         upper_separator: option_types.UpperSeparators | None = None,
         decimal_separator: option_types.DecimalSeparators | None = None,
         lower_separator: option_types.LowerSeparators | None = None,
@@ -198,7 +198,7 @@ class Formatter:
           fixed point and percent modes, an integer multiple of 3 for
           engineering and engineering shifted modes, and an integer
           multiple of 10 for binary IEC mode.
-        :type exp_val: ``int | type[AutoExpVal] | None``
+        :type exp_val: ``int | Literal['auto'] | None``
         :param round_mode: Indicate how to round numbers during
           formatting.
         :type round_mode: ``Literal['sig_fig', 'dec_place'] | None``
@@ -206,7 +206,7 @@ class Formatter:
           decimal place to use for rounding. Must be >= 1 for
           significant figure rounding. Can be any integer for decimal
           place rounding.
-        :type ndigits: ``int | type[AutoDigits] | None``
+        :type ndigits: ``int | Literal['auto'] | None``
         :param upper_separator: Separator character to be used to group
           digits above the decimal symbol.
         :type upper_separator: ``Literal['', ',', '.', ' ', '_'] | None``
