@@ -13,7 +13,6 @@ from sciform.formatting.parser import (
     non_finite_val_pattern,
 )
 from sciform.options.option_types import (
-    AutoDigits,
     AutoExpVal,
     ExpModeEnum,
 )
@@ -48,7 +47,7 @@ def get_val_unc_top_dec_place(
     input_top_dec_place: int,
     *,
     left_pad_matching: bool,
-) -> int | AutoDigits:
+) -> int:
     """Get top decimal place for value/uncertainty formatting."""
     if left_pad_matching:
         val_top_dec_place = get_top_dec_place(val_mantissa)

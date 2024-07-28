@@ -356,11 +356,13 @@ two digits past the decimal point :mod:`sciform` displays
 displays ``"1.0e+01"``).
 This is taken into account before the final presentation.
 
-If the user does not specify the number of significant digits or the
-digits place to which to round, then the decimal numbers are displayed
-with full precision.
-To explicitly request this behavior, the user may use the
-:class:`AutoDigits` sentinel by passing ``ndigits=AutoDigits``.
+The number of significant figure or digits-past-the-decimal displayed is
+controlled by the ``ndigits`` option.
+The user can pass ``ndigits="auto"`` in which case the numbers are shown with
+full precision.
+In more detail, this means the numbers are displayed with enough digits so that
+the string representation round trips to :class:`float` and back.
+See :ref:`dec_and_float` for more details.
 This is the default value in the global options.
 
 Note that surprising behavior may be observed if using :class:`float`

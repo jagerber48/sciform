@@ -28,13 +28,6 @@ Options
 .. autoclass:: PopulatedOptions()
    :members:
 
-Auto Options
-============
-
-.. autoclass:: AutoExpVal()
-
-.. autoclass:: AutoDigits()
-
 Global Configuration
 ====================
 
