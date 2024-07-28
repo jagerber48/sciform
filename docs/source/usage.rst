@@ -453,9 +453,9 @@ The :mod:`sciform` default global options can be viewed using
 >>> print(get_default_global_options())
 PopulatedOptions(
  'exp_mode': 'fixed_point',
- 'exp_val': AutoExpVal,
+ 'exp_val': 'auto',
  'round_mode': 'sig_fig',
- 'ndigits': AutoDigits,
+ 'ndigits': 'auto',
  'upper_separator': '',
  'decimal_separator': '.',
  'lower_separator': '',
@@ -495,7 +495,7 @@ options using :func:`reset_global_options`.
 >>> print(get_global_options())
 PopulatedOptions(
  'exp_mode': 'engineering_shifted',
- 'exp_val': AutoExpVal,
+ 'exp_val': 'auto',
  'round_mode': 'sig_fig',
  'ndigits': 4,
  'upper_separator': '',
@@ -595,7 +595,7 @@ property.
 >>> print(formatter.populated_options)
 PopulatedOptions(
  'exp_mode': 'engineering',
- 'exp_val': AutoExpVal,
+ 'exp_val': 'auto',
  'round_mode': 'sig_fig',
  'ndigits': 2,
  'upper_separator': '',
@@ -641,7 +641,7 @@ The :class:`FormattedNumber` class stores a record of the
 >>> print(formatted.populated_options)
 PopulatedOptions(
  'exp_mode': 'engineering',
- 'exp_val': AutoExpVal,
+ 'exp_val': 'auto',
  'round_mode': 'sig_fig',
  'ndigits': 2,
  'upper_separator': '',
