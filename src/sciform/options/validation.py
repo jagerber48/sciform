@@ -44,9 +44,9 @@ def validate_rounding(
         raise ValueError(msg)
 
     if (
-            not (none_allowed and options.ndigits is None)
-            and not isinstance(options.ndigits, int)
-            and options.ndigits != "auto"
+        not (none_allowed and options.ndigits is None)
+        and not isinstance(options.ndigits, int)
+        and options.ndigits != "auto"
     ):
         msg = f"ndigits must be an int or 'auto', not {options.ndigits}."
         raise TypeError(msg)
@@ -80,9 +80,9 @@ def validate_exp_options(
 
     if not (none_allowed and options.exp_val is None):
         if (
-                options.exp_val is not None
-                and not isinstance(options.exp_val, int)
-                and options.exp_val != "auto"
+            options.exp_val is not None
+            and not isinstance(options.exp_val, int)
+            and options.exp_val != "auto"
         ):
             msg = f"exp_val must be an int, 'auto', or None, not {options.exp_val}."
             raise TypeError(msg)

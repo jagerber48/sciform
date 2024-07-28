@@ -10,8 +10,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from sciform.options.validation import validate_options
-
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.options import option_types
 

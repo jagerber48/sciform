@@ -1,6 +1,5 @@
 """Global Options."""
 
-from sciform.options import option_types
 from sciform.options.populated_options import PopulatedOptions
 
 PKG_DEFAULT_OPTIONS = PopulatedOptions(
