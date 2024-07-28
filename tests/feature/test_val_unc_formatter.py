@@ -2,7 +2,7 @@ import unittest
 from decimal import Decimal
 from typing import List, Tuple
 
-from sciform import AutoDigits, Formatter
+from sciform import Formatter
 from sciform.format_utils import Number
 
 ValUncFormatterCases = List[Tuple[Tuple[Number, Number], List[Tuple[Formatter, str]]]]
@@ -401,7 +401,7 @@ class TestValUncFormatter(unittest.TestCase):
                 (7, 0.1234),
                 [
                     (
-                        Formatter(pdg_sig_figs=True, ndigits=AutoDigits),
+                        Formatter(pdg_sig_figs=True, ndigits="auto"),
                         "7.00 ± 0.12",
                     ),
                     (
@@ -409,7 +409,7 @@ class TestValUncFormatter(unittest.TestCase):
                         "7.00 ± 0.12",
                     ),
                     (
-                        Formatter(pdg_sig_figs=False, ndigits=AutoDigits),
+                        Formatter(pdg_sig_figs=False, ndigits="auto"),
                         "7.0000 ± 0.1234",
                     ),
                     (
@@ -610,7 +610,7 @@ class TestValUncFormatter(unittest.TestCase):
         self.run_val_unc_formatter_cases(cases_list)
 
     def test_decimal_normalization(self):
-        formatter = Formatter(ndigits=AutoDigits)
+        formatter = Formatter(ndigits="auto")
         self.assertEqual(
             formatter(Decimal("100.0"), Decimal("1.00")),
             formatter(Decimal("100"), Decimal("1.0000")),

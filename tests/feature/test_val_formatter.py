@@ -2,7 +2,7 @@ import unittest
 from decimal import Decimal, localcontext
 from typing import List, Tuple
 
-from sciform import AutoDigits, Formatter
+from sciform import Formatter
 from sciform.format_utils import Number
 
 ValFormatterCases = List[Tuple[Number, List[Tuple[Formatter, str]]]]
@@ -290,7 +290,7 @@ class TestValFormatter(unittest.TestCase):
         self.assertEqual(formatter(42), "42")
 
     def test_dec_place_auto_round(self):
-        formatter = Formatter(round_mode="dec_place", ndigits=AutoDigits)
+        formatter = Formatter(round_mode="dec_place", ndigits="auto")
         self.assertEqual(formatter(123.456), "123.456")
 
     def test_pdg_sig_figs(self):
@@ -299,7 +299,7 @@ class TestValFormatter(unittest.TestCase):
                 6789,
                 [
                     (
-                        Formatter(pdg_sig_figs=True, ndigits=AutoDigits),
+                        Formatter(pdg_sig_figs=True, ndigits="auto"),
                         "6789",
                     ),
                     (
@@ -307,7 +307,7 @@ class TestValFormatter(unittest.TestCase):
                         "6789.0",
                     ),
                     (
-                        Formatter(pdg_sig_figs=False, ndigits=AutoDigits),
+                        Formatter(pdg_sig_figs=False, ndigits="auto"),
                         "6789",
                     ),
                     (
@@ -321,7 +321,7 @@ class TestValFormatter(unittest.TestCase):
         self.run_val_formatter_cases(cases_list)
 
     def test_decimal_normalization(self):
-        formatter = Formatter(ndigits=AutoDigits)
+        formatter = Formatter(ndigits="auto")
         self.assertEqual(formatter(Decimal("1.0")), formatter(Decimal("1.00")))
 
     def test_long_decimal(self):
@@ -333,7 +333,7 @@ class TestValFormatter(unittest.TestCase):
                         Formatter(
                             exp_mode="engineering",
                             exp_format="prefix",
-                            ndigits=AutoDigits,
+                            ndigits="auto",
                             upper_separator=" ",
                             lower_separator=" ",
                         ),
@@ -347,7 +347,7 @@ class TestValFormatter(unittest.TestCase):
                     (
                         Formatter(
                             exp_mode="fixed_point",
-                            ndigits=AutoDigits,
+                            ndigits="auto",
                         ),
                         "123456789987654321.123456789987654321",
                     ),
