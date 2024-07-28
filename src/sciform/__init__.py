@@ -11,7 +11,6 @@ from sciform.api.global_configuration import (
 )
 from sciform.api.scinum import SciNum
 from sciform.options.input_options import InputOptions
-from sciform.options.option_types import AutoDigits, AutoExpVal
 from sciform.options.populated_options import PopulatedOptions
 
 __all__ = [
@@ -22,8 +21,6 @@ __all__ = [
     "get_global_options",
     "reset_global_options",
     "set_global_options",
-    "AutoDigits",
-    "AutoExpVal",
     "SciNum",
     "InputOptions",
     "PopulatedOptions",
