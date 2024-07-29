@@ -37,6 +37,7 @@ dev = [
     "sphinx",
     "sphinx-rtd-theme",
     "sphinx-toolbox",
+    "sphinx-rtd-dark-mode",
     "numpy",
 ]
 examples = [
