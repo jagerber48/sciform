@@ -697,7 +697,7 @@ mode and the ``pdg_sig_figs`` flag.
 
 >>> formatter = Formatter(
 ...     round_mode="sig_fig",
-...     pdg_sig_figs=True,
+...     ndigits="pdg",
 ... )
 >>> print(formatter(1, 0.0123))
 1.000 ± 0.012
