@@ -299,20 +299,16 @@ class TestValFormatter(unittest.TestCase):
                 6789,
                 [
                     (
-                        Formatter(pdg_sig_figs=True, ndigits="all"),
-                        "6789",
-                    ),
-                    (
-                        Formatter(pdg_sig_figs=True, ndigits=5),
-                        "6789.0",
-                    ),
-                    (
-                        Formatter(pdg_sig_figs=False, ndigits="all"),
-                        "6789",
+                        Formatter(ndigits="pdg"),
+                        "7000",
                     ),
                     (
                         Formatter(ndigits=5),
                         "6789.0",
+                    ),
+                    (
+                        Formatter(ndigits="all"),
+                        "6789",
                     ),
                 ],
             ),

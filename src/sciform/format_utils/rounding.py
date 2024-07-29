@@ -9,7 +9,7 @@ from sciform.format_utils.numbers import (
     get_top_dec_place,
 )
 from sciform.options.option_types import (
-    AutoDigits,
+    NDigitsEnum,
     RoundModeEnum,
 )
 
@@ -32,7 +32,7 @@ def get_pdg_round_digit(num: Decimal) -> int:
     top_dec_place = get_top_dec_place(num)
 
     # Bring num to be between 100 and 1000.
-    num_top_three_digs = num * Decimal(10) ** (Decimal(2) - Decimal(top_dec_place))
+    num_top_three_digs = abs(num) * Decimal(10) ** (Decimal(2) - Decimal(top_dec_place))
     num_top_three_digs = num_top_three_digs.quantize(1, rounding="ROUND_FLOOR")
     new_top_dec_place = get_top_dec_place(num_top_three_digs)
     num_top_three_digs = num_top_three_digs * 10 ** (2 - new_top_dec_place)
@@ -59,21 +59,18 @@ def get_pdg_round_digit(num: Decimal) -> int:
 def get_round_dec_place(
     num: Decimal,
     round_mode: RoundModeEnum,
-    ndigits: int | type(AutoDigits),
-    *,
-    pdg_sig_figs: bool = False,
+    ndigits: int | NDigitsEnum,
 ) -> int:
     """Get the decimal place to which to round."""
     # TODO: Handle nan and inf
-    if round_mode is RoundModeEnum.SIG_FIG:
-        if pdg_sig_figs:
-            round_digit = get_pdg_round_digit(num)
-        elif ndigits is AutoDigits:
-            round_digit = get_bottom_dec_place(num)
-        else:
-            round_digit = get_top_dec_place(num) - (ndigits - 1)
+    if ndigits is NDigitsEnum.ALL:
+        round_digit = get_bottom_dec_place(num)
+    elif ndigits is NDigitsEnum.PDG:
+        round_digit = get_pdg_round_digit(num)
+    elif round_mode is RoundModeEnum.SIG_FIG:
+        round_digit = get_top_dec_place(num) - (ndigits - 1)
     elif round_mode is RoundModeEnum.DEC_PLACE:
-        round_digit = get_bottom_dec_place(num) if ndigits is AutoDigits else -ndigits
+        round_digit = -ndigits
     else:
         msg = f"Unhandled round mode: {round_mode}."
         raise ValueError(msg)
@@ -83,9 +80,7 @@ def get_round_dec_place(
 def round_val_unc(
     val: Decimal,
     unc: Decimal,
-    ndigits: int | type[AutoDigits],
-    *,
-    use_pdg_sig_figs: bool = False,
+    ndigits: int | NDigitsEnum,
 ) -> tuple[Decimal, Decimal, int]:
     """Simultaneously round the value and uncertainty."""
     if unc.is_finite() and unc != 0:
@@ -93,19 +88,17 @@ def round_val_unc(
             unc,
             RoundModeEnum.SIG_FIG,
             ndigits,
-            pdg_sig_figs=use_pdg_sig_figs,
         )
         unc_rounded = round(unc, -round_digit)
         if val.is_finite():
             val_rounded = round(val, -round_digit)
         else:
             val_rounded = val
-    elif val.is_finite():
+    elif val.is_finite() and val != 0:
         round_digit = get_round_dec_place(
             val,
             RoundModeEnum.SIG_FIG,
             ndigits,
-            pdg_sig_figs=False,
         )
         unc_rounded = unc
         val_rounded = round(val, -round_digit)

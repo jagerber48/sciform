@@ -25,9 +25,9 @@ from sciform.format_utils.rounding import get_round_dec_place, round_val_unc
 from sciform.formatting.parser import parse_val_unc_from_input
 from sciform.options.conversion import finalize_populated_options, populate_options
 from sciform.options.option_types import (
-    AutoExpVal,
     ExpFormatEnum,
     ExpModeEnum,
+    ExpValEnum,
     RoundModeEnum,
     SignModeEnum,
 )
@@ -79,7 +79,7 @@ def format_non_finite(num: Decimal, options: FinalizedOptions) -> str:
         exp_mode = options.exp_mode
 
         exp_val = options.exp_val
-        if options.exp_val is AutoExpVal:
+        if options.exp_val is ExpValEnum.AUTO:
             exp_val = 0
 
         exp_str = get_exp_str(
@@ -220,13 +220,11 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         val,
         unc,
         options.ndigits,
-        use_pdg_sig_figs=options.pdg_sig_figs,
     )
     val_rounded, unc_rounded, round_digit = round_val_unc(
         val_rounded,
         unc_rounded,
         options.ndigits,
-        use_pdg_sig_figs=options.pdg_sig_figs,
     )
 
     exp_val = get_val_unc_exp(

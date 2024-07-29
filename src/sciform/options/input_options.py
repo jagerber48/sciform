@@ -53,7 +53,7 @@ class InputOptions:
     exp_mode: option_types.ExpMode | None = None
     exp_val: int | Literal["auto"] | None = None
     round_mode: option_types.RoundMode | None = None
-    ndigits: int | Literal["all"] | None = None
+    ndigits: int | Literal["all", "pdg"] | None = None
     upper_separator: option_types.UpperSeparators | None = None
     decimal_separator: option_types.DecimalSeparators | None = None
     lower_separator: option_types.LowerSeparators | None = None
@@ -68,7 +68,6 @@ class InputOptions:
     superscript: bool | None = None
     nan_inf_exp: bool | None = None
     paren_uncertainty: bool | None = None
-    pdg_sig_figs: bool | None = None
     left_pad_matching: bool | None = None
     paren_uncertainty_trim: bool | None = None
     pm_whitespace: bool | None = None

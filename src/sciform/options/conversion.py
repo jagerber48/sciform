@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 
 from sciform.options import global_options, option_types
 from sciform.options.finalized_options import FinalizedOptions
-from sciform.options.option_types import AutoDigits, AutoExpVal
 from sciform.options.populated_options import PopulatedOptions
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -91,7 +90,9 @@ def populate_options(input_options: InputOptions) -> PopulatedOptions:
 
 key_to_enum_dict = {
     "exp_mode": option_types.ExpModeEnum,
+    "exp_val": option_types.ExpValEnum,
     "round_mode": option_types.RoundModeEnum,
+    "ndigits": option_types.NDigitsEnum,
     "upper_separator": option_types.SeparatorEnum,
     "decimal_separator": option_types.SeparatorEnum,
     "lower_separator": option_types.SeparatorEnum,
@@ -105,13 +106,9 @@ def finalize_populated_options(populated_options: PopulatedOptions) -> Finalized
     """Convert PopulatedOptions into FinalizedOptions with enum values."""
     kwargs = populated_options.as_dict()
     for key, value in kwargs.items():
-        if key in key_to_enum_dict:
+        if key in key_to_enum_dict and isinstance(value, str):
             enum = key_to_enum_dict[key]
             kwargs[key] = option_types.mode_str_to_enum(value, enum)
-        if key == "exp_val" and value == "auto":
-            kwargs[key] = AutoExpVal
-        if key == "ndigits" and value == "all":
-            kwargs[key] = AutoDigits
     return FinalizedOptions(**kwargs)
 
 

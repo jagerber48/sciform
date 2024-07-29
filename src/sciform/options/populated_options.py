@@ -61,13 +61,12 @@ class PopulatedOptions:
      'superscript': True,
      'nan_inf_exp': False,
      'paren_uncertainty': False,
-     'pdg_sig_figs': False,
      'left_pad_matching': False,
      'paren_uncertainty_trim': True,
      'pm_whitespace': True,
     )
     >>> print(formatter.populated_options.as_dict())
-    {'exp_mode': 'engineering', 'exp_val': 'auto', 'round_mode': 'sig_fig', 'ndigits': 2, 'upper_separator': '', 'decimal_separator': '.', 'lower_separator': '', 'sign_mode': '-', 'left_pad_char': ' ', 'left_pad_dec_place': 0, 'exp_format': 'standard', 'extra_si_prefixes': {}, 'extra_iec_prefixes': {}, 'extra_parts_per_forms': {}, 'capitalize': False, 'superscript': True, 'nan_inf_exp': False, 'paren_uncertainty': False, 'pdg_sig_figs': False, 'left_pad_matching': False, 'paren_uncertainty_trim': True, 'pm_whitespace': True}
+    {'exp_mode': 'engineering', 'exp_val': 'auto', 'round_mode': 'sig_fig', 'ndigits': 2, 'upper_separator': '', 'decimal_separator': '.', 'lower_separator': '', 'sign_mode': '-', 'left_pad_char': ' ', 'left_pad_dec_place': 0, 'exp_format': 'standard', 'extra_si_prefixes': {}, 'extra_iec_prefixes': {}, 'extra_parts_per_forms': {}, 'capitalize': False, 'superscript': True, 'nan_inf_exp': False, 'paren_uncertainty': False, 'left_pad_matching': False, 'paren_uncertainty_trim': True, 'pm_whitespace': True}
 
     Note that :class:`PopulatedOptions` lacks the ``add_c_prefix``,
     ``add_small_si_prefixes`` and ``add_ppth_form`` options present
@@ -95,7 +94,7 @@ class PopulatedOptions:
     exp_mode: option_types.ExpMode
     exp_val: int | Literal["auto"]
     round_mode: option_types.RoundMode
-    ndigits: int | Literal["all"]
+    ndigits: int | Literal["all", "pdg"]
     upper_separator: option_types.UpperSeparators
     decimal_separator: option_types.DecimalSeparators
     lower_separator: option_types.LowerSeparators
@@ -110,7 +109,6 @@ class PopulatedOptions:
     superscript: bool
     nan_inf_exp: bool
     paren_uncertainty: bool
-    pdg_sig_figs: bool
     left_pad_matching: bool
     paren_uncertainty_trim: bool
     pm_whitespace: bool
