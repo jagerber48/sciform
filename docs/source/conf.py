@@ -24,6 +24,7 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.todo",
     "sphinx_toolbox.collapse",
+    "sphinx_rtd_dark_mode",
 ]
 
 templates_path = ["_templates"]
@@ -39,6 +40,7 @@ html_theme_options = {
 }
 todo_include_todos = True
 todo_emit_warnings = True
+default_dark_mode = True
 
 autodoc_member_order = "bysource"
 
