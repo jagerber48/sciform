@@ -8,9 +8,26 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* Any unreleased changes can be viewed in the latest version
-  documentation
-  `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
+Changed
+^^^^^^^
+
+* **[BREAKING]** Previously ``exp_val`` and ``ndigits`` accepted the enums
+  ``AutoExpVal`` and ``AutoDigits``.
+  Now ``exp_val`` accepts the string literal ``"auto"`` and ``ndigits`` accepts
+  the string literal ``"all"``.
+  [`#178 <https://github.com/jagerber48/sciform/issues/178>`_]
+* Previously the backend ``FinalizedOptions`` class ran a validation check on
+  itself after initialization.
+  This check has been removed in favor of not complicating the validation code
+  to handle the above change to ``exp_val`` and ``ndigits``.
+  Users never directly instantiate ``FinalizedOptions`` so this will hopefully
+  be no problem.
+  ``InputOptions`` continue to be validated because this is the direct result
+  of user input.
+  ``PopulatedOptions`` also must continue to be validated because options
+  conflicts due to the combination of user input with global options can arise
+  at options population time.
+* Update ``ruff`` version in pre-commit config.
 
 ----
 

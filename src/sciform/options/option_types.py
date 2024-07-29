@@ -6,14 +6,7 @@ from enum import Enum
 from typing import Literal, TypeVar
 
 
-class SentinelMeta(type):
-    """Sentinel metaclass, __repr__ returns class name."""
-
-    def __repr__(cls: SentinelMeta) -> str:
-        return cls.__name__
-
-
-class AutoExpVal(metaclass=SentinelMeta):
+class AutoExpVal:
     """
     Flag for auto-exponent calculation mode.
 
@@ -32,7 +25,7 @@ class AutoExpVal(metaclass=SentinelMeta):
     """
 
 
-class AutoDigits(metaclass=SentinelMeta):
+class AutoDigits:
     """
     Flag for auto ndigits calculation mode.
 

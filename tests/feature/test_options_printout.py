@@ -38,7 +38,7 @@ class TestOptionsPrintOut(unittest.TestCase):
         expected_str = (
             "PopulatedOptions(\n"
             " 'exp_mode': 'engineering',\n"
-            " 'exp_val': AutoExpVal,\n"
+            " 'exp_val': 'auto',\n"
             " 'round_mode': 'sig_fig',\n"
             " 'ndigits': 10,\n"
             " 'upper_separator': '',\n"
@@ -68,9 +68,9 @@ class TestOptionsPrintOut(unittest.TestCase):
         expected_string = (
             "PopulatedOptions(\n"
             " 'exp_mode': 'fixed_point',\n"
-            " 'exp_val': AutoExpVal,\n"
+            " 'exp_val': 'auto',\n"
             " 'round_mode': 'sig_fig',\n"
-            " 'ndigits': AutoDigits,\n"
+            " 'ndigits': 'all',\n"
             " 'upper_separator': '',\n"
             " 'decimal_separator': '.',\n"
             " 'lower_separator': '',\n"
@@ -99,9 +99,9 @@ class TestOptionsPrintOut(unittest.TestCase):
         expected_str = (
             "PopulatedOptions(\n"
             " 'exp_mode': 'fixed_point',\n"
-            " 'exp_val': AutoExpVal,\n"
+            " 'exp_val': 'auto',\n"
             " 'round_mode': 'sig_fig',\n"
-            " 'ndigits': AutoDigits,\n"
+            " 'ndigits': 'all',\n"
             " 'upper_separator': '',\n"
             " 'decimal_separator': '.',\n"
             " 'lower_separator': '',\n"

@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from sciform.options import global_options, option_types
 from sciform.options.finalized_options import FinalizedOptions
+from sciform.options.option_types import AutoDigits, AutoExpVal
 from sciform.options.populated_options import PopulatedOptions
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -107,6 +108,10 @@ def finalize_populated_options(populated_options: PopulatedOptions) -> Finalized
         if key in key_to_enum_dict:
             enum = key_to_enum_dict[key]
             kwargs[key] = option_types.mode_str_to_enum(value, enum)
+        if key == "exp_val" and value == "auto":
+            kwargs[key] = AutoExpVal
+        if key == "ndigits" and value == "all":
+            kwargs[key] = AutoDigits
     return FinalizedOptions(**kwargs)
 
 

@@ -10,8 +10,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from sciform.options.validation import validate_options
-
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.options import option_types
 
@@ -42,6 +40,3 @@ class FinalizedOptions:
     left_pad_matching: bool
     paren_uncertainty_trim: bool
     pm_whitespace: bool
-
-    def __post_init__(self: FinalizedOptions) -> None:
-        validate_options(self, none_allowed=False)
