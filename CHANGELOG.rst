@@ -13,7 +13,8 @@ Changed
 
 * **[BREAKING]** Previously ``exp_val`` and ``ndigits`` accepted the enums
   ``AutoExpVal`` and ``AutoDigits``.
-  These have both been changed to now only accept the string literal ``"auto"``.
+  Now ``exp_val`` accepts the string literal ``"auto"`` and ``ndigits`` accepts
+  the string literal ``"all"``.
   [`#178 <https://github.com/jagerber48/sciform/issues/178>`_]
 * Previously the backend ``FinalizedOptions`` class ran a validation check on
   itself after initialization.
