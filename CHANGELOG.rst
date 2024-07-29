@@ -8,6 +8,11 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+Added
+^^^^^
+
+* Added a dark theme option (default on) for readthedocs documentation.
+
 Changed
 ^^^^^^^
 
