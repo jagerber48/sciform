@@ -439,6 +439,10 @@ This means that the :class:`float` will be rounded to the minimum
 necessary precision for it to "round-trip".
 See :ref:`dec_and_float` for more details.
 
+.. todo::
+   This section needs to be reworked after the ``pdg_sig_fig`` option is
+   refactored.
+
 For value/uncertainty formatting, if ``ndigits="all"`` and
 ``pdg_sig_figs=False``, then the rounding strategy described in the
 previous paragraph is used to round the uncertainty and the value is
