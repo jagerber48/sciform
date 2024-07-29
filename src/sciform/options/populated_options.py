@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from pprint import pformat
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any
 
 from sciform.options.validation import validate_options
 
@@ -92,9 +92,9 @@ class PopulatedOptions:
     """  # noqa: E501
 
     exp_mode: option_types.ExpMode
-    exp_val: int | Literal["auto"]
+    exp_val: int | option_types.ExpVal
     round_mode: option_types.RoundMode
-    ndigits: int | Literal["all", "pdg"]
+    ndigits: int | option_types.NDigits
     upper_separator: option_types.UpperSeparators
     decimal_separator: option_types.DecimalSeparators
     lower_separator: option_types.LowerSeparators
