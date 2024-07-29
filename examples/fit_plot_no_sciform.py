@@ -13,6 +13,9 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
+plt.style.use("dark_background")
+
+
 def quadratic(x: NDArray, c: float, x0: float, y0: float) -> NDArray:
     return (c / 2) * (x - x0) ** 2 + y0
 
@@ -60,7 +63,7 @@ def main() -> None:
     ax.grid(True)  # noqa: FBT003
     ax.legend()
 
-    fig.savefig("outputs/fit_plot_no_sciform.png", facecolor="white")
+    fig.savefig("outputs/fit_plot_no_sciform.png")
     plt.show()
 
     table_str = tabulate(
