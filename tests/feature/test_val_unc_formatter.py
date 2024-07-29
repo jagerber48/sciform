@@ -401,7 +401,7 @@ class TestValUncFormatter(unittest.TestCase):
                 (7, 0.1234),
                 [
                     (
-                        Formatter(pdg_sig_figs=True, ndigits="auto"),
+                        Formatter(pdg_sig_figs=True, ndigits="all"),
                         "7.00 ± 0.12",
                     ),
                     (
@@ -409,7 +409,7 @@ class TestValUncFormatter(unittest.TestCase):
                         "7.00 ± 0.12",
                     ),
                     (
-                        Formatter(pdg_sig_figs=False, ndigits="auto"),
+                        Formatter(pdg_sig_figs=False, ndigits="all"),
                         "7.0000 ± 0.1234",
                     ),
                     (
@@ -610,7 +610,7 @@ class TestValUncFormatter(unittest.TestCase):
         self.run_val_unc_formatter_cases(cases_list)
 
     def test_decimal_normalization(self):
-        formatter = Formatter(ndigits="auto")
+        formatter = Formatter(ndigits="all")
         self.assertEqual(
             formatter(Decimal("100.0"), Decimal("1.00")),
             formatter(Decimal("100"), Decimal("1.0000")),

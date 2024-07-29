@@ -95,7 +95,7 @@ class PopulatedOptions:
     exp_mode: option_types.ExpMode
     exp_val: int | Literal["auto"]
     round_mode: option_types.RoundMode
-    ndigits: int | Literal["auto"]
+    ndigits: int | Literal["all"]
     upper_separator: option_types.UpperSeparators
     decimal_separator: option_types.DecimalSeparators
     lower_separator: option_types.LowerSeparators

@@ -38,8 +38,8 @@ def validate_rounding(
     r"""Validate ndigits if round_mode == "sig_fig"."""
     if none_allowed and options.ndigits is None:
         pass
-    elif not isinstance(options.ndigits, int) and options.ndigits != "auto":
-        msg = f"ndigits must be an int or 'auto', not {options.ndigits}."
+    elif not isinstance(options.ndigits, int) and options.ndigits != "all":
+        msg = f"ndigits must be an int or 'all', not {options.ndigits}."
         raise TypeError(msg)
 
     if none_allowed and options.round_mode is None:

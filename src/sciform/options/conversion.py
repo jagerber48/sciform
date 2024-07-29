@@ -110,7 +110,7 @@ def finalize_populated_options(populated_options: PopulatedOptions) -> Finalized
             kwargs[key] = option_types.mode_str_to_enum(value, enum)
         if key == "exp_val" and value == "auto":
             kwargs[key] = AutoExpVal
-        if key == "ndigits" and value == "auto":
+        if key == "ndigits" and value == "all":
             kwargs[key] = AutoDigits
     return FinalizedOptions(**kwargs)
 

@@ -145,7 +145,7 @@ class Formatter:
         exp_mode: option_types.ExpMode | None = None,
         exp_val: int | Literal["auto"] | None = None,
         round_mode: option_types.RoundMode | None = None,
-        ndigits: int | Literal["auto"] | None = None,
+        ndigits: int | Literal["all"] | None = None,
         upper_separator: option_types.UpperSeparators | None = None,
         decimal_separator: option_types.DecimalSeparators | None = None,
         lower_separator: option_types.LowerSeparators | None = None,
@@ -206,7 +206,7 @@ class Formatter:
           decimal place to use for rounding. Must be >= 1 for
           significant figure rounding. Can be any integer for decimal
           place rounding.
-        :type ndigits: ``int | Literal['auto'] | None``
+        :type ndigits: ``int | Literal['all'] | None``
         :param upper_separator: Separator character to be used to group
           digits above the decimal symbol.
         :type upper_separator: ``Literal['', ',', '.', ' ', '_'] | None``

@@ -455,7 +455,7 @@ PopulatedOptions(
  'exp_mode': 'fixed_point',
  'exp_val': 'auto',
  'round_mode': 'sig_fig',
- 'ndigits': 'auto',
+ 'ndigits': 'all',
  'upper_separator': '',
  'decimal_separator': '.',
  'lower_separator': '',

@@ -425,7 +425,7 @@ It is possible for ``ndigits <= 0``:
 Automatic Rounding
 ------------------
 
-If the user specifies ``ndigits="auto"``, then
+If the user specifies ``ndigits="all"``, then
 :mod:`sciform` will automatically determine how rounding should be
 performed.
 
@@ -439,7 +439,7 @@ This means that the :class:`float` will be rounded to the minimum
 necessary precision for it to "round-trip".
 See :ref:`dec_and_float` for more details.
 
-For value/uncertainty formatting, if ``ndigits="auto"`` and
+For value/uncertainty formatting, if ``ndigits="all"`` and
 ``pdg_sig_figs=False``, then the rounding strategy described in the
 previous paragraph is used to round the uncertainty and the value is
 rounded to the same decimal place as the uncertainty.
