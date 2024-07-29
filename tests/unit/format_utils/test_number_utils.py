@@ -4,9 +4,8 @@ from decimal import Decimal
 from math import isnan
 from typing import List, Tuple, Union
 
-from sciform import AutoExpVal
 from sciform.format_utils import numbers
-from sciform.options.option_types import ExpModeEnum
+from sciform.options.option_types import AutoExpVal, ExpModeEnum
 
 from tests import NanTestCase
 
