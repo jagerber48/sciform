@@ -41,6 +41,7 @@ test = [
     "coverage",
     "numpy",
     "ruff",
+    "sphinx",
 ]
 examples = [
     "numpy",
