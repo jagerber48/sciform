@@ -42,6 +42,7 @@ test = [
     "numpy",
     "ruff",
     "sphinx",
+    "sphinx-toolbox",
 ]
 examples = [
     "numpy",
