@@ -1,4 +1,1 @@
-.
-sphinx==6.2.1
-sphinx-rtd-theme==1.2.2
-sphinx-toolbox==3.5.0
+.[docs]
