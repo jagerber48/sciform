@@ -41,8 +41,7 @@ test = [
     "coverage",
     "numpy",
     "ruff",
-    "sphinx",
-    "sphinx-toolbox",
+    "sciform[docs]",
 ]
 examples = [
     "numpy",
