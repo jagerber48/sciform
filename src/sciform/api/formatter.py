@@ -172,7 +172,8 @@ class Formatter:
         The following checks are performed when creating a new
         :class:`Formatter` object:
 
-        * ``ndigits`` >= 1 for significant figure rounding mode
+        * If ``ndigits`` is an :class:`int` and ``round_mode`` is ``"sig_fig"``
+          then ``ndigits`` >= 1.
         * ``exp_val`` must be consistent with the exponent mode. If
           ``exp_val`` is specified (i.e. not ``None``) and ``exp_val``
           is not ``"auto"`` then
@@ -187,7 +188,7 @@ class Formatter:
         * ``decimal_separator`` may be any of ``['.', ',']``
         * ``lower_separator`` may be any of ``['', ' ', '_']``
 
-        :param exp_mode: Specify the formatting mode.
+        :param exp_mode: Specify the exponent formatting mode.
         :type exp_mode: ``Literal['fixed_point', 'percent',
           'scientific', 'engineering', 'engineering_shifted', 'binary',
           'binary_iec'] | None``
@@ -195,15 +196,17 @@ class Formatter:
           chosen. If an integer is specified, the value must be 0 for
           fixed point and percent modes, an integer multiple of 3 for
           engineering and engineering shifted modes, and an integer
-          multiple of 10 for binary IEC mode.
+          multiple of 10 for binary IEC mode. Can be set to ``"auto"``.
         :type exp_val: ``int | Literal['auto'] | None``
         :param round_mode: Indicate how to round numbers during
           formatting.
         :type round_mode: ``Literal['sig_fig', 'dec_place'] | None``
-        :param ndigits: Indicate how the many significant digits or the
-          decimal place to use for rounding. Must be >= 1 for
-          significant figure rounding. Can be any integer for decimal
-          place rounding.
+        :param ndigits: If ``ndigits`` is a :class:`int` then it specifies how
+          many digits to use for significant figure or digits-past-the-decimal
+          rounding. Can also be ``"all"`` to display as many digits needed to
+          reproduce the input representation of the number, or ``"pdg"`` to
+          automatically select the number of digits according to the PDG
+          rounding rules.
         :type ndigits: ``int | Literal['all', 'pdg'] | None``
         :param upper_separator: Separator character to be used to group
           digits above the decimal symbol.
