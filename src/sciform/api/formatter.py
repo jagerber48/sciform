@@ -201,7 +201,7 @@ class Formatter:
         :param round_mode: Indicate how to round numbers during
           formatting.
         :type round_mode: ``Literal['sig_fig', 'dec_place'] | None``
-        :param ndigits: If ``ndigits`` is a :class:`int` then it specifies how
+        :param ndigits: If ``ndigits`` is an :class:`int` then it specifies how
           many digits to use for significant figure or digits-past-the-decimal
           rounding. Can also be ``"all"`` to display as many digits needed to
           reproduce the input representation of the number, or ``"pdg"`` to
