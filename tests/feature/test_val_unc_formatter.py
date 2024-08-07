@@ -94,6 +94,14 @@ class TestValUncFormatter(unittest.TestCase):
                 (0, 0),
                 [
                     (Formatter(paren_uncertainty=True), "0(0)"),
+                    (Formatter(paren_uncertainty=True, ndigits=3), "0(0)"),
+                ],
+            ),
+            (
+                (0, float("inf")),
+                [
+                    (Formatter(paren_uncertainty=True), "0(inf)"),
+                    (Formatter(paren_uncertainty=True, ndigits=3), "0(inf)"),
                 ],
             ),
         ]
@@ -254,73 +262,73 @@ class TestValUncFormatter(unittest.TestCase):
             (
                 (10, 0.0353),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.000 ± 0.035"),
+                    (Formatter(ndigits="pdg"), "10.000 ± 0.035"),
                 ],
             ),
             (
                 (10, 0.0354),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.000 ± 0.035"),
+                    (Formatter(ndigits="pdg"), "10.000 ± 0.035"),
                 ],
             ),
             (
                 (10, 0.03544),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.000 ± 0.035"),
+                    (Formatter(ndigits="pdg"), "10.000 ± 0.035"),
                 ],
             ),
             (
                 (10, 0.03546),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.000 ± 0.035"),
+                    (Formatter(ndigits="pdg"), "10.000 ± 0.035"),
                 ],
             ),
             (
                 (10, 0.0355),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.04"),
+                    (Formatter(ndigits="pdg"), "10.00 ± 0.04"),
                 ],
             ),
             (
                 (10, 0.0949),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.09"),
+                    (Formatter(ndigits="pdg"), "10.00 ± 0.09"),
                 ],
             ),
             (
                 (10, 0.09494),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.09"),
+                    (Formatter(ndigits="pdg"), "10.00 ± 0.09"),
                 ],
             ),
             (
                 (10, 0.09496),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.09"),
+                    (Formatter(ndigits="pdg"), "10.00 ± 0.09"),
                 ],
             ),
             (
                 (10, 0.0950),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.10"),
+                    (Formatter(ndigits="pdg"), "10.00 ± 0.10"),
                 ],
             ),
             (
                 (10, 0.0951),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.10"),
+                    (Formatter(ndigits="pdg"), "10.00 ± 0.10"),
                 ],
             ),
             (
                 (10, 0.09994),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.10"),
+                    (Formatter(ndigits="pdg"), "10.00 ± 0.10"),
                 ],
             ),
             (
                 (10, 0.09996),
                 [
-                    (Formatter(pdg_sig_figs=True), "10.00 ± 0.10"),
+                    (Formatter(ndigits="pdg"), "10.00 ± 0.10"),
                 ],
             ),
             (
@@ -330,7 +338,7 @@ class TestValUncFormatter(unittest.TestCase):
                         Formatter(
                             exp_mode="engineering",
                             exp_format="prefix",
-                            pdg_sig_figs=True,
+                            ndigits="pdg",
                         ),
                         "(3.1416 ± 0.0016) M",
                     ),
@@ -345,37 +353,37 @@ class TestValUncFormatter(unittest.TestCase):
             (
                 (123, 0),
                 [
-                    (Formatter(pdg_sig_figs=True), "123 ± 0"),
+                    (Formatter(ndigits="pdg"), "120 ± 0"),
                 ],
             ),
             (
                 (-123, 0),
                 [
-                    (Formatter(pdg_sig_figs=True), "-123 ± 0"),
+                    (Formatter(ndigits="pdg"), "-120 ± 0"),
                 ],
             ),
             (
                 (0, 0),
                 [
-                    (Formatter(pdg_sig_figs=True), "0 ± 0"),
+                    (Formatter(ndigits="pdg"), "0 ± 0"),
                 ],
             ),
             (
                 (123, float("nan")),
                 [
-                    (Formatter(pdg_sig_figs=True), "123 ± nan"),
+                    (Formatter(ndigits="pdg"), "120 ± nan"),
                 ],
             ),
             (
                 (-123, float("nan")),
                 [
-                    (Formatter(pdg_sig_figs=True), "-123 ± nan"),
+                    (Formatter(ndigits="pdg"), "-120 ± nan"),
                 ],
             ),
             (
                 (0, float("nan")),
                 [
-                    (Formatter(pdg_sig_figs=True), "0 ± nan"),
+                    (Formatter(ndigits="pdg"), "0 ± nan"),
                 ],
             ),
         ]
@@ -401,20 +409,16 @@ class TestValUncFormatter(unittest.TestCase):
                 (7, 0.1234),
                 [
                     (
-                        Formatter(pdg_sig_figs=True, ndigits="all"),
+                        Formatter(ndigits="pdg"),
                         "7.00 ± 0.12",
                     ),
                     (
-                        Formatter(pdg_sig_figs=True, ndigits=5),
-                        "7.00 ± 0.12",
-                    ),
-                    (
-                        Formatter(pdg_sig_figs=False, ndigits="all"),
-                        "7.0000 ± 0.1234",
-                    ),
-                    (
-                        Formatter(pdg_sig_figs=False, ndigits=5),
+                        Formatter(ndigits=5),
                         "7.00000 ± 0.12340",
+                    ),
+                    (
+                        Formatter(ndigits="all"),
+                        "7.0000 ± 0.1234",
                     ),
                 ],
             ),

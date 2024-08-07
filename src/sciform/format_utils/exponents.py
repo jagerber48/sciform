@@ -15,12 +15,11 @@ from sciform.format_utils.numbers import (
 from sciform.options.option_types import (
     ExpFormatEnum,
     ExpModeEnum,
+    ExpValEnum,
 )
 
 if TYPE_CHECKING:  # pragma: no cover
     from decimal import Decimal
-
-    from sciform.options.option_types import AutoExpVal
 
 
 def get_translation_dict(
@@ -120,7 +119,7 @@ def get_val_unc_exp(
     val: Decimal,
     unc: Decimal,
     exp_mode: ExpModeEnum,
-    input_exp: int | AutoExpVal,
+    input_exp: int | ExpValEnum,
 ) -> int:
     """Get exponent for value/uncertainty formatting."""
     if val.is_finite() and unc.is_finite():

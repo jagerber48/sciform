@@ -124,7 +124,6 @@ class Formatter:
      'superscript': True,
      'nan_inf_exp': False,
      'paren_uncertainty': False,
-     'pdg_sig_figs': False,
      'left_pad_matching': False,
      'paren_uncertainty_trim': True,
      'pm_whitespace': True,
@@ -143,9 +142,9 @@ class Formatter:
         self: Formatter,
         *,
         exp_mode: option_types.ExpMode | None = None,
-        exp_val: int | Literal["auto"] | None = None,
+        exp_val: int | option_types.ExpVal | None = None,
         round_mode: option_types.RoundMode | None = None,
-        ndigits: int | Literal["all"] | None = None,
+        ndigits: int | option_types.NDigits | None = None,
         upper_separator: option_types.UpperSeparators | None = None,
         decimal_separator: option_types.DecimalSeparators | None = None,
         lower_separator: option_types.LowerSeparators | None = None,
@@ -160,7 +159,6 @@ class Formatter:
         superscript: bool | None = None,
         nan_inf_exp: bool | None = None,
         paren_uncertainty: bool | None = None,
-        pdg_sig_figs: bool | None = None,
         left_pad_matching: bool | None = None,
         paren_uncertainty_trim: bool | None = None,
         pm_whitespace: bool | None = None,
@@ -174,10 +172,11 @@ class Formatter:
         The following checks are performed when creating a new
         :class:`Formatter` object:
 
-        * ``ndigits`` >= 1 for significant figure rounding mode
+        * If ``ndigits`` is an :class:`int` and ``round_mode`` is ``"sig_fig"``
+          then ``ndigits`` >= 1.
         * ``exp_val`` must be consistent with the exponent mode. If
           ``exp_val`` is specified (i.e. not ``None``) and ``exp_val``
-          is not ``AutoExpVal`` then
+          is not ``"auto"`` then
 
           * ``exp_val`` must be 0 for fixed point and percent modes
           * ``exp_val`` must be a multiple of 3 for engineering and
@@ -189,7 +188,7 @@ class Formatter:
         * ``decimal_separator`` may be any of ``['.', ',']``
         * ``lower_separator`` may be any of ``['', ' ', '_']``
 
-        :param exp_mode: Specify the formatting mode.
+        :param exp_mode: Specify the exponent formatting mode.
         :type exp_mode: ``Literal['fixed_point', 'percent',
           'scientific', 'engineering', 'engineering_shifted', 'binary',
           'binary_iec'] | None``
@@ -197,16 +196,18 @@ class Formatter:
           chosen. If an integer is specified, the value must be 0 for
           fixed point and percent modes, an integer multiple of 3 for
           engineering and engineering shifted modes, and an integer
-          multiple of 10 for binary IEC mode.
+          multiple of 10 for binary IEC mode. Can be set to ``"auto"``.
         :type exp_val: ``int | Literal['auto'] | None``
         :param round_mode: Indicate how to round numbers during
           formatting.
         :type round_mode: ``Literal['sig_fig', 'dec_place'] | None``
-        :param ndigits: Indicate how the many significant digits or the
-          decimal place to use for rounding. Must be >= 1 for
-          significant figure rounding. Can be any integer for decimal
-          place rounding.
-        :type ndigits: ``int | Literal['all'] | None``
+        :param ndigits: If ``ndigits`` is an :class:`int` then it specifies how
+          many digits to use for significant figure or digits-past-the-decimal
+          rounding. Can also be ``"all"`` to display as many digits needed to
+          reproduce the input representation of the number, or ``"pdg"`` to
+          automatically select the number of digits according to the PDG
+          rounding rules.
+        :type ndigits: ``int | Literal['all', 'pdg'] | None``
         :param upper_separator: Separator character to be used to group
           digits above the decimal symbol.
         :type upper_separator: ``Literal['', ',', '.', ' ', '_'] | None``
@@ -261,11 +262,6 @@ class Formatter:
           uncertainty mode (e.g. ``12.34(82)`` instead of
           ``12.34 ± 0.82``) should be used.
         :type paren_uncertainty: ``bool | None``
-        :param pdg_sig_figs: Flag indicating whether the
-          particle-data-group conventions should be used to
-          automatically determine the number of significant figures to
-          use for uncertainty. Ignored for single value formatting.
-        :type pdg_sig_figs: ``bool | None``
         :param left_pad_matching: Flag indicating if the value or
           uncertainty should be left padded to ensure they are both left
           padded to the same digits place.
@@ -312,7 +308,6 @@ class Formatter:
             superscript=superscript,
             nan_inf_exp=nan_inf_exp,
             paren_uncertainty=paren_uncertainty,
-            pdg_sig_figs=pdg_sig_figs,
             left_pad_matching=left_pad_matching,
             paren_uncertainty_trim=paren_uncertainty_trim,
             pm_whitespace=pm_whitespace,

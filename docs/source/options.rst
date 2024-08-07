@@ -343,46 +343,79 @@ This behavior is the same as the behavior for all other options.
 Rounding
 ========
 
-:mod:`sciform` provides two rounding strategies: rounding based on
-significant figures, and rounding based on decimal places.
-In both cases, the rounding applies to the mantissa determined after
-identifying the appropriate exponent for display based on the selected
-exponent mode.
-In some cases, the rounding results in a modification to the chosen
-exponent (e.g. when presenting ``9.99`` in scientific exponent mode with
-two digits past the decimal point :mod:`sciform` displays
-``"9.99e+00"``, but with one digit past the decimal point :mod:`sciform`
-displays ``"1.0e+01"``).
-This is taken into account before the final presentation.
-:mod:`sciform` also provides a "no-rounding" strategy in which numbers are shown
-with the minimum number of digits to fully specify the underlying :class:`float`
-or :class:`Decimal` representation of the number.
+:mod:`sciform` provides four rounding strategies controlled by the
+``round_mode`` and ``ndigits`` options.
 
-Note that surprising behavior may be observed if using :class:`float`
-inputs.
-A :class:`float` input is handled by first being converted to a string
-to realize the minimum number decimal digits necessary for the
-:class:`float` to round trip and is then cast to :class:`Decimal`
-instance before determining the mantissa and exponent and applying the
+* Significant figure rounding is selected by setting ``round_mode="sig_fig"``
+  and passing in a positive :class:`int` for ``ndigits`` specifying the number
+  of significant figures to which to round.
+* Digits-past-the-deciaml rounding is selected by setting
+  ``round_mode="dec_place"`` and passing an :class:`int` for ``ndigits``
+  specifying the digit place to which to round.
+* All digits rounding is selected by setting ``ndigits="all"``.
+  In this mode "all" digits of the number are shown where the definition of
+  "all" depends on the type of the numerical input data. See below for
+  more details. In this mode the ``round_mode`` option has no effect.
+* Particle data group (PDG) rounding is selected by setting ``ndigits="pdg"``.
+  See below for the defintion of PDG rounding. In this mode the ``round_mode``
+  option has no effect.
+
+Rounding always applies to the mantissa determined after identifying the
+appropriate exponent for display based on ``exp_mode`` and ``exp_val``.
+In some cases, the rounding results in a modification to the chosen
+exponent.
+This is taken into account before the final presentation.
+
+>>> formatter = Formatter(
+...     exp_mode="scientific",
+...     round_mode="dec_place",
+...     ndigits=2,
+... )
+>>> print(formatter(9.99))
+9.99e+00
+>>> formatter = Formatter(
+...     exp_mode="scientific",
+...     round_mode="dec_place",
+...     ndigits=1,
+... )
+>>> print(formatter(9.99))
+1.0e+01
+
+By default, :mod:`sciform` uses
+`"round-to-even" or "banker's rounding" <https://en.wikipedia.org/wiki/Rounding#Rounding_half_to_even>`_:
+
+>>> formatter = Formatter(
+...     round_mode="sig_fig",
+...     ndigits=2,
+... )
+>>> print(formatter("2.45"))
+2.4
+>>> print(formatter("2.35"))
+2.4
+
+All :mod:`sciform` inputs are converted to :class:`Decimal` as the first step
+for formatting before determining the mantissa and exponent and applying the
 rounding algorithm.
+This conversion can sometimes have surprising effects for rounding.
 See :ref:`dec_and_float` for more details.
+
+Note that for value/uncertainty formatting, if the uncertainty is finite and
+non-zero, the rounding is applied to the uncertainty first then the value is
+rounded to the same decimal place (as long as it is finite).
 
 Significant Figures
 -------------------
 
-For significant figure rounding, first the digits place for the
-most-significant digit is identified, then the number is rounded to
-the specified number of significant figures below that digits place.
+Significant figure rounding is selected by setting ``round_mode="sig_fig"`` and
+``ndigits`` equal to a positive integer (zero excluded). In this mode, After the
+exponent is first calculated, the digits place for the most-significant digit of
+the mantissa is identified.
+Then the mantissa is rounded to the specified number of significant figures
+below that digits place.
 E.g. for ``12345.678`` the most-significant digit appears in the
 ten-thousands, or 10\ :sup:`4`, place.
 To express this number to 4-significant digits means we should round it
 to the tens, or 10\ :sup:`1`, place resulting in ``12350``.
-
-Note that 1001 rounded to 1, 2, or 3 significant figures results in
-1000.
-This demonstrates that we can't determine how many significant figures
-a number was rounded to (or "how many significant figures a number has")
-just by looking at the resulting string.
 
 >>> formatter = Formatter(
 ...     exp_mode="engineering",
@@ -392,16 +425,19 @@ just by looking at the resulting string.
 >>> print(formatter(12345.678))
 12.35e+03
 
-Here the ``ndigits`` input is used to indicate how many significant
-figures should be included.
-for significant figure rounding, ``ndigits`` must be an integer
-greater than or equal 1.
+Note that 1001 rounded to 1, 2, or 3 significant figures results in
+1000.
+This demonstrates that we can't determine how many significant figures
+a number was rounded to (or "how many significant figures a number has")
+just by looking at the resulting string.
 
-Decimal Place
--------------
+Digits-Past-the-Decimal Place
+-----------------------------
 
-For decimal place rounding we specify the decimal place to which we want
-to round using ``ndigits``.
+Decimal place, or digits-past-the-decimal, rounding is selected by setting
+``round_mode="dec_place"`` and ``ndigits`` equal to any integer.
+In this mode ``ndigits`` specifies the decimal place to which the mantissa will
+be rounded.
 The convention for ``ndigits`` is the same as that for the built-in
 `round function <https://docs.python.org/3/library/functions.html#round>`_.
 E.g. ``ndigits=2`` means to round to two digits past the decimal place,
@@ -412,7 +448,7 @@ rounded to ``12.99``.
 >>> print(formatter(12345.678))
 12.3457e+03
 
-It is possible for ``ndigits <= 0``:
+Unlike the built in number formatting, it is possible for ``ndigits <= 0``:
 
 >>> formatter = Formatter(
 ...     exp_mode="fixed_point",
@@ -422,32 +458,94 @@ It is possible for ``ndigits <= 0``:
 >>> print(formatter(12345.678))
 12300
 
-Automatic Rounding
-------------------
+All Digits
+----------
 
-If the user specifies ``ndigits="all"``, then
-:mod:`sciform` will automatically determine how rounding should be
-performed.
+"All" digits rounding is selected by setting ``ndigits="all"``.
+In this case, the ``round_mode`` option is ignored.
+This mode attempts to display the input digits with full precision.
+What exactly "full precision" means depends on the type of the input.
+:class:`int`, :class:`str` and :class:`Decimal` inputs are converted to
+:class:`Decimal` as the first step for formatting.
+For these inputs the number of digits shown in ``"all"`` mode will be the
+smaller of the number of significant digits in the number or the
+:mod:`decimal` module precision (default 28).
 
-For single value formatting the auto rounding mode will display the
-input number with full precision.
-For :class:`str`, :class:`int` and :class:`Decimal` inputs this is
-unambiguous.
-For :class:`float` inputs the :class:`float` is first converted to a
-string and then converted to a decimal.
-This means that the :class:`float` will be rounded to the minimum
-necessary precision for it to "round-trip".
-See :ref:`dec_and_float` for more details.
+:class:`float` inputs are first converted to :class:`str` before being converted
+to :class:`Decimal`.
+The string conversion converts the float into the shortest string representation
+that will round trip to the same value as the input float.
+For the 64-bit floats used in python this will be at most 17 digits, but it is
+typically many fewer digits.
+Unless the :mod:`decimal` module precision is decreased below 17 digits, then
+the result of ``"all"`` rounding will print the same digits as present in the
+string representation of the input :class:`float`.
 
-.. todo::
-   This section needs to be reworked after the ``pdg_sig_fig`` option is
-   refactored.
+>>> from decimal import Decimal
+>>> formatter = Formatter(exp_mode="scientific", ndigits="all")
+>>> float_num = 1/9
+>>> dec_num = Decimal(float_num).normalize()
+>>> print(float_num)
+0.1111111111111111
+>>> print(formatter(float_num))
+1.111111111111111e-01
+>>> print(dec_num)
+0.1111111111111111049432054187
+>>> print(formatter(dec_num))
+1.111111111111111049432054187e-01
 
-For value/uncertainty formatting, if ``ndigits="all"`` and
-``pdg_sig_figs=False``, then the rounding strategy described in the
-previous paragraph is used to round the uncertainty and the value is
-rounded to the same decimal place as the uncertainty.
-See :ref:`pdg_sig_figs` for more details.
+PDG Significant Figures
+-----------------------
+
+The PDG rounding is selected by setting ``ndigits="pdg"``.
+In this case, the ``round_mode`` option is ignored.
+
+Typically value/uncertainty pairs are formatted with one or two
+significant figures displayed for the uncertainty.
+The Particle Data Group has
+`published an algorithm <https://pdg.lbl.gov/2010/reviews/rpp2010-rev-rpp-intro.pdf>`_
+for deciding when to
+display uncertainty with one versus two significant figures.
+:mod:`sciform` can apply the PDG rounding algorithm either to value/uncertainty
+pairs or to values alone.
+The algorithm is as follows:
+
+* Determine the three most significant digits of the number (without rounding).
+  E.g. if the number is 0.004857 then these digits would be 485.
+  Call 485 the scaled number.
+* If the scaled number is between 100 and 354 (inclusive) then the
+  number is rounded and displayed to one digit below its most
+  significant digit.
+  This means it will have two significant digit.
+  E.g. if the uncertainty is 3.03 then it will appear as as 3.0
+* If the scaled number is between 355 and 949 (inclusive) then the number is
+  rounded and displayed to the same digit as the most significant digit.
+  This means it will have one significant digit.
+  E.g. if the uncertainty is 0.76932 then it will appear as 0.8
+* If the scaled number is between 950 and 999 (inclusive) then the number is
+  rounded and displayed to the same digit as the most significant digit.
+  But 950 and above will always be rounded to 1000 if we round to the
+  hundreds place.
+  This means there will be two significant digits.
+  E.g. if the number is 0.0099 then it will be displayed as 0.010.
+
+The rationale for this algorithm is that it uses more significant digits in the
+bottom section of an order-of-magnitude range where the fractional error
+due to rounding is larger, but it saves ink in the upper section of an
+order-of-magnitude range where the fractional error is not as large.
+For a more thorough discussion see
+`Significant digit 354 rule from Particle Data Group <https://stats.stackexchange.com/q/100502/260369>`_.
+
+>>> formatter = Formatter(
+...     round_mode="sig_fig",
+...     ndigits="pdg",
+... )
+>>> print(formatter(0.0123))
+0.012
+>>> print(formatter(0.0483))
+0.05
+>>> print(formatter(0.0997))
+0.10
 
 .. _separators:
 
@@ -657,60 +755,6 @@ according to the options below.
 >>> print(formatter(123.456, 0.789))
 123.456 ± 0.789
 
-.. _pdg_sig_figs:
-
-Particle Data Group Significant Figures
----------------------------------------
-
-Typically value/uncertainty pairs are formatted with one or two
-significant figures displayed for the uncertainty.
-The Particle Data Group has
-`published an algorithm <https://pdg.lbl.gov/2010/reviews/rpp2010-rev-rpp-intro.pdf>`_
-for deciding when to
-display uncertainty with one versus two significant figures.
-The algorithm is as follows.
-
-* Determine the three most significant digits of the uncertainty
-  (without rounding). E.g. if the uncertainty is 0.004857 then these
-  digits would be 485
-* If the scaled uncertainty is between 100 and 354 (inclusive) then the
-  uncertainty is rounded and displayed to one digit below its most
-  significant digit.
-  This means it will have two significant digit.
-  E.g. if the uncertainty is 3.03 then it will appear as as 3.0
-* If the scaled uncertainty is between 355 and 949 (inclusive) then the
-  uncertainty is rounded and displayed to the same digit as the most
-  significant digit.
-  This means it will have one significant digit.
-  E.g. if the uncertainty is 0.76932 then it will appear as 0.8
-* If the scaled uncertainty is between 950 and 999 (inclusive) then the
-  uncertainty is rounded and displayed to the same digit as the most
-  significant digit.
-  But 950 and above will always be rounded to 1000 if we round to the
-  hundreds place.
-  This means there will be two significant digits.
-  E.g. if the uncertainty is 0.0099 then it will be displayed as 0.010.
-
-:mod:`sciform` provides the ability to use this algorithm when
-formatting value/uncertainty pairs by using significant figure rounding
-mode and the ``pdg_sig_figs`` flag.
-
->>> formatter = Formatter(
-...     round_mode="sig_fig",
-...     pdg_sig_figs=True,
-... )
->>> print(formatter(1, 0.0123))
-1.000 ± 0.012
->>> print(formatter(1, 0.0483))
-1.00 ± 0.05
->>> print(formatter(1, 0.0997))
-1.00 ± 0.10
-
-If ``pdg_sig_figs=True`` then ``ndigits`` is ignored for
-value/uncertainty formatting.
-``pdg_sig_figs`` is always ignored in favor of ``ndigits`` for single
-value formatting.
-
 .. _paren_uncertainty:
 
 Parentheses Uncertainty
@@ -762,8 +806,9 @@ formatting strategies by using the ``paren_uncertainty`` and
 100,021 47(0,000 35)
 100,021 47(35)
 
-``paren_uncertainty_trim`` eliminates all separators which are not the
-decimal separator.
+``paren_uncertainty_trim`` modifies the uncertainty by eliminating any leading
+zeros and all separators unless there are significant digits above and below
+the decimal separator, in which case that separator is kept.
 
 >>> value = 100.0215
 >>> uncertainty = 1.2345
@@ -803,8 +848,8 @@ decimal.
 The default global options have ``paren_uncertainty=False`` and
 ``paren_uncertainty_trim=True``.
 
-We can look at the interplay between parentheses uncertainty mode and
-exponent options.
+Here are examples demonstrating ``paren_uncertainty`` behavior when exponent
+strings are present.
 
 >>> formatter = Formatter(
 ...     exp_mode="engineering",
@@ -821,9 +866,7 @@ exponent options.
 >>> print(formatter(523.4e-3, 1.2e-3))
 523.4(1.2) m
 
-We see that in the ASCII formatting mode parentheses are included around
-the value/uncertainty, but they are excluded in the SI prefix mode.
-This is consistent with the BIPM examples.
+The latter example is consistent with BIPM examples.
 
 Match Value/Uncertainty Width
 -----------------------------
@@ -852,3 +895,16 @@ This feature is accessed with the ``left_pad_matching`` option.
 ... )
 >>> print(formatter(12345, 1.23))
 12345.00 ± 00001.23
+
+Plus/Minus Symbol Whitespace
+----------------------------
+
+Depending on the value of ``pm_whitespace``, the ``±`` symbol will either have
+one full space on either side of it or not.
+
+>>> formatter = Formatter(pm_whitespace=True)
+>>> print(formatter(2, 1))
+2 ± 1
+>>> formatter = Formatter(pm_whitespace=False)
+>>> print(formatter(2, 1))
+2±1

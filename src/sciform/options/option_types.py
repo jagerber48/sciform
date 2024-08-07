@@ -5,44 +5,6 @@ from __future__ import annotations
 from enum import Enum
 from typing import Literal, TypeVar
 
-
-class AutoExpVal:
-    """
-    Flag for auto-exponent calculation mode.
-
-      * For scientific exponent mode the base-10 exponent is selected so
-        that the mantissa ``m`` satisfies ``1 <= m < 10``.
-      * For engineering exponent mode the base-10 exponent is chosen so
-        that it is an integer multiple of 3 and the mantissa ``m``
-        satisfies ``1 <= m < 1000``.
-      * For shifted engineering exponent mode the base-10 exponent is
-        chosen so that it is an integer multiple of 3 and the mantissa
-        ``m`` satisfies ``0.1 <= m < 100``.
-      * For binary exponent mode the base-2 exponent is chosen so that
-        the mantissa ``m`` satisfies ``1 <= m < 2``.
-      * For binary IEC exponent mode the base-2 exponent is chosen so
-        that the mantissa ``m`` satisfies ``1 <= m < 1024 = 2**10``.
-    """
-
-
-class AutoDigits:
-    """
-    Flag for auto ndigits calculation mode.
-
-    In both sig fig and ndigits round modes this auto ndigits
-    option chooses the ndigits so that the least significant digit of
-    the input number will be displayed.
-    For example the number 123.456789 would be displayed with either 9
-    significant figures or 6 digits past the decimal point so that in
-    either case all digits are shown.
-
-    When used with sig fig rounding and in combination with the
-    ``pdg_sig_figs`` option, the number of significant figures will be
-    chosen to be one or two in accordance with the Particle Data Group
-    algorithm.
-    """
-
-
 LeftPadChar = Literal[" ", "0"]
 
 
@@ -104,6 +66,16 @@ class RoundModeEnum(str, Enum):
     DEC_PLACE = "dec_place"
 
 
+NDigits = Literal["all", "pdg"]
+
+
+class NDigitsEnum(str, Enum):
+    """Number of digits Enum."""
+
+    ALL = "all"
+    PDG = "pdg"
+
+
 ExpMode = Literal[
     "fixed_point",
     "percent",
@@ -136,6 +108,15 @@ class ExpFormatEnum(str, Enum):
     STANDARD = "standard"
     PREFIX = "prefix"
     PARTS_PER = "parts_per"
+
+
+ExpVal = Literal["auto"]
+
+
+class ExpValEnum(str, Enum):
+    """Exponent value Enum."""
+
+    AUTO = "auto"
 
 
 T = TypeVar("T", bound=Enum)

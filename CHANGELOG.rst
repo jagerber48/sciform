@@ -19,8 +19,14 @@ Changed
 * **[BREAKING]** Previously ``exp_val`` and ``ndigits`` accepted the enums
   ``AutoExpVal`` and ``AutoDigits``.
   Now ``exp_val`` accepts the string literal ``"auto"`` and ``ndigits`` accepts
-  the string literal ``"all"``.
+  the string literals ``"all"`` and ``"pdg"``.
   [`#178 <https://github.com/jagerber48/sciform/issues/178>`_]
+* Previously during value/uncertainty formatting, if the uncertainty was invalid
+  (0, ``nan`` or ``inf``) and the value was 0, the number would be formatted
+  with as many digits as significant figures requested, e.g. ``0.00 ± nan``.
+  Now a zero value is always shown with a single digit, e.g. ``0 ± nan``.
+  The justification for this is that ``0`` has no significant figures so it
+  doesn't make sense to fake significant figures by showing additional digits.
 * Previously the backend ``FinalizedOptions`` class ran a validation check on
   itself after initialization.
   This check has been removed in favor of not complicating the validation code
@@ -33,6 +39,11 @@ Changed
   conflicts due to the combination of user input with global options can arise
   at options population time.
 * Update ``ruff`` version in pre-commit config.
+
+REMOVED
+^^^^^^^
+* The ``pdg_sig_figs`` options has been removed.
+  This option is now configured by setting ``ndigits="pdg"``.
 
 ----
 

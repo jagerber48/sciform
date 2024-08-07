@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import unittest
 from decimal import Decimal
-from typing import Any, Dict, Literal, Tuple, Type, Union
+from typing import Any, Dict, Literal, Tuple, Union
 
 from sciform.format_utils import exp_translations, exponents
-from sciform.options.option_types import AutoExpVal, ExpFormatEnum, ExpModeEnum
+from sciform.options.option_types import ExpFormatEnum, ExpModeEnum, ExpValEnum
 
 Base = Literal[10, 2]
 GetTranslationDictCase = Tuple[
@@ -20,7 +20,7 @@ GetTranslationDictCase = Tuple[
 ]
 GetStandardExpStrCase = Tuple[Tuple[int, int, bool], str]
 GetValUncExpCase = Tuple[
-    Tuple[Decimal, Decimal, ExpModeEnum, Union[int, Type[AutoExpVal]]],
+    Tuple[Decimal, Decimal, ExpModeEnum, Union[int, ExpValEnum]],
     int,
 ]
 
@@ -194,13 +194,54 @@ class TestExponentUtils(unittest.TestCase):
 
     def test_get_val_unc_exp(self):
         cases: list[GetValUncExpCase] = [
-            ((Decimal("123"), Decimal("1"), ExpModeEnum.FIXEDPOINT, AutoExpVal), 0),
-            ((Decimal("123"), Decimal("1"), ExpModeEnum.SCIENTIFIC, AutoExpVal), 2),
-            ((Decimal("-123"), Decimal("1"), ExpModeEnum.SCIENTIFIC, AutoExpVal), 2),
-            ((Decimal("1"), Decimal("123"), ExpModeEnum.SCIENTIFIC, AutoExpVal), 2),
-            ((Decimal("nan"), Decimal("123"), ExpModeEnum.SCIENTIFIC, AutoExpVal), 2),
-            ((Decimal("123"), Decimal("nan"), ExpModeEnum.SCIENTIFIC, AutoExpVal), 2),
-            ((Decimal("nan"), Decimal("nan"), ExpModeEnum.SCIENTIFIC, AutoExpVal), 0),
+            (
+                (Decimal("123"), Decimal("1"), ExpModeEnum.FIXEDPOINT, ExpValEnum.AUTO),
+                0,
+            ),
+            (
+                (Decimal("123"), Decimal("1"), ExpModeEnum.SCIENTIFIC, ExpValEnum.AUTO),
+                2,
+            ),
+            (
+                (
+                    Decimal("-123"),
+                    Decimal("1"),
+                    ExpModeEnum.SCIENTIFIC,
+                    ExpValEnum.AUTO,
+                ),
+                2,
+            ),
+            (
+                (Decimal("1"), Decimal("123"), ExpModeEnum.SCIENTIFIC, ExpValEnum.AUTO),
+                2,
+            ),
+            (
+                (
+                    Decimal("nan"),
+                    Decimal("123"),
+                    ExpModeEnum.SCIENTIFIC,
+                    ExpValEnum.AUTO,
+                ),
+                2,
+            ),
+            (
+                (
+                    Decimal("123"),
+                    Decimal("nan"),
+                    ExpModeEnum.SCIENTIFIC,
+                    ExpValEnum.AUTO,
+                ),
+                2,
+            ),
+            (
+                (
+                    Decimal("nan"),
+                    Decimal("nan"),
+                    ExpModeEnum.SCIENTIFIC,
+                    ExpValEnum.AUTO,
+                ),
+                0,
+            ),
         ]
 
         for (val, unc, exp_mode, input_exp), expected_output in cases:

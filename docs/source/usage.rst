@@ -470,7 +470,6 @@ PopulatedOptions(
  'superscript': False,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
- 'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_trim': True,
  'pm_whitespace': True,
@@ -512,7 +511,6 @@ PopulatedOptions(
  'superscript': False,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
- 'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_trim': True,
  'pm_whitespace': True,
@@ -612,7 +610,6 @@ PopulatedOptions(
  'superscript': True,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
- 'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_trim': True,
  'pm_whitespace': True,
@@ -658,7 +655,6 @@ PopulatedOptions(
  'superscript': True,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
- 'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_trim': True,
  'pm_whitespace': True,
@@ -802,7 +798,7 @@ concerned with the exact decimal representation of their numerical data.
   :class:`float` to a string decimal representation with the minimum
   number of digits such that it round trips to the same :class:`float`.
   For example we can see the exact decimal representation of the
-  :class:`float` which ``0.1`` is mapped to:
+  :class:`float` to which ``0.1`` is mapped:
   ``print(Decimal(float(0.1)))`` gives
   ``"0.1000000000000000055511151231257827021181583404541015625"``.
   However ``print(float(0.1))`` just gives ``"0.1"``.
