@@ -31,13 +31,17 @@ homepage = "https://github.com/jagerber48/sciform"
 documentation = "https://sciform.readthedocs.io"
 
 [project.optional-dependencies]
-dev = [
-    "ruff",
-    "coverage",
+docs = [
     "sphinx",
+    "sphinx-rtd-dark-mode",
     "sphinx-rtd-theme",
     "sphinx-toolbox",
+]
+test = [
+    "coverage",
     "numpy",
+    "ruff",
+    "sciform[docs]",
 ]
 examples = [
     "numpy",
@@ -45,6 +49,11 @@ examples = [
     "matplotlib",
     "tabulate",
     "jupyter",
+]
+all = [
+    "sciform[docs]",
+    "sciform[test]",
+    "sciform[examples]",
 ]
 
 [tool.setuptools.dynamic]

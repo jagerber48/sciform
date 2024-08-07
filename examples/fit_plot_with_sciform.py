@@ -15,6 +15,9 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
+plt.style.use("dark_background")
+
+
 def get_scale_and_offset_from_offset_str(
     ax: plt.Axes,
     axis: Literal["x", "y"],
@@ -159,7 +162,7 @@ def main() -> None:
     prefix_exp_ticks(ax, "x")
     prefix_exp_ticks(ax, "y", shifted=True)
 
-    fig.savefig("outputs/fit_plot_with_sciform.png", facecolor="white")
+    fig.savefig("outputs/fit_plot_with_sciform.png")
     plt.show()
 
     table_str = tabulate(fit_results_list, headers="keys", tablefmt="grid")

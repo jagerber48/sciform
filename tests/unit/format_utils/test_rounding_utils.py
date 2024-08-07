@@ -1,20 +1,20 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import Tuple, Type, Union
+from typing import Tuple, Union
 
 from sciform.format_utils import rounding
-from sciform.options.option_types import AutoDigits, RoundModeEnum
+from sciform.options.option_types import NDigitsEnum, RoundModeEnum
 
 from tests import NanTestCase
 
 RoundDecPlaceCase = Tuple[
-    Tuple[Decimal, RoundModeEnum, Union[int, Type[AutoDigits]]],
+    Tuple[Decimal, RoundModeEnum, Union[int, NDigitsEnum]],
     int,
 ]
 
 RoundValUncCase = Tuple[
-    Tuple[Decimal, Decimal, Union[int, Type[AutoDigits]], bool],
+    Tuple[Decimal, Decimal, Union[int, NDigitsEnum]],
     Tuple[Decimal, Decimal, int],
 ]
 
@@ -114,115 +114,59 @@ class TestRounding(NanTestCase):
             ((Decimal("0.0123456"), RoundModeEnum.DEC_PLACE, -2), 2),
             ((Decimal("0.00123456"), RoundModeEnum.DEC_PLACE, -2), 2),
             ((Decimal("0.000123456"), RoundModeEnum.DEC_PLACE, -2), 2),
-            ((Decimal("123456"), RoundModeEnum.SIG_FIG, AutoDigits), 0),
-            ((Decimal("12345.6"), RoundModeEnum.SIG_FIG, AutoDigits), -1),
-            ((Decimal("1234.56"), RoundModeEnum.SIG_FIG, AutoDigits), -2),
-            ((Decimal("123.456"), RoundModeEnum.SIG_FIG, AutoDigits), -3),
-            ((Decimal("12.3456"), RoundModeEnum.SIG_FIG, AutoDigits), -4),
-            ((Decimal("1.23456"), RoundModeEnum.SIG_FIG, AutoDigits), -5),
-            ((Decimal("0.123456"), RoundModeEnum.SIG_FIG, AutoDigits), -6),
-            ((Decimal("0.0123456"), RoundModeEnum.SIG_FIG, AutoDigits), -7),
-            ((Decimal("0.00123456"), RoundModeEnum.SIG_FIG, AutoDigits), -8),
-            ((Decimal("0.000123456"), RoundModeEnum.SIG_FIG, AutoDigits), -9),
-            ((Decimal("123456"), RoundModeEnum.DEC_PLACE, AutoDigits), 0),
-            ((Decimal("12345.6"), RoundModeEnum.DEC_PLACE, AutoDigits), -1),
-            ((Decimal("1234.56"), RoundModeEnum.DEC_PLACE, AutoDigits), -2),
-            ((Decimal("123.456"), RoundModeEnum.DEC_PLACE, AutoDigits), -3),
-            ((Decimal("12.3456"), RoundModeEnum.DEC_PLACE, AutoDigits), -4),
-            ((Decimal("1.23456"), RoundModeEnum.DEC_PLACE, AutoDigits), -5),
-            ((Decimal("0.123456"), RoundModeEnum.DEC_PLACE, AutoDigits), -6),
-            ((Decimal("0.0123456"), RoundModeEnum.DEC_PLACE, AutoDigits), -7),
-            ((Decimal("0.00123456"), RoundModeEnum.DEC_PLACE, AutoDigits), -8),
-            ((Decimal("0.000123456"), RoundModeEnum.DEC_PLACE, AutoDigits), -9),
+            ((Decimal("123456"), RoundModeEnum.SIG_FIG, NDigitsEnum.ALL), 0),
+            ((Decimal("12345.6"), RoundModeEnum.SIG_FIG, NDigitsEnum.ALL), -1),
+            ((Decimal("1234.56"), RoundModeEnum.SIG_FIG, NDigitsEnum.ALL), -2),
+            ((Decimal("123.456"), RoundModeEnum.SIG_FIG, NDigitsEnum.ALL), -3),
+            ((Decimal("12.3456"), RoundModeEnum.SIG_FIG, NDigitsEnum.ALL), -4),
+            ((Decimal("1.23456"), RoundModeEnum.SIG_FIG, NDigitsEnum.ALL), -5),
+            ((Decimal("0.123456"), RoundModeEnum.SIG_FIG, NDigitsEnum.ALL), -6),
+            ((Decimal("0.0123456"), RoundModeEnum.SIG_FIG, NDigitsEnum.ALL), -7),
+            ((Decimal("0.00123456"), RoundModeEnum.SIG_FIG, NDigitsEnum.ALL), -8),
+            ((Decimal("0.000123456"), RoundModeEnum.SIG_FIG, NDigitsEnum.ALL), -9),
+            ((Decimal("123456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.ALL), 0),
+            ((Decimal("12345.6"), RoundModeEnum.DEC_PLACE, NDigitsEnum.ALL), -1),
+            ((Decimal("1234.56"), RoundModeEnum.DEC_PLACE, NDigitsEnum.ALL), -2),
+            ((Decimal("123.456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.ALL), -3),
+            ((Decimal("12.3456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.ALL), -4),
+            ((Decimal("1.23456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.ALL), -5),
+            ((Decimal("0.123456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.ALL), -6),
+            ((Decimal("0.0123456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.ALL), -7),
+            ((Decimal("0.00123456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.ALL), -8),
+            ((Decimal("0.000123456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.ALL), -9),
+            ((Decimal("123456"), RoundModeEnum.SIG_FIG, NDigitsEnum.PDG), 4),
+            ((Decimal("12345.6"), RoundModeEnum.SIG_FIG, NDigitsEnum.PDG), 3),
+            ((Decimal("1234.56"), RoundModeEnum.SIG_FIG, NDigitsEnum.PDG), 2),
+            ((Decimal("123.456"), RoundModeEnum.SIG_FIG, NDigitsEnum.PDG), 1),
+            ((Decimal("12.3456"), RoundModeEnum.SIG_FIG, NDigitsEnum.PDG), 0),
+            ((Decimal("1.23456"), RoundModeEnum.SIG_FIG, NDigitsEnum.PDG), -1),
+            ((Decimal("0.123456"), RoundModeEnum.SIG_FIG, NDigitsEnum.PDG), -2),
+            ((Decimal("0.0123456"), RoundModeEnum.SIG_FIG, NDigitsEnum.PDG), -3),
+            ((Decimal("0.00123456"), RoundModeEnum.SIG_FIG, NDigitsEnum.PDG), -4),
+            ((Decimal("0.000123456"), RoundModeEnum.SIG_FIG, NDigitsEnum.PDG), -5),
+            ((Decimal("123456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.PDG), 4),
+            ((Decimal("12345.6"), RoundModeEnum.DEC_PLACE, NDigitsEnum.PDG), 3),
+            ((Decimal("1234.56"), RoundModeEnum.DEC_PLACE, NDigitsEnum.PDG), 2),
+            ((Decimal("123.456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.PDG), 1),
+            ((Decimal("12.3456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.PDG), 0),
+            ((Decimal("1.23456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.PDG), -1),
+            ((Decimal("0.123456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.PDG), -2),
+            ((Decimal("0.0123456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.PDG), -3),
+            ((Decimal("0.00123456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.PDG), -4),
+            ((Decimal("0.000123456"), RoundModeEnum.DEC_PLACE, NDigitsEnum.PDG), -5),
         ]
 
         for input_data, expected_output in cases:
             num, round_mode, ndigits = input_data
-            pdg_sig_figs = False
             actual_output = rounding.get_round_dec_place(
                 num,
                 round_mode,
                 ndigits,
-                pdg_sig_figs=pdg_sig_figs,
             )
             with self.subTest(
                 num=num,
                 round_mode=round_mode,
                 ndigits=ndigits,
-                pdg_sig_figs=pdg_sig_figs,
-                expected_output=expected_output,
-                actual_output=actual_output,
-            ):
-                self.assertEqual(expected_output, actual_output)
-
-    def test_get_round_dec_place_pdg(self):
-        cases: list[RoundDecPlaceCase] = [
-            ((Decimal("123456"), RoundModeEnum.SIG_FIG, 2), 4),
-            ((Decimal("12345.6"), RoundModeEnum.SIG_FIG, 2), 3),
-            ((Decimal("1234.56"), RoundModeEnum.SIG_FIG, 2), 2),
-            ((Decimal("123.456"), RoundModeEnum.SIG_FIG, 2), 1),
-            ((Decimal("12.3456"), RoundModeEnum.SIG_FIG, 2), 0),
-            ((Decimal("1.23456"), RoundModeEnum.SIG_FIG, 2), -1),
-            ((Decimal("0.123456"), RoundModeEnum.SIG_FIG, 2), -2),
-            ((Decimal("0.0123456"), RoundModeEnum.SIG_FIG, 2), -3),
-            ((Decimal("0.00123456"), RoundModeEnum.SIG_FIG, 2), -4),
-            ((Decimal("0.000123456"), RoundModeEnum.SIG_FIG, 2), -5),
-            ((Decimal("123456"), RoundModeEnum.DEC_PLACE, 2), -2),
-            ((Decimal("12345.6"), RoundModeEnum.DEC_PLACE, 2), -2),
-            ((Decimal("1234.56"), RoundModeEnum.DEC_PLACE, 2), -2),
-            ((Decimal("123.456"), RoundModeEnum.DEC_PLACE, 2), -2),
-            ((Decimal("12.3456"), RoundModeEnum.DEC_PLACE, 2), -2),
-            ((Decimal("1.23456"), RoundModeEnum.DEC_PLACE, 2), -2),
-            ((Decimal("0.123456"), RoundModeEnum.DEC_PLACE, 2), -2),
-            ((Decimal("0.0123456"), RoundModeEnum.DEC_PLACE, 2), -2),
-            ((Decimal("0.00123456"), RoundModeEnum.DEC_PLACE, 2), -2),
-            ((Decimal("0.000123456"), RoundModeEnum.DEC_PLACE, 2), -2),
-            ((Decimal("123456"), RoundModeEnum.DEC_PLACE, -2), 2),
-            ((Decimal("12345.6"), RoundModeEnum.DEC_PLACE, -2), 2),
-            ((Decimal("1234.56"), RoundModeEnum.DEC_PLACE, -2), 2),
-            ((Decimal("123.456"), RoundModeEnum.DEC_PLACE, -2), 2),
-            ((Decimal("12.3456"), RoundModeEnum.DEC_PLACE, -2), 2),
-            ((Decimal("1.23456"), RoundModeEnum.DEC_PLACE, -2), 2),
-            ((Decimal("0.123456"), RoundModeEnum.DEC_PLACE, -2), 2),
-            ((Decimal("0.0123456"), RoundModeEnum.DEC_PLACE, -2), 2),
-            ((Decimal("0.00123456"), RoundModeEnum.DEC_PLACE, -2), 2),
-            ((Decimal("0.000123456"), RoundModeEnum.DEC_PLACE, -2), 2),
-            ((Decimal("123456"), RoundModeEnum.SIG_FIG, AutoDigits), 4),
-            ((Decimal("12345.6"), RoundModeEnum.SIG_FIG, AutoDigits), 3),
-            ((Decimal("1234.56"), RoundModeEnum.SIG_FIG, AutoDigits), 2),
-            ((Decimal("123.456"), RoundModeEnum.SIG_FIG, AutoDigits), 1),
-            ((Decimal("12.3456"), RoundModeEnum.SIG_FIG, AutoDigits), 0),
-            ((Decimal("1.23456"), RoundModeEnum.SIG_FIG, AutoDigits), -1),
-            ((Decimal("0.123456"), RoundModeEnum.SIG_FIG, AutoDigits), -2),
-            ((Decimal("0.0123456"), RoundModeEnum.SIG_FIG, AutoDigits), -3),
-            ((Decimal("0.00123456"), RoundModeEnum.SIG_FIG, AutoDigits), -4),
-            ((Decimal("0.000123456"), RoundModeEnum.SIG_FIG, AutoDigits), -5),
-            ((Decimal("123456"), RoundModeEnum.DEC_PLACE, AutoDigits), 0),
-            ((Decimal("12345.6"), RoundModeEnum.DEC_PLACE, AutoDigits), -1),
-            ((Decimal("1234.56"), RoundModeEnum.DEC_PLACE, AutoDigits), -2),
-            ((Decimal("123.456"), RoundModeEnum.DEC_PLACE, AutoDigits), -3),
-            ((Decimal("12.3456"), RoundModeEnum.DEC_PLACE, AutoDigits), -4),
-            ((Decimal("1.23456"), RoundModeEnum.DEC_PLACE, AutoDigits), -5),
-            ((Decimal("0.123456"), RoundModeEnum.DEC_PLACE, AutoDigits), -6),
-            ((Decimal("0.0123456"), RoundModeEnum.DEC_PLACE, AutoDigits), -7),
-            ((Decimal("0.00123456"), RoundModeEnum.DEC_PLACE, AutoDigits), -8),
-            ((Decimal("0.000123456"), RoundModeEnum.DEC_PLACE, AutoDigits), -9),
-        ]
-
-        for input_data, expected_output in cases:
-            num, round_mode, ndigits = input_data
-            pdg_sig_figs = True
-            actual_output = rounding.get_round_dec_place(
-                num,
-                round_mode,
-                ndigits,
-                pdg_sig_figs=pdg_sig_figs,
-            )
-            with self.subTest(
-                num=num,
-                round_mode=round_mode,
-                ndigits=ndigits,
-                pdg_sig_figs=pdg_sig_figs,
                 expected_output=expected_output,
                 actual_output=actual_output,
             ):
@@ -240,61 +184,61 @@ class TestRounding(NanTestCase):
     def test_round_val_unc(self):
         cases: list[RoundValUncCase] = [
             (
-                (Decimal("123"), Decimal("0.456"), 1, False),
+                (Decimal("123"), Decimal("0.456"), 1),
                 (Decimal("123.0"), Decimal("0.5"), -1),
             ),
             (
-                (Decimal("123"), Decimal("0.456"), 4, False),
+                (Decimal("123"), Decimal("0.456"), 4),
                 (Decimal("123.0000"), Decimal("0.4560"), -4),
             ),
             (
-                (Decimal("123"), Decimal("0.456"), 1, True),
+                (Decimal("123"), Decimal("0.456"), NDigitsEnum.PDG),
                 (Decimal("123.0"), Decimal("0.5"), -1),
             ),
             (
-                (Decimal("123"), Decimal("0.456"), 4, True),
+                (Decimal("123"), Decimal("0.456"), NDigitsEnum.PDG),
                 (Decimal("123.0"), Decimal("0.5"), -1),
             ),
             (
-                (Decimal("0.456"), Decimal("123"), 1, False),
+                (Decimal("0.456"), Decimal("123"), 1),
                 (Decimal("0"), Decimal("100"), 2),
             ),
             (
-                (Decimal("0.456"), Decimal("123"), 4, False),
+                (Decimal("0.456"), Decimal("123"), 4),
                 (Decimal("0.5"), Decimal("123.0"), -1),
             ),
             (
-                (Decimal("0.456"), Decimal("123"), 4, True),
+                (Decimal("0.456"), Decimal("123"), NDigitsEnum.PDG),
                 (Decimal("0"), Decimal("120"), 1),
             ),
             (
-                (Decimal("123"), Decimal("nan"), 4, False),
+                (Decimal("123"), Decimal("nan"), 4),
                 (Decimal("123.0"), Decimal("nan"), -1),
             ),
             (
-                (Decimal("nan"), Decimal("123"), 4, False),
+                (Decimal("nan"), Decimal("123"), 4),
                 (Decimal("nan"), Decimal("123.0"), -1),
             ),
             (
-                (Decimal("nan"), Decimal("inf"), 4, False),
+                (Decimal("nan"), Decimal("inf"), 4),
                 (Decimal("nan"), Decimal("inf"), 0),
             ),
             (
-                (Decimal("123"), Decimal("nan"), 4, True),
-                (Decimal("123.0"), Decimal("nan"), -1),
+                (Decimal("123"), Decimal("nan"), NDigitsEnum.PDG),
+                (Decimal("120.0"), Decimal("nan"), 1),
             ),
             (
-                (Decimal("nan"), Decimal("123"), 4, True),
+                (Decimal("nan"), Decimal("123"), NDigitsEnum.PDG),
                 (Decimal("nan"), Decimal("120"), 1),
             ),
             (
-                (Decimal("nan"), Decimal("inf"), 4, True),
+                (Decimal("nan"), Decimal("inf"), NDigitsEnum.PDG),
                 (Decimal("nan"), Decimal("inf"), 0),
             ),
         ]
 
         for input_data, output_data in cases:
-            val, unc, ndigits, use_pdg_sig_figs = input_data
+            val, unc, ndigits = input_data
             (
                 expected_val_rounded,
                 expected_unc_rounded,
@@ -309,13 +253,11 @@ class TestRounding(NanTestCase):
                 unc,
                 ndigits,
                 RoundModeEnum.SIG_FIG,
-                use_pdg_sig_figs=use_pdg_sig_figs,
             )
             with self.subTest(
                 val=val,
                 unc=unc,
                 ndigits=ndigits,
-                use_pdg_sig_figs=use_pdg_sig_figs,
             ):
                 self.assertNanEqual(expected_val_rounded, actual_val_rounded)
                 self.assertNanEqual(expected_unc_rounded, actual_unc_rounded)

@@ -10,8 +10,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from sciform.options.validation import validate_options
-
 if TYPE_CHECKING:  # pragma: no cover
     from sciform.options import option_types
 
@@ -21,9 +19,9 @@ class FinalizedOptions:
     """Rendered options: All options populated and using Enum instead of Literal."""
 
     exp_mode: option_types.ExpModeEnum
-    exp_val: int | type(option_types.AutoExpVal)
+    exp_val: int | option_types.ExpValEnum
     round_mode: option_types.RoundModeEnum
-    ndigits: int | type(option_types.AutoDigits)
+    ndigits: int | option_types.NDigitsEnum
     upper_separator: option_types.UpperSeparatorEnums
     decimal_separator: option_types.DecimalSeparatorEnums
     lower_separator: option_types.LowerSeparatorEnums
@@ -38,10 +36,6 @@ class FinalizedOptions:
     superscript: bool
     nan_inf_exp: bool
     paren_uncertainty: bool
-    pdg_sig_figs: bool
     left_pad_matching: bool
     paren_uncertainty_trim: bool
     pm_whitespace: bool
-
-    def __post_init__(self: FinalizedOptions) -> None:
-        validate_options(self, none_allowed=False)

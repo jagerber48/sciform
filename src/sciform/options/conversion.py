@@ -90,7 +90,9 @@ def populate_options(input_options: InputOptions) -> PopulatedOptions:
 
 key_to_enum_dict = {
     "exp_mode": option_types.ExpModeEnum,
+    "exp_val": option_types.ExpValEnum,
     "round_mode": option_types.RoundModeEnum,
+    "ndigits": option_types.NDigitsEnum,
     "upper_separator": option_types.SeparatorEnum,
     "decimal_separator": option_types.SeparatorEnum,
     "lower_separator": option_types.SeparatorEnum,
@@ -104,7 +106,7 @@ def finalize_populated_options(populated_options: PopulatedOptions) -> Finalized
     """Convert PopulatedOptions into FinalizedOptions with enum values."""
     kwargs = populated_options.as_dict()
     for key, value in kwargs.items():
-        if key in key_to_enum_dict:
+        if key in key_to_enum_dict and isinstance(value, str):
             enum = key_to_enum_dict[key]
             kwargs[key] = option_types.mode_str_to_enum(value, enum)
     return FinalizedOptions(**kwargs)

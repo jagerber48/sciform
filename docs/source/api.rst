@@ -2,7 +2,7 @@ API
 ###
 
 .. module:: sciform
-   :noindex:
+   :no-index:
 
 Formatting
 ==========
@@ -27,13 +27,6 @@ Options
 
 .. autoclass:: PopulatedOptions()
    :members:
-
-Auto Options
-============
-
-.. autoclass:: AutoExpVal()
-
-.. autoclass:: AutoDigits()
 
 Global Configuration
 ====================

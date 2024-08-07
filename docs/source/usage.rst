@@ -2,7 +2,7 @@ Usage
 #####
 
 .. module:: sciform
-   :noindex:
+   :no-index:
 
 Formatting
 ==========
@@ -453,9 +453,9 @@ The :mod:`sciform` default global options can be viewed using
 >>> print(get_default_global_options())
 PopulatedOptions(
  'exp_mode': 'fixed_point',
- 'exp_val': AutoExpVal,
+ 'exp_val': 'auto',
  'round_mode': 'sig_fig',
- 'ndigits': AutoDigits,
+ 'ndigits': 'all',
  'upper_separator': '',
  'decimal_separator': '.',
  'lower_separator': '',
@@ -470,7 +470,6 @@ PopulatedOptions(
  'superscript': False,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
- 'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_trim': True,
  'pm_whitespace': True,
@@ -495,7 +494,7 @@ options using :func:`reset_global_options`.
 >>> print(get_global_options())
 PopulatedOptions(
  'exp_mode': 'engineering_shifted',
- 'exp_val': AutoExpVal,
+ 'exp_val': 'auto',
  'round_mode': 'sig_fig',
  'ndigits': 4,
  'upper_separator': '',
@@ -512,7 +511,6 @@ PopulatedOptions(
  'superscript': False,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
- 'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_trim': True,
  'pm_whitespace': True,
@@ -595,7 +593,7 @@ property.
 >>> print(formatter.populated_options)
 PopulatedOptions(
  'exp_mode': 'engineering',
- 'exp_val': AutoExpVal,
+ 'exp_val': 'auto',
  'round_mode': 'sig_fig',
  'ndigits': 2,
  'upper_separator': '',
@@ -612,7 +610,6 @@ PopulatedOptions(
  'superscript': True,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
- 'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_trim': True,
  'pm_whitespace': True,
@@ -641,7 +638,7 @@ The :class:`FormattedNumber` class stores a record of the
 >>> print(formatted.populated_options)
 PopulatedOptions(
  'exp_mode': 'engineering',
- 'exp_val': AutoExpVal,
+ 'exp_val': 'auto',
  'round_mode': 'sig_fig',
  'ndigits': 2,
  'upper_separator': '',
@@ -658,7 +655,6 @@ PopulatedOptions(
  'superscript': True,
  'nan_inf_exp': False,
  'paren_uncertainty': False,
- 'pdg_sig_figs': False,
  'left_pad_matching': False,
  'paren_uncertainty_trim': True,
  'pm_whitespace': True,
@@ -802,7 +798,7 @@ concerned with the exact decimal representation of their numerical data.
   :class:`float` to a string decimal representation with the minimum
   number of digits such that it round trips to the same :class:`float`.
   For example we can see the exact decimal representation of the
-  :class:`float` which ``0.1`` is mapped to:
+  :class:`float` to which ``0.1`` is mapped:
   ``print(Decimal(float(0.1)))`` gives
   ``"0.1000000000000000055511151231257827021181583404541015625"``.
   However ``print(float(0.1))`` just gives ``"0.1"``.

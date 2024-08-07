@@ -4,15 +4,14 @@ from decimal import Decimal
 from math import isnan
 from typing import List, Tuple, Union
 
-from sciform import AutoExpVal
 from sciform.format_utils import numbers
-from sciform.options.option_types import ExpModeEnum
+from sciform.options.option_types import ExpModeEnum, ExpValEnum
 
 from tests import NanTestCase
 
 MantissaExpBaseCase = List[
     Tuple[
-        Tuple[Decimal, ExpModeEnum, Union[int, type(AutoExpVal)]],
+        Tuple[Decimal, ExpModeEnum, Union[int, ExpValEnum]],
         Tuple[Decimal, int, int],
     ]
 ]
@@ -217,7 +216,7 @@ class TestNumberUtils(NanTestCase):
 
     def test_get_fixed_exp(self):
         self.assertEqual(0, numbers.get_fixed_exp(0))
-        self.assertEqual(0, numbers.get_fixed_exp(AutoExpVal))
+        self.assertEqual(0, numbers.get_fixed_exp(ExpValEnum.AUTO))
         self.assertRaises(
             ValueError,
             numbers.get_fixed_exp,
@@ -225,20 +224,20 @@ class TestNumberUtils(NanTestCase):
         )
 
     def test_get_scientific_exp(self):
-        cases: list[tuple[tuple[Decimal, int | type(AutoExpVal)], int]] = [
-            ((Decimal("1000000"), AutoExpVal), 6),
-            ((Decimal("100000"), AutoExpVal), 5),
-            ((Decimal("10000"), AutoExpVal), 4),
-            ((Decimal("1000"), AutoExpVal), 3),
-            ((Decimal("100"), AutoExpVal), 2),
-            ((Decimal("10"), AutoExpVal), 1),
-            ((Decimal("1"), AutoExpVal), 0),
-            ((Decimal("0.1"), AutoExpVal), -1),
-            ((Decimal("0.01"), AutoExpVal), -2),
-            ((Decimal("0.001"), AutoExpVal), -3),
-            ((Decimal("0.0001"), AutoExpVal), -4),
-            ((Decimal("0.00001"), AutoExpVal), -5),
-            ((Decimal("0.000001"), AutoExpVal), -6),
+        cases: list[tuple[tuple[Decimal, int | ExpValEnum], int]] = [
+            ((Decimal("1000000"), ExpValEnum.AUTO), 6),
+            ((Decimal("100000"), ExpValEnum.AUTO), 5),
+            ((Decimal("10000"), ExpValEnum.AUTO), 4),
+            ((Decimal("1000"), ExpValEnum.AUTO), 3),
+            ((Decimal("100"), ExpValEnum.AUTO), 2),
+            ((Decimal("10"), ExpValEnum.AUTO), 1),
+            ((Decimal("1"), ExpValEnum.AUTO), 0),
+            ((Decimal("0.1"), ExpValEnum.AUTO), -1),
+            ((Decimal("0.01"), ExpValEnum.AUTO), -2),
+            ((Decimal("0.001"), ExpValEnum.AUTO), -3),
+            ((Decimal("0.0001"), ExpValEnum.AUTO), -4),
+            ((Decimal("0.00001"), ExpValEnum.AUTO), -5),
+            ((Decimal("0.000001"), ExpValEnum.AUTO), -6),
             ((Decimal("1000000"), 3), 3),
             ((Decimal("100000"), 3), 3),
             ((Decimal("10000"), 3), 3),
@@ -271,20 +270,20 @@ class TestNumberUtils(NanTestCase):
                     self.assertEqual(expected_output, actual_output)
 
     def test_get_engineering_exp(self):
-        cases: list[tuple[tuple[Decimal, int | type(AutoExpVal)], int]] = [
-            ((Decimal("1000000"), AutoExpVal), 6),
-            ((Decimal("100000"), AutoExpVal), 3),
-            ((Decimal("10000"), AutoExpVal), 3),
-            ((Decimal("1000"), AutoExpVal), 3),
-            ((Decimal("100"), AutoExpVal), 0),
-            ((Decimal("10"), AutoExpVal), 0),
-            ((Decimal("1"), AutoExpVal), 0),
-            ((Decimal("0.1"), AutoExpVal), -3),
-            ((Decimal("0.01"), AutoExpVal), -3),
-            ((Decimal("0.001"), AutoExpVal), -3),
-            ((Decimal("0.0001"), AutoExpVal), -6),
-            ((Decimal("0.00001"), AutoExpVal), -6),
-            ((Decimal("0.000001"), AutoExpVal), -6),
+        cases: list[tuple[tuple[Decimal, int | ExpValEnum], int]] = [
+            ((Decimal("1000000"), ExpValEnum.AUTO), 6),
+            ((Decimal("100000"), ExpValEnum.AUTO), 3),
+            ((Decimal("10000"), ExpValEnum.AUTO), 3),
+            ((Decimal("1000"), ExpValEnum.AUTO), 3),
+            ((Decimal("100"), ExpValEnum.AUTO), 0),
+            ((Decimal("10"), ExpValEnum.AUTO), 0),
+            ((Decimal("1"), ExpValEnum.AUTO), 0),
+            ((Decimal("0.1"), ExpValEnum.AUTO), -3),
+            ((Decimal("0.01"), ExpValEnum.AUTO), -3),
+            ((Decimal("0.001"), ExpValEnum.AUTO), -3),
+            ((Decimal("0.0001"), ExpValEnum.AUTO), -6),
+            ((Decimal("0.00001"), ExpValEnum.AUTO), -6),
+            ((Decimal("0.000001"), ExpValEnum.AUTO), -6),
             ((Decimal("1000000"), 3), 3),
             ((Decimal("100000"), 3), 3),
             ((Decimal("10000"), 3), 3),
@@ -320,20 +319,20 @@ class TestNumberUtils(NanTestCase):
                     self.assertEqual(expected_output, actual_output)
 
     def test_get_engineering_shifted_exp(self):
-        cases: list[tuple[tuple[Decimal, int | type(AutoExpVal)], int]] = [
-            ((Decimal("1000000"), AutoExpVal), 6),
-            ((Decimal("100000"), AutoExpVal), 6),
-            ((Decimal("10000"), AutoExpVal), 3),
-            ((Decimal("1000"), AutoExpVal), 3),
-            ((Decimal("100"), AutoExpVal), 3),
-            ((Decimal("10"), AutoExpVal), 0),
-            ((Decimal("1"), AutoExpVal), 0),
-            ((Decimal("0.1"), AutoExpVal), 0),
-            ((Decimal("0.01"), AutoExpVal), -3),
-            ((Decimal("0.001"), AutoExpVal), -3),
-            ((Decimal("0.0001"), AutoExpVal), -3),
-            ((Decimal("0.00001"), AutoExpVal), -6),
-            ((Decimal("0.000001"), AutoExpVal), -6),
+        cases: list[tuple[tuple[Decimal, int | ExpValEnum], int]] = [
+            ((Decimal("1000000"), ExpValEnum.AUTO), 6),
+            ((Decimal("100000"), ExpValEnum.AUTO), 6),
+            ((Decimal("10000"), ExpValEnum.AUTO), 3),
+            ((Decimal("1000"), ExpValEnum.AUTO), 3),
+            ((Decimal("100"), ExpValEnum.AUTO), 3),
+            ((Decimal("10"), ExpValEnum.AUTO), 0),
+            ((Decimal("1"), ExpValEnum.AUTO), 0),
+            ((Decimal("0.1"), ExpValEnum.AUTO), 0),
+            ((Decimal("0.01"), ExpValEnum.AUTO), -3),
+            ((Decimal("0.001"), ExpValEnum.AUTO), -3),
+            ((Decimal("0.0001"), ExpValEnum.AUTO), -3),
+            ((Decimal("0.00001"), ExpValEnum.AUTO), -6),
+            ((Decimal("0.000001"), ExpValEnum.AUTO), -6),
             ((Decimal("1000000"), 3), 3),
             ((Decimal("100000"), 3), 3),
             ((Decimal("10000"), 3), 3),
@@ -377,18 +376,18 @@ class TestNumberUtils(NanTestCase):
         )
 
     def test_get_binary_exp(self):
-        cases: list[tuple[tuple[Decimal, int | type(AutoExpVal)], int]] = [
-            ((Decimal("0.0625"), AutoExpVal), -4),
-            ((Decimal("0.125"), AutoExpVal), -3),
-            ((Decimal("0.25"), AutoExpVal), -2),
-            ((Decimal("0.5"), AutoExpVal), -1),
-            ((Decimal("1"), AutoExpVal), 0),
-            ((Decimal("2"), AutoExpVal), 1),
-            ((Decimal("4"), AutoExpVal), 2),
-            ((Decimal("8"), AutoExpVal), 3),
-            ((Decimal("16"), AutoExpVal), 4),
-            ((Decimal("32"), AutoExpVal), 5),
-            ((Decimal("64"), AutoExpVal), 6),
+        cases: list[tuple[tuple[Decimal, int | ExpValEnum], int]] = [
+            ((Decimal("0.0625"), ExpValEnum.AUTO), -4),
+            ((Decimal("0.125"), ExpValEnum.AUTO), -3),
+            ((Decimal("0.25"), ExpValEnum.AUTO), -2),
+            ((Decimal("0.5"), ExpValEnum.AUTO), -1),
+            ((Decimal("1"), ExpValEnum.AUTO), 0),
+            ((Decimal("2"), ExpValEnum.AUTO), 1),
+            ((Decimal("4"), ExpValEnum.AUTO), 2),
+            ((Decimal("8"), ExpValEnum.AUTO), 3),
+            ((Decimal("16"), ExpValEnum.AUTO), 4),
+            ((Decimal("32"), ExpValEnum.AUTO), 5),
+            ((Decimal("64"), ExpValEnum.AUTO), 6),
             ((Decimal("0.0625"), 3), 3),
             ((Decimal("0.125"), 3), 3),
             ((Decimal("0.25"), 3), 3),
@@ -422,21 +421,21 @@ class TestNumberUtils(NanTestCase):
                     self.assertEqual(expected_output, actual_output)
 
     def test_get_binary_iec_exp(self):
-        cases: list[tuple[tuple[Decimal, int | type(AutoExpVal)], int]] = [
-            ((Decimal("0.0625"), AutoExpVal), -10),
-            ((Decimal("0.125"), AutoExpVal), -10),
-            ((Decimal("0.25"), AutoExpVal), -10),
-            ((Decimal("0.5"), AutoExpVal), -10),
-            ((Decimal("1"), AutoExpVal), 0),
-            ((Decimal("2"), AutoExpVal), 0),
-            ((Decimal("4"), AutoExpVal), 0),
-            ((Decimal("8"), AutoExpVal), 0),
-            ((Decimal("16"), AutoExpVal), 0),
-            ((Decimal("32"), AutoExpVal), 0),
-            ((Decimal("64"), AutoExpVal), 0),
-            ((Decimal("1024"), AutoExpVal), 10),
-            ((Decimal(2**20), AutoExpVal), 20),
-            ((Decimal(2**30), AutoExpVal), 30),
+        cases: list[tuple[tuple[Decimal, int | ExpValEnum], int]] = [
+            ((Decimal("0.0625"), ExpValEnum.AUTO), -10),
+            ((Decimal("0.125"), ExpValEnum.AUTO), -10),
+            ((Decimal("0.25"), ExpValEnum.AUTO), -10),
+            ((Decimal("0.5"), ExpValEnum.AUTO), -10),
+            ((Decimal("1"), ExpValEnum.AUTO), 0),
+            ((Decimal("2"), ExpValEnum.AUTO), 0),
+            ((Decimal("4"), ExpValEnum.AUTO), 0),
+            ((Decimal("8"), ExpValEnum.AUTO), 0),
+            ((Decimal("16"), ExpValEnum.AUTO), 0),
+            ((Decimal("32"), ExpValEnum.AUTO), 0),
+            ((Decimal("64"), ExpValEnum.AUTO), 0),
+            ((Decimal("1024"), ExpValEnum.AUTO), 10),
+            ((Decimal(2**20), ExpValEnum.AUTO), 20),
+            ((Decimal(2**30), ExpValEnum.AUTO), 30),
             ((Decimal("0.0625"), 10), 10),
             ((Decimal("0.125"), 10), 10),
             ((Decimal("0.25"), 10), 10),
@@ -481,211 +480,219 @@ class TestNumberUtils(NanTestCase):
     def test_get_mantissa_exp_base(self):
         cases: MantissaExpBaseCase = [
             (
-                (Decimal("123456"), ExpModeEnum.FIXEDPOINT, AutoExpVal),
+                (Decimal("123456"), ExpModeEnum.FIXEDPOINT, ExpValEnum.AUTO),
                 (Decimal("123456"), 0, 10),
             ),
             (
-                (Decimal("1234.56"), ExpModeEnum.FIXEDPOINT, AutoExpVal),
+                (Decimal("1234.56"), ExpModeEnum.FIXEDPOINT, ExpValEnum.AUTO),
                 (Decimal("1234.56"), 0, 10),
             ),
             (
-                (Decimal("12.3456"), ExpModeEnum.FIXEDPOINT, AutoExpVal),
+                (Decimal("12.3456"), ExpModeEnum.FIXEDPOINT, ExpValEnum.AUTO),
                 (Decimal("12.3456"), 0, 10),
             ),
             (
-                (Decimal("0.123456"), ExpModeEnum.FIXEDPOINT, AutoExpVal),
+                (Decimal("0.123456"), ExpModeEnum.FIXEDPOINT, ExpValEnum.AUTO),
                 (Decimal("0.123456"), 0, 10),
             ),
             (
-                (Decimal("0.00123456"), ExpModeEnum.FIXEDPOINT, AutoExpVal),
+                (Decimal("0.00123456"), ExpModeEnum.FIXEDPOINT, ExpValEnum.AUTO),
                 (Decimal("0.00123456"), 0, 10),
             ),
             (
-                (Decimal("0.0000123456"), ExpModeEnum.FIXEDPOINT, AutoExpVal),
+                (Decimal("0.0000123456"), ExpModeEnum.FIXEDPOINT, ExpValEnum.AUTO),
                 (Decimal("0.0000123456"), 0, 10),
             ),
             (
-                (Decimal("123456"), ExpModeEnum.PERCENT, AutoExpVal),
+                (Decimal("123456"), ExpModeEnum.PERCENT, ExpValEnum.AUTO),
                 (Decimal("123456"), 0, 10),
             ),
             (
-                (Decimal("1234.56"), ExpModeEnum.PERCENT, AutoExpVal),
+                (Decimal("1234.56"), ExpModeEnum.PERCENT, ExpValEnum.AUTO),
                 (Decimal("1234.56"), 0, 10),
             ),
             (
-                (Decimal("12.3456"), ExpModeEnum.PERCENT, AutoExpVal),
+                (Decimal("12.3456"), ExpModeEnum.PERCENT, ExpValEnum.AUTO),
                 (Decimal("12.3456"), 0, 10),
             ),
             (
-                (Decimal("0.123456"), ExpModeEnum.PERCENT, AutoExpVal),
+                (Decimal("0.123456"), ExpModeEnum.PERCENT, ExpValEnum.AUTO),
                 (Decimal("0.123456"), 0, 10),
             ),
             (
-                (Decimal("0.00123456"), ExpModeEnum.PERCENT, AutoExpVal),
+                (Decimal("0.00123456"), ExpModeEnum.PERCENT, ExpValEnum.AUTO),
                 (Decimal("0.00123456"), 0, 10),
             ),
             (
-                (Decimal("0.0000123456"), ExpModeEnum.PERCENT, AutoExpVal),
+                (Decimal("0.0000123456"), ExpModeEnum.PERCENT, ExpValEnum.AUTO),
                 (Decimal("0.0000123456"), 0, 10),
             ),
             (
-                (Decimal("123456"), ExpModeEnum.SCIENTIFIC, AutoExpVal),
+                (Decimal("123456"), ExpModeEnum.SCIENTIFIC, ExpValEnum.AUTO),
                 (Decimal("1.23456"), 5, 10),
             ),
             (
-                (Decimal("1234.56"), ExpModeEnum.SCIENTIFIC, AutoExpVal),
+                (Decimal("1234.56"), ExpModeEnum.SCIENTIFIC, ExpValEnum.AUTO),
                 (Decimal("1.23456"), 3, 10),
             ),
             (
-                (Decimal("12.3456"), ExpModeEnum.SCIENTIFIC, AutoExpVal),
+                (Decimal("12.3456"), ExpModeEnum.SCIENTIFIC, ExpValEnum.AUTO),
                 (Decimal("1.23456"), 1, 10),
             ),
             (
-                (Decimal("0.123456"), ExpModeEnum.SCIENTIFIC, AutoExpVal),
+                (Decimal("0.123456"), ExpModeEnum.SCIENTIFIC, ExpValEnum.AUTO),
                 (Decimal("1.23456"), -1, 10),
             ),
             (
-                (Decimal("0.00123456"), ExpModeEnum.SCIENTIFIC, AutoExpVal),
+                (Decimal("0.00123456"), ExpModeEnum.SCIENTIFIC, ExpValEnum.AUTO),
                 (Decimal("1.23456"), -3, 10),
             ),
             (
-                (Decimal("0.0000123456"), ExpModeEnum.SCIENTIFIC, AutoExpVal),
+                (Decimal("0.0000123456"), ExpModeEnum.SCIENTIFIC, ExpValEnum.AUTO),
                 (Decimal("1.23456"), -5, 10),
             ),
             (
-                (Decimal("123456"), ExpModeEnum.ENGINEERING, AutoExpVal),
+                (Decimal("123456"), ExpModeEnum.ENGINEERING, ExpValEnum.AUTO),
                 (Decimal("123.456"), 3, 10),
             ),
             (
-                (Decimal("1234.56"), ExpModeEnum.ENGINEERING, AutoExpVal),
+                (Decimal("1234.56"), ExpModeEnum.ENGINEERING, ExpValEnum.AUTO),
                 (Decimal("1.23456"), 3, 10),
             ),
             (
-                (Decimal("12.3456"), ExpModeEnum.ENGINEERING, AutoExpVal),
+                (Decimal("12.3456"), ExpModeEnum.ENGINEERING, ExpValEnum.AUTO),
                 (Decimal("12.3456"), 0, 10),
             ),
             (
-                (Decimal("0.123456"), ExpModeEnum.ENGINEERING, AutoExpVal),
+                (Decimal("0.123456"), ExpModeEnum.ENGINEERING, ExpValEnum.AUTO),
                 (Decimal("123.456"), -3, 10),
             ),
             (
-                (Decimal("0.00123456"), ExpModeEnum.ENGINEERING, AutoExpVal),
+                (Decimal("0.00123456"), ExpModeEnum.ENGINEERING, ExpValEnum.AUTO),
                 (Decimal("1.23456"), -3, 10),
             ),
             (
-                (Decimal("0.0000123456"), ExpModeEnum.ENGINEERING, AutoExpVal),
+                (Decimal("0.0000123456"), ExpModeEnum.ENGINEERING, ExpValEnum.AUTO),
                 (Decimal("12.3456"), -6, 10),
             ),
             (
-                (Decimal("123456"), ExpModeEnum.ENGINEERING_SHIFTED, AutoExpVal),
+                (Decimal("123456"), ExpModeEnum.ENGINEERING_SHIFTED, ExpValEnum.AUTO),
                 (Decimal("0.123456"), 6, 10),
             ),
             (
-                (Decimal("1234.56"), ExpModeEnum.ENGINEERING_SHIFTED, AutoExpVal),
+                (Decimal("1234.56"), ExpModeEnum.ENGINEERING_SHIFTED, ExpValEnum.AUTO),
                 (Decimal("1.23456"), 3, 10),
             ),
             (
-                (Decimal("12.3456"), ExpModeEnum.ENGINEERING_SHIFTED, AutoExpVal),
+                (Decimal("12.3456"), ExpModeEnum.ENGINEERING_SHIFTED, ExpValEnum.AUTO),
                 (Decimal("12.3456"), 0, 10),
             ),
             (
-                (Decimal("0.123456"), ExpModeEnum.ENGINEERING_SHIFTED, AutoExpVal),
+                (Decimal("0.123456"), ExpModeEnum.ENGINEERING_SHIFTED, ExpValEnum.AUTO),
                 (Decimal("0.123456"), 0, 10),
             ),
             (
-                (Decimal("0.00123456"), ExpModeEnum.ENGINEERING_SHIFTED, AutoExpVal),
+                (
+                    Decimal("0.00123456"),
+                    ExpModeEnum.ENGINEERING_SHIFTED,
+                    ExpValEnum.AUTO,
+                ),
                 (Decimal("1.23456"), -3, 10),
             ),
             (
-                (Decimal("0.0000123456"), ExpModeEnum.ENGINEERING_SHIFTED, AutoExpVal),
+                (
+                    Decimal("0.0000123456"),
+                    ExpModeEnum.ENGINEERING_SHIFTED,
+                    ExpValEnum.AUTO,
+                ),
                 (Decimal("12.3456"), -6, 10),
             ),
             (
-                (Decimal(1 * 2**-10), ExpModeEnum.BINARY, AutoExpVal),
+                (Decimal(1 * 2**-10), ExpModeEnum.BINARY, ExpValEnum.AUTO),
                 (Decimal("1.0"), -10, 2),
             ),
             (
-                (Decimal(1.5 * 2**-10), ExpModeEnum.BINARY, AutoExpVal),
+                (Decimal(1.5 * 2**-10), ExpModeEnum.BINARY, ExpValEnum.AUTO),
                 (Decimal("1.5"), -10, 2),
             ),
             (
-                (Decimal(1 * 2**-5), ExpModeEnum.BINARY, AutoExpVal),
+                (Decimal(1 * 2**-5), ExpModeEnum.BINARY, ExpValEnum.AUTO),
                 (Decimal("1.0"), -5, 2),
             ),
             (
-                (Decimal(1.5 * 2**-5), ExpModeEnum.BINARY, AutoExpVal),
+                (Decimal(1.5 * 2**-5), ExpModeEnum.BINARY, ExpValEnum.AUTO),
                 (Decimal("1.5"), -5, 2),
             ),
             (
-                (Decimal(1 * 2**0), ExpModeEnum.BINARY, AutoExpVal),
+                (Decimal(1 * 2**0), ExpModeEnum.BINARY, ExpValEnum.AUTO),
                 (Decimal("1.0"), 0, 2),
             ),
             (
-                (Decimal(1.5 * 2**0), ExpModeEnum.BINARY, AutoExpVal),
+                (Decimal(1.5 * 2**0), ExpModeEnum.BINARY, ExpValEnum.AUTO),
                 (Decimal("1.5"), 0, 2),
             ),
             (
-                (Decimal(1 * 2**5), ExpModeEnum.BINARY, AutoExpVal),
+                (Decimal(1 * 2**5), ExpModeEnum.BINARY, ExpValEnum.AUTO),
                 (Decimal("1.0"), 5, 2),
             ),
             (
-                (Decimal(1.5 * 2**5), ExpModeEnum.BINARY, AutoExpVal),
+                (Decimal(1.5 * 2**5), ExpModeEnum.BINARY, ExpValEnum.AUTO),
                 (Decimal("1.5"), 5, 2),
             ),
             (
-                (Decimal(1 * 2**10), ExpModeEnum.BINARY, AutoExpVal),
+                (Decimal(1 * 2**10), ExpModeEnum.BINARY, ExpValEnum.AUTO),
                 (Decimal("1.0"), 10, 2),
             ),
             (
-                (Decimal(1.5 * 2**10), ExpModeEnum.BINARY, AutoExpVal),
+                (Decimal(1.5 * 2**10), ExpModeEnum.BINARY, ExpValEnum.AUTO),
                 (Decimal("1.5"), 10, 2),
             ),
             (
-                (Decimal(1 * 2**-10), ExpModeEnum.BINARY_IEC, AutoExpVal),
+                (Decimal(1 * 2**-10), ExpModeEnum.BINARY_IEC, ExpValEnum.AUTO),
                 (Decimal("1.0"), -10, 2),
             ),
             (
-                (Decimal(1.5 * 2**-10), ExpModeEnum.BINARY_IEC, AutoExpVal),
+                (Decimal(1.5 * 2**-10), ExpModeEnum.BINARY_IEC, ExpValEnum.AUTO),
                 (Decimal("1.5"), -10, 2),
             ),
             (
-                (Decimal(1 * 2**-5), ExpModeEnum.BINARY_IEC, AutoExpVal),
+                (Decimal(1 * 2**-5), ExpModeEnum.BINARY_IEC, ExpValEnum.AUTO),
                 (Decimal("32"), -10, 2),
             ),
             (
-                (Decimal(1.5 * 2**-5), ExpModeEnum.BINARY_IEC, AutoExpVal),
+                (Decimal(1.5 * 2**-5), ExpModeEnum.BINARY_IEC, ExpValEnum.AUTO),
                 (Decimal("48"), -10, 2),
             ),
             (
-                (Decimal(1 * 2**0), ExpModeEnum.BINARY_IEC, AutoExpVal),
+                (Decimal(1 * 2**0), ExpModeEnum.BINARY_IEC, ExpValEnum.AUTO),
                 (Decimal("1.0"), 0, 2),
             ),
             (
-                (Decimal(1.5 * 2**0), ExpModeEnum.BINARY_IEC, AutoExpVal),
+                (Decimal(1.5 * 2**0), ExpModeEnum.BINARY_IEC, ExpValEnum.AUTO),
                 (Decimal("1.5"), 0, 2),
             ),
             (
-                (Decimal(1 * 2**5), ExpModeEnum.BINARY_IEC, AutoExpVal),
+                (Decimal(1 * 2**5), ExpModeEnum.BINARY_IEC, ExpValEnum.AUTO),
                 (Decimal("32"), 0, 2),
             ),
             (
-                (Decimal(1.5 * 2**5), ExpModeEnum.BINARY_IEC, AutoExpVal),
+                (Decimal(1.5 * 2**5), ExpModeEnum.BINARY_IEC, ExpValEnum.AUTO),
                 (Decimal("48"), 0, 2),
             ),
             (
-                (Decimal(1 * 2**10), ExpModeEnum.BINARY_IEC, AutoExpVal),
+                (Decimal(1 * 2**10), ExpModeEnum.BINARY_IEC, ExpValEnum.AUTO),
                 (Decimal("1.0"), 10, 2),
             ),
             (
-                (Decimal(1.5 * 2**10), ExpModeEnum.BINARY_IEC, AutoExpVal),
+                (Decimal(1.5 * 2**10), ExpModeEnum.BINARY_IEC, ExpValEnum.AUTO),
                 (Decimal("1.5"), 10, 2),
             ),
             (
-                (Decimal("nan"), ExpModeEnum.FIXEDPOINT, AutoExpVal),
+                (Decimal("nan"), ExpModeEnum.FIXEDPOINT, ExpValEnum.AUTO),
                 (Decimal("nan"), 0, 10),
             ),
             (
-                (Decimal("inf"), ExpModeEnum.SCIENTIFIC, AutoExpVal),
+                (Decimal("inf"), ExpModeEnum.SCIENTIFIC, ExpValEnum.AUTO),
                 (Decimal("inf"), 0, 10),
             ),
             (

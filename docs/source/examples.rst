@@ -2,7 +2,7 @@ Examples
 ########
 
 .. module:: sciform
-   :noindex:
+   :no-index:
 
 Test Cases
 ==========
@@ -68,7 +68,7 @@ available formatting options.
 >>> formatter = Formatter(
 ...     exp_mode="engineering",
 ...     exp_format="prefix",
-...     pdg_sig_figs=True,
+...     ndigits="pdg",
 ...     pm_whitespace=False,
 ... )
 >>> print(formatter(num, unc))
@@ -77,7 +77,7 @@ available formatting options.
 >>> num = 314159.27
 >>> unc = 1618
 >>> formatter = Formatter(
-...     exp_mode="engineering_shifted", pdg_sig_figs=True, paren_uncertainty=True
+...     exp_mode="engineering_shifted", ndigits="pdg", paren_uncertainty=True
 ... )
 >>> print(formatter(num, unc))
 0.3142(16)e+06
@@ -175,13 +175,13 @@ instead.
 >>> num_unc = SciNum(3141592.7, 1618)
 >>> print(f"{num_unc}")
 3141593 ± 1618
->>> with GlobalOptionsContext(pdg_sig_figs=True, pm_whitespace=False):
+>>> with GlobalOptionsContext(ndigits="pdg", pm_whitespace=False):
 ...     print(f"{num_unc:rp}")
 ...
 (3.1416±0.0016) M
 
 >>> num_unc = SciNum(314159.27, 1618)
->>> with GlobalOptionsContext(pdg_sig_figs=True):
+>>> with GlobalOptionsContext(ndigits="pdg"):
 ...     print(f"{num_unc:#r()}")
 ...
 0.3142(16)e+06
@@ -295,20 +295,26 @@ lists, arrays, etc.) of numbers.
 
 >>> from sciform import Formatter
 >>>
->>> formatter = Formatter(
+>>> val_formatter = Formatter(
 ...     exp_mode="engineering",
 ...     exp_format="prefix",
-...     pdg_sig_figs=True,
+...     ndigits="all",
+...     paren_uncertainty=True,
+... )
+>>> val_err_formatter = Formatter(
+...     exp_mode="engineering",
+...     exp_format="prefix",
+...     ndigits="pdg",
 ...     paren_uncertainty=True,
 ... )
 >>> val_list = [1000, 2000, 3000]
 >>> err_list = [200, 400, 600]
 >>>
->>> val_str_list = list(map(formatter, val_list))
+>>> val_str_list = list(map(val_formatter, val_list))
 >>> print(val_str_list)
 ['1 k', '2 k', '3 k']
 >>>
->>> val_err_str_list = list(map(formatter, val_list, err_list))
+>>> val_err_str_list = list(map(val_err_formatter, val_list, err_list))
 >>> print(val_err_str_list)
 ['1.00(20) k', '2.0(4) k', '3.0(6) k']
 
@@ -318,16 +324,17 @@ makes this easy.
 
 >>> import numpy as np
 >>>
->>> vec_formatter = np.vectorize(formatter)
+>>> vec_val_formatter = np.vectorize(val_formatter)
+>>> vec_val_err_formatter = np.vectorize(val_err_formatter)
 >>> arr = np.array([[1e6, 2e6, 3e6], [4e6, 5e6, 6e6], [7e6, 8e6, 9e6]])
 >>>
 >>> arr_err = np.array([[9e4, 8e4, 7e4], [6e4, 5e4, 4e4], [3e4, 2e4, 1e4]])
 >>>
->>> print(vec_formatter(arr))
+>>> print(vec_val_formatter(arr))
 [['1 M' '2 M' '3 M']
  ['4 M' '5 M' '6 M']
  ['7 M' '8 M' '9 M']]
->>> print(vec_formatter(arr, arr_err))
+>>> print(vec_val_err_formatter(arr, arr_err))
 [['1.00(9) M' '2.00(8) M' '3.00(7) M']
  ['4.00(6) M' '5.00(5) M' '6.00(4) M']
  ['7.000(30) M' '8.000(20) M' '9.000(10) M']]

@@ -25,10 +25,10 @@ from sciform.format_utils.rounding import get_round_dec_place, round_val_unc
 from sciform.formatting.parser import parse_val_unc_from_input
 from sciform.options.conversion import finalize_populated_options, populate_options
 from sciform.options.option_types import (
-    AutoDigits,
-    AutoExpVal,
     ExpFormatEnum,
     ExpModeEnum,
+    ExpValEnum,
+    NDigitsEnum,
     RoundModeEnum,
     SignModeEnum,
 )
@@ -42,9 +42,9 @@ if TYPE_CHECKING:  # pragma: no cover
 def re_round_mantissa_exp_decomposition(
     number: Number,
     exp_mode: ExpModeEnum,
-    input_exp_val: int | type(AutoExpVal),
+    input_exp_val: int | ExpValEnum,
     round_mode: RoundModeEnum,
-    ndigits: int | type(AutoDigits),
+    ndigits: int | NDigitsEnum,
 ) -> tuple[Decimal, int, int, int]:
     """Decompose a number into a mantissa and exponent using repeated rounding."""
     first_mantissa, first_exp_val, base = get_mantissa_exp_base(
@@ -121,7 +121,7 @@ def format_non_finite(num: Decimal, options: FinalizedOptions) -> str:
         exp_mode = options.exp_mode
 
         exp_val = options.exp_val
-        if options.exp_val is AutoExpVal:
+        if options.exp_val is ExpValEnum.AUTO:
             exp_val = 0
 
         exp_str = get_exp_str(
@@ -233,14 +233,12 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         unc,
         options.ndigits,
         options.round_mode,
-        use_pdg_sig_figs=options.pdg_sig_figs,
     )
     val_rounded, unc_rounded, round_digit = round_val_unc(
         val_rounded,
         unc_rounded,
         options.ndigits,
         options.round_mode,
-        use_pdg_sig_figs=options.pdg_sig_figs,
     )
 
     exp_val = get_val_unc_exp(

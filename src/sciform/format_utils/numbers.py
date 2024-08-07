@@ -13,9 +13,8 @@ from sciform.formatting.parser import (
     non_finite_val_pattern,
 )
 from sciform.options.option_types import (
-    AutoDigits,
-    AutoExpVal,
     ExpModeEnum,
+    ExpValEnum,
 )
 
 
@@ -48,7 +47,7 @@ def get_val_unc_top_dec_place(
     input_top_dec_place: int,
     *,
     left_pad_matching: bool,
-) -> int | AutoDigits:
+) -> int:
     """Get top decimal place for value/uncertainty formatting."""
     if left_pad_matching:
         val_top_dec_place = get_top_dec_place(val_mantissa)
@@ -65,10 +64,10 @@ def get_val_unc_top_dec_place(
 
 
 def get_fixed_exp(
-    input_exp: int | type(AutoExpVal),
+    input_exp: int | ExpValEnum,
 ) -> Literal[0]:
     """Get the exponent for fixed or percent format modes."""
-    if input_exp is not AutoExpVal and input_exp != 0:
+    if input_exp is not ExpValEnum.AUTO and input_exp != 0:
         msg = "Cannot set non-zero exponent in fixed point or percent exponent mode."
         raise ValueError(msg)
     return 0
@@ -76,20 +75,20 @@ def get_fixed_exp(
 
 def get_scientific_exp(
     num: Decimal,
-    input_exp: int | type(AutoExpVal),
+    input_exp: int | ExpValEnum,
 ) -> int:
     """Get the exponent for scientific formatting mode."""
-    return get_top_dec_place(num) if input_exp is AutoExpVal else input_exp
+    return get_top_dec_place(num) if input_exp is ExpValEnum.AUTO else input_exp
 
 
 def get_engineering_exp(
     num: Decimal,
-    input_exp: int | type(AutoExpVal),
+    input_exp: int | ExpValEnum,
     *,
     shifted: bool = False,
 ) -> int:
     """Get the exponent for engineering formatting modes."""
-    if input_exp is AutoExpVal:
+    if input_exp is ExpValEnum.AUTO:
         exp_val = get_top_dec_place(num)
         exp_val = exp_val // 3 * 3 if not shifted else (exp_val + 1) // 3 * 3
     else:
@@ -105,12 +104,12 @@ def get_engineering_exp(
 
 def get_binary_exp(
     num: Decimal,
-    input_exp: int | type(AutoExpVal),
+    input_exp: int | ExpValEnum,
     *,
     iec: bool = False,
 ) -> int:
     """Get the exponent for binary formatting modes."""
-    if input_exp is AutoExpVal:
+    if input_exp is ExpValEnum.AUTO:
         exp_val = get_top_dec_place_binary(num)
         if iec:
             exp_val = (exp_val // 10) * 10
@@ -128,7 +127,7 @@ def get_binary_exp(
 def get_mantissa_exp_base(
     num: Decimal,
     exp_mode: ExpModeEnum,
-    input_exp: int | type(AutoExpVal),
+    input_exp: int | ExpValEnum,
 ) -> tuple[Decimal, int, int]:
     """Get mantissa, exponent, and base for formatting a decimal number."""
     if exp_mode is ExpModeEnum.BINARY or exp_mode is ExpModeEnum.BINARY_IEC:
@@ -138,7 +137,7 @@ def get_mantissa_exp_base(
 
     if num == 0 or not num.is_finite():
         mantissa = Decimal(num)
-        exp = 0 if input_exp is AutoExpVal else input_exp
+        exp = 0 if input_exp is ExpValEnum.AUTO else input_exp
     else:
         if exp_mode is ExpModeEnum.FIXEDPOINT or exp_mode is ExpModeEnum.PERCENT:
             exp = get_fixed_exp(input_exp)
