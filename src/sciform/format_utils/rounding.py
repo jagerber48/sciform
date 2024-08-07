@@ -81,12 +81,13 @@ def round_val_unc(
     val: Decimal,
     unc: Decimal,
     ndigits: int | NDigitsEnum,
+    round_mode: RoundModeEnum,
 ) -> tuple[Decimal, Decimal, int]:
     """Simultaneously round the value and uncertainty."""
     if unc.is_finite() and unc != 0:
         round_digit = get_round_dec_place(
             unc,
-            RoundModeEnum.SIG_FIG,
+            round_mode,
             ndigits,
         )
         unc_rounded = round(unc, -round_digit)
@@ -97,7 +98,7 @@ def round_val_unc(
     elif val.is_finite() and val != 0:
         round_digit = get_round_dec_place(
             val,
-            RoundModeEnum.SIG_FIG,
+            round_mode,
             ndigits,
         )
         unc_rounded = unc

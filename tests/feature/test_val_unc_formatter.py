@@ -95,6 +95,14 @@ class TestValUncFormatter(unittest.TestCase):
                 [
                     (Formatter(paren_uncertainty=True), "0(0)"),
                     (Formatter(paren_uncertainty=True, ndigits=3), "0(0)"),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            round_mode="dec_place",
+                            ndigits=3,
+                        ),
+                        "0.000(0.000)",
+                    ),
                 ],
             ),
             (
@@ -102,6 +110,14 @@ class TestValUncFormatter(unittest.TestCase):
                 [
                     (Formatter(paren_uncertainty=True), "0(inf)"),
                     (Formatter(paren_uncertainty=True, ndigits=3), "0(inf)"),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            round_mode="dec_place",
+                            ndigits=3,
+                        ),
+                        "0.000(inf)",
+                    ),
                 ],
             ),
         ]
@@ -425,10 +441,6 @@ class TestValUncFormatter(unittest.TestCase):
         ]
 
         self.run_val_unc_formatter_cases(cases_list)
-
-    def test_dec_place_warn(self):
-        formatter = Formatter(round_mode="dec_place")
-        self.assertWarns(Warning, formatter, 42, 24)
 
     def test_left_pad_matching(self):
         formatter = Formatter(left_pad_matching=True)

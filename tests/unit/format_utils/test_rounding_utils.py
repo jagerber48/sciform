@@ -252,6 +252,7 @@ class TestRounding(NanTestCase):
                 val,
                 unc,
                 ndigits,
+                RoundModeEnum.SIG_FIG,
             )
             with self.subTest(
                 val=val,
