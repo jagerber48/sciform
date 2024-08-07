@@ -895,3 +895,16 @@ This feature is accessed with the ``left_pad_matching`` option.
 ... )
 >>> print(formatter(12345, 1.23))
 12345.00 ± 00001.23
+
+Plus/Minus Symbol Whitespace
+----------------------------
+
+Depending on the value of ``pm_whitespace``, the ``±`` symbol will either have
+one full space on either side of it or not.
+
+>>> formatter = Formatter(pm_whitespace=True)
+>>> print(formatter(2, 1))
+2 ± 1
+>>> formatter = Formatter(pm_whitespace=False)
+>>> print(formatter(2, 1))
+2±1
