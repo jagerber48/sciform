@@ -95,6 +95,14 @@ class TestValUncFormatter(unittest.TestCase):
                 [
                     (Formatter(paren_uncertainty=True), "0(0)"),
                     (Formatter(paren_uncertainty=True, ndigits=3), "0(0)"),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            round_mode="dec_place",
+                            ndigits=3,
+                        ),
+                        "0.000(0.000)",
+                    ),
                 ],
             ),
             (
@@ -102,6 +110,14 @@ class TestValUncFormatter(unittest.TestCase):
                 [
                     (Formatter(paren_uncertainty=True), "0(inf)"),
                     (Formatter(paren_uncertainty=True, ndigits=3), "0(inf)"),
+                    (
+                        Formatter(
+                            paren_uncertainty=True,
+                            round_mode="dec_place",
+                            ndigits=3,
+                        ),
+                        "0.000(inf)",
+                    ),
                 ],
             ),
         ]
