@@ -19,7 +19,7 @@ Changed
 * **[BREAKING]** Previously ``exp_val`` and ``ndigits`` accepted the enums
   ``AutoExpVal`` and ``AutoDigits``.
   Now ``exp_val`` accepts the string literal ``"auto"`` and ``ndigits`` accepts
-  the string literal ``"all"``.
+  the string literals ``"all"`` and ``"pdg"``.
   [`#178 <https://github.com/jagerber48/sciform/issues/178>`_]
 * Previously the backend ``FinalizedOptions`` class ran a validation check on
   itself after initialization.
@@ -33,6 +33,11 @@ Changed
   conflicts due to the combination of user input with global options can arise
   at options population time.
 * Update ``ruff`` version in pre-commit config.
+
+REMOVED
+^^^^^^^
+* The ``pdg_sig_figs`` options has been removed.
+  This option is now configured by setting ``ndigits="pdg"``.
 
 ----
 
