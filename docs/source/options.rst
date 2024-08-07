@@ -755,60 +755,6 @@ according to the options below.
 >>> print(formatter(123.456, 0.789))
 123.456 ± 0.789
 
-.. _pdg_sig_figs:
-
-Particle Data Group Significant Figures
----------------------------------------
-
-Typically value/uncertainty pairs are formatted with one or two
-significant figures displayed for the uncertainty.
-The Particle Data Group has
-`published an algorithm <https://pdg.lbl.gov/2010/reviews/rpp2010-rev-rpp-intro.pdf>`_
-for deciding when to
-display uncertainty with one versus two significant figures.
-The algorithm is as follows.
-
-* Determine the three most significant digits of the uncertainty
-  (without rounding). E.g. if the uncertainty is 0.004857 then these
-  digits would be 485
-* If the scaled uncertainty is between 100 and 354 (inclusive) then the
-  uncertainty is rounded and displayed to one digit below its most
-  significant digit.
-  This means it will have two significant digit.
-  E.g. if the uncertainty is 3.03 then it will appear as as 3.0
-* If the scaled uncertainty is between 355 and 949 (inclusive) then the
-  uncertainty is rounded and displayed to the same digit as the most
-  significant digit.
-  This means it will have one significant digit.
-  E.g. if the uncertainty is 0.76932 then it will appear as 0.8
-* If the scaled uncertainty is between 950 and 999 (inclusive) then the
-  uncertainty is rounded and displayed to the same digit as the most
-  significant digit.
-  But 950 and above will always be rounded to 1000 if we round to the
-  hundreds place.
-  This means there will be two significant digits.
-  E.g. if the uncertainty is 0.0099 then it will be displayed as 0.010.
-
-:mod:`sciform` provides the ability to use this algorithm when
-formatting value/uncertainty pairs by using significant figure rounding
-mode and the ``pdg_sig_figs`` flag.
-
->>> formatter = Formatter(
-...     round_mode="sig_fig",
-...     ndigits="pdg",
-... )
->>> print(formatter(1, 0.0123))
-1.000 ± 0.012
->>> print(formatter(1, 0.0483))
-1.00 ± 0.05
->>> print(formatter(1, 0.0997))
-1.00 ± 0.10
-
-If ``pdg_sig_figs=True`` then ``ndigits`` is ignored for
-value/uncertainty formatting.
-``pdg_sig_figs`` is always ignored in favor of ``ndigits`` for single
-value formatting.
-
 .. _paren_uncertainty:
 
 Parentheses Uncertainty
@@ -860,8 +806,9 @@ formatting strategies by using the ``paren_uncertainty`` and
 100,021 47(0,000 35)
 100,021 47(35)
 
-``paren_uncertainty_trim`` eliminates all separators which are not the
-decimal separator.
+``paren_uncertainty_trim`` modifies the uncertainty by eliminating any leading
+zeros and all separators unless there are significant digits above and below
+the decimal separator, in which case that separator is kept.
 
 >>> value = 100.0215
 >>> uncertainty = 1.2345
@@ -901,8 +848,8 @@ decimal.
 The default global options have ``paren_uncertainty=False`` and
 ``paren_uncertainty_trim=True``.
 
-We can look at the interplay between parentheses uncertainty mode and
-exponent options.
+Here are examples demonstrating ``paren_uncertainty`` behavior when exponent
+strings are present.
 
 >>> formatter = Formatter(
 ...     exp_mode="engineering",
@@ -919,9 +866,7 @@ exponent options.
 >>> print(formatter(523.4e-3, 1.2e-3))
 523.4(1.2) m
 
-We see that in the ASCII formatting mode parentheses are included around
-the value/uncertainty, but they are excluded in the SI prefix mode.
-This is consistent with the BIPM examples.
+The latter example is consistent with BIPM examples.
 
 Match Value/Uncertainty Width
 -----------------------------
