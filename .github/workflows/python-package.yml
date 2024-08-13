@@ -48,6 +48,7 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         flags: ${{ matrix.python-version }}, feature
         files: ./cover/feature/coverage.xml
+        disable_search: true
         fail_ci_if_error: true
         verbose: true
     - name: Upload unit coverage reports to Codecov
@@ -56,5 +57,6 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         flags: ${{ matrix.python-version }}, unit
         files: ./cover/unit/coverage.xml
+        disable_search: true
         fail_ci_if_error: true
         verbose: true
