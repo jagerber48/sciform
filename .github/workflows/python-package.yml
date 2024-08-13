@@ -36,8 +36,10 @@ jobs:
     - name: Test source code and docs
       run: |
         coverage run --rcfile=coverage_feature.toml
+        coverage report --rcfile=coverage_feature.toml
         coverage xml --rcfile=coverage_feature.toml
         coverage run --rcfile=coverage_unit.toml
+        coverage report --rcfile=coverage_unit.toml
         coverage xml --rcfile=coverage_unit.toml
         python -m sphinx -b doctest docs/source/ docs/build/doctest/
     - name: Upload feature coverage reports to Codecov
