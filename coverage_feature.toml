@@ -1,0 +1,12 @@
+[tool.coverage.run]
+source = ["src/sciform/"]
+command_line = "-m unittest discover tests/feature/"
+dynamic_context = "test_function"
+data_file = "cover/feature/.coverage"
+
+[tool.coverage.html]
+directory = "cover/feature/html/"
+show_contexts = true
+
+[tool.coverage.xml]
+output = "cover/feature/coverage.xml"

@@ -35,15 +35,24 @@ jobs:
         ruff format . --check
     - name: Test source code and docs
       run: |
-        coverage run -m unittest
-        coverage report
-        coverage xml
+        coverage run --rcfile=coverage_feature.toml
+        coverage xml --rcfile=coverage_feature.toml
+        coverage run --rcfile=coverage_unit.toml
+        coverage xml --rcfile=coverage_unit.toml
         python -m sphinx -b doctest docs/source/ docs/build/doctest/
-    - name: Upload coverage reports to Codecov
+    - name: Upload feature coverage reports to Codecov
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        flags: ${{ matrix.python-version }}
-        files: coverage.xml
+        flags: ${{ matrix.python-version }}, feature
+        files: cover\feature\coverage.xml
+        fail_ci_if_error: true
+        verbose: true
+    - name: Upload unit coverage reports to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        flags: ${{ matrix.python-version }}, unit
+        files: cover\unit\coverage.xml
         fail_ci_if_error: true
         verbose: true
