@@ -12,6 +12,7 @@ Added
 ^^^^^
 
 * Added a dark theme option (default on) for readthedocs documentation.
+* Added code coverage breakdown for unit and feature tests to codecov CI.
 
 Changed
 ^^^^^^^

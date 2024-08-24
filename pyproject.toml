@@ -38,7 +38,7 @@ docs = [
     "sphinx-toolbox",
 ]
 test = [
-    "coverage",
+    "coverage[toml]",
     "numpy",
     "ruff==0.5.5",
     "sciform[docs]",
