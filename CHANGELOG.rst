@@ -45,6 +45,12 @@ REMOVED
 * The ``pdg_sig_figs`` options has been removed.
   This option is now configured by setting ``ndigits="pdg"``.
 
+FIXED
+^^^^^
+
+* The ``ruff`` version in the github CI now matches the ``ruff`` in the local precommit
+  configuration.
+
 ----
 
 0.37.0 (2024-03-07)
