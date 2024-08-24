@@ -12,6 +12,7 @@ Added
 ^^^^^
 
 * Added a dark theme option (default on) for readthedocs documentation.
+* Added code coverage breakdown for unit and feature tests to codecov CI.
 
 Changed
 ^^^^^^^
@@ -44,6 +45,12 @@ REMOVED
 ^^^^^^^
 * The ``pdg_sig_figs`` options has been removed.
   This option is now configured by setting ``ndigits="pdg"``.
+
+FIXED
+^^^^^
+
+* The ``ruff`` version in the github CI now matches the ``ruff`` in the local precommit
+  configuration.
 
 ----
 
