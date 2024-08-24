@@ -40,7 +40,7 @@ docs = [
 test = [
     "coverage",
     "numpy",
-    "ruff",
+    "ruff==0.5.5",
     "sciform[docs]",
 ]
 examples = [
