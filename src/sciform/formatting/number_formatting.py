@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import replace
 from decimal import Decimal
 from typing import TYPE_CHECKING, cast
-from warnings import warn
 
 from sciform.api.formatted_number import FormattedNumber
 from sciform.format_utils.exponents import get_exp_str, get_val_unc_exp
@@ -190,13 +189,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         )
         raise NotImplementedError(msg)
 
-    if options.round_mode is RoundModeEnum.DEC_PLACE:
-        msg = (
-            "Precision round mode not available for value/uncertainty formatting. "
-            "Rounding is always applied as significant figures for the uncertainty."
-        )
-        warn(msg, stacklevel=2)
-
     unc = abs(unc)
     if exp_mode is ExpModeEnum.PERCENT:
         val *= 100
@@ -216,15 +208,19 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     significant figures will lead to 1000.000 ± 0120.000 on the first
     pass, but we must re-round to get 1000.000 ± 0100.000.
     """
+    round_mode = options.round_mode
+
     val_rounded, unc_rounded, _ = round_val_unc(
         val,
         unc,
         options.ndigits,
+        round_mode,
     )
     val_rounded, unc_rounded, round_digit = round_val_unc(
         val_rounded,
         unc_rounded,
         options.ndigits,
+        round_mode,
     )
 
     exp_val = get_val_unc_exp(
