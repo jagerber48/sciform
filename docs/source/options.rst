@@ -482,7 +482,7 @@ the result of ``"all"`` rounding will print the same digits as present in the
 string representation of the input :class:`float`.
 
 >>> from decimal import Decimal
->>> formatter = Formatter(exp_mode="scientific", ndigits="all")
+>>> formatter = Formatter(exp_mode="scientific")
 >>> float_num = 1/9
 >>> dec_num = Decimal(float_num).normalize()
 >>> print(float_num)
@@ -536,10 +536,7 @@ order-of-magnitude range where the fractional error is not as large.
 For a more thorough discussion see
 `Significant digit 354 rule from Particle Data Group <https://stats.stackexchange.com/q/100502/260369>`_.
 
->>> formatter = Formatter(
-...     round_mode="sig_fig",
-...     ndigits="pdg",
-... )
+>>> formatter = Formatter(round_mode="pdg")
 >>> print(formatter(0.0123))
 0.012
 >>> print(formatter(0.0483))
