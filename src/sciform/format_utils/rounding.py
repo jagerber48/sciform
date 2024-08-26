@@ -48,6 +48,8 @@ def get_pdg_round_digit(num: Decimal) -> int:
         e.g. 123.45632 +/- 0.987 would be rounded as 123.5 +/- 1.0.
         """
         round_digit = top_dec_place
+    elif num_top_three_digs == 0:
+        round_digit = top_dec_place
     else:  # pragma: no cover
         msg = f"Unable to determine PDG rounding decimal place for {num}"
         raise ValueError(msg)
@@ -94,7 +96,7 @@ def round_val_unc(
             val_rounded = round(val, -round_digit)
         else:
             val_rounded = val
-    elif val.is_finite() and val != 0:
+    elif val.is_finite():
         round_digit = get_round_dec_place(
             val,
             round_mode,
