@@ -73,7 +73,7 @@ using the :class:`SciNum` object.
 
 >>> val = 84.3
 >>> unc = 0.2
->>> formatter = Formatter(ndigits=2)
+>>> formatter = Formatter(round_mode="sig_fig", ndigits=2)
 >>> print(formatter(val, unc))
 84.30 ± 0.20
 >>> from sciform import SciNum
@@ -118,7 +118,7 @@ types for the uncertainty.
 >>> from decimal import Decimal
 >>> from sciform import Formatter
 >>>
->>> formatter = Formatter(ndigits=4)
+>>> formatter = Formatter(round_mode="sig_fig", ndigits=4)
 >>> print(formatter("32", "9"))
 32.000 ± 9.000
 >>> print(formatter(32, 9))
@@ -396,7 +396,12 @@ These conversions can be accessed via the
 >>> print(f"{formatted} -> {formatted.as_ascii()}")
 (12.345_678 ± 0.000_255)% -> (12.345_678 +/- 0.000_255)%
 
->>> formatter = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
+>>> formatter = Formatter(
+...     exp_mode="engineering",
+...     exp_format="prefix",
+...     round_mode="sig_fig",
+...     ndigits=4,
+... )
 >>> formatted = formatter(314.159e-6, 2.71828e-6)
 >>> print(f"{formatted} -> {formatted.as_latex()}")
 (314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
@@ -408,7 +413,12 @@ These conversions can be accessed via the
 The LaTeX enclosing ``"$"`` math environment symbols can be optionally
 stripped:
 
->>> formatter = Formatter(exp_mode="engineering", exp_format="prefix", ndigits=4)
+>>> formatter = Formatter(
+...     exp_mode="engineering",
+...     exp_format="prefix",
+...     round_mode="sig_fig",
+...     ndigits=4,
+... )
 >>> formatted = formatter(314.159e-6, 2.71828e-6)
 >>> print(f"{formatted} -> {formatted.as_latex(strip_math_mode=False)}")
 (314.159 ± 2.718) μ -> $(314.159\:\pm\:2.718)\:\text{\textmu}$
@@ -454,8 +464,8 @@ The :mod:`sciform` default global options can be viewed using
 PopulatedOptions(
  'exp_mode': 'fixed_point',
  'exp_val': 'auto',
- 'round_mode': 'sig_fig',
- 'ndigits': 'all',
+ 'round_mode': 'all',
+ 'ndigits': 2,
  'upper_separator': '',
  'decimal_separator': '.',
  'lower_separator': '',
@@ -488,6 +498,7 @@ options using :func:`reset_global_options`.
 >>> set_global_options(
 ...     left_pad_char="0",
 ...     exp_mode="engineering_shifted",
+...     round_mode="sig_fig",
 ...     ndigits=4,
 ...     decimal_separator=",",
 ... )

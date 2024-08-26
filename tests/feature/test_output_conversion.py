@@ -431,6 +431,7 @@ class TestLatexConversion(unittest.TestCase):
                         Formatter(
                             exp_mode="engineering",
                             exp_format="prefix",
+                            round_mode="sig_fig",
                             ndigits=4,
                         ),
                         (

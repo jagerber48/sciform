@@ -28,7 +28,6 @@ def validate_options(
 
 
 allowed_round_modes = get_args(option_types.RoundMode)
-allowed_ndigits = get_args(option_types.NDigits)
 
 
 def validate_rounding(
@@ -37,28 +36,21 @@ def validate_rounding(
     none_allowed: bool,
 ) -> None:
     r"""Validate ndigits if round_mode == "sig_fig"."""
-    if none_allowed and options.ndigits is None:
-        pass
-    elif (
-        not isinstance(options.ndigits, int) and options.ndigits not in allowed_ndigits
-    ):
-        msg = f"ndigits must be an int or in {allowed_ndigits}, not {options.ndigits}."
-        raise TypeError(msg)
-
     if none_allowed and options.round_mode is None:
         pass
+    elif options.round_mode not in allowed_round_modes:
+        msg = (
+            f"round_mode must be in {allowed_round_modes}, not "
+            f"{options.round_mode}."
+        )
+        raise ValueError(msg)
+    if none_allowed and options.ndigits is None:
+        pass
     else:
-        if options.round_mode not in allowed_round_modes:
-            msg = (
-                f"round_mode must be in {allowed_round_modes}, not "
-                f"{options.round_mode}."
-            )
-            raise ValueError(msg)
-        if (
-            options.round_mode == "sig_fig"
-            and isinstance(options.ndigits, int)
-            and options.ndigits < 1
-        ):
+        if not isinstance(options.ndigits, int):
+            msg = f"ndigits must be an int, not {options.ndigits}."
+            raise TypeError(msg)
+        if options.round_mode == "sig_fig" and options.ndigits < 1:
             msg = f"ndigits must be >= 1 for sig fig rounding, not {options.ndigits}."
             raise ValueError(msg)
 

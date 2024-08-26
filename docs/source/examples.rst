@@ -68,7 +68,7 @@ available formatting options.
 >>> formatter = Formatter(
 ...     exp_mode="engineering",
 ...     exp_format="prefix",
-...     ndigits="pdg",
+...     round_mode="pdg",
 ...     pm_whitespace=False,
 ... )
 >>> print(formatter(num, unc))
@@ -77,7 +77,9 @@ available formatting options.
 >>> num = 314159.27
 >>> unc = 1618
 >>> formatter = Formatter(
-...     exp_mode="engineering_shifted", ndigits="pdg", paren_uncertainty=True
+...     exp_mode="engineering_shifted",
+...     round_mode="pdg",
+...     paren_uncertainty=True
 ... )
 >>> print(formatter(num, unc))
 0.3142(16)e+06
@@ -175,13 +177,13 @@ instead.
 >>> num_unc = SciNum(3141592.7, 1618)
 >>> print(f"{num_unc}")
 3141593 ± 1618
->>> with GlobalOptionsContext(ndigits="pdg", pm_whitespace=False):
+>>> with GlobalOptionsContext(round_mode="pdg", pm_whitespace=False):
 ...     print(f"{num_unc:rp}")
 ...
 (3.1416±0.0016) M
 
 >>> num_unc = SciNum(314159.27, 1618)
->>> with GlobalOptionsContext(ndigits="pdg"):
+>>> with GlobalOptionsContext(round_mode="pdg"):
 ...     print(f"{num_unc:#r()}")
 ...
 0.3142(16)e+06
@@ -298,13 +300,13 @@ lists, arrays, etc.) of numbers.
 >>> val_formatter = Formatter(
 ...     exp_mode="engineering",
 ...     exp_format="prefix",
-...     ndigits="all",
+...     round_mode="all",
 ...     paren_uncertainty=True,
 ... )
 >>> val_err_formatter = Formatter(
 ...     exp_mode="engineering",
 ...     exp_format="prefix",
-...     ndigits="pdg",
+...     round_mode="pdg",
 ...     paren_uncertainty=True,
 ... )
 >>> val_list = [1000, 2000, 3000]

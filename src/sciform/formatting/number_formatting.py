@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import replace
 from decimal import Decimal
 from typing import TYPE_CHECKING, cast
-from warnings import warn
 
 from sciform.api.formatted_number import FormattedNumber
 from sciform.format_utils.exponents import get_exp_str, get_val_unc_exp
@@ -190,13 +189,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         )
         raise NotImplementedError(msg)
 
-    if options.round_mode is RoundModeEnum.DEC_PLACE:
-        msg = (
-            "Precision round mode not available for value/uncertainty formatting. "
-            "Rounding is always applied as significant figures for the uncertainty."
-        )
-        warn(msg, stacklevel=2)
-
     unc = abs(unc)
     if exp_mode is ExpModeEnum.PERCENT:
         val *= 100
@@ -220,11 +212,13 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         val,
         unc,
         options.ndigits,
+        options.round_mode,
     )
     val_rounded, unc_rounded, round_digit = round_val_unc(
         val_rounded,
         unc_rounded,
         options.ndigits,
+        options.round_mode,
     )
 
     exp_val = get_val_unc_exp(
@@ -252,7 +246,10 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         left_pad_matching=options.left_pad_matching,
     )
 
-    ndigits = -round_digit + exp_val
+    if options.round_mode is RoundModeEnum.DEC_PLACE:
+        ndigits = options.ndigits
+    else:
+        ndigits = -round_digit + exp_val
 
     """
     We will format the val and unc mantissas
@@ -292,8 +289,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     val_unc_str = construct_val_unc_str(
         val_mantissa_str=val_mantissa_str,
         unc_mantissa_str=unc_mantissa_str,
-        val_mantissa=val_mantissa,
-        unc_mantissa=unc_mantissa,
         decimal_separator=options.decimal_separator,
         paren_uncertainty=options.paren_uncertainty,
         pm_whitespace=options.pm_whitespace,
