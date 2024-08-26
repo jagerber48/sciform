@@ -248,7 +248,10 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         left_pad_matching=options.left_pad_matching,
     )
 
-    ndigits = -round_digit + exp_val
+    if options.round_mode is RoundModeEnum.DEC_PLACE:
+        ndigits = options.ndigits
+    else:
+        ndigits = -round_digit + exp_val
 
     """
     We will format the val and unc mantissas

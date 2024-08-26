@@ -117,18 +117,18 @@ def construct_val_unc_str(  # noqa: PLR0913
             paren_uncertainty_trim
             and unc_mantissa.is_finite()
             and val_mantissa.is_finite()
-            and 0 < unc_mantissa < abs(val_mantissa)
         ):
-            """
-            Don't strip the unc_mantissa_str if val_mantissa is non-finite.
-            Don't strip the unc_mantissa_str if unc_mantissa == 0 (because then the
-              empty string would remain).
-            Don't left strip the unc_mantissa_str if unc_mantissa >= val_mantissa
-            """
-            for separator in SeparatorEnum:
-                if separator != decimal_separator:
-                    unc_mantissa_str = unc_mantissa_str.replace(separator, "")
-            unc_mantissa_str = unc_mantissa_str.lstrip("0" + decimal_separator)
+            if 0 < unc_mantissa < abs(val_mantissa):
+                if unc_mantissa > 0:
+                    for separator in SeparatorEnum:
+                        if separator != decimal_separator:
+                            unc_mantissa_str = unc_mantissa_str.replace(
+                                separator,
+                                "",
+                            )
+                    unc_mantissa_str = unc_mantissa_str.lstrip("0" + decimal_separator)
+            elif unc_mantissa == 0:
+                unc_mantissa_str = "0"
         val_unc_str = f"{val_mantissa_str}({unc_mantissa_str})"
     return val_unc_str
 

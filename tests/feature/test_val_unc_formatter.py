@@ -73,6 +73,12 @@ class TestValUncFormatter(unittest.TestCase):
                 ],
             ),
             (
+                (123.4, 0),
+                [
+                    (Formatter(paren_uncertainty=True), "123.4(0)"),
+                ],
+            ),
+            (
                 (-123, 0),
                 [
                     (Formatter(paren_uncertainty=True), "-123(0)"),
