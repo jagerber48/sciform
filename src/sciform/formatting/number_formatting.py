@@ -208,7 +208,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     significant figures will lead to 1000.000 ± 0120.000 on the first
     pass, but we must re-round to get 1000.000 ± 0100.000.
     """
-
     val_rounded, unc_rounded, _ = round_val_unc(
         val,
         unc,
