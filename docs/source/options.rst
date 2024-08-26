@@ -352,12 +352,12 @@ Rounding
 * Digits-past-the-deciaml rounding is selected by setting
   ``round_mode="dec_place"`` and passing an :class:`int` for ``ndigits``
   specifying the digit place to which to round.
-* All digits rounding is selected by setting ``ndigits="all"``.
+* All digits rounding is selected by setting ``round_mode="all"``.
   In this mode "all" digits of the number are shown where the definition of
   "all" depends on the type of the numerical input data. See below for
-  more details. In this mode the ``round_mode`` option has no effect.
-* Particle data group (PDG) rounding is selected by setting ``ndigits="pdg"``.
-  See below for the defintion of PDG rounding. In this mode the ``round_mode``
+  more details. In this mode the ``ndigits`` option has no effect.
+* Particle data group (PDG) rounding is selected by setting ``round_mode="pdg"``.
+  See below for the defintion of PDG rounding. In this mode the ``ndigits``
   option has no effect.
 
 Rounding always applies to the mantissa determined after identifying the
@@ -461,8 +461,8 @@ Unlike the built in number formatting, it is possible for ``ndigits <= 0``:
 All Digits
 ----------
 
-"All" digits rounding is selected by setting ``ndigits="all"``.
-In this case, the ``round_mode`` option is ignored.
+"All" digits rounding is selected by setting ``round_mode="all"``.
+In this case, the ``ndigits`` option is ignored.
 This mode attempts to display the input digits with full precision.
 What exactly "full precision" means depends on the type of the input.
 :class:`int`, :class:`str` and :class:`Decimal` inputs are converted to
@@ -482,7 +482,7 @@ the result of ``"all"`` rounding will print the same digits as present in the
 string representation of the input :class:`float`.
 
 >>> from decimal import Decimal
->>> formatter = Formatter(exp_mode="scientific")
+>>> formatter = Formatter(round_mode="all", exp_mode="scientific")
 >>> float_num = 1/9
 >>> dec_num = Decimal(float_num).normalize()
 >>> print(float_num)
@@ -497,8 +497,8 @@ string representation of the input :class:`float`.
 PDG Significant Figures
 -----------------------
 
-The PDG rounding is selected by setting ``ndigits="pdg"``.
-In this case, the ``round_mode`` option is ignored.
+PDG rounding is selected by setting ``round_mode="pdg"``.
+In this case, the ``ndigits`` option is ignored.
 
 Typically value/uncertainty pairs are formatted with one or two
 significant figures displayed for the uncertainty.
