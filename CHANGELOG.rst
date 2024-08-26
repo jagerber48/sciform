@@ -11,23 +11,34 @@ Unreleased
 Added
 ^^^^^
 
+* it is now possible to use decimal place rounding for value/uncertainty formatting.
+  [`#170 <https://github.com/jagerber48/sciform/issues/170>`_,
+
 * Added a dark theme option (default on) for readthedocs documentation.
 * Added code coverage breakdown for unit and feature tests to codecov CI.
 
 Changed
 ^^^^^^^
 
+* **[BREAKING]** Rounding configuration has been refactored.
+  Previously ``round_mode`` accepted only ``"sig_fig"`` and ``"dec_place"`` string
+  literals, all digits rounding mode was selected by settings ``ndigits = AutoDigits``
+  and PDG rouning mode was selected by setting ``pdg_sig_figs = True``.
+  Now ``round_mode`` accepts ``"sig_fig"``, ``"dec_place"``, ``"pdg"`` and ``"all"``
+  string literals, ``ndigits`` only accepts integers, and the ``pdg_sig_figs`` option is
+  removed.
+  ``round_mode`` defaults to ``"all"`` and `ndigits` defaults to 2.
+  [`#178 <https://github.com/jagerber48/sciform/issues/178>`_,
+  `#185 <https://github.com/jagerber48/sciform/issues/185>`_]
+* **[BREAKING]** Previously ``exp_val`` accepted the ``AutoExpVal`` sentinel.
+  Now it, instead, accepts the string literal ``"auto"``.
+  [`#178 <https://github.com/jagerber48/sciform/issues/178>`_]
 * **[BREAKING]** Previously ``exp_val`` and ``ndigits`` accepted the enums
   ``AutoExpVal`` and ``AutoDigits``.
-  Now ``exp_val`` accepts the string literal ``"auto"`` and ``ndigits`` accepts
-  the string literals ``"all"`` and ``"pdg"``.
-  [`#178 <https://github.com/jagerber48/sciform/issues/178>`_]
-* Previously during value/uncertainty formatting, if the uncertainty was invalid
-  (0, ``nan`` or ``inf``) and the value was 0, the number would be formatted
-  with as many digits as significant figures requested, e.g. ``0.00 ± nan``.
-  Now a zero value is always shown with a single digit, e.g. ``0 ± nan``.
-  The justification for this is that ``0`` has no significant figures so it
-  doesn't make sense to fake significant figures by showing additional digits.
+  Now ``exp_val`` accepts the string literal ``"auto"`` and ``ndigits`` only accepts
+  integers.
+  [`#178 <https://github.com/jagerber48/sciform/issues/178>`_,
+  `#185 <https://github.com/jagerber48/sciform/issues/185>`_]
 * Previously the backend ``FinalizedOptions`` class ran a validation check on
   itself after initialization.
   This check has been removed in favor of not complicating the validation code
@@ -44,7 +55,7 @@ Changed
 REMOVED
 ^^^^^^^
 * The ``pdg_sig_figs`` options has been removed.
-  This option is now configured by setting ``ndigits="pdg"``.
+  This option is now configured by setting ``round_mode="pdg"``.
 
 FIXED
 ^^^^^
