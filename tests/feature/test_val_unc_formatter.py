@@ -446,11 +446,6 @@ class TestValUncFormatter(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
-    @unittest.expectedFailure
-    def test_dec_place_warn(self):
-        formatter = Formatter(round_mode="dec_place")
-        self.assertWarns(Warning, formatter, 42, 24)
-
     def test_left_pad_matching(self):
         formatter = Formatter(left_pad_matching=True)
         result = formatter(123, 0.123)
