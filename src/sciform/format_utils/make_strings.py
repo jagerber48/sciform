@@ -95,7 +95,7 @@ def construct_num_str(
 def parse_mantissa_str_to_dec(
     mantissa_str: str,
     decimal_separator: DecimalSeparatorEnums,
-) -> str:
+) -> Decimal:
     """Convert a string, possibly with non-standard separators, to a decimal."""
     clean_mantissa_str = mantissa_str
     for separator in SeparatorEnum:
