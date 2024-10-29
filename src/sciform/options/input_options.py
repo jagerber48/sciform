@@ -53,7 +53,7 @@ class InputOptions:
     exp_mode: option_types.ExpMode | None = None
     exp_val: int | option_types.ExpVal | None = None
     round_mode: option_types.RoundMode | None = None
-    ndigits: int | option_types.NDigits | None = None
+    ndigits: int | None = None
     upper_separator: option_types.UpperSeparators | None = None
     decimal_separator: option_types.DecimalSeparators | None = None
     lower_separator: option_types.LowerSeparators | None = None

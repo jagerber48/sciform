@@ -290,7 +290,7 @@ class TestValFormatter(unittest.TestCase):
         self.assertEqual(formatter(42), "42")
 
     def test_dec_place_auto_round(self):
-        formatter = Formatter(round_mode="dec_place", ndigits="all")
+        formatter = Formatter(round_mode="all")
         self.assertEqual(formatter(123.456), "123.456")
 
     def test_pdg_sig_figs(self):
@@ -299,15 +299,15 @@ class TestValFormatter(unittest.TestCase):
                 6789,
                 [
                     (
-                        Formatter(ndigits="pdg"),
+                        Formatter(round_mode="pdg"),
                         "7000",
                     ),
                     (
-                        Formatter(ndigits=5),
+                        Formatter(round_mode="sig_fig", ndigits=5),
                         "6789.0",
                     ),
                     (
-                        Formatter(ndigits="all"),
+                        Formatter(round_mode="all"),
                         "6789",
                     ),
                 ],
@@ -317,7 +317,7 @@ class TestValFormatter(unittest.TestCase):
         self.run_val_formatter_cases(cases_list)
 
     def test_decimal_normalization(self):
-        formatter = Formatter(ndigits="all")
+        formatter = Formatter(round_mode="all")
         self.assertEqual(formatter(Decimal("1.0")), formatter(Decimal("1.00")))
 
     def test_long_decimal(self):
@@ -329,7 +329,7 @@ class TestValFormatter(unittest.TestCase):
                         Formatter(
                             exp_mode="engineering",
                             exp_format="prefix",
-                            ndigits="all",
+                            round_mode="all",
                             upper_separator=" ",
                             lower_separator=" ",
                         ),
@@ -343,7 +343,7 @@ class TestValFormatter(unittest.TestCase):
                     (
                         Formatter(
                             exp_mode="fixed_point",
-                            ndigits="all",
+                            round_mode="all",
                         ),
                         "123456789987654321.123456789987654321",
                     ),

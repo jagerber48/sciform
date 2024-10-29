@@ -21,7 +21,7 @@ class FinalizedOptions:
     exp_mode: option_types.ExpModeEnum
     exp_val: int | option_types.ExpValEnum
     round_mode: option_types.RoundModeEnum
-    ndigits: int | option_types.NDigitsEnum
+    ndigits: int
     upper_separator: option_types.UpperSeparatorEnums
     decimal_separator: option_types.DecimalSeparatorEnums
     lower_separator: option_types.LowerSeparatorEnums

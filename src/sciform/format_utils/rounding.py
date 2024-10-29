@@ -8,10 +8,7 @@ from sciform.format_utils.numbers import (
     get_bottom_dec_place,
     get_top_dec_place,
 )
-from sciform.options.option_types import (
-    NDigitsEnum,
-    RoundModeEnum,
-)
+from sciform.options.option_types import RoundModeEnum
 
 
 def get_pdg_round_digit(num: Decimal) -> int:
@@ -59,13 +56,13 @@ def get_pdg_round_digit(num: Decimal) -> int:
 def get_round_dec_place(
     num: Decimal,
     round_mode: RoundModeEnum,
-    ndigits: int | NDigitsEnum,
+    ndigits: int,
 ) -> int:
     """Get the decimal place to which to round."""
     # TODO: Handle nan and inf
-    if ndigits is NDigitsEnum.ALL:
+    if round_mode is RoundModeEnum.ALL:
         round_digit = get_bottom_dec_place(num)
-    elif ndigits is NDigitsEnum.PDG:
+    elif round_mode is RoundModeEnum.PDG:
         round_digit = get_pdg_round_digit(num)
     elif round_mode is RoundModeEnum.SIG_FIG:
         round_digit = get_top_dec_place(num) - (ndigits - 1)
@@ -80,13 +77,14 @@ def get_round_dec_place(
 def round_val_unc(
     val: Decimal,
     unc: Decimal,
-    ndigits: int | NDigitsEnum,
+    round_mode: RoundModeEnum,
+    ndigits: int,
 ) -> tuple[Decimal, Decimal, int]:
     """Simultaneously round the value and uncertainty."""
     if unc.is_finite() and unc != 0:
         round_digit = get_round_dec_place(
             unc,
-            RoundModeEnum.SIG_FIG,
+            round_mode,
             ndigits,
         )
         unc_rounded = round(unc, -round_digit)
@@ -97,7 +95,7 @@ def round_val_unc(
     elif val.is_finite() and val != 0:
         round_digit = get_round_dec_place(
             val,
-            RoundModeEnum.SIG_FIG,
+            round_mode,
             ndigits,
         )
         unc_rounded = unc
