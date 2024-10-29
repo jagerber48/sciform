@@ -51,11 +51,7 @@ def validate_rounding(
                 f"{options.round_mode}."
             )
             raise ValueError(msg)
-        if (
-            options.round_mode == "sig_fig"
-            and isinstance(options.ndigits, int)
-            and options.ndigits < 1
-        ):
+        if options.round_mode == "sig_fig" and options.ndigits < 1:
             msg = f"ndigits must be >= 1 for sig fig rounding, not {options.ndigits}."
             raise ValueError(msg)
 
