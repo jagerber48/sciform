@@ -41,6 +41,8 @@ Changed
   doesn't make sense to add more trailing zeros to indicate additional "fake"
   significant figures.
   Now if zero is used for significant figure rounding it always appears directly as 0.
+  E.g. ``format(SciNum(0), "!3f"`` gives ``"0"`` and
+  ``format(SciNum(0, float("nan")), "!2f")`` gives ``"0 ± nan"``.
   Note that, as before, trailing zeros may still be added to a zero value if the
   uncertainty is less than one, e.g. ``format(SciNum(0, 0.0012), "!2f")`` gives
   ``"0.0000 ± 0.0012"``.

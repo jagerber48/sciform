@@ -450,3 +450,14 @@ class TestValUncFSML(unittest.TestCase):
             ),
         ]
         self.run_val_unc_fsml_cases(cases_list)
+
+    def test_zero(self):
+        cases_list = [
+            (
+                (0, float("nan")),
+                [
+                    ("!3f", "0 ± nan"),
+                ],
+            ),
+        ]
+        self.run_val_unc_fsml_cases(cases_list)
