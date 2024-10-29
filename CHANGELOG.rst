@@ -33,12 +33,20 @@ Changed
   accepts integers.
   [`#178 <https://github.com/jagerber48/sciform/issues/178>`_,
   `#185 <https://github.com/jagerber48/sciform/issues/185>`_]
-* Previously during value/uncertainty formatting, if the uncertainty was invalid
-  (0, ``nan`` or ``inf``) and the value was 0, the number would be formatted
-  with as many digits as significant figures requested, e.g. ``0.00 ± nan``.
-  Now a zero value is always shown with a single digit, e.g. ``0 ± nan``.
-  The justification for this is that ``0`` has no significant figures so it
-  doesn't make sense to fake significant figures by showing additional digits.
+* Previously, significant figure rounding with a value of 0 would result in trailing
+  zeros being added in the formatted output.
+  For example, ``format(SciNum(0), "!3f"`` would give ``"0.00"`` or
+  ``format(SciNum(0, float("nan")), "!2f")`` would give ``"0.0 ± nan"``.
+  This is not reasonable because zero doesn't have any significant figures, so it
+  doesn't make sense to add more trailing zeros to indicate additional "fake"
+  significant figures.
+  Now if zero is used for significant figure rounding it always appears directly as 0.
+  E.g. ``format(SciNum(0), "!3f"`` gives ``"0"`` and
+  ``format(SciNum(0, float("nan")), "!2f")`` gives ``"0 ± nan"``.
+  Note that, as before, trailing zeros may still be added to a zero value if the
+  uncertainty is less than one, e.g. ``format(SciNum(0, 0.0012), "!2f")`` gives
+  ``"0.0000 ± 0.0012"``.
+  [`#189 <https://github.com/jagerber48/sciform/issues/189>`_]
 * Previously the backend ``FinalizedOptions`` class ran a validation check on
   itself after initialization.
   This check has been removed in favor of not complicating the validation code
