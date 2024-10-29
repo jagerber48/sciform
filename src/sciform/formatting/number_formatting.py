@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import replace
 from decimal import Decimal
 from typing import TYPE_CHECKING, cast
-from warnings import warn
 
 from sciform.api.formatted_number import FormattedNumber
 from sciform.format_utils.exponents import get_exp_str, get_val_unc_exp
@@ -190,13 +189,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         )
         raise NotImplementedError(msg)
 
-    if options.round_mode is RoundModeEnum.DEC_PLACE:
-        msg = (
-            "Precision round mode not available for value/uncertainty formatting. "
-            "Rounding is always applied as significant figures for the uncertainty."
-        )
-        warn(msg, stacklevel=2)
-
     unc = abs(unc)
     if exp_mode is ExpModeEnum.PERCENT:
         val *= 100
@@ -210,6 +202,8 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         """
         exp_mode = ExpModeEnum.FIXEDPOINT
 
+    # TODO: This needs to split into a sig fig and dec place branch. The logic is
+    #   different for the two modes.
     """
     We round twice in case the first rounding changes the digits place
     to which we need to round. E.g. rounding 999.999 ± 123.456 to two
@@ -254,7 +248,10 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         left_pad_matching=options.left_pad_matching,
     )
 
-    ndigits = -round_digit + exp_val
+    if options.round_mode is RoundModeEnum.DEC_PLACE:
+        ndigits = options.ndigits
+    else:
+        ndigits = -round_digit + exp_val
 
     """
     We will format the val and unc mantissas
