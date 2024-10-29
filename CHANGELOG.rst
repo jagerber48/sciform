@@ -33,7 +33,7 @@ Changed
   accepts integers.
   [`#178 <https://github.com/jagerber48/sciform/issues/178>`_,
   `#185 <https://github.com/jagerber48/sciform/issues/185>`_]
-* Previously significant figure rounding with a value of 0 would result in trailing
+* Previously, significant figure rounding with a value of 0 would result in trailing
   zeros being added in the formatted output.
   For example, ``format(SciNum(0), "!3f"`` would give ``"0.00"`` or
   ``format(SciNum(0, float("nan")), "!2f")`` would give ``"0.0 ± nan"``.
