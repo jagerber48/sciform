@@ -25,6 +25,8 @@ def get_pdg_round_digit(num: Decimal) -> int:
     if not num.is_finite():
         msg = f"num must be finite, not {num}."
         raise ValueError(msg)
+    if num == 0:
+        return 0
 
     top_dec_place = get_top_dec_place(num)
 
@@ -65,7 +67,10 @@ def get_round_dec_place(
     elif round_mode is RoundModeEnum.PDG:
         round_digit = get_pdg_round_digit(num)
     elif round_mode is RoundModeEnum.SIG_FIG:
-        round_digit = get_top_dec_place(num) - (ndigits - 1)
+        if num == 0:
+            round_digit = 0
+        else:
+            round_digit = get_top_dec_place(num) - (ndigits - 1)
     elif round_mode is RoundModeEnum.DEC_PLACE:
         round_digit = -ndigits
     else:
@@ -92,7 +97,7 @@ def round_val_unc(
             val_rounded = round(val, -round_digit)
         else:
             val_rounded = val
-    elif val.is_finite() and val != 0:
+    elif val.is_finite():
         round_digit = get_round_dec_place(
             val,
             round_mode,

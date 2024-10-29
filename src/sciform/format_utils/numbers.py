@@ -20,7 +20,7 @@ from sciform.options.option_types import (
 
 def get_top_dec_place(num: Decimal) -> int:
     """Get the decimal place of a decimal's most significant digit."""
-    if not num.is_finite() or num == 0:
+    if not num.is_finite():
         return 0
     _, digits, exp = num.normalize().as_tuple()
     return len(digits) + exp - 1
