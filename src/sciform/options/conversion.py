@@ -92,7 +92,6 @@ key_to_enum_dict = {
     "exp_mode": option_types.ExpModeEnum,
     "exp_val": option_types.ExpValEnum,
     "round_mode": option_types.RoundModeEnum,
-    "ndigits": option_types.NDigitsEnum,
     "upper_separator": option_types.SeparatorEnum,
     "decimal_separator": option_types.SeparatorEnum,
     "lower_separator": option_types.SeparatorEnum,

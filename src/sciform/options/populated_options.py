@@ -94,7 +94,7 @@ class PopulatedOptions:
     exp_mode: option_types.ExpMode
     exp_val: int | option_types.ExpVal
     round_mode: option_types.RoundMode
-    ndigits: int | option_types.NDigits
+    ndigits: int
     upper_separator: option_types.UpperSeparators
     decimal_separator: option_types.DecimalSeparators
     lower_separator: option_types.LowerSeparators

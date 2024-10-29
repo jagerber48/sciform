@@ -56,7 +56,7 @@ LowerSeparatorEnums = Literal[
 ]
 
 
-RoundMode = Literal["sig_fig", "dec_place"]
+RoundMode = Literal["sig_fig", "dec_place", "all", "pdg"]
 
 
 class RoundModeEnum(str, Enum):
@@ -64,14 +64,6 @@ class RoundModeEnum(str, Enum):
 
     SIG_FIG = "sig_fig"
     DEC_PLACE = "dec_place"
-
-
-NDigits = Literal["all", "pdg"]
-
-
-class NDigitsEnum(str, Enum):
-    """Number of digits Enum."""
-
     ALL = "all"
     PDG = "pdg"
 

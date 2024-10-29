@@ -17,11 +17,22 @@ Added
 Changed
 ^^^^^^^
 
+* **[BREAKING]** Rounding configuration has been refactored.
+  Previously ``round_mode`` accepted only ``"sig_fig"`` and ``"dec_place"``
+  string literals, all digits rounding mode was selected by settings
+  ``ndigits = AutoDigits`` and PDG rounding mode was selected by setting
+  ``pdg_sig_figs = True``.
+  Now ``round_mode`` accepts ``"sig_fig"``, ``"dec_place"``, ``"pdg"`` and
+  ``"all"`` string literals, ``ndigits`` only accepts integers, and the
+  ``pdg_sig_figs`` option is removed.
+  ``round_mode`` defaults to ``"all"`` and ``ndigits`` defaults to 2.
+  [`#185 <https://github.com/jagerber48/sciform/issues/185>`_]
 * **[BREAKING]** Previously ``exp_val`` and ``ndigits`` accepted the enums
   ``AutoExpVal`` and ``AutoDigits``.
-  Now ``exp_val`` accepts the string literal ``"auto"`` and ``ndigits`` accepts
-  the string literals ``"all"`` and ``"pdg"``.
-  [`#178 <https://github.com/jagerber48/sciform/issues/178>`_]
+  Now ``exp_val`` accepts the string literal ``"auto"`` and ``ndigits`` only
+  accepts integers.
+  [`#178 <https://github.com/jagerber48/sciform/issues/178>`_,
+  `#185 <https://github.com/jagerber48/sciform/issues/185>`_]
 * Previously during value/uncertainty formatting, if the uncertainty was invalid
   (0, ``nan`` or ``inf``) and the value was 0, the number would be formatted
   with as many digits as significant figures requested, e.g. ``0.00 ± nan``.
@@ -44,7 +55,7 @@ Changed
 REMOVED
 ^^^^^^^
 * The ``pdg_sig_figs`` options has been removed.
-  This option is now configured by setting ``ndigits="pdg"``.
+  This option is now configured by setting ``round_mode="pdg"``.
 
 FIXED
 ^^^^^

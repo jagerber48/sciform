@@ -219,11 +219,13 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     val_rounded, unc_rounded, _ = round_val_unc(
         val,
         unc,
+        options.round_mode,
         options.ndigits,
     )
     val_rounded, unc_rounded, round_digit = round_val_unc(
         val_rounded,
         unc_rounded,
+        options.round_mode,
         options.ndigits,
     )
 

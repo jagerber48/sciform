@@ -144,7 +144,7 @@ class Formatter:
         exp_mode: option_types.ExpMode | None = None,
         exp_val: int | option_types.ExpVal | None = None,
         round_mode: option_types.RoundMode | None = None,
-        ndigits: int | option_types.NDigits | None = None,
+        ndigits: int | None = None,
         upper_separator: option_types.UpperSeparators | None = None,
         decimal_separator: option_types.DecimalSeparators | None = None,
         lower_separator: option_types.LowerSeparators | None = None,
@@ -172,8 +172,7 @@ class Formatter:
         The following checks are performed when creating a new
         :class:`Formatter` object:
 
-        * If ``ndigits`` is an :class:`int` and ``round_mode`` is ``"sig_fig"``
-          then ``ndigits`` >= 1.
+        * If ``round_mode`` is ``"sig_fig"`` then ``ndigits`` >= 1.
         * ``exp_val`` must be consistent with the exponent mode. If
           ``exp_val`` is specified (i.e. not ``None``) and ``exp_val``
           is not ``"auto"`` then
@@ -200,14 +199,10 @@ class Formatter:
         :type exp_val: ``int | Literal['auto'] | None``
         :param round_mode: Indicate how to round numbers during
           formatting.
-        :type round_mode: ``Literal['sig_fig', 'dec_place'] | None``
-        :param ndigits: If ``ndigits`` is an :class:`int` then it specifies how
-          many digits to use for significant figure or digits-past-the-decimal
-          rounding. Can also be ``"all"`` to display as many digits needed to
-          reproduce the input representation of the number, or ``"pdg"`` to
-          automatically select the number of digits according to the PDG
-          rounding rules.
-        :type ndigits: ``int | Literal['all', 'pdg'] | None``
+        :type round_mode: ``Literal['sig_fig', 'dec_place', 'all', 'pdg'] | None``
+        :param ndigits: Specifies how many digits to use for significant figure
+          or digits-past-the-decimal rounding.
+        :type ndigits: ``int | None``
         :param upper_separator: Separator character to be used to group
           digits above the decimal symbol.
         :type upper_separator: ``Literal['', ',', '.', ' ', '_'] | None``
