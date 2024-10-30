@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import replace
 from decimal import Decimal
 from typing import TYPE_CHECKING, cast
-from warnings import warn
 
 from sciform.api.formatted_number import FormattedNumber
 from sciform.format_utils.exponents import get_exp_str, get_val_unc_exp
@@ -180,7 +179,7 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
     return result
 
 
-def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str:
+def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str:  # noqa: PLR0915
     """Format value/uncertainty pair according to input options."""
     exp_mode = options.exp_mode
 
@@ -189,13 +188,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
             "Binary exponent modes are not supported for value/uncertainty formatting."
         )
         raise NotImplementedError(msg)
-
-    if options.round_mode is RoundModeEnum.DEC_PLACE:
-        msg = (
-            "Precision round mode not available for value/uncertainty formatting. "
-            "Rounding is always applied as significant figures for the uncertainty."
-        )
-        warn(msg, stacklevel=2)
 
     unc = abs(unc)
     if exp_mode is ExpModeEnum.PERCENT:
@@ -210,31 +202,72 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         """
         exp_mode = ExpModeEnum.FIXEDPOINT
 
-    """
-    We round twice in case the first rounding changes the digits place
-    to which we need to round. E.g. rounding 999.999 ± 123.456 to two
-    significant figures will lead to 1000.000 ± 0120.000 on the first
-    pass, but we must re-round to get 1000.000 ± 0100.000.
-    """
-    val_rounded, unc_rounded, _ = round_val_unc(
-        val,
-        unc,
-        options.round_mode,
-        options.ndigits,
-    )
-    val_rounded, unc_rounded, round_digit = round_val_unc(
-        val_rounded,
-        unc_rounded,
-        options.round_mode,
-        options.ndigits,
-    )
+    if options.round_mode is RoundModeEnum.DEC_PLACE:
+        """
+        We calculate the exponent twice in case rounding the mantissa changes the
+        required exponent. For example, 0.0999 ± 0.0999 displayed in scientific notation
+        would be (9.99 ± 9.99)e-02 but rounded to zero digits-past-the-decimal gives
+        (10 ± 10)e-02, so we need to recalculate the exponent to get (1 ± 1)e-01.
+        """
+        exp_val = get_val_unc_exp(
+            val,
+            unc,
+            options.exp_mode,
+            options.exp_val,
+        )
+        val_mantissa = val * Decimal(10) ** (-Decimal(exp_val))
+        unc_mantissa = unc * Decimal(10) ** (-Decimal(exp_val))
+        val_mantissa_rounded, unc_mantissa_rounded, _ = round_val_unc(
+            val_mantissa,
+            unc_mantissa,
+            options.round_mode,
+            options.ndigits,
+        )
+        val_rounded = val_mantissa_rounded * Decimal(10) ** Decimal(exp_val)
+        unc_rounded = unc_mantissa_rounded * Decimal(10) ** Decimal(exp_val)
+        exp_val = get_val_unc_exp(
+            val_rounded,
+            unc_rounded,
+            options.exp_mode,
+            options.exp_val,
+        )
+        """
+        ndigits that will be used for separate digits-past-the-decimal rounding for the
+        value and uncertainty.
+        """
+        ndigits = options.ndigits
+    else:
+        """
+        We round twice in case the first rounding changes the digits place to which we
+        need to round. E.g. rounding 0.0999 ± 0.0999 to one significant figure would
+        naively result in rounding to the -2 place, leaving us with 0.10 ± 0.10. But the
+        -2 place actually corresponds to two significant figures, so we re-round to the
+        -1 place to get 0.1 ± 0.1.
+        """
+        val_rounded, unc_rounded, _ = round_val_unc(
+            val,
+            unc,
+            options.round_mode,
+            options.ndigits,
+        )
+        val_rounded, unc_rounded, round_digit = round_val_unc(
+            val_rounded,
+            unc_rounded,
+            options.round_mode,
+            options.ndigits,
+        )
 
-    exp_val = get_val_unc_exp(
-        val_rounded,
-        unc_rounded,
-        options.exp_mode,
-        options.exp_val,
-    )
+        exp_val = get_val_unc_exp(
+            val_rounded,
+            unc_rounded,
+            options.exp_mode,
+            options.exp_val,
+        )
+        """
+        ndigits that will be used for separate digits-past-the-decimal rounding for the
+        value and uncertainty.
+        """
+        ndigits = -round_digit + exp_val
 
     val_mantissa, _, _ = get_mantissa_exp_base(
         val_rounded,
@@ -253,8 +286,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         options.left_pad_dec_place,
         left_pad_matching=options.left_pad_matching,
     )
-
-    ndigits = -round_digit + exp_val
 
     """
     We will format the val and unc mantissas
@@ -294,8 +325,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
     val_unc_str = construct_val_unc_str(
         val_mantissa_str=val_mantissa_str,
         unc_mantissa_str=unc_mantissa_str,
-        val_mantissa=val_mantissa,
-        unc_mantissa=unc_mantissa,
         decimal_separator=options.decimal_separator,
         paren_uncertainty=options.paren_uncertainty,
         pm_whitespace=options.pm_whitespace,

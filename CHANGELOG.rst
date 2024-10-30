@@ -11,6 +11,9 @@ Unreleased
 Added
 ^^^^^
 
+* Digits-past-the-decimal formatting (``round_mode="dec_place"``) is now supported for
+  value/uncertainty pairs.
+  [`#170 <https://github.com/jagerber48/sciform/issues/170>`_]
 * Added a dark theme option (default on) for readthedocs documentation.
 * Added code coverage breakdown for unit and feature tests to codecov CI.
 
