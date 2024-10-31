@@ -13,7 +13,11 @@ pattern = re.compile(
                          (?P<sign_mode>[-+ ])?
                          (?P<alternate_mode>\#)?
                          (?P<left_pad_dec_place>\d+)?
-                         (?:(?P<round_mode>[.!])(?P<ndigits>([+-]?\d+|[AP])))?
+                         (?:
+                           (?P<round_mode>[.!])(?P<ndigits>([+-]?\d+))
+                           |
+                           (?P<round_mode_special>[AP])
+                         )?
                          (?P<exp_mode>[fF%eErRbB])?
                          (?:x(?P<exp_val>[+-]?\d+))?
                          (?P<prefix_mode>p)?
@@ -52,6 +56,15 @@ def parse_exp_mode(
     return exp_mode, capitalize
 
 
+ROUND_MODE_MAPPING = {
+    "!": "sig_fig",
+    ".": "dec_place",
+    "A": RoundModeEnum.ALL,
+    "P": RoundModeEnum.PDG,
+    None: None,
+}
+
+
 def format_options_from_fmt_spec(fmt_spec: str) -> InputOptions:
     """Resolve InputOptions from format specification string."""
     match = pattern.match(fmt_spec)
@@ -69,23 +82,17 @@ def format_options_from_fmt_spec(fmt_spec: str) -> InputOptions:
     if left_pad_dec_place is not None:
         left_pad_dec_place = int(left_pad_dec_place)
 
-    round_mode_mapping = {"!": "sig_fig", ".": "dec_place", None: None}
-
     round_mode_flag = match.group("round_mode")
-    round_mode = round_mode_mapping[round_mode_flag]
-
-    ndigits_flag = match.group("ndigits")
-    if ndigits_flag is not None:
-        if ndigits_flag == "A":
-            round_mode = RoundModeEnum.ALL
-            ndigits = None
-        elif ndigits_flag == "P":
-            round_mode = RoundModeEnum.PDG
-            ndigits = None
+    ndigits = match.group("ndigits")
+    if not round_mode_flag:
+        special_round_mode_flag = match.group("round_mode_special")
+        if not special_round_mode_flag:
+            round_mode = None
         else:
-            ndigits = int(ndigits_flag)
+            round_mode = ROUND_MODE_MAPPING[special_round_mode_flag]
     else:
-        ndigits = None
+        round_mode = ROUND_MODE_MAPPING[round_mode_flag]
+        ndigits = int(ndigits)
 
     exp_mode = match.group("exp_mode")
     exp_mode, capitalize = parse_exp_mode(
