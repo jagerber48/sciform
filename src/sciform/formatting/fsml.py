@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 
 from sciform.options.input_options import InputOptions
+from sciform.options.option_types import RoundModeEnum
 
 pattern = re.compile(
     r"""^
@@ -12,7 +13,7 @@ pattern = re.compile(
                          (?P<sign_mode>[-+ ])?
                          (?P<alternate_mode>\#)?
                          (?P<left_pad_dec_place>\d+)?
-                         (?:(?P<round_mode>[.!])(?P<ndigits>[+-]?\d+))?
+                         (?:(?P<round_mode>[.!])(?P<ndigits>([+-]?\d+|[AP])))?
                          (?P<exp_mode>[fF%eErRbB])?
                          (?:x(?P<exp_val>[+-]?\d+))?
                          (?P<prefix_mode>p)?
@@ -73,9 +74,16 @@ def format_options_from_fmt_spec(fmt_spec: str) -> InputOptions:
     round_mode_flag = match.group("round_mode")
     round_mode = round_mode_mapping[round_mode_flag]
 
-    ndigits = match.group("ndigits")
-    if ndigits is not None:
-        ndigits = int(ndigits)
+    ndigits_flag = match.group("ndigits")
+    if ndigits_flag is not None:
+        if ndigits_flag == "A":
+            round_mode = RoundModeEnum.ALL
+            ndigits = None
+        elif ndigits_flag == "P":
+            round_mode = RoundModeEnum.PDG
+            ndigits = None
+        else:
+            ndigits = int(ndigits_flag)
     else:
         ndigits = None
 
