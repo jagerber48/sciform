@@ -404,6 +404,30 @@ class TestValUncFSML(unittest.TestCase):
 
         self.run_val_unc_fsml_cases(cases_list)
 
+    def test_all_pdg(self):
+        cases_list = [
+            (
+                (123.456, 0.789),
+                [
+                    (".Af", "123.456 ± 0.789"),
+                    ("!Af", "123.456 ± 0.789"),
+                    (".Pf", "123.5 ± 0.8"),
+                    ("!Pf", "123.5 ± 0.8"),
+                ],
+            ),
+            (
+                (0.789, 123.456),
+                [
+                    (".Af", "0.789 ± 123.456"),
+                    ("!Af", "0.789 ± 123.456"),
+                    (".Pf", "0 ± 120"),
+                    ("!Pf", "0 ± 120"),
+                ],
+            ),
+        ]
+
+        self.run_val_unc_fsml_cases(cases_list)
+
     def test_paren_uncertainty(self):
         cases_list = [
             (
