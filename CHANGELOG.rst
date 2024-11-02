@@ -8,50 +8,61 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
+* Any unreleased changes can be viewed in the latest version
+  documentation
+  `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
+
+----
+
+0.38.0 (2024-11-02)
+-------------------
+
 Added
 ^^^^^
 
-* Digits-past-the-decimal formatting (``round_mode="dec_place"``) is now supported for
-  value/uncertainty pairs.
+* Digits-past-the-decimal formatting (``round_mode="dec_place"``) is now
+  supported for value/uncertainty pairs.
   [`#170 <https://github.com/jagerber48/sciform/issues/170>`_]
-* ``round_mode="all"`` and ``round_mode="pdg"`` options can now be accessed in the FSML
-  using ``"A"`` and ``"P"`` flags.
+* ``round_mode="all"`` and ``round_mode="pdg"`` options can now be
+  accessed in the FSML using ``"A"`` and ``"P"`` flags.
   [`#192 <https://github.com/jagerber48/sciform/issues/192>`_]
 * Added a dark theme option (default on) for readthedocs documentation.
-* Added code coverage breakdown for unit and feature tests to codecov CI.
+* Added code coverage breakdown for unit and feature tests to codecov
+  CI.
 
 Changed
 ^^^^^^^
 
 * **[BREAKING]** Rounding configuration has been refactored.
-  Previously ``round_mode`` accepted only ``"sig_fig"`` and ``"dec_place"``
-  string literals, all digits rounding mode was selected by settings
-  ``ndigits = AutoDigits`` and PDG rounding mode was selected by setting
-  ``pdg_sig_figs = True``.
-  Now ``round_mode`` accepts ``"sig_fig"``, ``"dec_place"``, ``"pdg"`` and
-  ``"all"`` string literals, ``ndigits`` only accepts integers, and the
-  ``pdg_sig_figs`` option is removed.
+  Previously ``round_mode`` accepted only ``"sig_fig"`` and
+  ``"dec_place"`` string literals, all digits rounding mode was selected
+  by settings ``ndigits = AutoDigits`` and PDG rounding mode was
+  selected by setting ``pdg_sig_figs = True``.
+  Now ``round_mode`` accepts ``"sig_fig"``, ``"dec_place"``, ``"pdg"``
+  and ``"all"`` string literals, ``ndigits`` only accepts integers, and
+  the ``pdg_sig_figs`` option is removed.
   ``round_mode`` defaults to ``"all"`` and ``ndigits`` defaults to 2.
   [`#185 <https://github.com/jagerber48/sciform/issues/185>`_]
-* **[BREAKING]** Previously ``exp_val`` and ``ndigits`` accepted the enums
-  ``AutoExpVal`` and ``AutoDigits``.
-  Now ``exp_val`` accepts the string literal ``"auto"`` and ``ndigits`` only
-  accepts integers.
+* **[BREAKING]** Previously ``exp_val`` and ``ndigits`` accepted the
+  enums ``AutoExpVal`` and ``AutoDigits``.
+  Now ``exp_val`` accepts the string literal ``"auto"`` and ``ndigits``
+  only accepts integers.
   [`#178 <https://github.com/jagerber48/sciform/issues/178>`_,
   `#185 <https://github.com/jagerber48/sciform/issues/185>`_]
-* Previously, significant figure rounding with a value of 0 would result in trailing
-  zeros being added in the formatted output.
-  For example, ``format(SciNum(0), "!3f"`` would give ``"0.00"`` or
+* Previously, significant figure rounding with a value of ``0`` would
+  result in trailing zeros being added in the formatted output.
+  For example, ``format(SciNum(0), "!3f")`` would give ``"0.00"`` or
   ``format(SciNum(0, float("nan")), "!2f")`` would give ``"0.0 ± nan"``.
-  This is not reasonable because zero doesn't have any significant figures, so it
-  doesn't make sense to add more trailing zeros to indicate additional "fake"
-  significant figures.
-  Now if zero is used for significant figure rounding it always appears directly as 0.
-  E.g. ``format(SciNum(0), "!3f"`` gives ``"0"`` and
+  This is not reasonable because zero doesn't have any significant
+  figures, so it doesn't make sense to add more trailing zeros to
+  indicate additional "fake" significant figures.
+  Now if zero is used for significant figure rounding it always appears
+  directly as ``"0"``.
+  E.g. ``format(SciNum(0), "!3f")`` gives ``"0"`` and
   ``format(SciNum(0, float("nan")), "!2f")`` gives ``"0 ± nan"``.
-  Note that, as before, trailing zeros may still be added to a zero value if the
-  uncertainty is less than one, e.g. ``format(SciNum(0, 0.0012), "!2f")`` gives
-  ``"0.0000 ± 0.0012"``.
+  Note that, as before, trailing zeros may still be added to a zero
+  value if the uncertainty is less than one, e.g.
+  ``format(SciNum(0, 0.0012), "!2f")`` gives ``"0.0000 ± 0.0012"``.
   [`#189 <https://github.com/jagerber48/sciform/issues/189>`_]
 * Previously the backend ``FinalizedOptions`` class ran a validation check on
   itself after initialization.
