@@ -352,7 +352,7 @@ makes this easy.
  ['7.000(30) M' '8.000(20) M' '9.000(10) M']]
 
 Appending Units
-========================
+===============
 
 The :mod:`sciform` :ref:`SI prefix mode<exp_str_replacement>` allows
 exponent strings such as ``'e+03'`` to be replaced with their SI
@@ -416,3 +416,55 @@ At this point it would be recommended to, instead, directly calculate
 the unit, rescale the numerical inputs to :mod:`sciform` formatting, and
 append the entire unit without utilizing the :mod:`sciform` SI prefix
 mode.
+
+Interactions with the Decimal Module
+====================================
+
+Numbers passed into :mod:`sciform` are always converted into
+:class:`Decimal` instances during formatting.
+Various options exposed by the
+`Decimal module <https://docs.python.org/3/library/decimal.html>`_
+will (desirably or undesirably) modify :mod:`sciform` formatting
+behavior.
+
+>>> import decimal
+>>> from sciform import SciNum
+>>>
+>>> # We calculate 1/9 in a high precision decimal context
+>>> with decimal.localcontext() as ctx:
+...     ctx.prec = 100
+...     num = decimal.Decimal(1)/decimal.Decimal(9)
+>>> # Formatted in the default decimal context
+>>> print(format(SciNum(num), "Af"))
+0.1111111111111111111111111111
+>>>
+>>> # Formatted in a low precision decimal context
+>>> with decimal.localcontext() as ctx:
+...     ctx.prec = 5
+...     print(format(SciNum(num), "Af"))
+0.11111
+>>>
+>>> # Formatted in a high precision decimal context
+>>> with decimal.localcontext() as ctx:
+...     ctx.prec = 50
+...     print(format(SciNum(num), "Af"))
+0.11111111111111111111111111111111111111111111111111
+>>>
+>>> # Formatted in a decimal context with a different rounding rule
+>>> with decimal.localcontext() as ctx:
+...     ctx.rounding = decimal.ROUND_CEILING
+...     print(format(SciNum(num), "Af"))
+0.1111111111111111111111111112
+
+We see that the number of digits shown in the ``"all"`` round mode can
+be modified using the decimal context precision.
+We also see that the rounding mode can be adjusted away from the default
+round-to-even rounding.
+
+When working on high precision applications, recall that :class:`float`
+instances will always be converted to :class:`Decimal` instances with 17
+digits of precision or fewer.
+So, if you desire higher precision you should use :class:`Decimal`
+rather than :class:`float` inputs, otherwise you may observe undesirable
+behavior.
+See :ref:`dec_and_float`.
