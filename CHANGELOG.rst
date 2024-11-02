@@ -19,6 +19,10 @@ Added
 * Documented examples demonstrating the interplay between ``sciform``
   formatting the ``decimal`` module configuration.
   [`#183 <https://github.com/jagerber48/sciform/issues/183>`_]
+* Added an example demonstrating how users can implement a "fallback"
+  formatter for cases when users want different formatting behavior
+  applied when the uncertainty is invalid or not present.
+  [`#177 <https://github.com/jagerber48/sciform/issues/177>`_]
 
 ----
 
