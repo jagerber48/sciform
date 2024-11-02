@@ -9,8 +9,8 @@ Unreleased
 ----------
 
 * Any unreleased changes can be viewed in the latest version
-   documentation
-   `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
+  documentation
+  `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
 
 0.38.1 (2024-11-02)
 -------------------
