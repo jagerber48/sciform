@@ -20,6 +20,8 @@ Fixed
 
 * Corrected a typo in a previous release.
 
+----
+
 0.38.1 (2024-11-02)
 -------------------
 
