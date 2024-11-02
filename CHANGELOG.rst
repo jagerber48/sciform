@@ -12,6 +12,8 @@ Unreleased
   documentation
   `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
 
+----
+
 0.38.2 (2024-11-02)
 -------------------
 
@@ -19,6 +21,8 @@ Fixed
 -----
 
 * Corrected a typo in a previous release.
+
+----
 
 0.38.1 (2024-11-02)
 -------------------
