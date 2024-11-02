@@ -468,3 +468,68 @@ So, if you desire higher precision you should use :class:`Decimal`
 rather than :class:`float` inputs, otherwise you may observe undesirable
 behavior.
 See :ref:`dec_and_float`.
+
+Fallback Formatters
+===================
+
+Sometimes values and value/uncertainty pairs with various properties may
+appear together in the same context.
+It may be inappropriate to use a single formatter for all of these
+inputs.
+For example
+
+>>> from sciform import Formatter
+>>> sform = Formatter(round_mode="pdg", paren_uncertainty=True)
+>>> print(sform(123456, 0.0789))
+123456.00(8)
+>>> print(sform(123456, float("nan")))
+120000(nan)
+>>> print(sform(123456))
+120000
+
+In both the cases when the uncertainty was invalid for rounding and when
+the uncertainty wasn't present the rounding got applied to the value
+directly.
+However, it may be inappropriate to apply PDG rounding, which is usually
+used for uncertainty, to the value.
+Instead, the user may want to retain more significant figures when
+rounding is applied to the value instead of the uncertainty.
+Users can resolve this by defining two formatters and a simple helper
+function to cover these cases.
+
+>>> from math import isfinite
+>>> from sciform import Formatter
+>>>
+>>> def generate_multi_formatter(
+...     val_unc_formatter=None,
+...     val_formatter=None
+... ):
+...     if val_unc_formatter is None:
+...         val_unc_formatter = Formatter()
+...     if val_formatter is None:
+...         val_formatter = Formatter()
+...     def multi_formatter(val, unc=None):
+...         if unc is None or not isfinite(unc):
+...             return val_formatter(val, unc)
+...         else:
+...             return val_unc_formatter(val, unc)
+...     return multi_formatter
+>>>
+>>> multi_formatter = generate_multi_formatter(
+...     val_unc_formatter = Formatter(
+...         round_mode="pdg",
+...         paren_uncertainty=True,
+...     ),
+...     val_formatter=Formatter(
+...         round_mode="sig_fig",
+...         ndigits=6,
+...         paren_uncertainty=True,
+...     ),
+... )
+>>>
+>>> print(multi_formatter(123456, 0.0789))
+123456.00(8)
+>>> print(multi_formatter(123456, float("nan")))
+123456(nan)
+>>> print(multi_formatter(123456))
+123456
