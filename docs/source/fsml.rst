@@ -18,17 +18,18 @@ This is analogous to how python :class:`int`, :class:`float`, and
 `format specification mini-language <https://docs.python.org/3/library/string.html#format-specification-mini-language>`_.
 The :mod:`sciform` format specification mini-language is given by::
 
-    format_spec        ::=  [left_pad_char "="][sign]["#"][left_pad_dec_place][round_mode ndigits][exp_mode]["x" exp_val]["p"]["()"]
+    format_spec        ::=  [left_pad_char "="][sign]["#"][left_pad_dec_place][round_mode ndigits | special_round_mode][exp_mode]["x" exp_val]["p"]["()"]
 
     left_pad_char      ::=  "0" | " "
     sign               ::=  "+" | "-" | " "
     left_pad_dec_place ::=  digit+
     round_mode         ::=  "!" | "."
+    special_round_mode ::=  "A" | "P"
     ndigits            ::=  [+-]?digit+
     exp_mode           ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" | "b" | "B" |
     exp_val            ::=  [+-]?digit+
 
-Below is are two simple FSML usage examples.
+Below are two simple FSML usage examples.
 See :ref:`FSML examples <fsml_examples>` for more complicated FSML
 usage examples.
 
@@ -86,6 +87,10 @@ Further details about the options can be found at
    * - | ndigits
        | (``[+-]?\d+``)
      - Sets ``ndigits`` to an integer to control rounding.
+       See :ref:`rounding`.
+   * - | special_round_mode
+       | (``'A'``, ``'P'``)
+     - Set ``round_mode`` to ``'all'`` or ``'pdg'``.
        See :ref:`rounding`.
    * - | exp_mode
        | (``'f'``, ``'F'``, ``'%'``, ``'e'``, ``'E'``, ``'r'``, ``'R'``,

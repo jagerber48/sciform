@@ -131,6 +131,18 @@ The ``.-1`` indicates the number should be rounded to one
 digit *before* the decimal point and the ``f`` indicates that fixed
 point mode should be used.
 
+>>> print(f"{SciNum(123.456, 0.123):Pf}")
+123.46 ± 0.12
+>>> print(f"{SciNum(123.456, 0.523):Pf}")
+123.5 ± 0.5
+>>> print(f"{SciNum(123.456, 0.973):Pf}")
+123.5 ± 1.0
+>>> print(f"{SciNum(123.456, 0.973):Af}")
+123.456 ± 0.973
+
+In these examples the ``"P"`` selects the ``"PDG"`` rounding rule and
+``"A"`` selects the ``"all"`` rounding rule.
+
 SciNum, and Global Options
 =====================================
 
