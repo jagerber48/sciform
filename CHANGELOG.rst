@@ -14,7 +14,7 @@ Unreleased
      `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
 
 Removed
--------
+^^^^^^^
 
 * Removed all support for base-2 formatting.
   The ``sciform`` package will focus on base-2 scientific formatting,
@@ -30,7 +30,7 @@ Removed
 -------------------
 
 Fixed
------
+^^^^^
 
 * Corrected a typo in a previous release.
 
@@ -40,7 +40,7 @@ Fixed
 -------------------
 
 Added
------
+^^^^^
 
 * Documented examples demonstrating the interplay between ``sciform``
   formatting the ``decimal`` module configuration.
