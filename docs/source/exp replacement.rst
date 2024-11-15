@@ -6,7 +6,7 @@ Supported Exponent Replacements
 :mod:`sciform` offers exponent replacement modes which provide
 translations between exponent strings and conventional alphabetic
 symbol representations.
-For decimal exponents in engineering formats, SI prefix translations are
+For exponents in engineering formats, SI prefix translations are
 available according to the
 `SI prefixes <https://www.nist.gov/pml/owm/metric-si-prefixes>`_.
 It is also possible to convert decimal exponents into
