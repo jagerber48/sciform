@@ -21,7 +21,7 @@ Removed
 ^^^^^^^
 
 * Removed all support for base-2 formatting.
-  The ``sciform`` package will focus on base-2 scientific formatting,
+  The ``sciform`` package will focus on base-10 scientific formatting,
   more relevent for the physical sciences, unless there is demand for
   base-2 or base-``n`` formatting.
   We encourage users to consider the `prefixed <https://pypi.org/project/prefixed/>`_
