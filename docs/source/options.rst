@@ -24,7 +24,7 @@ formatting presents numbers in the form::
    num = mantissa * 10**exp
 
 Where exp is an integer.
-The different exponent modes control how ``mantissa``, and ``exp`` are
+The different exponent modes control how ``mantissa`` and ``exp`` are
 chosen for a given input number ``num``.
 
 .. _fixed_point:
@@ -142,7 +142,7 @@ For fixed point and percent modes an explicit fixed exponent must equal
 For engineering and shifted engineering modes an explicit fixed exponent
 must be an integer multiple of 3.
 Because of this constrained behavior, it is recommended to only use a
-fixed exponent with the scientific exponent modes.
+fixed exponent with the scientific exponent mode.
 
 .. _exp_str_replacement:
 
@@ -150,8 +150,9 @@ Exponent String Replacement
 ===========================
 
 :mod:`sciform` provides a number of formatting options for replacing
-Exponent strings such as ``'e-03'`` with conventional strings such as
-``'m'`` to succinctly communicate the order of magnitude.
+exponent strings such as ``'e-03'`` with conventional strings such as
+``'m'`` (the SI prefix for milli) to succinctly communicate the order
+of magnitude.
 Exponent strings can be replaced with either SI prefixes or parts-per
 identifiers.
 See :ref:`exp_replacements` for all default supported
