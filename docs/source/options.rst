@@ -62,7 +62,7 @@ appended to the end of the formatted string.
 Scientific Notation
 -------------------
 
-Scientific notation is used to display decimal numbers.
+Scientific notation is used to display numbers.
 In scientific notation, the exponent is uniquely chosen so that the
 mantissa ``m`` satisfies ``1 <= m < 10``.
 
