@@ -89,12 +89,6 @@ def validate_exp_val(
                     f"for engineering exponent modes."
                 )
                 raise ValueError(msg)
-            if options.exp_mode == "binary_iec" and options.exp_val % 10 != 0:
-                msg = (
-                    f"Exponent must be a multiple of 10, not "
-                    f"exp_val={options.exp_val}, for binary IEC exponent mode."
-                )
-                raise ValueError(msg)
 
 
 def validate_exp_options(
@@ -188,7 +182,6 @@ def validate_extra_translations(
     """Validate translation dictionary have int keys and alphabetic values."""
     translations_dicts = [
         options.extra_si_prefixes,
-        options.extra_iec_prefixes,
         options.extra_parts_per_forms,
     ]
 

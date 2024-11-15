@@ -181,14 +181,6 @@ class TestLatexConversion(unittest.TestCase):
                 ),
             ),
             (
-                "0b+00",
-                (
-                    "0b+00",
-                    "0×2<sup>0</sup>",
-                    r"$0\times2^{0}$",
-                ),
-            ),
-            (
                 "16.18033E+03",
                 (
                     "16.18033E+03",

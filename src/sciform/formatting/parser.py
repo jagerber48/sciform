@@ -296,8 +296,8 @@ def parse_val_unc_from_str(
         (INF)e+00, or "(123.000 ± 0.456)e+01"
 
     Whichever pattern is matched is then parsed to extract the value,
-    uncertainty, and exponent base and value (if no exponent information
-    is available then base is set to 10 and value is set to 0).
+    uncertainty, and exponent value (if no exponent information
+    is available then the exponent value is set to 0).
 
     Next, grouping separators such as "_" or " " are stripped from the
     value and uncertainty strings. An algorithm is then run to detect

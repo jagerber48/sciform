@@ -1,0 +1,993 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.21.2: https://docutils.sourceforge.io/" />
+<title>Examples</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 9511 2024-01-13 09:50:07Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+Despite the name, some widely supported CSS2 features are used.
+
+See https://docutils.sourceforge.io/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: gray; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic, pre.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="examples">
+<h1 class="title">Examples</h1>
+
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 4)</p>
+<p>Unknown directive type &quot;module&quot;.</p>
+<pre class="literal-block">
+.. module:: sciform
+   :no-index:
+
+</pre>
+</div>
+<div class="section" id="test-cases">
+<h1>Test Cases</h1>
+<p>The <a href="#system-message-1"><span class="problematic" id="problematic-1">:mod:`sciform`</span></a>
+<a class="reference external" href="https://github.com/jagerber48/sciform/tree/main/tests">test suite</a>
+contains hundreds of example formatting test cases which showcase the
+many available formatting options.</p>
+<div class="system-message" id="system-message-1">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 10); <em><a href="#problematic-1">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+</div>
+<div class="section" id="formatter">
+<h1>Formatter</h1>
+<p>Here are a small selection of examples which demonstrate some of the
+available formatting options.</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; from sciform import Formatter
+&gt;&gt;&gt; num = 12345.54321
+&gt;&gt;&gt; formatter = Formatter(exp_mode=&quot;scientific&quot;, round_mode=&quot;sig_fig&quot;, ndigits=4)
+&gt;&gt;&gt; print(formatter(num))
+1.235e+04
+&gt;&gt;&gt; formatter = Formatter(
+...     exp_mode=&quot;engineering&quot;,
+...     round_mode=&quot;dec_place&quot;,
+...     ndigits=10,
+...     sign_mode=&quot; &quot;,
+...     superscript=True,
+... )
+&gt;&gt;&gt; print(formatter(num))
+ 12.3455432100×10³
+&gt;&gt;&gt; formatter = Formatter(
+...     exp_mode=&quot;fixed_point&quot;,
+...     upper_separator=&quot; &quot;,
+...     decimal_separator=&quot;,&quot;,
+...     lower_separator=&quot;_&quot;,
+...     sign_mode=&quot;+&quot;,
+... )
+&gt;&gt;&gt; print(formatter(num))
++12 345,543_21
+</pre>
+<pre class="doctest-block">
+&gt;&gt;&gt; num = 0.076543
+&gt;&gt;&gt; formatter = Formatter(
+...     exp_mode=&quot;scientific&quot;, exp_val=-3, exp_format=&quot;parts_per&quot;, add_ppth_form=True
+... )
+&gt;&gt;&gt; print(formatter(num))
+76.543 ppth
+&gt;&gt;&gt; formatter = Formatter(
+...     exp_mode=&quot;scientific&quot;, exp_val=-2, exp_format=&quot;prefix&quot;, add_c_prefix=True
+... )
+&gt;&gt;&gt; print(formatter(num))
+7.6543 c
+&gt;&gt;&gt; formatter = Formatter(exp_mode=&quot;scientific&quot;, exp_val=-6, exp_format=&quot;prefix&quot;)
+&gt;&gt;&gt; print(formatter(num))
+76543 μ
+&gt;&gt;&gt; formatter = Formatter(exp_mode=&quot;percent&quot;)
+&gt;&gt;&gt; print(formatter(num))
+7.6543%
+</pre>
+<pre class="doctest-block">
+&gt;&gt;&gt; num = 3141592.7
+&gt;&gt;&gt; unc = 1618
+&gt;&gt;&gt; formatter = Formatter()
+&gt;&gt;&gt; print(formatter(num, unc))
+3141593 ± 1618
+&gt;&gt;&gt; formatter = Formatter(
+...     exp_mode=&quot;engineering&quot;,
+...     exp_format=&quot;prefix&quot;,
+...     round_mode=&quot;pdg&quot;,
+...     pm_whitespace=False,
+... )
+&gt;&gt;&gt; print(formatter(num, unc))
+(3.1416±0.0016) M
+</pre>
+<pre class="doctest-block">
+&gt;&gt;&gt; num = 314159.27
+&gt;&gt;&gt; unc = 1618
+&gt;&gt;&gt; formatter = Formatter(
+...     exp_mode=&quot;engineering_shifted&quot;, round_mode=&quot;pdg&quot;, paren_uncertainty=True
+... )
+&gt;&gt;&gt; print(formatter(num, unc))
+0.3142(16)e+06
+</pre>
+</div>
+<div class="section" id="format-specification-mini-language">
+<span id="fsml-examples"></span><h1>Format Specification Mini Language</h1>
+<pre class="doctest-block">
+&gt;&gt;&gt; from sciform import SciNum
+&gt;&gt;&gt; print(f&quot;{SciNum(1234.432):0=+5.6f}&quot;)
++001234.432000
+</pre>
+<p>In the preceding example <tt class="docutils literal">0=</tt> indicates that left padding should be
+done using <tt class="docutils literal">'0'</tt> characters.
+The <tt class="docutils literal">+</tt> indicates that a sign symbol should always be displayed.
+The <tt class="docutils literal">5</tt> preceding the round mode symbol (<tt class="docutils literal">.</tt>) indicates that the
+number should be left padded to the 10<sup>+5</sup> (ten-thousands)
+decimal place.
+The <tt class="docutils literal">.6</tt> indicates that the number will be rounded to six digits past
+the decimal points.
+The <tt class="docutils literal">f</tt> indicates that the number will be displayed in fixed point
+exponent mode.</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; print(f&quot;{SciNum(123, 0.123):#!2R()}&quot;)
+0.12300(12)E+03
+</pre>
+<p>In the preceding example the <tt class="docutils literal">#</tt> alternate flag combined with <tt class="docutils literal">R</tt>
+indicates that the number will be formatted in the shifted engineering
+exponent mode with a capitalized exponent symbol <tt class="docutils literal">'E'</tt>.
+<tt class="docutils literal">!2</tt> indicates that the number will be rounded so that the uncertainty
+has two significant figures.
+The <tt class="docutils literal">()</tt> indicates that the value/uncertainty pair should be formatted
+using the parentheses uncertainty format.</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; print(f&quot;{SciNum(123):ex-3p}&quot;)
+123000 m
+</pre>
+<p>In the preceding example the <tt class="docutils literal">e</tt> indicates that scientific notation
+should be used.
+The <tt class="docutils literal"><span class="pre">x-3</span></tt> indicates that the exponent will be forced to equal <tt class="docutils literal"><span class="pre">-3</span></tt>.
+Finally the <tt class="docutils literal">p</tt> indicates that the SI prefix mode should be used.</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; print(f&quot;{SciNum(123): .-1f}&quot;)
+ 120
+</pre>
+<p>In this example the leading space indicates a leading space should be
+included for non-negative numbers so that positive and negative numbers
+have the same justification.
+The <tt class="docutils literal"><span class="pre">.-1</span></tt> indicates the number should be rounded to one
+digit <em>before</em> the decimal point and the <tt class="docutils literal">f</tt> indicates that fixed
+point mode should be used.</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; print(f&quot;{SciNum(123.456, 0.123):Pf}&quot;)
+123.46 ± 0.12
+&gt;&gt;&gt; print(f&quot;{SciNum(123.456, 0.523):Pf}&quot;)
+123.5 ± 0.5
+&gt;&gt;&gt; print(f&quot;{SciNum(123.456, 0.973):Pf}&quot;)
+123.5 ± 1.0
+&gt;&gt;&gt; print(f&quot;{SciNum(123.456, 0.973):Af}&quot;)
+123.456 ± 0.973
+</pre>
+<p>In these examples the <tt class="docutils literal">&quot;P&quot;</tt> selects the <tt class="docutils literal">&quot;PDG&quot;</tt> rounding rule and
+<tt class="docutils literal">&quot;A&quot;</tt> selects the <tt class="docutils literal">&quot;all&quot;</tt> rounding rule.</p>
+</div>
+<div class="section" id="scinum-and-global-options">
+<h1>SciNum, and Global Options</h1>
+<p>Here are a small selection of examples which demonstrate some of the
+available string formatting options.
+Note that many options are not available through the <a href="#system-message-2"><span class="problematic" id="problematic-2">:ref:`fsml`</span></a>, so
+these options must be selected by configuring the global options.
+Here this is done using the <a href="#system-message-3"><span class="problematic" id="problematic-3">:class:`GlobalOptionsContext`</span></a> context
+manager, but this could have been done using <a href="#system-message-4"><span class="problematic" id="problematic-4">:func:`set_global_options`</span></a>
+instead.</p>
+<div class="system-message" id="system-message-2">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 149); <em><a href="#problematic-2">backlink</a></em></p>
+Unknown interpreted text role &quot;ref&quot;.</div>
+<div class="system-message" id="system-message-3">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 149); <em><a href="#problematic-3">backlink</a></em></p>
+Unknown interpreted text role &quot;class&quot;.</div>
+<div class="system-message" id="system-message-4">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 149); <em><a href="#problematic-4">backlink</a></em></p>
+Unknown interpreted text role &quot;func&quot;.</div>
+<pre class="doctest-block">
+&gt;&gt;&gt; from sciform import SciNum, GlobalOptionsContext
+&gt;&gt;&gt; num = SciNum(12345.54321)
+&gt;&gt;&gt; print(f&quot;{num:!4e}&quot;)
+1.235e+04
+&gt;&gt;&gt; print(f&quot;{num: .10r}&quot;)
+ 12.3455432100e+03
+&gt;&gt;&gt; with GlobalOptionsContext(
+...     upper_separator=&quot; &quot;,
+...     decimal_separator=&quot;,&quot;,
+...     lower_separator=&quot;_&quot;,
+... ):
+...     print(f&quot;{num:+}&quot;)
++12 345,543_21
+</pre>
+<pre class="doctest-block">
+&gt;&gt;&gt; num = SciNum(0.076543)
+&gt;&gt;&gt; with GlobalOptionsContext(exp_format=&quot;parts_per&quot;, add_ppth_form=True):
+...     print(f&quot;{num:ex-3}&quot;)
+...
+76.543 ppth
+&gt;&gt;&gt; with GlobalOptionsContext(exp_format=&quot;prefix&quot;, add_c_prefix=True):
+...     print(f&quot;{num:ex-2}&quot;)
+...
+7.6543 c
+&gt;&gt;&gt; with GlobalOptionsContext(exp_mode=&quot;scientific&quot;, exp_val=-6, exp_format=&quot;prefix&quot;):
+...     print(f&quot;{num:ex-6}&quot;)
+...
+76543 μ
+&gt;&gt;&gt; print(f&quot;{num:%}&quot;)
+7.6543%
+</pre>
+<pre class="doctest-block">
+&gt;&gt;&gt; num_unc = SciNum(3141592.7, 1618)
+&gt;&gt;&gt; print(f&quot;{num_unc}&quot;)
+3141593 ± 1618
+&gt;&gt;&gt; with GlobalOptionsContext(round_mode=&quot;pdg&quot;, pm_whitespace=False):
+...     print(f&quot;{num_unc:rp}&quot;)
+...
+(3.1416±0.0016) M
+</pre>
+<pre class="doctest-block">
+&gt;&gt;&gt; num_unc = SciNum(314159.27, 1618)
+&gt;&gt;&gt; with GlobalOptionsContext(round_mode=&quot;pdg&quot;):
+...     print(f&quot;{num_unc:#r()}&quot;)
+...
+0.3142(16)e+06
+</pre>
+</div>
+<div class="section" id="plotting-and-tabulating-fit-data">
+<h1>Plotting and Tabulating Fit Data</h1>
+<p>We are given 3 data sets:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 206)</p>
+<p>Unknown directive type &quot;collapse&quot;.</p>
+<pre class="literal-block">
+.. collapse:: Data
+
+   .. literalinclude:: ../../examples/data/fit_data.json
+      :language: json
+
+</pre>
+</div>
+<p>We want to perform quadratic fits to these data sets, visualize
+the results, and print the best fit parameters including the uncertainty
+reported by the fit routine.
+For these tasks we will require the <tt class="docutils literal">numpy</tt>, <tt class="docutils literal">scipy</tt>,
+<tt class="docutils literal">matplotlib</tt>, and <tt class="docutils literal">tabulate</tt> packages.</p>
+<div class="section" id="without-sciform">
+<h2>Without <tt class="docutils literal">sciform</tt></h2>
+<p>Without <tt class="docutils literal">sciform</tt> we can perform the fit and plot the data and best
+fit lines and print out a table of best fit parameters and
+uncertainties:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 224)</p>
+<p>Unknown directive type &quot;collapse&quot;.</p>
+<pre class="literal-block">
+.. collapse:: Code
+
+   .. literalinclude:: ../../examples/fit_plot_no_sciform.py
+      :language: python
+
+</pre>
+</div>
+<p>This produces the plot:</p>
+<img alt="../../examples/outputs/fit_plot_no_sciform.png" src="../../examples/outputs/fit_plot_no_sciform.png" style="width: 400px;" />
+<p>And the table:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 236)</p>
+<p>Unknown directive type &quot;literalinclude&quot;.</p>
+<pre class="literal-block">
+.. literalinclude:: ../../examples/outputs/fit_plot_no_sciform_table.txt
+   :language: python
+
+</pre>
+</div>
+<p>This plot and table suffer from a number of shortcomings which impede
+human readability.</p>
+<ul class="simple">
+<li>In the table, the exponents for the values and uncertainties differ,
+making it hard to identify the significant digits of the value.</li>
+<li>The number of digits displayed for the values is not correlated with
+the uncertainty for that value. For example, the <tt class="docutils literal">y0</tt> values are
+shown with precision to the 10<sup>+8</sup> place, but the uncertainty
+indicates precision down to the 10<sup>+3</sup> place.</li>
+<li>In the table, the exponents vary from one dataset to the next. It is
+hard to see these differences at a glance.</li>
+<li>The tick labels on the plot are illegible because each value has so
+many digits.</li>
+</ul>
+<p>Of course, even without <a href="#system-message-5"><span class="problematic" id="problematic-5">:mod:`sciform`</span></a>, it would be possible to make
+manual adjustments to the plot and the table to improve these data
+visualizations.
+However, <a href="#system-message-6"><span class="problematic" id="problematic-6">:mod:`sciform`</span></a> will allow us to make the required changes in a
+general and automated way.</p>
+<div class="system-message" id="system-message-5">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 253); <em><a href="#problematic-5">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+<div class="system-message" id="system-message-6">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 253); <em><a href="#problematic-6">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+</div>
+<div class="section" id="with-sciform">
+<h2>With <tt class="docutils literal">sciform</tt></h2>
+<p>We can address these problems using <a href="#system-message-7"><span class="problematic" id="problematic-7">:mod:`sciform`</span></a> by:</p>
+<div class="system-message" id="system-message-7">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 262); <em><a href="#problematic-7">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+<ol class="arabic simple">
+<li>Using prefix scientific notation to label the plot axes.
+This will greatly reduce the number of symbols needed for each tick
+value.</li>
+<li>Using value/uncertainty formatting in the table to collapse the value
+and error column pairs into individual columns.
+This will make obvious the relative scale between the uncertainty and
+the value.
+Using <tt class="docutils literal">sciform</tt>, the significant digits displayed for the value
+will always match the precision of the uncertainty.
+We will use the parentheses uncertainty format.</li>
+<li>Using engineering notation for the value/uncertainty in the table. This
+will make the relative scale between different rows obvious.</li>
+</ol>
+<p>To do this we import <a href="#system-message-8"><span class="problematic" id="problematic-8">:mod:`sciform`</span></a> and make some helper functions for
+displaying the plot axes as described:</p>
+<div class="system-message" id="system-message-8">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 277); <em><a href="#problematic-8">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 280)</p>
+<p>Unknown directive type &quot;collapse&quot;.</p>
+<pre class="literal-block">
+.. collapse:: Code
+
+    .. literalinclude:: ../../examples/fit_plot_with_sciform.py
+      :language: python
+
+</pre>
+</div>
+<p>This produces the plot:</p>
+<img alt="../../examples/outputs/fit_plot_with_sciform.png" src="../../examples/outputs/fit_plot_with_sciform.png" style="width: 400px;" />
+<p>and the table:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 292)</p>
+<p>Unknown directive type &quot;literalinclude&quot;.</p>
+<pre class="literal-block">
+.. literalinclude:: ../../examples/outputs/fit_plot_with_sciform_table.txt
+   :language: python
+
+</pre>
+</div>
+<p>We can see the plot and table are immediately much more legible.
+Less characters are needed to communicate the data in both
+visualizations.
+The relative scaling of parameters between datasets and the relative
+scaling between the value and uncertainty for each entry are
+immediately clear.</p>
+</div>
+</div>
+<div class="section" id="mapping-over-collections">
+<h1>Mapping Over Collections</h1>
+<p>It may be convenient to apply <tt class="docutils literal">sciform</tt> mapping to collections (sets,
+lists, arrays, etc.) of numbers.</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; from sciform import Formatter
+&gt;&gt;&gt;
+&gt;&gt;&gt; val_formatter = Formatter(
+...     exp_mode=&quot;engineering&quot;,
+...     exp_format=&quot;prefix&quot;,
+...     round_mode=&quot;all&quot;,
+...     paren_uncertainty=True,
+... )
+&gt;&gt;&gt; val_err_formatter = Formatter(
+...     exp_mode=&quot;engineering&quot;,
+...     exp_format=&quot;prefix&quot;,
+...     round_mode=&quot;pdg&quot;,
+...     paren_uncertainty=True,
+... )
+&gt;&gt;&gt; val_list = [1000, 2000, 3000]
+&gt;&gt;&gt; err_list = [200, 400, 600]
+&gt;&gt;&gt;
+&gt;&gt;&gt; val_str_list = list(map(val_formatter, val_list))
+&gt;&gt;&gt; print(val_str_list)
+['1 k', '2 k', '3 k']
+&gt;&gt;&gt;
+&gt;&gt;&gt; val_err_str_list = list(map(val_err_formatter, val_list, err_list))
+&gt;&gt;&gt; print(val_err_str_list)
+['1.00(20) k', '2.0(4) k', '3.0(6) k']
+</pre>
+<p>We may also want to map over higher dimensional numpy arrays.
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.vectorize.html">numpy.vectorize()</a>
+makes this easy.</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt;
+&gt;&gt;&gt; vec_val_formatter = np.vectorize(val_formatter)
+&gt;&gt;&gt; vec_val_err_formatter = np.vectorize(val_err_formatter)
+&gt;&gt;&gt; arr = np.array([[1e6, 2e6, 3e6], [4e6, 5e6, 6e6], [7e6, 8e6, 9e6]])
+&gt;&gt;&gt;
+&gt;&gt;&gt; arr_err = np.array([[9e4, 8e4, 7e4], [6e4, 5e4, 4e4], [3e4, 2e4, 1e4]])
+&gt;&gt;&gt;
+&gt;&gt;&gt; print(vec_val_formatter(arr))
+[['1 M' '2 M' '3 M']
+ ['4 M' '5 M' '6 M']
+ ['7 M' '8 M' '9 M']]
+&gt;&gt;&gt; print(vec_val_err_formatter(arr, arr_err))
+[['1.00(9) M' '2.00(8) M' '3.00(7) M']
+ ['4.00(6) M' '5.00(5) M' '6.00(4) M']
+ ['7.000(30) M' '8.000(20) M' '9.000(10) M']]
+</pre>
+</div>
+<div class="section" id="appending-units">
+<h1>Appending Units</h1>
+<p>The <a href="#system-message-9"><span class="problematic" id="problematic-9">:mod:`sciform`</span></a> <a href="#system-message-10"><span class="problematic" id="problematic-10">:ref:`SI prefix mode&lt;exp_str_replacement&gt;`</span></a> allows
+exponent strings such as <tt class="docutils literal">'e+03'</tt> to be replaced with their SI
+prefix counterparts such as <tt class="docutils literal">'k'</tt>.
+In scientific applications numbers and numbers with uncertainty include
+units such as <tt class="docutils literal">'g'</tt>, <tt class="docutils literal">'s'</tt>, and <tt class="docutils literal">'Hz'</tt>.
+The simple utility function below appends units to a <a href="#system-message-11"><span class="problematic" id="problematic-11">:mod:`sciform`</span></a>
+output string in such a way that, if an SI prefix is present the unit
+is appended to the prefix, otherwise there is a space between the unit
+and the number.</p>
+<div class="system-message" id="system-message-9">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 357); <em><a href="#problematic-9">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+<div class="system-message" id="system-message-10">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 357); <em><a href="#problematic-10">backlink</a></em></p>
+Unknown interpreted text role &quot;ref&quot;.</div>
+<div class="system-message" id="system-message-11">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 357); <em><a href="#problematic-11">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+<pre class="doctest-block">
+&gt;&gt;&gt; import re
+&gt;&gt;&gt; from sciform import FormattedNumber, SciNum
+&gt;&gt;&gt;
+&gt;&gt;&gt; def add_units(formatted_number: FormattedNumber, unit: str) -&gt; FormattedNumber:
+...     &quot;&quot;&quot;Add units to a number string.&quot;&quot;&quot;
+...     if re.match(r&quot;[a-zA-Z]&quot;, formatted_number[-1]):
+...         num_with_units = f&quot;{formatted_number}{unit}&quot;
+...     else:
+...         num_with_units = f&quot;{formatted_number} {unit}&quot;
+...     return FormattedNumber(
+...         num_with_units,
+...         formatted_number.value,
+...         formatted_number.uncertainty,
+...         formatted_number.populated_options,
+...     )
+&gt;&gt;&gt;
+&gt;&gt;&gt; num_str = format(SciNum(123e6, 0.45e6), &quot;rp()&quot;)
+&gt;&gt;&gt; print(num_str)
+123.00(45) M
+&gt;&gt;&gt; print(add_units(num_str, &quot;Hz&quot;))
+123.00(45) MHz
+&gt;&gt;&gt; num_str = format(SciNum(123, 0.45), &quot;rp()&quot;)
+&gt;&gt;&gt; print(add_units(num_str, &quot;Hz&quot;))
+123.00(45) Hz
+&gt;&gt;&gt; num_str = format(SciNum(123e6, 0.45e6), &quot;e()&quot;)
+&gt;&gt;&gt; print(add_units(num_str, &quot;Hz&quot;))
+1.2300(45)e+08 Hz
+</pre>
+<p>The utility function has been written to preserve the
+<a href="#system-message-12"><span class="problematic" id="problematic-12">:class:`FormattedNumber`</span></a> structure of the input so that the output
+numbers with units can be still be e.g. converted to LaTeX:</p>
+<div class="system-message" id="system-message-12">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 395); <em><a href="#problematic-12">backlink</a></em></p>
+Unknown interpreted text role &quot;class&quot;.</div>
+<pre class="doctest-block">
+&gt;&gt;&gt; num_str = format(SciNum(123e6, 0.45e6), &quot;rp()&quot;)
+&gt;&gt;&gt; print(add_units(num_str, &quot;Hz&quot;).as_latex())
+$123.00(45)\:\text{MHz}$
+</pre>
+<p>This utility function can be used for more complex units e.g.:</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; num_str = format(SciNum(123e3, 0.45e3), &quot;rp()&quot;)
+&gt;&gt;&gt; print(add_units(num_str, &quot;m/s&quot;))
+123.00(45) km/s
+</pre>
+<p>however, you must remember that <a href="#system-message-13"><span class="problematic" id="problematic-13">:mod:`sciform`</span></a>, of course, only has
+control over the single prefix out front.
+If the user wants automated selection of multiple prefixes within a
+compound unit such as <tt class="docutils literal">'cm/ms'</tt>, then they will need to do logic to
+determine the exact unit string or utilize a more sophisticated unit
+framework.
+At this point it would be recommended to, instead, directly calculate
+the unit, rescale the numerical inputs to <a href="#system-message-14"><span class="problematic" id="problematic-14">:mod:`sciform`</span></a> formatting, and
+append the entire unit without utilizing the <a href="#system-message-15"><span class="problematic" id="problematic-15">:mod:`sciform`</span></a> SI prefix
+mode.</p>
+<div class="system-message" id="system-message-13">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 409); <em><a href="#problematic-13">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+<div class="system-message" id="system-message-14">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 409); <em><a href="#problematic-14">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+<div class="system-message" id="system-message-15">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 409); <em><a href="#problematic-15">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+</div>
+<div class="section" id="interactions-with-the-decimal-module">
+<h1>Interactions with the Decimal Module</h1>
+<p>Numbers passed into <a href="#system-message-16"><span class="problematic" id="problematic-16">:mod:`sciform`</span></a> are always converted into
+<a href="#system-message-17"><span class="problematic" id="problematic-17">:class:`Decimal`</span></a> instances during formatting.
+Various options exposed by the
+<a class="reference external" href="https://docs.python.org/3/library/decimal.html">Decimal module</a>
+will (desirably or undesirably) modify <a href="#system-message-18"><span class="problematic" id="problematic-18">:mod:`sciform`</span></a> formatting
+behavior.</p>
+<div class="system-message" id="system-message-16">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 423); <em><a href="#problematic-16">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+<div class="system-message" id="system-message-17">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 423); <em><a href="#problematic-17">backlink</a></em></p>
+Unknown interpreted text role &quot;class&quot;.</div>
+<div class="system-message" id="system-message-18">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 423); <em><a href="#problematic-18">backlink</a></em></p>
+Unknown interpreted text role &quot;mod&quot;.</div>
+<pre class="doctest-block">
+&gt;&gt;&gt; import decimal
+&gt;&gt;&gt; from sciform import SciNum
+&gt;&gt;&gt;
+&gt;&gt;&gt; # We calculate 1/9 in a high precision decimal context
+&gt;&gt;&gt; with decimal.localcontext() as ctx:
+...     ctx.prec = 100
+...     num = decimal.Decimal(1)/decimal.Decimal(9)
+&gt;&gt;&gt; # Formatted in the default decimal context
+&gt;&gt;&gt; print(format(SciNum(num), &quot;Af&quot;))
+0.1111111111111111111111111111
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Formatted in a low precision decimal context
+&gt;&gt;&gt; with decimal.localcontext() as ctx:
+...     ctx.prec = 5
+...     print(format(SciNum(num), &quot;Af&quot;))
+0.11111
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Formatted in a high precision decimal context
+&gt;&gt;&gt; with decimal.localcontext() as ctx:
+...     ctx.prec = 50
+...     print(format(SciNum(num), &quot;Af&quot;))
+0.11111111111111111111111111111111111111111111111111
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Formatted in a decimal context with a different rounding rule
+&gt;&gt;&gt; with decimal.localcontext() as ctx:
+...     ctx.rounding = decimal.ROUND_CEILING
+...     print(format(SciNum(num), &quot;Af&quot;))
+0.1111111111111111111111111112
+</pre>
+<p>We see that the number of digits shown in the <tt class="docutils literal">&quot;all&quot;</tt> round mode can
+be modified using the decimal context precision.
+We also see that the rounding mode can be adjusted away from the default
+round-to-even rounding.</p>
+<p>When working on high precision applications, recall that <a href="#system-message-19"><span class="problematic" id="problematic-19">:class:`float`</span></a>
+instances will always be converted to <a href="#system-message-20"><span class="problematic" id="problematic-20">:class:`Decimal`</span></a> instances with 17
+digits of precision or fewer.
+So, if you desire higher precision you should use <a href="#system-message-21"><span class="problematic" id="problematic-21">:class:`Decimal`</span></a>
+rather than <a href="#system-message-22"><span class="problematic" id="problematic-22">:class:`float`</span></a> inputs, otherwise you may observe undesirable
+behavior.
+See <a href="#system-message-23"><span class="problematic" id="problematic-23">:ref:`dec_and_float`</span></a>.</p>
+<div class="system-message" id="system-message-19">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 464); <em><a href="#problematic-19">backlink</a></em></p>
+Unknown interpreted text role &quot;class&quot;.</div>
+<div class="system-message" id="system-message-20">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 464); <em><a href="#problematic-20">backlink</a></em></p>
+Unknown interpreted text role &quot;class&quot;.</div>
+<div class="system-message" id="system-message-21">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 464); <em><a href="#problematic-21">backlink</a></em></p>
+Unknown interpreted text role &quot;class&quot;.</div>
+<div class="system-message" id="system-message-22">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 464); <em><a href="#problematic-22">backlink</a></em></p>
+Unknown interpreted text role &quot;class&quot;.</div>
+<div class="system-message" id="system-message-23">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">C:/Users/User/Code/repos/sciform/docs/source/examples.rst</tt>, line 464); <em><a href="#problematic-23">backlink</a></em></p>
+Unknown interpreted text role &quot;ref&quot;.</div>
+</div>
+<div class="section" id="fallback-formatters">
+<h1>Fallback Formatters</h1>
+<p>Sometimes values and value/uncertainty pairs with various properties may
+appear together in the same context.
+It may be inappropriate to use a single formatter for all of these
+inputs.
+For example</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; from sciform import Formatter
+&gt;&gt;&gt; sform = Formatter(round_mode=&quot;pdg&quot;, paren_uncertainty=True)
+&gt;&gt;&gt; print(sform(123456, 0.0789))
+123456.00(8)
+&gt;&gt;&gt; print(sform(123456, float(&quot;nan&quot;)))
+120000(nan)
+&gt;&gt;&gt; print(sform(123456))
+120000
+</pre>
+<p>In both the cases when the uncertainty was invalid for rounding and when
+the uncertainty wasn't present the rounding got applied to the value
+directly.
+However, it may be inappropriate to apply PDG rounding, which is usually
+used for uncertainty, to the value.
+Instead, the user may want to retain more significant figures when
+rounding is applied to the value instead of the uncertainty.
+Users can resolve this by defining two formatters and a simple helper
+function to cover these cases.</p>
+<pre class="doctest-block">
+&gt;&gt;&gt; from math import isfinite
+&gt;&gt;&gt; from sciform import Formatter
+&gt;&gt;&gt;
+&gt;&gt;&gt; def generate_multi_formatter(
+...     val_unc_formatter=None,
+...     val_formatter=None
+... ):
+...     if val_unc_formatter is None:
+...         val_unc_formatter = Formatter()
+...     if val_formatter is None:
+...         val_formatter = Formatter()
+...     def multi_formatter(val, unc=None):
+...         if unc is None or not isfinite(unc):
+...             return val_formatter(val, unc)
+...         else:
+...             return val_unc_formatter(val, unc)
+...     return multi_formatter
+&gt;&gt;&gt;
+&gt;&gt;&gt; multi_formatter = generate_multi_formatter(
+...     val_unc_formatter = Formatter(
+...         round_mode=&quot;pdg&quot;,
+...         paren_uncertainty=True,
+...     ),
+...     val_formatter=Formatter(
+...         round_mode=&quot;sig_fig&quot;,
+...         ndigits=6,
+...         paren_uncertainty=True,
+...     ),
+... )
+&gt;&gt;&gt;
+&gt;&gt;&gt; print(multi_formatter(123456, 0.0789))
+123456.00(8)
+&gt;&gt;&gt; print(multi_formatter(123456, float(&quot;nan&quot;)))
+123456(nan)
+&gt;&gt;&gt; print(multi_formatter(123456))
+123456
+</pre>
+</div>
+</div>
+</body>
+</html>

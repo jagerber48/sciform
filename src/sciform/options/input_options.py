@@ -62,7 +62,6 @@ class InputOptions:
     left_pad_dec_place: int | None = None
     exp_format: option_types.ExpFormat | None = None
     extra_si_prefixes: dict[int, str] | None = None
-    extra_iec_prefixes: dict[int, str] | None = None
     extra_parts_per_forms: dict[int, str] | None = None
     capitalize: bool | None = None
     superscript: bool | None = None

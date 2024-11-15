@@ -40,9 +40,6 @@ def get_translation_dict(
     return translation_dict
 
 
-base_exp_symbol_dict = {10: "e", 2: "b"}
-
-
 def get_standard_exp_str(exp_val: int, *, capitalize: bool = False) -> str:
     """Get standard (eg. 'e+02') exponent string."""
     base_symbol = "e"

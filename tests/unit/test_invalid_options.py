@@ -50,14 +50,6 @@ class TestInvalidOptions(unittest.TestCase):
             exp_val=1,
         )
 
-    def test_binary_iec(self):
-        self.assertRaises(
-            ValueError,
-            Formatter,
-            exp_mode="binary_iec",
-            exp_val=5,
-        )
-
     def test_upper_separator_non_option(self):
         self.assertRaises(
             ValueError,
@@ -171,18 +163,8 @@ class TestInvalidOptions(unittest.TestCase):
         self.assertRaises(
             ValueError,
             _make_exp_str,
-            10,
             0,
             "rst",
-        )
-
-    def test_make_exp_str_invalid_base(self):
-        self.assertRaises(
-            ValueError,
-            _make_exp_str,
-            16,
-            0,
-            "ascii",
         )
 
     def test_invalid_translation_key(self):

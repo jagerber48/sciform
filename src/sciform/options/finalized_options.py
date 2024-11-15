@@ -30,7 +30,6 @@ class FinalizedOptions:
     left_pad_dec_place: int
     exp_format: option_types.ExpFormatEnum
     extra_si_prefixes: dict[int, str]
-    extra_iec_prefixes: dict[int, str]
     extra_parts_per_forms: dict[int, str]
     capitalize: bool
     superscript: bool

@@ -107,7 +107,6 @@ class TestValidation(unittest.TestCase):
     def test_validate_extra_translations(self):
         translation_keys = (
             "extra_si_prefixes",
-            "extra_iec_prefixes",
             "extra_parts_per_forms",
         )
 

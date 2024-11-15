@@ -2,16 +2,14 @@ from __future__ import annotations
 
 import unittest
 from decimal import Decimal
-from typing import Any, Dict, Literal, Tuple, Union
+from typing import Any, Dict, Tuple, Union
 
 from sciform.format_utils import exp_translations, exponents
 from sciform.options.option_types import ExpFormatEnum, ExpModeEnum, ExpValEnum
 
-Base = Literal[10, 2]
 GetTranslationDictCase = Tuple[
     Tuple[
         ExpFormatEnum,
-        Base,
         Dict[int, str],
         Dict[int, str],
         Dict[int, str],

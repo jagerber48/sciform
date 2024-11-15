@@ -74,8 +74,7 @@ Further details about the options can be found at
        | (``'#'``)
      - The alternate mode flag indicates to use
        :ref:`engineering_shifted` mode when the exponent mode flag is
-       ``'r'`` or ``'R'`` or to use :ref:`binary_iec` mode when the
-       exponent mode flag is ``'b'`` or ``'B'``.
+       ``'r'`` or ``'R'``.
    * - | left_pad_dec_place
        | (``\d+``)
      - Sets ``left_pad_dec_place`` to any non-negative integer.
@@ -93,8 +92,8 @@ Further details about the options can be found at
      - Set ``round_mode`` to ``'all'`` or ``'pdg'``.
        See :ref:`rounding`.
    * - | exp_mode
-       | (``'f'``, ``'F'``, ``'%'``, ``'e'``, ``'E'``, ``'r'``, ``'R'``,
-         ``'b'``, ``'B'``)
+       | (``'f'``, ``'F'``, ``'%'``, ``'e'``, ``'E'``, ``'r'``,
+         ``'R'``)
      - Sets ``exponent_mode``.
        If this flag is capitalized then ``capitalize`` is set to
        ``True``.
@@ -106,8 +105,6 @@ Further details about the options can be found at
        * ``'r'`` and ``'R'`` set :ref:`engineering` or
          :ref:`engineering_shifted` exponent modes depending on if the
          alternate mode flag is used..
-       * ``'b'`` and ``'B'`` set :ref:`binary` or :ref:`binary_iec`
-         exponent modes depending on if the alternate mode flag is used.
    * - | exp_val
        | (``x[+-]\d+``)
      - Sets ``exp_val`` to an integer.
