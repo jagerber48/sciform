@@ -46,7 +46,7 @@ Overview
 
 ``sciform`` is used to convert python numbers into strings according to
 a variety of user-selected scientific formatting options including
-decimal, fixed-point, scientific and engineering formats.
+fixed-point, scientific and engineering formats.
 Where possible, formatting follows documented standards such as those
 published by `BIPM <https://www.bipm.org/en/>`_.
 ``sciform`` provides certain options, such as engineering notation,
