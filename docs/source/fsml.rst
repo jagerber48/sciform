@@ -26,7 +26,7 @@ The :mod:`sciform` format specification mini-language is given by::
     round_mode         ::=  "!" | "."
     special_round_mode ::=  "A" | "P"
     ndigits            ::=  [+-]?digit+
-    exp_mode           ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" | "b" | "B" |
+    exp_mode           ::=  "f" | "F" | "%" | "e" | "E" | "r" | "R" |
     exp_val            ::=  [+-]?digit+
 
 Below are two simple FSML usage examples.
