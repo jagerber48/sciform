@@ -390,19 +390,6 @@ class TestValUncFormatter(unittest.TestCase):
 
         self.run_val_unc_formatter_cases(cases_list)
 
-    def test_binary_not_implemented(self):
-        formatter = Formatter(exp_mode="binary")
-        self.assertRaises(NotImplementedError, formatter, 1024, 32)
-
-    @unittest.expectedFailure
-    def test_binary(self):
-        """
-        This test should pass when binary value/uncertainty formatting
-        is implemented
-        """
-        formatter = Formatter(exp_mode="binary")
-        self.assertEqual(formatter(1024, 32), "(1.00000 ± 0.03125)b+10")
-
     def test_pdg_sig_figs(self):
         cases_list = [
             (

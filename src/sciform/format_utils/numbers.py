@@ -124,17 +124,12 @@ def get_binary_exp(
     return exp_val
 
 
-def get_mantissa_exp_base(
+def get_mantissa_exp(
     num: Decimal,
     exp_mode: ExpModeEnum,
     input_exp: int | ExpValEnum,
-) -> tuple[Decimal, int, int]:
+) -> tuple[Decimal, int]:
     """Get mantissa, exponent, and base for formatting a decimal number."""
-    if exp_mode is ExpModeEnum.BINARY or exp_mode is ExpModeEnum.BINARY_IEC:
-        base = 2
-    else:
-        base = 10
-
     if num == 0 or not num.is_finite():
         mantissa = Decimal(num)
         exp = 0 if input_exp is ExpValEnum.AUTO else input_exp
@@ -147,16 +142,12 @@ def get_mantissa_exp_base(
             exp = get_engineering_exp(num, input_exp)
         elif exp_mode is ExpModeEnum.ENGINEERING_SHIFTED:
             exp = get_engineering_exp(num, input_exp, shifted=True)
-        elif exp_mode is ExpModeEnum.BINARY:
-            exp = get_binary_exp(num, input_exp)
-        elif exp_mode is ExpModeEnum.BINARY_IEC:
-            exp = get_binary_exp(num, input_exp, iec=True)
         else:
             msg = f"Unhandled exponent mode {exp_mode}."
             raise ValueError(msg)
-        mantissa = num * Decimal(base) ** Decimal(-exp)
+        mantissa = num * Decimal(10) ** Decimal(-exp)
     mantissa = mantissa.normalize()
-    return mantissa, exp, base
+    return mantissa, exp
 
 
 # language=pythonverboseregexp  noqa: ERA001

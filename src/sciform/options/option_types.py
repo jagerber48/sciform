@@ -74,8 +74,6 @@ ExpMode = Literal[
     "scientific",
     "engineering",
     "engineering_shifted",
-    "binary",
-    "binary_iec",
 ]
 
 
@@ -87,8 +85,6 @@ class ExpModeEnum(str, Enum):
     SCIENTIFIC = "scientific"
     ENGINEERING = "engineering"
     ENGINEERING_SHIFTED = "engineering_shifted"
-    BINARY = "binary"
-    BINARY_IEC = "binary_iec"
 
 
 ExpFormat = Literal["standard", "prefix", "parts_per"]

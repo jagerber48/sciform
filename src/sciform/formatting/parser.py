@@ -51,9 +51,9 @@ paren_pattern = rf"""
 """
 
 # language=pythonverboseregexp
-ascii_exp_pattern = r"(?P<ascii_exp>(?P<ascii_base>[eEbB])(?P<ascii_exp_val>[+-]\d+))"
+ascii_exp_pattern = r"(?P<ascii_exp>(?P<ascii_base>[eE])(?P<ascii_exp_val>[+-]\d+))"
 # language=pythonverboseregexp
-uni_exp_pattern = r"(?P<uni_exp>×(?P<uni_base>10|2)(?P<uni_exp_val>[⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]+))"
+uni_exp_pattern = r"(?P<uni_exp>×10(?P<uni_exp_val>[⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]+))"
 # language=pythonverboseregexp
 prefix_exp_pattern = r"(\ (?P<prefix_exp>[a-zA-zμ]+))"
 # language=pythonverboseregexp
@@ -88,79 +88,58 @@ $
 superscript_translation = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-0123456789")
 
 
-def _get_ascii_base_exp_val(match: re.Match) -> tuple[int, int]:
-    base = match.group("ascii_base")
-    if base.lower() == "e":
-        base = 10
-    elif base.lower() == "b":
-        base = 2
-    else:  # pragma: no cover
-        msg = f'Unexpected ASCII base: "{base}"'
-        raise ValueError(msg)
-    exp_val = int(match.group("ascii_exp_val"))
-    return base, exp_val
+def _get_ascii_exp_val(match: re.Match) -> int:
+    return int(match.group("ascii_exp_val"))
 
 
-def _get_unicode_base_exp_val(match: re.Match) -> tuple[int, int]:
-    base = int(match.group("uni_base"))
-    exp_val = int(match.group("uni_exp_val").translate(superscript_translation))
-    return base, exp_val
+def _get_unicode_exp_val(match: re.Match) -> int:
+    return int(match.group("uni_exp_val").translate(superscript_translation))
 
 
-def _get_prefix_base_exp_val(prefix_exp: str) -> tuple[int, int]:
-    candidate_base_exp_val_pairs = []
+def _get_prefix_exp_val(prefix_exp: str) -> int:
+    candidate_exp_vals = []
     global_options = global_options_module.GLOBAL_DEFAULT_OPTIONS
 
     si_translations = exp_translations.val_to_si_dict.copy()
     si_translations.update(global_options.extra_si_prefixes)
     for key, value in si_translations.items():
         if prefix_exp == value:
-            candidate_base_exp_val_pairs.append((10, key))
+            candidate_exp_vals.append(key)
 
     pp_translations = exp_translations.val_to_parts_per_dict.copy()
     pp_translations.update(global_options.extra_parts_per_forms)
     for key, value in pp_translations.items():
         if prefix_exp == value:
-            candidate_base_exp_val_pairs.append((10, key))
+            candidate_exp_vals.append(key)
 
-    iec_translations = exp_translations.val_to_iec_dict.copy()
-    iec_translations.update(global_options.extra_iec_prefixes)
-    for key, value in iec_translations.items():
-        if prefix_exp == value:
-            candidate_base_exp_val_pairs.append((2, key))
-
-    if len(candidate_base_exp_val_pairs) == 0:
+    if len(candidate_exp_vals) == 0:
         msg = f'Unrecognized prefix: "{prefix_exp}". Unable to parse input.'
         raise ValueError(msg)
-    if len(set(candidate_base_exp_val_pairs)) > 1:
-        candidate_exps = [
-            candidate_pair[1] for candidate_pair in candidate_base_exp_val_pairs
-        ]
+    if len(set(candidate_exp_vals)) > 1:
         msg = (
-            f'Multiple translations found for "{prefix_exp}": {candidate_exps}. '
+            f'Multiple translations found for "{prefix_exp}": {candidate_exp_vals}. '
             f"Unable to parse input."
         )
         raise ValueError(msg)
-    base, exp_val = candidate_base_exp_val_pairs[0]
-    return base, exp_val
+    exp_val = candidate_exp_vals[0]
+    return exp_val
 
 
-def _extract_exp_base_exp_val(
+def _extract_exp_val(
     match: re.Match,
 ) -> tuple[int, int]:
     if match.group("ascii_exp"):
-        base, exp_val = _get_ascii_base_exp_val(match)
+        exp_val = _get_ascii_exp_val(match)
     elif match.group("uni_exp"):
-        base, exp_val = _get_unicode_base_exp_val(match)
+        exp_val = _get_unicode_exp_val(match)
     elif prefix_exp := match.group("prefix_exp"):
-        base, exp_val = _get_prefix_base_exp_val(prefix_exp)
+        exp_val = _get_prefix_exp_val(prefix_exp)
     elif match.group("percent_exp"):
-        base = 10
         exp_val = -2
     else:  # pragma: no cover
         msg = "Expected named match groups not found."
         raise ValueError(msg)
-    return base, exp_val
+    return exp_val
 
 
 def _infer_decimal_separator(
@@ -252,54 +231,52 @@ def _normalize_separators(
     return input_str
 
 
-def _parse_no_exp_pattern(match: re.Match) -> tuple[str, str | None, int, int]:
+def _parse_no_exp_pattern(match: re.Match) -> tuple[str, str | None, int]:
     if val := match.group("non_finite_val"):
         unc = None
     else:
         val = match.group("pm_val")
         unc = match.group("pm_unc")
-    base = 10
     exp_val = 0
-    return val, unc, base, exp_val
+    return val, unc, exp_val
 
 
-def _parse_optional_exp_pattern(match: re.Match) -> tuple[str, str | None, int, int]:
+def _parse_optional_exp_pattern(match: re.Match) -> tuple[str, str | None, int]:
     if match.group("exp"):
-        base, exp_val = _extract_exp_base_exp_val(match)
+        exp_val = _extract_exp_val(match)
     else:
-        base = 10
         exp_val = 0
     if val := match.group("val"):
         unc = None
     else:
         val = match.group("paren_val")
         unc = match.group("paren_unc")
-    return val, unc, base, exp_val
+    return val, unc, exp_val
 
 
-def _parse_always_exp_pattern(match: re.Match) -> tuple[str, str | None, int, int]:
-    base, exp_val = _extract_exp_base_exp_val(match)
+def _parse_always_exp_pattern(match: re.Match) -> tuple[str, str | None, int]:
+    exp_val = _extract_exp_val(match)
     if val := match.group("non_finite_val"):
         unc = None
     else:
         val = match.group("pm_val")
         unc = match.group("pm_unc")
-    return val, unc, base, exp_val
+    return val, unc, exp_val
 
 
-def _extract_val_unc_base_exp(
+def _extract_val_unc_exp(
     input_str: str,
-) -> tuple[str, str | None, int, int]:
+) -> tuple[str, str | None, int]:
     if match := re.fullmatch(no_exp_pattern, input_str, re.VERBOSE):
-        val, unc, base, exp_val = _parse_no_exp_pattern(match)
+        val, unc, exp_val = _parse_no_exp_pattern(match)
     elif match := re.fullmatch(optional_exp_pattern, input_str, re.VERBOSE):
-        val, unc, base, exp_val = _parse_optional_exp_pattern(match)
+        val, unc, exp_val = _parse_optional_exp_pattern(match)
     elif match := re.fullmatch(always_exp_pattern, input_str, re.VERBOSE):
-        val, unc, base, exp_val = _parse_always_exp_pattern(match)
+        val, unc, exp_val = _parse_always_exp_pattern(match)
     else:
         msg = f'Input string "{input_str}" does not match any expected input format.'
         raise ValueError(msg)
-    return val, unc, base, exp_val
+    return val, unc, exp_val
 
 
 def parse_val_unc_from_str(
@@ -339,7 +316,7 @@ def parse_val_unc_from_str(
     Finally, the value and uncertainty strings are converted to decimals
     and multiplied by the extracted exponents.
     """
-    val, unc, base, exp_val = _extract_val_unc_base_exp(input_str)
+    val, unc, exp_val = _extract_val_unc_exp(input_str)
 
     decimal_separator = _parse_decimal_separator(val, unc, decimal_separator)
 
@@ -372,16 +349,15 @@ def parse_val_unc_from_str(
             raise ValueError(msg)
         unc = "0." + "0" * num_missing_zeros + unc
 
-    base = Decimal(base)
     exp_val = Decimal(exp_val)
     val = Decimal(val)
     if val.is_finite():
-        val *= base**exp_val
+        val *= 10**exp_val
 
     if unc is not None:
         unc = Decimal(unc)
         if unc.is_finite():
-            unc *= base**exp_val
+            unc *= 10**exp_val
 
     return val, unc
 

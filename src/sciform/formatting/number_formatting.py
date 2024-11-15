@@ -16,7 +16,7 @@ from sciform.format_utils.make_strings import (
     get_sign_str,
 )
 from sciform.format_utils.numbers import (
-    get_mantissa_exp_base,
+    get_mantissa_exp,
     get_val_unc_top_dec_place,
     parse_mantissa_from_ascii_exp_str,
 )
@@ -88,7 +88,6 @@ def format_non_finite(num: Decimal, options: FinalizedOptions) -> str:
             capitalize=options.capitalize,
             superscript=options.superscript,
             extra_si_prefixes=options.extra_si_prefixes,
-            extra_iec_prefixes=options.extra_iec_prefixes,
             extra_parts_per_forms=options.extra_parts_per_forms,
         )
     else:
@@ -120,7 +119,7 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
     round_mode = options.round_mode
     exp_mode = options.exp_mode
     ndigits = options.ndigits
-    mantissa, temp_exp_val, base = get_mantissa_exp_base(num, exp_mode, exp_val)
+    mantissa, temp_exp_val = get_mantissa_exp(num, exp_mode, exp_val)
     round_digit = get_round_dec_place(mantissa, round_mode, ndigits)
     mantissa_rounded = round(mantissa, -round_digit)
 
@@ -128,8 +127,8 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
     Repeat mantissa + exponent discovery after rounding in case rounding
     altered the required exponent.
     """
-    rounded_num = mantissa_rounded * Decimal(base) ** Decimal(temp_exp_val)
-    mantissa, exp_val, base = get_mantissa_exp_base(rounded_num, exp_mode, exp_val)
+    rounded_num = mantissa_rounded * Decimal(10) ** Decimal(temp_exp_val)
+    mantissa, exp_val = get_mantissa_exp(rounded_num, exp_mode, exp_val)
     round_digit = get_round_dec_place(mantissa, round_mode, ndigits)
     mantissa_rounded = round(mantissa, -int(round_digit))
     mantissa_rounded = cast(Decimal, mantissa_rounded)
@@ -170,7 +169,6 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
         capitalize=options.capitalize,
         superscript=options.superscript,
         extra_si_prefixes=options.extra_si_prefixes,
-        extra_iec_prefixes=options.extra_iec_prefixes,
         extra_parts_per_forms=options.extra_parts_per_forms,
     )
 
@@ -179,15 +177,9 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
     return result
 
 
-def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str:  # noqa: PLR0915
+def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str:
     """Format value/uncertainty pair according to input options."""
     exp_mode = options.exp_mode
-
-    if exp_mode is ExpModeEnum.BINARY or exp_mode is ExpModeEnum.BINARY_IEC:
-        msg = (
-            "Binary exponent modes are not supported for value/uncertainty formatting."
-        )
-        raise NotImplementedError(msg)
 
     unc = abs(unc)
     if exp_mode is ExpModeEnum.PERCENT:
@@ -269,12 +261,12 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         """
         ndigits = -round_digit + exp_val
 
-    val_mantissa, _, _ = get_mantissa_exp_base(
+    val_mantissa, _ = get_mantissa_exp(
         val_rounded,
         exp_mode=exp_mode,
         input_exp=exp_val,
     )
-    unc_mantissa, _, _ = get_mantissa_exp_base(
+    unc_mantissa, _ = get_mantissa_exp(
         unc_rounded,
         exp_mode=exp_mode,
         input_exp=exp_val,
@@ -337,7 +329,6 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
             exp_mode=exp_mode,
             exp_format=options.exp_format,
             extra_si_prefixes=options.extra_si_prefixes,
-            extra_iec_prefixes=options.extra_iec_prefixes,
             extra_parts_per_forms=options.extra_parts_per_forms,
             capitalize=options.capitalize,
             superscript=options.superscript,

@@ -19,8 +19,5 @@ class TestExpTranslations(unittest.TestCase):
     def test_si_prefixes(self):
         self.validate_translations_dict(exp_translations.val_to_si_dict)
 
-    def test_iec_prefixes(self):
-        self.validate_translations_dict(exp_translations.val_to_iec_dict)
-
     def test__prefixes(self):
         self.validate_translations_dict(exp_translations.val_to_parts_per_dict)

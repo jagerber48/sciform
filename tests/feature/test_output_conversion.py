@@ -324,20 +324,6 @@ class TestLatexConversion(unittest.TestCase):
                 ],
             ),
             (
-                1024,
-                [
-                    (
-                        Formatter(exp_mode="binary", exp_val=8),
-                        (
-                            "4b+08",
-                            "4b+08",
-                            "4×2<sup>8</sup>",
-                            r"4\times2^{8}",
-                        ),
-                    ),
-                ],
-            ),
-            (
                 float("nan"),
                 [
                     (
