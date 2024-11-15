@@ -181,14 +181,6 @@ class TestLatexConversion(unittest.TestCase):
                 ),
             ),
             (
-                "0b+00",
-                (
-                    "0b+00",
-                    "0×2<sup>0</sup>",
-                    r"$0\times2^{0}$",
-                ),
-            ),
-            (
                 "16.18033E+03",
                 (
                     "16.18033E+03",
@@ -319,20 +311,6 @@ class TestLatexConversion(unittest.TestCase):
                             "12.345 k",
                             "12.345 k",
                             r"12.345\:\text{k}",
-                        ),
-                    ),
-                ],
-            ),
-            (
-                1024,
-                [
-                    (
-                        Formatter(exp_mode="binary", exp_val=8),
-                        (
-                            "4b+08",
-                            "4b+08",
-                            "4×2<sup>8</sup>",
-                            r"4\times2^{8}",
                         ),
                     ),
                 ],

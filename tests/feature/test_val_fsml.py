@@ -310,31 +310,6 @@ class TestValFSML(unittest.TestCase):
 
         self.run_val_fsml_cases(cases_list)
 
-    def test_binary(self):
-        cases_list = [
-            (
-                1024,
-                [
-                    ("b", "1b+10"),
-                    ("#b", "1b+10"),
-                ],
-            ),
-            (
-                float("nan"),
-                [
-                    ("b", "nan"),
-                ],
-            ),
-            (
-                0,
-                [
-                    ("b", "0b+00"),
-                ],
-            ),
-        ]
-
-        self.run_val_fsml_cases(cases_list)
-
     def test_exp(self):
         cases_list = [
             (
@@ -358,7 +333,6 @@ class TestValFSML(unittest.TestCase):
                     ("rx+3", "0.123456e+03"),
                 ],
             ),
-            (512, [("bx+10", "0.5b+10")]),
         ]
 
         self.run_val_fsml_cases(cases_list)
@@ -477,8 +451,6 @@ class TestValFSML(unittest.TestCase):
                     ("", "nan"),
                     ("e", "(nan)e+00"),
                     ("E", "(NAN)E+00"),
-                    ("b", "(nan)b+00"),
-                    ("B", "(NAN)B+00"),
                 ],
             ),
             (
@@ -487,8 +459,6 @@ class TestValFSML(unittest.TestCase):
                     ("", "inf"),
                     ("e", "(inf)e+00"),
                     ("E", "(INF)E+00"),
-                    ("b", "(inf)b+00"),
-                    ("B", "(INF)B+00"),
                 ],
             ),
             (
@@ -497,8 +467,6 @@ class TestValFSML(unittest.TestCase):
                     ("", "-inf"),
                     ("e", "(-inf)e+00"),
                     ("E", "(-INF)E+00"),
-                    ("b", "(-inf)b+00"),
-                    ("B", "(-INF)B+00"),
                 ],
             ),
         ]
@@ -557,13 +525,6 @@ class TestValFSML(unittest.TestCase):
                     ("E", "1.618033E+04"),
                     ("r", "16.18033e+03"),
                     ("R", "16.18033E+03"),
-                ],
-            ),
-            (
-                1024,
-                [
-                    ("!3b", "1.00b+10"),
-                    ("!3B", "1.00B+10"),
                 ],
             ),
         ]
@@ -651,15 +612,6 @@ class TestValFSML(unittest.TestCase):
             (3.1415e28, [("ep", "3.1415e+28")]),
             (3.1415e29, [("ep", "3.1415e+29")]),
             (3.1415e30, [("ep", "3.1415 Q")]),
-            (2**10, [("bp", "1 Ki")]),
-            (2**10, [("bp", "1 Ki")]),
-            (2**20, [("bp", "1 Mi")]),
-            (2**30, [("bp", "1 Gi")]),
-            (2**40, [("bp", "1 Ti")]),
-            (2**50, [("bp", "1 Pi")]),
-            (2**60, [("bp", "1 Ei")]),
-            (2**70, [("bp", "1 Zi")]),
-            (2**80, [("bp", "1 Yi")]),
         ]
 
         self.run_val_fsml_cases(cases_list)

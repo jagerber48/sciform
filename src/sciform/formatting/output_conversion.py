@@ -6,12 +6,11 @@ import re
 from typing import Literal, get_args
 
 ascii_exp_pattern = re.compile(
-    r"^(?P<mantissa>.*)(?P<ascii_base>[eEbB])(?P<exp>[+-]\d+)$",
+    r"^(?P<mantissa>.*)(?P<ascii_base>[eE])(?P<exp>[+-]\d+)$",
 )
-ascii_base_dict = {"e": 10, "E": 10, "b": 2, "B": 2}
 
 unicode_exp_pattern = re.compile(
-    r"^(?P<mantissa>.*)×(?P<base>10|2)(?P<super_exp>[⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]+)$",
+    r"^(?P<mantissa>.*)×10(?P<super_exp>[⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]+)$",
 )
 superscript_translation = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-0123456789")
 
@@ -19,24 +18,17 @@ output_formats = Literal["latex", "html", "ascii"]
 
 
 def _make_exp_str(
-    base: int,
     exp: int,
     output_format: output_formats,
     *,
     capitalize: bool = False,
 ) -> str:
     if output_format == "latex":
-        return rf"\times{base}^{{{exp}}}"
+        return rf"\times10^{{{exp}}}"
     if output_format == "html":
-        return f"×{base}<sup>{exp}</sup>"
+        return f"×10<sup>{exp}</sup>"
     if output_format == "ascii":
-        if base == 10:
-            exp_str = f"e{exp:+03d}"
-        elif base == 2:
-            exp_str = f"b{exp:+03d}"
-        else:
-            msg = f"base must be 10 or 2, not {base}"
-            raise ValueError(msg)
+        exp_str = f"e{exp:+03d}"
         if capitalize:
             exp_str = exp_str.upper()
         return exp_str
@@ -116,10 +108,8 @@ def convert_sciform_format(
     if match := re.match(ascii_exp_pattern, formatted_str):
         mantissa = match.group("mantissa")
         ascii_base = match.group("ascii_base")
-        base = ascii_base_dict[ascii_base]
         exp = int(match.group("exp"))
         exp_str = _make_exp_str(
-            base,
             exp,
             output_format,
             capitalize=ascii_base.isupper(),
@@ -128,10 +118,9 @@ def convert_sciform_format(
         suffix_str = exp_str
     elif match := re.match(unicode_exp_pattern, formatted_str):
         mantissa = match.group("mantissa")
-        base = int(match.group("base"))
         super_exp = match.group("super_exp")
         exp = int(super_exp.translate(superscript_translation))
-        exp_str = _make_exp_str(base, exp, output_format)
+        exp_str = _make_exp_str(exp, output_format)
         main_str = mantissa
         suffix_str = exp_str
     else:

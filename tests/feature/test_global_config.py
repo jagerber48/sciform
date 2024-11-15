@@ -54,14 +54,6 @@ class TestConfig(unittest.TestCase):
                 num_str = f"{num:ex{exp:+}p}"
                 self.assertEqual(num_str, expected_num_str)
 
-    def test_iec_prefix(self):
-        num = SciNum(1024)
-        fmt_spec = "bp"
-        self.assertEqual(f"{num:{fmt_spec}}", "1 Ki")
-        with GlobalOptionsContext(extra_iec_prefixes={10: "KiB"}):
-            self.assertEqual(f"{num:{fmt_spec}}", "1 KiB")
-        self.assertEqual(f"{num:{fmt_spec}}", "1 Ki")
-
     def test_ppth_form(self):
         num = 0.0024
         formatter = Formatter(

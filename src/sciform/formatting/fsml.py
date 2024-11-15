@@ -18,7 +18,7 @@ pattern = re.compile(
                            |
                            (?P<round_mode_special>[AP])
                          )?
-                         (?P<exp_mode>[fF%eErRbB])?
+                         (?P<exp_mode>[fF%eErR])?
                          (?:x(?P<exp_val>[+-]?\d+))?
                          (?P<prefix_mode>p)?
                          (?P<paren_uncertainty>\(\))?
@@ -46,11 +46,6 @@ def parse_exp_mode(
                 exp_mode = "engineering_shifted"
             else:
                 exp_mode = "engineering"
-        elif exp_mode in ["b", "B"]:
-            if alternate_mode:
-                exp_mode = "binary_iec"
-            else:
-                exp_mode = "binary"
     else:
         capitalize = None
     return exp_mode, capitalize

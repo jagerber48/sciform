@@ -8,9 +8,21 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* Any unreleased changes can be viewed in the latest version
-  documentation
-  `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
+..
+   * Any unreleased changes can be viewed in the latest version
+     documentation
+     `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
+
+Removed
+^^^^^^^
+
+* Removed all support for base-2 formatting.
+  The ``sciform`` package will focus on base-2 scientific formatting,
+  more relevent for the physical sciences, unless there is demand for
+  base-2 or base-``n`` formatting.
+  We encourage users to consider the `prefixed <https://pypi.org/project/prefixed/>`_
+  package if they have requirements for base-2 formatting.
+  [`#201 <https://github.com/jagerber48/sciform/issues/201>`_]
 
 ----
 
@@ -18,7 +30,7 @@ Unreleased
 -------------------
 
 Fixed
------
+^^^^^
 
 * Corrected a typo in a previous release.
 
@@ -28,7 +40,7 @@ Fixed
 -------------------
 
 Added
------
+^^^^^
 
 * Documented examples demonstrating the interplay between ``sciform``
   formatting the ``decimal`` module configuration.

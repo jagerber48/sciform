@@ -21,11 +21,11 @@ Exponent Mode
 To display numbers across a wide range of magnitudes, scientific
 formatting presents numbers in the form::
 
-   num = mantissa * base**exp
+   num = mantissa * 10**exp
 
-Where exp is an integer and ``base`` is 10 or 2.
-The different exponent modes control how ``mantissa``, ``base`` and
-``exp`` are chosen for a given input number ``num``.
+Where exp is an integer.
+The different exponent modes control how ``mantissa`` and ``exp`` are
+chosen for a given input number ``num``.
 
 .. _fixed_point:
 
@@ -62,7 +62,7 @@ appended to the end of the formatted string.
 Scientific Notation
 -------------------
 
-Scientific notation is used to display base-10 decimal numbers.
+Scientific notation is used to display numbers.
 In scientific notation, the exponent is uniquely chosen so that the
 mantissa ``m`` satisfies ``1 <= m < 10``.
 
@@ -120,36 +120,6 @@ the exponent is chosen so that the mantissa ``m`` satisfies
 >>> print(formatter(123.456, 0.001))
 (0.123456 ± 0.000001)e+03
 
-.. _binary:
-
-Binary
-------
-
-Binary formatting can be chosen to display a number in scientific
-notation in base-2.
-
->>> formatter = Formatter(exp_mode="binary")
->>> print(formatter(256))
-1b+08
-
-Here ``b`` exponent symbol indicates base-2 instead of base-10.
-For binary formatting, the mantissa ``m`` satisfies ``1 <= m < 2``.
-
-.. _binary_iec:
-
-Binary IEC
-----------
-
-Binary IEC mode is similar to engineering notation, except in base-2.
-In this mode number are expressed in base-2 exponent notation, but the
-exponent is constrained to be a multiple of 10, consistent with the
-IEC binary prefixes.
-The mantissa ``m`` satisfies ``1 <= m < 1024``.
-
->>> formatter = Formatter(exp_mode="binary_iec")
->>> print(formatter(2048))
-2b+10
-
 .. _fixed_exp:
 
 Fixed Exponent
@@ -171,10 +141,8 @@ For fixed point and percent modes an explicit fixed exponent must equal
 0.
 For engineering and shifted engineering modes an explicit fixed exponent
 must be an integer multiple of 3.
-For binary IEC mode an explicit fixed exponent must be an integer
-multiple of 10.
 Because of this constrained behavior, it is recommended to only use a
-fixed exponent with the scientific or binary exponent modes.
+fixed exponent with the scientific exponent mode.
 
 .. _exp_str_replacement:
 
@@ -182,12 +150,11 @@ Exponent String Replacement
 ===========================
 
 :mod:`sciform` provides a number of formatting options for replacing
-decimal and binary exponent strings such as ``'e-03'`` or ``'b+10'``
-with conventional strings such as ``'m'`` or ``'Ki'`` to succinctly
-communicate the order of magnitude.
-Decimal exponent strings can be replaced with either SI prefixes or
-parts-per identifiers and binary exponent strings can be replaced with
-IEC prefixes.
+exponent strings such as ``'e-03'`` with conventional strings such as
+``'m'`` (the SI prefix for milli) to succinctly communicate the order
+of magnitude.
+Exponent strings can be replaced with either SI prefixes or parts-per
+identifiers.
 See :ref:`exp_replacements` for all default supported
 replacements.
 Furthermore, it is possible to customize :class:`Formatter`
@@ -197,14 +164,6 @@ in addition to those provided by default.
 >>> formatter = Formatter(exp_mode="engineering", exp_format="prefix")
 >>> print(formatter(4242.13))
 4.24213 k
->>> formatter = Formatter(
-...     exp_mode="binary_iec",
-...     round_mode="sig_fig",
-...     ndigits=4,
-...     exp_format="prefix",
-... )
->>> print(formatter(1300))
-1.270 Ki
 >>> formatter = Formatter(exp_mode="engineering", exp_format="parts_per")
 >>> print(formatter(12.3e-6))
 12.3 ppm
@@ -217,11 +176,10 @@ Extra Exponent Replacements
 In addition to the default
 :ref:`exponent replacements <exp_replacements>`, The user can modify the
 available exponent replacements using a number of options.
-The SI prefix, IEC prefix, and parts-per replacements can be modified
-using the ``extra_si_prefixes``, ``extra_iec_prefixes`` and
-``extra_parts_per_forms`` options, respectively, and passing in
-dictionaries with keys corresponding to integer exponents and values
-corresponding to translated strings.
+The SI prefix and parts-per replacements can be modified
+using the ``extra_si_prefixes`` and ``extra_parts_per_forms`` options,
+respectively, and passing in dictionaries with keys corresponding to
+integer exponents and values corresponding to translated strings.
 The entries in these dictionaries overwrite any default translation
 mappings.
 
@@ -652,9 +610,6 @@ The capitalization of the exponent character can be controlled
 >>> formatter = Formatter(exp_mode="scientific", capitalize=True)
 >>> print(formatter(42))
 4.2E+01
->>> formatter = Formatter(exp_mode="binary", capitalize=True)
->>> print(formatter(1024))
-1B+10
 
 The ``capitalize`` flag also controls the capitalization of ``nan`` and
 ``inf`` formatting:
@@ -705,7 +660,7 @@ Python supports ``'nan'``, ``'inf'``, and
 and ``'-inf'`` or ``'NAN'``, ``'INF'``, and ``'-INF'``, respectively,
 depending on ``capitalize``.
 However, if ``nan_inf_exp=True`` (default ``False``), then, for
-scientific, percent, engineering, and binary exponent modes, these will
+scientific, percent, and engineering exponent modes, these will
 instead be formatted as, e.g. ``'(nan)e+00'``.
 
 >>> formatter = Formatter(

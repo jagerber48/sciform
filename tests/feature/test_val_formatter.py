@@ -45,12 +45,6 @@ class TestValFormatter(unittest.TestCase):
                     ),
                 ],
             ),
-            (
-                1024,
-                [
-                    (Formatter(exp_mode="binary", superscript=True), "1×2¹⁰"),
-                ],
-            ),
         ]
 
         self.run_val_formatter_cases(cases_list)

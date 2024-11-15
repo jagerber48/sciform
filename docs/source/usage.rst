@@ -238,9 +238,7 @@ exponents such as ``"n" -> "e-09"``.
 These translations are performed by first checking the default SI
 prefixes along with any global ``extra_si_prefixes``, then checking
 the default parts-per forms along with any global
-``extra_parts_per_forms``, then checking the default IEC prefixes along
-with any global ``extra_iec_prefixes``.
-If an IEC prefix is detected then the exponent base is chosen to be 2.
+``extra_parts_per_forms``.
 if no valid translations are discovered or more than one valid
 translation is discovered an exception is raised.
 
@@ -474,7 +472,6 @@ PopulatedOptions(
  'left_pad_dec_place': 0,
  'exp_format': 'standard',
  'extra_si_prefixes': {},
- 'extra_iec_prefixes': {},
  'extra_parts_per_forms': {},
  'capitalize': False,
  'superscript': False,
@@ -516,7 +513,6 @@ PopulatedOptions(
  'left_pad_dec_place': 0,
  'exp_format': 'standard',
  'extra_si_prefixes': {},
- 'extra_iec_prefixes': {},
  'extra_parts_per_forms': {},
  'capitalize': False,
  'superscript': False,
@@ -615,7 +611,6 @@ PopulatedOptions(
  'left_pad_dec_place': 0,
  'exp_format': 'standard',
  'extra_si_prefixes': {},
- 'extra_iec_prefixes': {},
  'extra_parts_per_forms': {},
  'capitalize': False,
  'superscript': True,
@@ -660,7 +655,6 @@ PopulatedOptions(
  'left_pad_dec_place': 0,
  'exp_format': 'standard',
  'extra_si_prefixes': {},
- 'extra_iec_prefixes': {},
  'extra_parts_per_forms': {},
  'capitalize': False,
  'superscript': True,

@@ -15,7 +15,6 @@ PKG_DEFAULT_OPTIONS = PopulatedOptions(
     left_pad_dec_place=0,
     exp_format="standard",
     extra_si_prefixes={},
-    extra_iec_prefixes={},
     extra_parts_per_forms={},
     capitalize=False,
     superscript=False,

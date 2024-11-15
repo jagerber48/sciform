@@ -24,18 +24,6 @@ val_to_si_dict = {
     -30: "q",
 }
 
-val_to_iec_dict = {
-    0: "",
-    10: "Ki",
-    20: "Mi",
-    30: "Gi",
-    40: "Ti",
-    50: "Pi",
-    60: "Ei",
-    70: "Zi",
-    80: "Yi",
-}
-
 val_to_parts_per_dict = {
     0: "",
     -6: "ppm",

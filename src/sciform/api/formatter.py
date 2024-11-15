@@ -118,7 +118,6 @@ class Formatter:
      'left_pad_dec_place': 0,
      'exp_format': 'standard',
      'extra_si_prefixes': {},
-     'extra_iec_prefixes': {},
      'extra_parts_per_forms': {},
      'capitalize': False,
      'superscript': True,
@@ -153,7 +152,6 @@ class Formatter:
         left_pad_dec_place: int | None = None,
         exp_format: option_types.ExpFormat | None = None,
         extra_si_prefixes: dict[int, str] | None = None,
-        extra_iec_prefixes: dict[int, str] | None = None,
         extra_parts_per_forms: dict[int, str] | None = None,
         capitalize: bool | None = None,
         superscript: bool | None = None,
@@ -180,7 +178,6 @@ class Formatter:
           * ``exp_val`` must be 0 for fixed point and percent modes
           * ``exp_val`` must be a multiple of 3 for engineering and
             shifted engineering modes
-          * ``exp_val`` must be a multiple of 10 for binary iec mode
 
         * ``upper_separator`` may be any of ``['', ',', '.', ' ', '_']``
           but must be different from ``decimal_separator``
@@ -189,13 +186,12 @@ class Formatter:
 
         :param exp_mode: Specify the exponent formatting mode.
         :type exp_mode: ``Literal['fixed_point', 'percent',
-          'scientific', 'engineering', 'engineering_shifted', 'binary',
-          'binary_iec'] | None``
+          'scientific', 'engineering', 'engineering_shifted'] | None``
         :param exp_val: Indicates how the exponent value should be
           chosen. If an integer is specified, the value must be 0 for
           fixed point and percent modes, an integer multiple of 3 for
-          engineering and engineering shifted modes, and an integer
-          multiple of 10 for binary IEC mode. Can be set to ``"auto"``.
+          engineering and engineering shifted modes. Can be set to
+          ``"auto"``.
         :type exp_val: ``int | Literal['auto'] | None``
         :param round_mode: Indicate how to round numbers during
           formatting.
@@ -231,11 +227,6 @@ class Formatter:
           values to si prefixes. Entries overwrite default values. A
           value of ``None`` means that exponent will not be converted.
         :type extra_si_prefixes: ``dict[int, Union[str, None]] | None``
-        :param extra_iec_prefixes: Dictionary mapping additional
-          exponent values to iec prefixes. Entries overwrite default
-          values. A value of ``None`` means that exponent will not be
-          converted.
-        :type extra_iec_prefixes: ``dict[int, Union[str, None]] | None``
         :param extra_parts_per_forms: Dictionary mapping additional
           exponent values to "parts-per" forms. Entries overwrite
           default values. A value of ``None`` means that exponent will
@@ -297,7 +288,6 @@ class Formatter:
             left_pad_dec_place=left_pad_dec_place,
             exp_format=exp_format,
             extra_si_prefixes=extra_si_prefixes,
-            extra_iec_prefixes=extra_iec_prefixes,
             extra_parts_per_forms=extra_parts_per_forms,
             capitalize=capitalize,
             superscript=superscript,

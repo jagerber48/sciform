@@ -6,14 +6,11 @@ Supported Exponent Replacements
 :mod:`sciform` offers exponent replacement modes which provide
 translations between exponent strings and conventional alphabetic
 symbol representations.
-For decimal exponents in engineering formats, SI prefix translations are
+For exponents in engineering formats, SI prefix translations are
 available according to the
 `SI prefixes <https://www.nist.gov/pml/owm/metric-si-prefixes>`_.
 It is also possible to convert decimal exponents into
 `parts-per notation <https://en.wikipedia.org/wiki/Parts-per_notation>`_.
-For binary formats, the IEC prefix translations are available matched to
-integer multiples of 10 according to the
-`IEC prefixes <https://physics.nist.gov/cuu/Units/binary.html>`_.
 
 SI Prefixes
 -----------
@@ -161,38 +158,3 @@ override the standard mappings listed above.
 33e-09
 >>> print(formatter(33e-12))
 33 ppb
-
-IEC Prefixes
-------------
-
-.. list-table:: IEC Prefixes
-   :widths: 15, 15, 15
-   :header-rows: 1
-
-   * - Exponent Value
-     - Prefix Name
-     - Prefix
-   * - 2\ :sup:`+80`
-     - yobi
-     - Yi
-   * - 2\ :sup:`+70`
-     - zebi
-     - Zi
-   * - 2\ :sup:`+60`
-     - exi
-     - Ei
-   * - 2\ :sup:`+50`
-     - pebi
-     - Pi
-   * - 2\ :sup:`+40`
-     - tebi
-     - Ti
-   * - 2\ :sup:`+30`
-     - gibi
-     - Gi
-   * - 2\ :sup:`+20`
-     - mebi
-     - Mi
-   * - 2\ :sup:`+10`
-     - kibi
-     - Ki
