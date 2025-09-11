@@ -8,9 +8,18 @@ This project adheres to `Semantic Versioning <https://semver.org/>`_.
 Unreleased
 ----------
 
-* Any unreleased changes can be viewed in the latest version
-  documentation
-  `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
+..
+   * Any unreleased changes can be viewed in the latest version
+     documentation
+     `changelog <https://sciform.readthedocs.io/en/latest/project.html#changelog>`_.
+
+Fixed
+-----
+
+* Fixed a value/uncertainty formatting bug when one of the value/uncertainty is 0, the
+  other one is 0 or non-finite and a positive fixed exponent is used. In this case the
+  zero values would erroneously be formatted with trailing zeros.
+  [`#205 <https://github.com/jagerber48/sciform/issues/205>`_]
 
 ----
 
