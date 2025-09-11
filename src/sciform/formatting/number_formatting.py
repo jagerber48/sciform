@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 from decimal import Decimal
+from math import isfinite
 from typing import TYPE_CHECKING, cast
 
 from sciform.api.formatted_number import FormattedNumber
@@ -177,7 +178,7 @@ def format_num(num: Decimal, options: FinalizedOptions) -> str:
     return result
 
 
-def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str:
+def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str:  # noqa: PLR0915
     """Format value/uncertainty pair according to input options."""
     exp_mode = options.exp_mode
 
@@ -259,7 +260,12 @@ def format_val_unc(val: Decimal, unc: Decimal, options: FinalizedOptions) -> str
         ndigits that will be used for separate digits-past-the-decimal rounding for the
         value and uncertainty.
         """
-        ndigits = -round_digit + exp_val
+        if (isfinite(val) and val_rounded != 0) or (
+            isfinite(unc_rounded) and unc_rounded != 0
+        ):
+            ndigits = -round_digit + exp_val
+        else:
+            ndigits = 0
 
     val_mantissa, _ = get_mantissa_exp(
         val_rounded,

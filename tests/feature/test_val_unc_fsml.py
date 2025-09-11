@@ -672,9 +672,30 @@ class TestValUncFSML(unittest.TestCase):
     def test_zero(self):
         cases_list = [
             (
+                (0, 0),
+                [
+                    ("!3f", "0 ± 0"),
+                    ("!3e", "(0 ± 0)e+00"),
+                    ("ex-2", "(0 ± 0)e-02"),
+                    ("ex+2", "(0 ± 0)e+02"),
+                ],
+            ),
+            (
                 (0, float("nan")),
                 [
                     ("!3f", "0 ± nan"),
+                    ("!3e", "(0 ± nan)e+00"),
+                    ("ex-2", "(0 ± nan)e-02"),
+                    ("ex+2", "(0 ± nan)e+02"),
+                ],
+            ),
+            (
+                (float("inf"), 0),
+                [
+                    ("!3f", "inf ± 0"),
+                    ("!3e", "(inf ± 0)e+00"),
+                    ("ex-2", "(inf ± 0)e-02"),
+                    ("ex+2", "(inf ± 0)e+02"),
                 ],
             ),
         ]
